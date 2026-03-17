@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cube Net Explorer</title>
+  <style>
+    :root {
+      --bg: #f6f8fc;
+      --card: #ffffff;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --line: #d1d5db;
+      --accent: #2563eb;
+      --accent-soft: #dbeafe;
+      --good: #16a34a;
+      --shadow: 0 10px 30px rgba(0,0,0,.08);
+      --cell: 48px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background: linear-gradient(180deg, #eef4ff 0%, var(--bg) 180px);
+    }
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    h1 {
+      margin: 0 0 8px;
+      font-size: 2rem;
+    }
+    .sub {
+      color: var(--muted);
+      line-height: 1.5;
+      margin-bottom: 20px;
+    }
+    .layout {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 20px;
+    }
+    .card {
+      background: var(--card);
+      border: 1px solid #e5e7eb;
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+    .controls {
+      display: grid;
+      gap: 12px;
+    }
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 10px 14px;
+      background: var(--accent);
+      color: white;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+    button.secondary {
+      background: #eef2ff;
+      color: #1e3a8a;
+    }
+    button.ghost {
+      background: #f3f4f6;
+      color: #111827;
+    }
+    button:hover { filter: brightness(.97); }
+    .tiny {
+      font-size: .92rem;
+      color: var(--muted);
+    }
+    .cube-stage {
+      height: 320px;
+      display: grid;
+      place-items: center;
+      perspective: 1100px;
+      margin-top: 8px;
+      background: linear-gradient(180deg, #f8fbff, #eef4ff);
+      border: 1px dashed #dbe4f0;
+      border-radius: 16px;
+      overflow: hidden;
+      position: relative;
+    }
+    .step-note {
+      min-height: 1.4rem;
+      margin-top: 10px;
+      text-align: center;
+      color: var(--muted);
+      font-size: .92rem;
+      font-weight: 700;
+    }
+    .nets-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      gap: 12px;
+    }
+    .count {
+      color: var(--good);
+      font-weight: 700;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+    .net-card {
+      border: 2px solid #e5e7eb;
+      border-radius: 16px;
+      padding: 12px;
+      background: white;
+      transition: .15s ease;
+      cursor: pointer;
+    }
+    .net-card:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+    .net-card.active {
+      border-color: var(--accent);
+      background: #f8fbff;
+    }
+    .net-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    .mini-grid {
+      position: relative;
+      display: grid;
+      gap: 0;
+      margin: 4px auto 0;
+      width: max-content;
+    }
+    .sq {
+      width: var(--cell);
+      height: var(--cell);
+      border: 2px solid #222;
+      background: #f3f4f6;
+      display: grid;
+      place-items: center;
+      font-size: .9rem;
+      font-weight: 700;
+      user-select: none;
+    }
+    .sq.center { background: #dbeafe; }
+    .legend {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+    .dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 4px;
+      display: inline-block;
+      border: 1px solid #777;
+    }
+    .tip {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 14px;
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      line-height: 1.5;
+      color: #374151;
+    }
+    .footer-note {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+    @media (max-width: 900px) {
+      .layout { grid-template-columns: 1fr; }
+      :root { --cell: 40px; }
+      .cube-stage { height: 280px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Cube Net Explorer</h1>
+    <div class="sub">
+      This page shows the <strong>11 possible nets of a cube</strong>. Click any net to inspect it, shuffle to a random one, or show all of them for comparison.
+    </div>
+
+    <div class="layout">
+      <div class="card">
+        <div class="controls">
+          <div>
+            <strong>Selected net:</strong> <span id="selectedName">Net 1</span>
+          </div>
+
+          <div class="btn-row">
+            <button id="prevBtn" class="secondary">◀ Previous</button>
+            <button id="nextBtn">Next ▶</button>
+            <button id="randomBtn" class="ghost">Random</button>
+          </div>
+
+          <div class="btn-row">
+            <button id="toggleAllBtn" class="secondary">Show only selected</button>
+          </div>
+
+          <div class="btn-row">
+            <button id="foldBtn">Fold net</button>
+            <button id="unfoldBtn" class="secondary">Unfold net</button>
+            <button id="replayBtn" class="ghost">Replay</button>
+          </div>
+
+          <div class="btn-row">
+            <button id="prevStepBtn" class="secondary">Previous fold step</button>
+            <button id="nextStepBtn">Next fold step</button>
+          </div>
+
+          <div class="btn-row">
+            <button id="resetFlatBtn" class="ghost">Reset to flat</button>
+            <button id="finishFoldBtn" class="ghost">Go to fully folded</button>
+          </div>
+
+          <div class="tiny">
+            A cube has exactly <strong>11 distinct nets</strong> (ignoring rotation and reflection).
+          </div>
+        </div>
+
+        <div class="cube-stage">
+          <div id="foldScene" style="width:100%;height:100%;display:grid;place-items:center;perspective:1100px;overflow:hidden;">
+            <div id="camera" style="position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform 320ms ease;transform:translateY(-2px) rotateX(-18deg) rotateY(-20deg) scale(.78);">
+              <div id="net3d" style="position:absolute;left:50%;top:50%;transform-style:preserve-3d;"></div>
+            </div>
+          </div>
+        </div>
+
+        <div id="stepNote" class="step-note">Flat net ready</div>
+
+        <div class="tip">
+          <strong>How to use:</strong><br>
+          Click <strong>Fold net</strong> to watch the selected 2D net close into a cube. Click <strong>Unfold net</strong> to open it again. You can also use <strong>Next fold step</strong> and <strong>Previous fold step</strong> to study one hinge movement at a time.
+        </div>
+
+        <div class="legend">
+          <span class="dot" style="background:#dbeafe"></span> base face
+          <span class="dot" style="background:#f3f4f6"></span> connected faces
+        </div>
+
+        <div class="footer-note">
+          Tip: choose a different net, then step through the folding manually to compare how different valid nets still form the same cube.
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="nets-head">
+          <div><strong>Possible cube nets</strong></div>
+          <div class="count" id="countLabel">Showing 11 nets</div>
+        </div>
+        <div class="grid" id="netsGrid"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const nets = [
+      { name: 'Net 1',  cells: [[0,0],[0,1],[0,2],[1,1],[2,1],[3,1]] },
+      { name: 'Net 2',  cells: [[0,0],[0,1],[0,2],[1,2],[1,3],[1,4]] },
+      { name: 'Net 3',  cells: [[0,0],[0,1],[1,1],[1,2],[1,3],[2,1]] },
+      { name: 'Net 4',  cells: [[0,0],[0,1],[1,1],[1,2],[1,3],[2,2]] },
+      { name: 'Net 5',  cells: [[0,0],[0,1],[1,1],[1,2],[1,3],[2,3]] },
+      { name: 'Net 6',  cells: [[0,0],[0,1],[1,1],[1,2],[2,1],[3,1]] },
+      { name: 'Net 7',  cells: [[0,0],[0,1],[1,1],[1,2],[2,2],[2,3]] },
+      { name: 'Net 8',  cells: [[0,0],[0,1],[1,1],[2,1],[2,2],[3,1]] },
+      { name: 'Net 9',  cells: [[0,0],[0,1],[1,1],[2,1],[3,1],[3,2]] },
+      { name: 'Net 10', cells: [[0,1],[1,0],[1,1],[1,2],[1,3],[2,1]] },
+      { name: 'Net 11', cells: [[0,1],[1,0],[1,1],[1,2],[1,3],[2,2]] }
+    ];
+
+    let selected = 0;
+    let showOnlySelected = false;
+    let folded = false;
+    let animating = false;
+    let animationRun = 0;
+
+    let hingeOrderFold = [];
+    let currentStep = 0;
+
+    const grid = document.getElementById('netsGrid');
+    const selectedName = document.getElementById('selectedName');
+    const countLabel = document.getElementById('countLabel');
+    const toggleAllBtn = document.getElementById('toggleAllBtn');
+    const net3d = document.getElementById('net3d');
+    const camera = document.getElementById('camera');
+    const foldBtn = document.getElementById('foldBtn');
+    const unfoldBtn = document.getElementById('unfoldBtn');
+    const replayBtn = document.getElementById('replayBtn');
+    const prevStepBtn = document.getElementById('prevStepBtn');
+    const nextStepBtn = document.getElementById('nextStepBtn');
+    const resetFlatBtn = document.getElementById('resetFlatBtn');
+    const finishFoldBtn = document.getElementById('finishFoldBtn');
+    const stepNote = document.getElementById('stepNote');
+
+    const FACE_SIZE = 62;
+    const FOLD_MOVE_MS = 900;
+    const FOLD_HOLD_MS = 800;
+    const STEP_MOVE_MS = 650;
+    const faceColors = ['#dbeafe','#f3f4f6','#e0e7ff','#fef3c7','#dcfce7','#fee2e2'];
+
+    const dirPriority = { up: 0, left: 1, right: 2, down: 3 };
+    const dirText = {
+      up: 'upward',
+      down: 'downward',
+      left: 'to the left',
+      right: 'to the right'
+    };
+
+    function normalize(cells) {
+      const xs = cells.map(c => c[0]);
+      const ys = cells.map(c => c[1]);
+      const minX = Math.min(...xs);
+      const minY = Math.min(...ys);
+      return cells.map(([x,y]) => [x - minX, y - minY]);
+    }
+
+    function renderNet(container, cells, highlight = false) {
+      const pts = normalize(cells);
+      const xs = pts.map(c => c[0]);
+      const ys = pts.map(c => c[1]);
+      const cols = Math.max(...xs) + 1;
+      const rows = Math.max(...ys) + 1;
+
+      container.style.gridTemplateColumns = `repeat(${cols}, var(--cell))`;
+      container.style.gridTemplateRows = `repeat(${rows}, var(--cell))`;
+
+      pts.forEach(([x, y], idx) => {
+        const d = document.createElement('div');
+        d.className = 'sq' + (highlight && idx === 0 ? ' center' : '');
+        d.style.gridColumn = (x + 1);
+        d.style.gridRow = (y + 1);
+        d.textContent = idx + 1;
+        container.appendChild(d);
+      });
+    }
+
+    function render() {
+      grid.innerHTML = '';
+      selectedName.textContent = nets[selected].name;
+
+      const toShow = showOnlySelected ? [nets[selected]] : nets;
+      countLabel.textContent = showOnlySelected ? 'Showing 1 net' : `Showing ${nets.length} nets`;
+      toggleAllBtn.textContent = showOnlySelected ? 'Show all nets' : 'Show only selected';
+
+      toShow.forEach((net) => {
+        const realIndex = nets.findIndex(n => n.name === net.name);
+        const card = document.createElement('div');
+        card.className = 'net-card' + (realIndex === selected ? ' active' : '');
+        card.addEventListener('click', () => {
+          selected = realIndex;
+          resetFoldExplorer();
+          render();
+        });
+
+        const title = document.createElement('div');
+        title.className = 'net-title';
+        title.innerHTML = `<span>${net.name}</span><span class="tiny">6 faces</span>`;
+
+        const mini = document.createElement('div');
+        mini.className = 'mini-grid';
+        renderNet(mini, net.cells, true);
+
+        card.appendChild(title);
+        card.appendChild(mini);
+        grid.appendChild(card);
+      });
+    }
+
+    function buildAdjacency(cells) {
+      const map = new Map();
+      cells.forEach((c, i) => map.set(`${c[0]},${c[1]}`, i));
+      const adj = Array.from({ length: cells.length }, () => []);
+      const dirs = [[1,0,'right'],[-1,0,'left'],[0,1,'down'],[0,-1,'up']];
+      cells.forEach(([x,y], i) => {
+        dirs.forEach(([dx,dy,name]) => {
+          const j = map.get(`${x+dx},${y+dy}`);
+          if (j !== undefined) adj[i].push({ to: j, dir: name, dx, dy });
+        });
+      });
+      return adj;
+    }
+
+    function sortEdges(edges) {
+      return [...edges].sort((a, b) => (dirPriority[a.dir] ?? 99) - (dirPriority[b.dir] ?? 99));
+    }
+
+    function pickRoot(adj) {
+      let best = 0;
+      for (let i = 1; i < adj.length; i++) {
+        if (adj[i].length > adj[best].length) best = i;
+      }
+      return best;
+    }
+
+    function buildTree(cells) {
+      const adj = buildAdjacency(cells);
+      const root = pickRoot(adj);
+      const parent = Array(cells.length).fill(-1);
+      const via = Array(cells.length).fill(null);
+      const children = Array.from({ length: cells.length }, () => []);
+      const q = [root];
+      parent[root] = root;
+
+      while (q.length) {
+        const cur = q.shift();
+        for (const edge of sortEdges(adj[cur])) {
+          if (parent[edge.to] !== -1) continue;
+          parent[edge.to] = cur;
+          via[edge.to] = edge.dir;
+          children[cur].push(edge.to);
+          q.push(edge.to);
+        }
+      }
+      return { root, parent, via, children };
+    }
+
+    function axisForDir(dir) {
+      return (dir === 'right' || dir === 'left') ? 'Y' : 'X';
+    }
+
+    function angleForDir(dir, isFolded) {
+      if (!isFolded) return 0;
+      if (dir === 'right') return -90;
+      if (dir === 'left') return 90;
+      if (dir === 'up') return -90;
+      if (dir === 'down') return 90;
+      return 0;
+    }
+
+    function localOffsetForDir(dir) {
+      if (dir === 'right') return { x: 0, y: 0, ox: FACE_SIZE, oy: 0 };
+      if (dir === 'left') return { x: -FACE_SIZE, y: 0, ox: 0, oy: 0 };
+      if (dir === 'up') return { x: 0, y: -FACE_SIZE, ox: 0, oy: 0 };
+      return { x: 0, y: 0, ox: 0, oy: FACE_SIZE };
+    }
+
+    function faceColorFor(idx, rootIdx) {
+      if (idx === rootIdx) return faceColors[0];
+      const nonRootColors = faceColors.slice(1);
+      const offset = idx < rootIdx ? idx : idx - 1;
+      return nonRootColors[offset % nonRootColors.length];
+    }
+
+    function createNumberLabel(label) {
+      const s = document.createElement('div');
+      s.textContent = label;
+      s.style.position = 'absolute';
+      s.style.inset = '0';
+      s.style.display = 'grid';
+      s.style.placeItems = 'center';
+      s.style.fontWeight = '900';
+      s.style.fontSize = '28px';
+      s.style.color = '#111827';
+      s.style.textShadow = '0 1px 0 rgba(255,255,255,.75), 0 0 2px rgba(255,255,255,.45)';
+      s.style.pointerEvents = 'none';
+      return s;
+    }
+
+    function createFace(label, color) {
+      const d = document.createElement('div');
+      d.style.position = 'absolute';
+      d.style.width = `${FACE_SIZE}px`;
+      d.style.height = `${FACE_SIZE}px`;
+      d.style.border = '2px solid #1f2937';
+      d.style.background = color;
+      d.style.display = 'block';
+      d.style.backfaceVisibility = 'hidden';
+      d.appendChild(createNumberLabel(label));
+      return d;
+    }
+
+    function createBackFace(label, color) {
+      const b = document.createElement('div');
+      b.style.position = 'absolute';
+      b.style.inset = '0';
+      b.style.transform = 'rotateY(180deg)';
+      b.style.backfaceVisibility = 'hidden';
+      b.style.background = color;
+      b.style.border = '2px solid #1f2937';
+      b.appendChild(createNumberLabel(label));
+      return b;
+    }
+
+    function wait(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+    }
+
+    function setStepNote(text) {
+      stepNote.textContent = text;
+    }
+
+    function setCameraPose(isFoldedView) {
+      camera.style.transform = isFoldedView
+        ? 'translateY(8px) rotateX(-24deg) rotateY(-28deg) scale(.98)'
+        : 'translateY(-2px) rotateX(-18deg) rotateY(-20deg) scale(.78)';
+    }
+
+    function buildFoldingModel(isFolded = false) {
+      net3d.innerHTML = '';
+      net3d.style.transition = 'opacity 260ms ease';
+      net3d.style.opacity = '1';
+
+      const cells = nets[selected].cells;
+      const pts = normalize(cells);
+      const xs = pts.map(([x]) => x);
+      const ys = pts.map(([, y]) => y);
+      const cols = Math.max(...xs) + 1;
+      const rows = Math.max(...ys) + 1;
+      const { root, children, via } = buildTree(cells);
+      const [rootX, rootY] = pts[root];
+
+      function makeNode(idx, depth = 0) {
+        const wrapper = document.createElement('div');
+        wrapper.style.position = 'absolute';
+        wrapper.style.transformStyle = 'preserve-3d';
+
+        const faceWrap = document.createElement('div');
+        faceWrap.style.position = 'absolute';
+        faceWrap.style.width = `${FACE_SIZE}px`;
+        faceWrap.style.height = `${FACE_SIZE}px`;
+        faceWrap.style.transformStyle = 'preserve-3d';
+
+        const color = faceColorFor(idx, root);
+        const face = createFace(idx + 1, color);
+        const back = createBackFace(idx + 1, color);
+        faceWrap.appendChild(face);
+        faceWrap.appendChild(back);
+        wrapper.appendChild(faceWrap);
+
+        children[idx].forEach(childIdx => {
+          const hinge = document.createElement('div');
+          hinge.style.position = 'absolute';
+          hinge.style.transformStyle = 'preserve-3d';
+          hinge.dataset.child = childIdx;
+          hinge.dataset.depth = String(depth + 1);
+          hinge.dataset.dir = via[childIdx];
+          wrapper.appendChild(hinge);
+          hinge.appendChild(makeNode(childIdx, depth + 1));
+        });
+
+        return wrapper;
+      }
+
+      const rootNode = makeNode(root, 0);
+      net3d.appendChild(rootNode);
+      rootNode.style.left = `${(rootX * FACE_SIZE) - (cols * FACE_SIZE / 2)}px`;
+      rootNode.style.top = `${(rootY * FACE_SIZE) - (rows * FACE_SIZE / 2)}px`;
+
+      function positionChildren(nodeWrapper, idx) {
+        const hingeNodes = [...nodeWrapper.children].slice(1);
+
+        hingeNodes.forEach(hinge => {
+          const childIdx = Number(hinge.dataset.child);
+          const dir = hinge.dataset.dir;
+          const axis = axisForDir(dir);
+          const angle = angleForDir(dir, isFolded);
+          const off = localOffsetForDir(dir);
+
+          hinge.style.left = `${off.ox}px`;
+          hinge.style.top = `${off.oy}px`;
+          hinge.style.transformOrigin = '0 0';
+          hinge.style.transform = `rotate${axis}(${angle}deg)`;
+
+          const childWrap = hinge.firstElementChild;
+          childWrap.style.left = `${off.x}px`;
+          childWrap.style.top = `${off.y}px`;
+
+          positionChildren(childWrap, childIdx);
+        });
+      }
+
+      positionChildren(rootNode, root);
+      computeHingeOrders();
+      updateButtonStates();
+    }
+
+    function computeHingeOrders() {
+      const hinges = [...net3d.querySelectorAll('[data-child]')];
+      hingeOrderFold = [...hinges].sort((a, b) => {
+        const depthDiff = Number(a.dataset.depth) - Number(b.dataset.depth);
+        if (depthDiff !== 0) return depthDiff;
+        return (dirPriority[a.dataset.dir] ?? 99) - (dirPriority[b.dataset.dir] ?? 99);
+      });
+    }
+
+    function applyStepState(stepCount, animated = false) {
+      computeHingeOrders();
+      currentStep = Math.max(0, Math.min(stepCount, hingeOrderFold.length));
+
+      hingeOrderFold.forEach((hinge, i) => {
+        const shouldFold = i < currentStep;
+        const axis = axisForDir(hinge.dataset.dir);
+        const angle = angleForDir(hinge.dataset.dir, shouldFold);
+
+        hinge.style.transition = animated ? `transform ${STEP_MOVE_MS}ms cubic-bezier(.2,.8,.2,1)` : 'none';
+        hinge.style.transform = `rotate${axis}(${angle}deg)`;
+      });
+
+      folded = currentStep === hingeOrderFold.length;
+      setCameraPose(currentStep > 0);
+
+      if (currentStep === 0) {
+        setStepNote('Flat net ready');
+      } else if (currentStep === hingeOrderFold.length) {
+        setStepNote('Cube formed');
+      } else {
+        const hinge = hingeOrderFold[currentStep - 1];
+        const faceNumber = Number(hinge.dataset.child) + 1;
+        setStepNote(
+          `Manual step ${currentStep} of ${hingeOrderFold.length}: ` +
+          `face ${faceNumber} rotated ${dirText[hinge.dataset.dir]}`
+        );
+      }
+
+      updateButtonStates();
+    }
+
+    async function stepForward() {
+      if (animating) return;
+      if (currentStep >= hingeOrderFold.length) return;
+
+      animating = true;
+      updateButtonStates();
+
+      const nextHinge = hingeOrderFold[currentStep];
+      const axis = axisForDir(nextHinge.dataset.dir);
+      const angle = angleForDir(nextHinge.dataset.dir, true);
+      const faceNumber = Number(nextHinge.dataset.child) + 1;
+
+      nextHinge.style.transition = `transform ${STEP_MOVE_MS}ms cubic-bezier(.2,.8,.2,1)`;
+      setStepNote(`Manual step ${currentStep + 1} of ${hingeOrderFold.length}: face ${faceNumber} rotates ${dirText[nextHinge.dataset.dir]}`);
+      requestAnimationFrame(() => {
+        nextHinge.style.transform = `rotate${axis}(${angle}deg)`;
+      });
+
+      await wait(STEP_MOVE_MS + 80);
+      currentStep += 1;
+      folded = currentStep === hingeOrderFold.length;
+      setCameraPose(currentStep > 0);
+
+      if (currentStep === hingeOrderFold.length) {
+        setStepNote('Cube formed');
+      }
+
+      animating = false;
+      updateButtonStates();
+    }
+
+    async function stepBackward() {
+      if (animating) return;
+      if (currentStep <= 0) return;
+
+      animating = true;
+      updateButtonStates();
+
+      const hinge = hingeOrderFold[currentStep - 1];
+      const axis = axisForDir(hinge.dataset.dir);
+      const angle = angleForDir(hinge.dataset.dir, false);
+      const faceNumber = Number(hinge.dataset.child) + 1;
+
+      hinge.style.transition = `transform ${STEP_MOVE_MS}ms cubic-bezier(.2,.8,.2,1)`;
+      setStepNote(`Reverse step ${currentStep} of ${hingeOrderFold.length}: face ${faceNumber} unfolds`);
+      requestAnimationFrame(() => {
+        hinge.style.transform = `rotate${axis}(${angle}deg)`;
+      });
+
+      await wait(STEP_MOVE_MS + 80);
+      currentStep -= 1;
+      folded = false;
+      setCameraPose(currentStep > 0);
+
+      if (currentStep === 0) {
+        setStepNote('Flat net ready');
+      } else {
+        const prevHinge = hingeOrderFold[currentStep - 1];
+        const prevFaceNumber = Number(prevHinge.dataset.child) + 1;
+        setStepNote(`Manual step ${currentStep} of ${hingeOrderFold.length}: face ${prevFaceNumber} rotated ${dirText[prevHinge.dataset.dir]}`);
+      }
+
+      animating = false;
+      updateButtonStates();
+    }
+
+    async function animateFold(targetFolded) {
+      if (animating) return;
+      const maxSteps = hingeOrderFold.length;
+      if (targetFolded && currentStep === maxSteps) return;
+      if (!targetFolded && currentStep === 0) return;
+
+      const runId = ++animationRun;
+      animating = true;
+      updateButtonStates();
+
+      if (targetFolded) {
+        while (currentStep < maxSteps) {
+          if (runId !== animationRun) return;
+          const hinge = hingeOrderFold[currentStep];
+          const faceNumber = Number(hinge.dataset.child) + 1;
+          const axis = axisForDir(hinge.dataset.dir);
+          const angle = angleForDir(hinge.dataset.dir, true);
+
+          setStepNote(`Fold step ${currentStep + 1} of ${maxSteps}: face ${faceNumber} rotates ${dirText[hinge.dataset.dir]}`);
+          hinge.style.transition = `transform ${FOLD_MOVE_MS}ms cubic-bezier(.2,.8,.2,1)`;
+          requestAnimationFrame(() => {
+            hinge.style.transform = `rotate${axis}(${angle}deg)`;
+          });
+
+          await wait(FOLD_MOVE_MS + FOLD_HOLD_MS);
+          currentStep += 1;
+          setCameraPose(currentStep > 0);
+        }
+        folded = true;
+        setStepNote('Cube formed');
+      } else {
+        while (currentStep > 0) {
+          if (runId !== animationRun) return;
+          const hinge = hingeOrderFold[currentStep - 1];
+          const faceNumber = Number(hinge.dataset.child) + 1;
+          const axis = axisForDir(hinge.dataset.dir);
+          const angle = angleForDir(hinge.dataset.dir, false);
+
+          setStepNote(`Unfold step ${maxSteps - currentStep + 1} of ${maxSteps}: face ${faceNumber} opens back`);
+          hinge.style.transition = `transform ${FOLD_MOVE_MS}ms cubic-bezier(.2,.8,.2,1)`;
+          requestAnimationFrame(() => {
+            hinge.style.transform = `rotate${axis}(${angle}deg)`;
+          });
+
+          await wait(FOLD_MOVE_MS + FOLD_HOLD_MS);
+          currentStep -= 1;
+          setCameraPose(currentStep > 0);
+        }
+        folded = false;
+        setStepNote('Flat net ready');
+      }
+
+      animating = false;
+      updateButtonStates();
+    }
+
+    function replayAnimation() {
+      if (animating) return;
+      animationRun += 1;
+      buildFoldingModel(false);
+      currentStep = 0;
+      folded = false;
+      setCameraPose(false);
+      setStepNote('Flat net ready');
+      setTimeout(() => animateFold(true), 140);
+    }
+
+    function resetFoldExplorer() {
+      animationRun += 1;
+      animating = false;
+      folded = false;
+      currentStep = 0;
+      buildFoldingModel(false);
+      setCameraPose(false);
+      setStepNote('Flat net ready');
+      updateButtonStates();
+    }
+
+    function updateButtonStates() {
+      const maxSteps = hingeOrderFold.length;
+
+      foldBtn.disabled = animating || currentStep === maxSteps;
+      unfoldBtn.disabled = animating || currentStep === 0;
+      replayBtn.disabled = animating;
+
+      nextStepBtn.disabled = animating || currentStep === maxSteps;
+      prevStepBtn.disabled = animating || currentStep === 0;
+      resetFlatBtn.disabled = animating || currentStep === 0;
+      finishFoldBtn.disabled = animating || currentStep === maxSteps;
+
+      [foldBtn, unfoldBtn, replayBtn, nextStepBtn, prevStepBtn, resetFlatBtn, finishFoldBtn].forEach(btn => {
+        btn.style.opacity = btn.disabled ? '.6' : '1';
+        btn.style.cursor = btn.disabled ? 'not-allowed' : 'pointer';
+      });
+    }
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      selected = (selected - 1 + nets.length) % nets.length;
+      resetFoldExplorer();
+      render();
+    });
+
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      selected = (selected + 1) % nets.length;
+      resetFoldExplorer();
+      render();
+    });
+
+    document.getElementById('randomBtn').addEventListener('click', () => {
+      let next = selected;
+      while (next === selected) next = Math.floor(Math.random() * nets.length);
+      selected = next;
+      resetFoldExplorer();
+      render();
+    });
+
+    toggleAllBtn.addEventListener('click', () => {
+      showOnlySelected = !showOnlySelected;
+      render();
+    });
+
+    foldBtn.addEventListener('click', () => animateFold(true));
+    unfoldBtn.addEventListener('click', () => animateFold(false));
+    replayBtn.addEventListener('click', replayAnimation);
+
+    nextStepBtn.addEventListener('click', stepForward);
+    prevStepBtn.addEventListener('click', stepBackward);
+    resetFlatBtn.addEventListener('click', () => applyStepState(0, true));
+    finishFoldBtn.addEventListener('click', () => applyStepState(hingeOrderFold.length, true));
+
+    buildFoldingModel(false);
+    currentStep = 0;
+    setCameraPose(false);
+    setStepNote('Flat net ready');
+    render();
+  </script>
+</body>
+</html>
