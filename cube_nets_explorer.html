@@ -250,7 +250,7 @@
 
         <div class="tip">
           <strong>How to use:</strong><br>
-          Click <strong>Fold net</strong> to watch the selected 2D net close into a cube. Click <strong>Unfold net</strong> to open it again. You can also use <strong>Next fold step</strong> and <strong>Previous fold step</strong> to study one hinge movement at a time.
+          Click <strong>Fold net</strong> to watch the selected 2D net close into a cube. Click <strong>Unfold net</strong> to open it again. You can also use <strong>Next fold step</strong> and <strong>Previous fold step</strong> to study one hinge movement at a time. When the cube is fully formed, use <strong>Up</strong> to rotate horizontally and <strong>Down</strong> to rotate vertically for a different view.
         </div>
 
         <div class="legend">
@@ -296,6 +296,8 @@
 
     let hingeOrderFold = [];
     let currentStep = 0;
+    let foldedViewYaw = -28;
+    let foldedViewPitch = -24;
 
     const grid = document.getElementById('netsGrid');
     const selectedName = document.getElementById('selectedName');
@@ -316,6 +318,10 @@
     const FOLD_MOVE_MS = 900;
     const FOLD_HOLD_MS = 800;
     const STEP_MOVE_MS = 650;
+    const DEFAULT_FOLDED_PITCH = -24;
+    const DEFAULT_FOLDED_YAW = -28;
+    const FOLDED_YAW_STEP = 18;
+    const FOLDED_PITCH_STEP = 12;
     const faceColors = ['#dbeafe','#f3f4f6','#e0e7ff','#fef3c7','#dcfce7','#fee2e2'];
 
     const dirPriority = { up: 0, left: 1, right: 2, down: 3 };
@@ -510,9 +516,32 @@
     }
 
     function setCameraPose(isFoldedView) {
+      const yaw = currentStep === hingeOrderFold.length ? foldedViewYaw : DEFAULT_FOLDED_YAW;
+      const pitch = currentStep === hingeOrderFold.length ? foldedViewPitch : DEFAULT_FOLDED_PITCH;
       camera.style.transform = isFoldedView
-        ? 'translateY(8px) rotateX(-24deg) rotateY(-28deg) scale(.98)'
+        ? `translateY(8px) rotateX(${pitch}deg) rotateY(${yaw}deg) scale(.98)`
         : 'translateY(-2px) rotateX(-18deg) rotateY(-20deg) scale(.78)';
+    }
+
+    function resetFoldedViewRotation() {
+      foldedViewYaw = DEFAULT_FOLDED_YAW;
+      foldedViewPitch = DEFAULT_FOLDED_PITCH;
+    }
+
+    function rotateFoldedViewHorizontal(delta) {
+      if (animating) return;
+      if (currentStep !== hingeOrderFold.length) return;
+
+      foldedViewYaw += delta;
+      setCameraPose(true);
+    }
+
+    function rotateFoldedViewVertical(delta) {
+      if (animating) return;
+      if (currentStep !== hingeOrderFold.length) return;
+
+      foldedViewPitch += delta;
+      setCameraPose(true);
     }
 
     function buildFoldingModel(isFolded = false) {
@@ -760,6 +789,7 @@
     function replayAnimation() {
       if (animating) return;
       animationRun += 1;
+      resetFoldedViewRotation();
       buildFoldingModel(false);
       currentStep = 0;
       folded = false;
@@ -773,6 +803,7 @@
       animating = false;
       folded = false;
       currentStep = 0;
+      resetFoldedViewRotation();
       buildFoldingModel(false);
       setCameraPose(false);
       setStepNote('Flat net ready');
@@ -845,6 +876,12 @@
       } else if (event.key === 'ArrowLeft') {
         event.preventDefault();
         stepBackward();
+      } else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        rotateFoldedViewHorizontal(-FOLDED_YAW_STEP);
+      } else if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        rotateFoldedViewVertical(FOLDED_PITCH_STEP);
       }
     });
 
