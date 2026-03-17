@@ -797,6 +797,12 @@
       });
     }
 
+    function shouldIgnoreArrowShortcut(target) {
+      if (!target) return false;
+      const tagName = target.tagName;
+      return target.isContentEditable || tagName === 'INPUT' || tagName === 'TEXTAREA' || tagName === 'SELECT';
+    }
+
     document.getElementById('prevBtn').addEventListener('click', () => {
       selected = (selected - 1 + nets.length) % nets.length;
       resetFoldExplorer();
@@ -830,6 +836,17 @@
     prevStepBtn.addEventListener('click', stepBackward);
     resetFlatBtn.addEventListener('click', () => applyStepState(0, true));
     finishFoldBtn.addEventListener('click', () => applyStepState(hingeOrderFold.length, true));
+
+    document.addEventListener('keydown', (event) => {
+      if (shouldIgnoreArrowShortcut(event.target)) return;
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        stepForward();
+      } else if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        stepBackward();
+      }
+    });
 
     buildFoldingModel(false);
     currentStep = 0;
