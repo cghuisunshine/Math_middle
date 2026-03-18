@@ -354,6 +354,60 @@
         <div class="step-note" id="step4"></div>
         <div class="note" id="note4">五个侧面先围成封闭五边形带，再加上两个五边形底面，因此能形成五棱柱。</div>
       </div>
+
+      <div class="card" data-figure="5">
+        <div class="top">
+          <div class="title">（5）</div>
+          <div class="state bad" id="state5">不能折叠</div>
+        </div>
+        <div class="viewport"><div class="prism-stage" id="stage5"></div></div>
+        <div class="btns">
+          <button id="fold5" onclick="animateFigure(5, true)">折叠</button>
+          <button id="unfold5" class="secondary" onclick="animateFigure(5, false)">展开</button>
+          <button id="replay5" class="ghost" onclick="replayFigure(5)">重播</button>
+        </div>
+        <div class="btns">
+          <button id="prevStep5" class="secondary" onclick="stepFigure(5, -1)">上一步</button>
+          <button id="nextStep5" onclick="stepFigure(5, 1)">下一步</button>
+          <button id="flat5" class="ghost" onclick="resetFlatFigure(5)">平铺</button>
+          <button id="finish5" class="ghost" onclick="finishFoldFigure(5)">完成折叠</button>
+        </div>
+        <div class="btns">
+          <button id="left5" class="ghost" onclick="rotateFigure(5, 'yaw', -18)">左转</button>
+          <button id="right5" class="ghost" onclick="rotateFigure(5, 'yaw', 18)">右转</button>
+          <button id="up5" class="ghost" onclick="rotateFigure(5, 'pitch', -12)">上仰</button>
+          <button id="down5" class="ghost" onclick="rotateFigure(5, 'pitch', 12)">下俯</button>
+        </div>
+        <div class="step-note" id="step5"></div>
+        <div class="note" id="note5">四个侧面虽然能沿折线依次立起，但两端附着的面不能正确封住上下两个开口，因此不能形成正确的四棱柱。</div>
+      </div>
+
+      <div class="card" data-figure="6">
+        <div class="top">
+          <div class="title">（6）</div>
+          <div class="state ok" id="state6">能折叠</div>
+        </div>
+        <div class="viewport"><div class="prism-stage" id="stage6"></div></div>
+        <div class="btns">
+          <button id="fold6" onclick="animateFigure(6, true)">折叠</button>
+          <button id="unfold6" class="secondary" onclick="animateFigure(6, false)">展开</button>
+          <button id="replay6" class="ghost" onclick="replayFigure(6)">重播</button>
+        </div>
+        <div class="btns">
+          <button id="prevStep6" class="secondary" onclick="stepFigure(6, -1)">上一步</button>
+          <button id="nextStep6" onclick="stepFigure(6, 1)">下一步</button>
+          <button id="flat6" class="ghost" onclick="resetFlatFigure(6)">平铺</button>
+          <button id="finish6" class="ghost" onclick="finishFoldFigure(6)">完成折叠</button>
+        </div>
+        <div class="btns">
+          <button id="left6" class="ghost" onclick="rotateFigure(6, 'yaw', -18)">左转</button>
+          <button id="right6" class="ghost" onclick="rotateFigure(6, 'yaw', 18)">右转</button>
+          <button id="up6" class="ghost" onclick="rotateFigure(6, 'pitch', -12)">上仰</button>
+          <button id="down6" class="ghost" onclick="rotateFigure(6, 'pitch', 12)">下俯</button>
+        </div>
+        <div class="step-note" id="step6"></div>
+        <div class="note" id="note6">四个侧面会先围成封闭的四边形侧面带，再由上下两个底面封住两端，所以能形成四棱柱。</div>
+      </div>
     </div>
 
     <div class="small" id="pageHint">提示：先用“下一步”观察各条折线依次起作用；全部折完后，旋转按钮才会启用。</div>
@@ -361,6 +415,8 @@
 
   <script>
     let currentLang = new URLSearchParams(window.location.search).get('lang') === 'en' ? 'en' : 'zh';
+
+    const FIGURE_IDS = [1,2,3,4,5,6];
 
     const I18N = {
       zh: {
@@ -393,13 +449,17 @@
           1: '三个侧面会先围成三棱柱侧面带，但两块长方形底面封不住三角形开口，所以不是棱柱。',
           2: '四个侧面先围成封闭四边形带，再加上两个底面，因此能形成四棱柱。',
           3: '四个侧面能先围成封闭四边形带，但两个底面都落在同一侧，不能同时封住两端开口。',
-          4: '五个侧面先围成封闭五边形带，再加上两个五边形底面，因此能形成五棱柱。'
+          4: '五个侧面先围成封闭五边形带，再加上两个五边形底面，因此能形成五棱柱。',
+          5: '四个侧面虽然能沿折线依次立起，但两端附着的面不能正确封住上下两个开口，因此不能形成正确的四棱柱。',
+          6: '四个侧面会先围成封闭的四边形侧面带，再由上下两个底面封住两端，所以能形成四棱柱。'
         },
         results: {
           r1: '三个侧面已闭合成三棱柱侧面带，但两块长方形底面封不住三角形开口',
           r2: '侧面先闭合成四边形带，再加两个底面，形成四棱柱',
           r3: '四个侧面能闭合，但两个底面都落在同一侧，不能同时封住两端开口',
-          r4: '侧面先闭合成五边形带，再加两个五边形底面，形成五棱柱'
+          r4: '侧面先闭合成五边形带，再加两个五边形底面，形成五棱柱',
+          r5: '侧面带能形成，但两端附着的面不能正确封住两个开口，因此不能形成目标棱柱',
+          r6: '四个侧面先闭合成四边形带，再由上、下两个底面封口，形成四棱柱'
         },
         stepReady: '平面展开图已就绪',
         stepDone: (n) => `已完成全部 ${n} 步，现在可以旋转观察`,
@@ -445,13 +505,17 @@
           1: 'The three side faces can close into a triangular side band, but the two rectangular bases cannot seal the triangular opening, so this is not a prism.',
           2: 'The four side faces close into a rectangular side band, and the two bases match, so this forms a quadrilateral prism.',
           3: 'The four side faces can close, but both bases lie on the same side, so they cannot seal the two openings at the same time.',
-          4: 'The five side faces close into a pentagonal side band, and the two pentagonal bases match, so this forms a pentagonal prism.'
+          4: 'The five side faces close into a pentagonal side band, and the two pentagonal bases match, so this forms a pentagonal prism.',
+          5: 'The side faces can rise in sequence, but the attached end faces do not correctly seal the two openings, so this is not a valid quadrilateral prism net.',
+          6: 'The four side faces close into a rectangular band, and the upper and lower bases seal the two ends, so this is a valid quadrilateral prism net.'
         },
         results: {
           r1: 'The three side faces close into a triangular side band, but the two rectangular bases cannot seal the triangular opening',
           r2: 'The side faces close into a quadrilateral band, then the two bases complete a quadrilateral prism',
           r3: 'The four side faces can close, but both bases lie on the same side and cannot seal both openings',
-          r4: 'The side faces close into a pentagonal band, then the two pentagonal bases complete a pentagonal prism'
+          r4: 'The side faces close into a pentagonal band, then the two pentagonal bases complete a pentagonal prism',
+          r5: 'The side band can form, but the attached end faces do not properly seal the two openings',
+          r6: 'The four side faces first close into a quadrilateral band, then the top and bottom bases seal both ends'
         },
         stepReady: 'Flat net ready',
         stepDone: (n) => `All ${n} steps completed. Rotation is now available`,
@@ -483,12 +547,8 @@
       };
     }
 
-    const states = {
-      1: makeState(),
-      2: makeState(),
-      3: makeState(),
-      4: makeState()
-    };
+    const states = {};
+    FIGURE_IDS.forEach(id => states[id] = makeState());
 
     const models = {};
     const STEP_MOVE_MS = 650;
@@ -499,6 +559,7 @@
     const FOLDED_YAW_STEP = 18;
     const FOLDED_PITCH_STEP = 12;
     let activeFigureId = 1;
+
     function E(tag, className = '') {
       const node = document.createElement(tag);
       if (className) node.className = className;
@@ -727,6 +788,78 @@
             }
           ]
         }
+      },
+
+      5: {
+        valid: false,
+        camera: {
+          flat: { rx: -6, ry: -8, ty: -2, scale: 0.92 },
+          folded: { rx: -22, ry: -28, ty: 10, scale: 1.02 }
+        },
+        origin: { x: -150, y: -105 },
+        finalPhaseKey: 'badShape',
+        finalResultKey: 'r5',
+        finalResultGood: false,
+        root: {
+          shape:'rect', w:26, h:165, color:'#fff', bad:true,
+          children: [
+            {
+              dir:'right', shape:'rect', w:76, h:165, color:'#fff', stage:'side', foldAngle:-90,
+              children: [
+                {
+                  dir:'right', shape:'rect', w:24, h:165, color:'#fff', stage:'side', foldAngle:-90,
+                  children: [
+                    {
+                      dir:'up', shape:'rect', w:24, h:74, color:'#fff', stage:'side', foldAngle:90,
+                      children: [
+                        {
+                          dir:'right', shape:'rect', w:165, h:74, color:'#fff', stage:'side', foldAngle:90,
+                          children: [
+                            { dir:'right', shape:'rect', w:26, h:74, color:'#fff', stage:'base', foldAngle:-90, bad:true }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+
+      6: {
+        valid: true,
+        camera: {
+          flat: { rx: -6, ry: -10, ty: -2, scale: 0.94 },
+          folded: { rx: -25, ry: -28, ty: 12, scale: 1.04 }
+        },
+        origin: { x: -112, y: -100 },
+        finalPhaseKey: 'success',
+        finalResultKey: 'r6',
+        finalResultGood: true,
+        root: {
+          shape:'rect', w:38, h:176, color:'#fff',
+          children: [
+            {
+              dir:'right', shape:'rect', w:72, h:176, color:'#fff', stage:'side', foldAngle:-90,
+              children: [
+                { dir:'down', shape:'rect', w:68, h:36, color:'#fff', stage:'base', foldAngle:90 },
+                {
+                  dir:'right', shape:'rect', w:38, h:176, color:'#fff', stage:'side', foldAngle:-90,
+                  children: [
+                    {
+                      dir:'right', shape:'rect', w:72, h:176, color:'#fff', stage:'side', foldAngle:-90,
+                      children: [
+                        { dir:'up', shape:'rect', w:68, h:36, color:'#fff', stage:'base', foldAngle:-90 }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
       }
     };
 
@@ -817,7 +950,7 @@
       document.getElementById('langZh').classList.toggle('active', currentLang === 'zh');
       document.getElementById('langEn').classList.toggle('active', currentLang === 'en');
 
-      [1,2,3,4].forEach((id) => {
+      FIGURE_IDS.forEach((id) => {
         const spec = FIGURES[id];
         document.getElementById('state' + id).textContent = spec.valid ? lang.yes : lang.no;
         document.getElementById('note' + id).textContent = lang.notes[id];
@@ -1107,7 +1240,7 @@
       }
     });
 
-    [1,2,3,4].forEach(buildFigure);
+    FIGURE_IDS.forEach(buildFigure);
     setActiveFigure(activeFigureId);
     applyLanguage();
   </script>
