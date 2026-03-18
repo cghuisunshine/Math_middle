@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bilingual Algebra Tutorial | 双语代数入门</title>
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --card:#ffffff;
+      --ink:#1f2937;
+      --muted:#6b7280;
+      --line:#d1d5db;
+      --accent:#2563eb;
+      --accent-soft:#dbeafe;
+      --shadow:0 12px 30px rgba(0,0,0,.08);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial,"Microsoft YaHei","PingFang SC",sans-serif;
+      background:linear-gradient(180deg,#eef4ff 0%, var(--bg) 100%);
+      color:var(--ink);
+      line-height:1.65;
+    }
+    .wrap{
+      max-width:1100px;
+      margin:0 auto;
+      padding:28px 18px 48px;
+    }
+    .hero,.section,.practice,.answers{
+      background:var(--card);
+      border:1px solid rgba(0,0,0,.05);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+    }
+    .hero{padding:28px}
+    .section,.practice,.answers{padding:22px}
+    h1,h2,h3{margin:0 0 12px}
+    h1{font-size:2rem}
+    h2{font-size:1.35rem; padding-bottom:8px; border-bottom:2px solid var(--accent-soft)}
+    h3{font-size:1.05rem; margin-top:18px}
+    .sub{color:var(--muted)}
+    .toolbar{
+      display:flex;
+      flex-wrap:wrap;
+      gap:10px;
+      margin-top:16px;
+    }
+    button{
+      border:none;
+      border-radius:999px;
+      padding:10px 16px;
+      font-size:0.96rem;
+      cursor:pointer;
+      background:#e5e7eb;
+      color:var(--ink);
+    }
+    button.active{
+      background:var(--accent);
+      color:#fff;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:18px;
+      align-items:start;
+    }
+    .box{
+      background:#fbfdff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:14px 16px;
+    }
+    .en,.zh{margin:0}
+    .label{
+      display:inline-block;
+      font-size:.78rem;
+      font-weight:700;
+      letter-spacing:.04em;
+      text-transform:uppercase;
+      margin-bottom:8px;
+      padding:4px 8px;
+      border-radius:999px;
+      background:var(--accent-soft);
+      color:#1d4ed8;
+    }
+    ul,ol{padding-left:22px; margin:8px 0}
+    code{
+      background:#eef2ff;
+      padding:2px 6px;
+      border-radius:6px;
+      font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+    }
+    .example{
+      background:#f8fafc;
+      border-left:5px solid var(--accent);
+      padding:12px 14px;
+      border-radius:10px;
+      margin:10px 0;
+    }
+    .qa{margin:10px 0 0}
+    .footer{
+      text-align:center;
+      color:var(--muted);
+      font-size:.92rem;
+      padding-top:8px;
+    }
+    body.lang-en .zh,
+    body.lang-en .zh-only,
+    body.lang-zh .en,
+    body.lang-zh .en-only{display:none}
+    @media (max-width:800px){
+      .grid{grid-template-columns:1fr}
+      h1{font-size:1.6rem}
+    }
+  </style>
+</head>
+<body class="lang-both">
+  <div class="wrap">
+    <section class="hero">
+      <h1 class="en">Introduction to Algebra — Bilingual Tutorial</h1>
+      <h1 class="zh">代数入门——双语教程</h1>
+      <p class="sub en">A beginner-friendly handout in English and Chinese, based on the introductory algebra ideas: variables, expressions, equations, properties, and simple solving.</p>
+      <p class="sub zh">这是一个适合初学者的英汉双语讲义，内容包括：变量、式子、方程、运算性质，以及简单方程的解法。</p>
+      <div class="toolbar">
+        <button class="active" onclick="setLang('both', this)">Bilingual / 双语</button>
+        <button onclick="setLang('en', this)">English</button>
+        <button onclick="setLang('zh', this)">中文</button>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="en">1. What is Algebra?</h2>
+      <h2 class="zh">1. 什么是代数？</h2>
+      <div class="grid">
+        <div class="box en">
+          <div class="label">English</div>
+          <p>Algebra is a way of using letters and symbols to represent numbers.</p>
+          <div class="example"><strong>Example:</strong> In arithmetic we write <code>3 + 5 = 8</code>. In algebra we may write <code>x + 5 = 8</code>.</div>
+          <p>Here, <code>x</code> stands for a number we do not yet know.</p>
+          <h3>Explanation</h3>
+          <p>Algebra helps us describe patterns and rules. Instead of solving only one example, we can solve many similar problems with one idea.</p>
+        </div>
+        <div class="box zh">
+          <div class="label">中文</div>
+          <p>代数是一种用字母和符号来表示数字的方法。</p>
+          <div class="example"><strong>例子：</strong>在算术里我们写 <code>3 + 5 = 8</code>；在代数里我们可以写 <code>x + 5 = 8</code>。</div>
+          <p>这里的 <code>x</code> 表示一个我们暂时还不知道的数。</p>
+          <h3>解释</h3>
+          <p>代数可以帮助我们描述规律和规则。它不只是解决一个具体题目，而是用一个方法解决很多相似的问题。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="en">2. Variables</h2>
+      <h2 class="zh">2. 变量</h2>
+      <div class="grid">
+        <div class="box en">
+          <div class="label">English</div>
+          <p>A <strong>variable</strong> is a letter that represents a number.</p>
+          <ul>
+            <li><code>x</code>, <code>y</code>, <code>a</code>, <code>n</code></li>
+          </ul>
+          <div class="example">
+            If <code>x = 4</code>, then <code>x + 3 = 7</code>.<br>
+            If <code>y = 10</code>, then <code>2y = 20</code>.
+          </div>
+          <p>Variables are like placeholders for numbers.</p>
+        </div>
+        <div class="box zh">
+          <div class="label">中文</div>
+          <p><strong>变量</strong>是代表数字的字母。</p>
+          <ul>
+            <li><code>x</code>、<code>y</code>、<code>a</code>、<code>n</code></li>
+          </ul>
+          <div class="example">
+            如果 <code>x = 4</code>，那么 <code>x + 3 = 7</code>。<br>
+            如果 <code>y = 10</code>，那么 <code>2y = 20</code>。
+          </div>
+          <p>变量就像数字的占位符。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="en">3. Types of Numbers</h2>
+      <h2 class="zh">3. 数的类型</h2>
+      <div class="grid">
+        <div class="box en">
+          <div class="label">English</div>
+          <ul>
+            <li><strong>Whole numbers:</strong> 0, 1, 2, 3, ...</li>
+            <li><strong>Integers:</strong> ..., -2, -1, 0, 1, 2, ...</li>
+            <li><strong>Rational numbers:</strong> numbers that can be written as fractions, like <code>1/2</code> or <code>-3/4</code></li>
+          </ul>
+          <p><strong>Important fact:</strong> 0 is neither positive nor negative.</p>
+        </div>
+        <div class="box zh">
+          <div class="label">中文</div>
+          <ul>
+            <li><strong>全体整数中的非负数（whole numbers）：</strong>0，1，2，3，……</li>
+            <li><strong>整数（integers）：</strong>……，-2，-1，0，1，2，……</li>
+            <li><strong>有理数（rational numbers）：</strong>可以写成分数的数，例如 <code>1/2</code>、<code>-3/4</code></li>
+          </ul>
+          <p><strong>重要事实：</strong>0 既不是正数，也不是负数。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="en">4. Order of Operations</h2>
+      <h2 class="zh">4. 运算顺序</h2>
+      <div class="grid">
+        <div class="box en">
+          <div class="label">English</div>
+          <ol>
+            <li>Parentheses</li>
+            <li>Exponents</li>
+            <li>Multiplication and division, left to right</li>
+            <li>Addition and subtraction, left to right</li>
+          </ol>
+          <div class="example"><strong>Example:</strong> <code>2 + 3 × 4 = 2 + 12 = 14</code></div>
+          <div class="example"><strong>Example:</strong> <code>(2 + 3) × 4 = 5 × 4 = 20</code></div>
+          <p>Parentheses can completely change the answer.</p>
+        </div>
+        <div class="box zh">
+          <div class="label">中文</div>
+          <ol>
+            <li>先算括号</li>
+            <li>再算乘方</li>
+            <li>再算乘除，从左到右</li>
+            <li>最后算加减，从左到右</li>
+          </ol>
+          <div class="example"><strong>例子：</strong><code>2 + 3 × 4 = 2 + 12 = 14</code></div>
+          <div class="example"><strong>例子：</strong><code>(2 + 3) × 4 = 5 × 4 = 20</code></div>
+          <p>括号会明显改变答案，所以要先看有没有括号。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="en">5. Important Properties</h2>
+      <h2 class="zh">5. 重要运算性质</h2>
+      <div class="grid">
+        <div class="box en">
+          <div class="label">English</div>
+          <h3>Commutative Property</h3>
+          <p><code>a + b = b + a</code>, and <code>ab = ba</code></p>
+          <p>But subtraction and division are not commutative.</p>
+          <h3>Associative Property</h3>
+          <p><code>(a + b) + c = a + (b + c)</code></p>
+          <p><code>(ab)c = a(bc)</code></p>
+          <h3>Distributive Property</h3>
+          <p><code>a(b + c) = ab + ac</code></p>
+          <div class="example"><code>3(x + 2) = 3x + 6</code></div>
+        </div>
+        <div class="box zh">
+          <div class="label">中文</div>
+          <h3>交换律</h3>
+          <p><code>a + b = b + a</code>，以及 <code>ab = ba</code></p>
+          <p>但减法和除法不满足交换律。</p>
+          <h3>结合律</h3>
+          <p><code>(a + b) + c = a + (b + c)</code></p>
+          <p><code>(ab)c = a(bc)</code></p>
+          <h3>分配律</h3>
+          <p><code>a(b + c) = ab + ac</code></p>
+          <div class="example"><code>3(x + 2) = 3x + 6</code></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="en">6. Expressions and Equations</h2>
+      <h2 class="zh">6. 式子与方程</h2>
+      <div class="grid">
+        <div class="box en">
+          <div class="label">English</div>
+          <p>An <strong>expression</strong> is a math phrase without an equals sign.</p>
+          <ul><li><code>x + 5</code></li><li><code>3y - 2</code></li></ul>
+          <p>An <strong>equation</strong> says two things are equal.</p>
+          <ul><li><code>x + 3 = 7</code></li><li><code>2y = 10</code></li></ul>
+          <p>Think of an equation like a balance scale.</p>
+        </div>
+        <div class="box zh">
+          <div class="label">中文</div>
+          <p><strong>式子（expression）</strong>是没有等号的数学表达。</p>
+          <ul><li><code>x + 5</code></li><li><code>3y - 2</code></li></ul>
+          <p><strong>方程（equation）</strong>表示两边相等。</p>
+          <ul><li><code>x + 3 = 7</code></li><li><code>2y = 10</code></li></ul>
+          <p>可以把方程想象成一个天平，两边必须保持平衡。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="en">7. Solving Simple Equations</h2>
+      <h2 class="zh">7. 解简单方程</h2>
+      <div class="grid">
+        <div class="box en">
+          <div class="label">English</div>
+          <div class="example"><strong>Example 1:</strong> <code>x + 4 = 9</code><br>Subtract 4 from both sides: <code>x = 5</code></div>
+          <div class="example"><strong>Example 2:</strong> <code>3x = 12</code><br>Divide both sides by 3: <code>x = 4</code></div>
+          <div class="example"><strong>Example 3:</strong> <code>x / 5 = 7</code><br>Multiply both sides by 5: <code>x = 35</code></div>
+          <p>The goal is to get the variable alone.</p>
+        </div>
+        <div class="box zh">
+          <div class="label">中文</div>
+          <div class="example"><strong>例1：</strong><code>x + 4 = 9</code><br>两边都减去 4：<code>x = 5</code></div>
+          <div class="example"><strong>例2：</strong><code>3x = 12</code><br>两边都除以 3：<code>x = 4</code></div>
+          <div class="example"><strong>例3：</strong><code>x / 5 = 7</code><br>两边都乘以 5：<code>x = 35</code></div>
+          <p>目标是把变量单独留在一边。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="en">8. Combining Like Terms</h2>
+      <h2 class="zh">8. 合并同类项</h2>
+      <div class="grid">
+        <div class="box en">
+          <div class="label">English</div>
+          <p>Like terms have the same variable part.</p>
+          <ul>
+            <li><code>3x + 5x = 8x</code></li>
+            <li><code>7y - 2y = 5y</code></li>
+          </ul>
+          <p>But these cannot be combined:</p>
+          <ul>
+            <li><code>3x + 4</code></li>
+            <li><code>2x + 3y</code></li>
+          </ul>
+        </div>
+        <div class="box zh">
+          <div class="label">中文</div>
+          <p>同类项必须有相同的字母部分。</p>
+          <ul>
+            <li><code>3x + 5x = 8x</code></li>
+            <li><code>7y - 2y = 5y</code></li>
+          </ul>
+          <p>下面这些不能合并：</p>
+          <ul>
+            <li><code>3x + 4</code></li>
+            <li><code>2x + 3y</code></li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2 class="en">9. Exponents and Fractions</h2>
+      <h2 class="zh">9. 乘方与分数</h2>
+      <div class="grid">
+        <div class="box en">
+          <div class="label">English</div>
+          <p><strong>Exponents:</strong> <code>x² = x × x</code>, <code>x³ = x × x × x</code></p>
+          <p><strong>Fractions:</strong> To add fractions, use a common denominator.</p>
+          <div class="example"><code>1/4 + 2/4 = 3/4</code></div>
+          <p><strong>Warning:</strong> Never divide by 0.</p>
+        </div>
+        <div class="box zh">
+          <div class="label">中文</div>
+          <p><strong>乘方：</strong><code>x² = x × x</code>，<code>x³ = x × x × x</code></p>
+          <p><strong>分数：</strong>分数相加时，要先通分。</p>
+          <div class="example"><code>1/4 + 2/4 = 3/4</code></div>
+          <p><strong>注意：</strong>绝对不能除以 0。</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="practice">
+      <h2 class="en">10. Practice Questions</h2>
+      <h2 class="zh">10. 练习题</h2>
+      <div class="grid">
+        <div class="box en">
+          <div class="label">English</div>
+          <ol class="qa">
+            <li>What is a variable?</li>
+            <li>Is 0 positive, negative, or neither?</li>
+            <li>Is <code>x + 3</code> an expression or an equation?</li>
+            <li>Evaluate: <code>2 + 3 × 5</code></li>
+            <li>Evaluate: <code>(2 + 3) × 5</code></li>
+            <li>Simplify: <code>6x + 2x</code></li>
+            <li>Expand: <code>2(x + 4)</code></li>
+            <li>Solve: <code>x + 7 = 12</code></li>
+            <li>Solve: <code>4x = 20</code></li>
+            <li>Solve: <code>x / 3 = 6</code></li>
+          </ol>
+        </div>
+        <div class="box zh">
+          <div class="label">中文</div>
+          <ol class="qa">
+            <li>什么是变量？</li>
+            <li>0 是正数、负数，还是都不是？</li>
+            <li><code>x + 3</code> 是式子还是方程？</li>
+            <li>计算：<code>2 + 3 × 5</code></li>
+            <li>计算：<code>(2 + 3) × 5</code></li>
+            <li>化简：<code>6x + 2x</code></li>
+            <li>展开：<code>2(x + 4)</code></li>
+            <li>解方程：<code>x + 7 = 12</code></li>
+            <li>解方程：<code>4x = 20</code></li>
+            <li>解方程：<code>x / 3 = 6</code></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="answers">
+      <h2 class="en">11. Answers</h2>
+      <h2 class="zh">11. 答案</h2>
+      <div class="grid">
+        <div class="box en">
+          <div class="label">English</div>
+          <ol>
+            <li>A letter that represents a number</li>
+            <li>Neither</li>
+            <li>Expression</li>
+            <li>17</li>
+            <li>25</li>
+            <li><code>8x</code></li>
+            <li><code>2x + 8</code></li>
+            <li><code>x = 5</code></li>
+            <li><code>x = 5</code></li>
+            <li><code>x = 18</code></li>
+          </ol>
+        </div>
+        <div class="box zh">
+          <div class="label">中文</div>
+          <ol>
+            <li>代表数字的字母</li>
+            <li>都不是</li>
+            <li>式子</li>
+            <li>17</li>
+            <li>25</li>
+            <li><code>8x</code></li>
+            <li><code>2x + 8</code></li>
+            <li><code>x = 5</code></li>
+            <li><code>x = 5</code></li>
+            <li><code>x = 18</code></li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <p class="footer en">Tip: open this file in a browser and switch between English, Chinese, or bilingual mode.</p>
+    <p class="footer zh">提示：在浏览器中打开这个文件后，可以切换为英文、中文或双语模式。</p>
+  </div>
+
+  <script>
+    function setLang(mode, btn){
+      document.body.className = 'lang-' + mode;
+      document.querySelectorAll('.toolbar button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+  </script>
+</body>
+</html>
+
