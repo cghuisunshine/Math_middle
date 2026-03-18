@@ -39,6 +39,20 @@
       line-height:1.7;
       margin-bottom:18px;
     }
+    .lang-bar{
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+      margin-bottom:14px;
+    }
+    .lang-btn{
+      background:#eef2ff;
+      color:#1e3a8a;
+    }
+    .lang-btn.active{
+      background:var(--accent);
+      color:#fff;
+    }
     .grid{
       display:grid;
       grid-template-columns:repeat(2,minmax(340px,1fr));
@@ -211,6 +225,10 @@
       color:var(--muted);
       font-size:.92rem;
     }
+    .card.active-figure{
+      border-color:var(--accent);
+      box-shadow:0 18px 34px rgba(37,99,235,.14);
+    }
     @media (max-width: 900px){
       .grid{grid-template-columns:1fr}
       .viewport{height:320px}
@@ -219,17 +237,20 @@
 </head>
 <body>
   <div class="wrap">
-    <h1>棱柱展开图：逐步折叠与旋转观察</h1>
-    <div class="sub">
-      这版把交互改成和 <strong>cube_nets_explorer.html</strong> 一样的学习方式：
-      既可以自动折叠/展开，也可以<strong>一步一步手动折</strong>；当所有折线都完成后，还可以继续旋转视角观察立体结果。
+    <div class="lang-bar">
+      <button id="langZh" class="lang-btn active" onclick="setLanguage('zh')">中文</button>
+      <button id="langEn" class="lang-btn" onclick="setLanguage('en')">EN</button>
+    </div>
+    <h1 id="pageTitle">棱柱展开图：逐步折叠与旋转观察</h1>
+    <div class="sub" id="pageSub">
+      这版把交互改成和 <strong>cube_nets_explorer.html</strong> 一样的学习方式：既可以自动折叠/展开，也可以<strong>一步一步手动折</strong>；当所有折线都完成后，还可以继续旋转视角观察立体结果。
     </div>
 
     <div class="grid">
-      <div class="card">
+      <div class="card" data-figure="1">
         <div class="top">
           <div class="title">（1）</div>
-          <div class="state bad">不能折叠</div>
+          <div class="state bad" id="state1">不能折叠</div>
         </div>
         <div class="viewport"><div class="prism-stage" id="stage1"></div></div>
         <div class="btns">
@@ -250,13 +271,13 @@
           <button id="down1" class="ghost" onclick="rotateFigure(1, 'pitch', 12)">下俯</button>
         </div>
         <div class="step-note" id="step1"></div>
-        <div class="note">三个侧面会先围成三棱柱侧面带，但两块长方形底面封不住三角形开口，所以不是棱柱。</div>
+        <div class="note" id="note1">三个侧面会先围成三棱柱侧面带，但两块长方形底面封不住三角形开口，所以不是棱柱。</div>
       </div>
 
-      <div class="card">
+      <div class="card" data-figure="2">
         <div class="top">
           <div class="title">（2）</div>
-          <div class="state ok">能折叠</div>
+          <div class="state ok" id="state2">能折叠</div>
         </div>
         <div class="viewport"><div class="prism-stage" id="stage2"></div></div>
         <div class="btns">
@@ -277,13 +298,13 @@
           <button id="down2" class="ghost" onclick="rotateFigure(2, 'pitch', 12)">下俯</button>
         </div>
         <div class="step-note" id="step2"></div>
-        <div class="note">四个侧面先围成封闭四边形带，再加上两个底面，因此能形成四棱柱。</div>
+        <div class="note" id="note2">四个侧面先围成封闭四边形带，再加上两个底面，因此能形成四棱柱。</div>
       </div>
 
-      <div class="card">
+      <div class="card" data-figure="3">
         <div class="top">
           <div class="title">（3）</div>
-          <div class="state bad">不能折叠</div>
+          <div class="state bad" id="state3">不能折叠</div>
         </div>
         <div class="viewport"><div class="prism-stage" id="stage3"></div></div>
         <div class="btns">
@@ -304,13 +325,13 @@
           <button id="down3" class="ghost" onclick="rotateFigure(3, 'pitch', 12)">下俯</button>
         </div>
         <div class="step-note" id="step3"></div>
-        <div class="note">四个侧面能先围成封闭四边形带，但两个底面都落在同一侧，不能同时封住两端开口。</div>
+        <div class="note" id="note3">四个侧面能先围成封闭四边形带，但两个底面都落在同一侧，不能同时封住两端开口。</div>
       </div>
 
-      <div class="card">
+      <div class="card" data-figure="4">
         <div class="top">
           <div class="title">（4）</div>
-          <div class="state ok">能折叠</div>
+          <div class="state ok" id="state4">能折叠</div>
         </div>
         <div class="viewport"><div class="prism-stage" id="stage4"></div></div>
         <div class="btns">
@@ -331,14 +352,127 @@
           <button id="down4" class="ghost" onclick="rotateFigure(4, 'pitch', 12)">下俯</button>
         </div>
         <div class="step-note" id="step4"></div>
-        <div class="note">五个侧面先围成封闭五边形带，再加上两个五边形底面，因此能形成五棱柱。</div>
+        <div class="note" id="note4">五个侧面先围成封闭五边形带，再加上两个五边形底面，因此能形成五棱柱。</div>
       </div>
     </div>
 
-    <div class="small">提示：先用“下一步”观察各条折线依次起作用；全部折完后，旋转按钮才会启用。</div>
+    <div class="small" id="pageHint">提示：先用“下一步”观察各条折线依次起作用；全部折完后，旋转按钮才会启用。</div>
   </div>
 
   <script>
+    let currentLang = new URLSearchParams(window.location.search).get('lang') === 'en' ? 'en' : 'zh';
+
+    const I18N = {
+      zh: {
+        pageTitle: '棱柱展开图：逐步折叠与旋转观察',
+        pageSub: '这版把交互改成和 <strong>cube_nets_explorer.html</strong> 一样的学习方式：既可以自动折叠/展开，也可以<strong>一步一步手动折</strong>；当所有折线都完成后，还可以继续旋转视角观察立体结果。',
+        pageHint: '提示：可用方向键操作当前选中的图形：右/左键前进或回退一步；全部折完后，上/下键旋转视角。',
+        yes: '能折叠',
+        no: '不能折叠',
+        buttons: {
+          fold: '折叠',
+          unfold: '展开',
+          replay: '重播',
+          prevStep: '上一步',
+          nextStep: '下一步',
+          flat: '平铺',
+          finish: '完成折叠',
+          left: '左转',
+          right: '右转',
+          up: '上仰',
+          down: '下俯'
+        },
+        phases: {
+          side: '阶段 1：先折侧面',
+          bases: '阶段 2：侧面已闭合，开始添加底面',
+          badShape: '阶段 2 失败：底面形状不匹配',
+          badPosition: '阶段 2 失败：底面位置不正确',
+          success: '阶段 2 完成：底面匹配成功'
+        },
+        notes: {
+          1: '三个侧面会先围成三棱柱侧面带，但两块长方形底面封不住三角形开口，所以不是棱柱。',
+          2: '四个侧面先围成封闭四边形带，再加上两个底面，因此能形成四棱柱。',
+          3: '四个侧面能先围成封闭四边形带，但两个底面都落在同一侧，不能同时封住两端开口。',
+          4: '五个侧面先围成封闭五边形带，再加上两个五边形底面，因此能形成五棱柱。'
+        },
+        results: {
+          r1: '三个侧面已闭合成三棱柱侧面带，但两块长方形底面封不住三角形开口',
+          r2: '侧面先闭合成四边形带，再加两个底面，形成四棱柱',
+          r3: '四个侧面能闭合，但两个底面都落在同一侧，不能同时封住两端开口',
+          r4: '侧面先闭合成五边形带，再加两个五边形底面，形成五棱柱'
+        },
+        stepReady: '平面展开图已就绪',
+        stepDone: (n) => `已完成全部 ${n} 步，现在可以旋转观察`,
+        stepFmt: (cur, max, stage, dir) => `第 ${cur} / ${max} 步：${stage}${dir}`,
+        stageLabel: {
+          side: '侧面',
+          base: '底面'
+        },
+        dirText: {
+          up: '向上折起',
+          down: '向下折起',
+          left: '向左折起',
+          right: '向右折起'
+        }
+      },
+      en: {
+        pageTitle: 'Prism Nets: Step-by-Step Folding and Rotation',
+        pageSub: 'This version uses the same interaction style as <strong>cube_nets_explorer.html</strong>: you can auto-fold and unfold, study the net <strong>one hinge at a time</strong>, and rotate the solid after the final fold is complete.',
+        pageHint: 'Tip: arrow keys control the currently selected figure: Right/Left move one step forward/back, and after the full fold, Up/Down rotate the view.',
+        yes: 'Foldable',
+        no: 'Not Foldable',
+        buttons: {
+          fold: 'Fold',
+          unfold: 'Unfold',
+          replay: 'Replay',
+          prevStep: 'Previous Step',
+          nextStep: 'Next Step',
+          flat: 'Reset Flat',
+          finish: 'Finish Fold',
+          left: 'Rotate Left',
+          right: 'Rotate Right',
+          up: 'Tilt Up',
+          down: 'Tilt Down'
+        },
+        phases: {
+          side: 'Stage 1: Fold the side faces first',
+          bases: 'Stage 2: Side band closed, now add the bases',
+          badShape: 'Stage 2 Failed: Base shape does not match',
+          badPosition: 'Stage 2 Failed: Base position is incorrect',
+          success: 'Stage 2 Complete: Bases match'
+        },
+        notes: {
+          1: 'The three side faces can close into a triangular side band, but the two rectangular bases cannot seal the triangular opening, so this is not a prism.',
+          2: 'The four side faces close into a rectangular side band, and the two bases match, so this forms a quadrilateral prism.',
+          3: 'The four side faces can close, but both bases lie on the same side, so they cannot seal the two openings at the same time.',
+          4: 'The five side faces close into a pentagonal side band, and the two pentagonal bases match, so this forms a pentagonal prism.'
+        },
+        results: {
+          r1: 'The three side faces close into a triangular side band, but the two rectangular bases cannot seal the triangular opening',
+          r2: 'The side faces close into a quadrilateral band, then the two bases complete a quadrilateral prism',
+          r3: 'The four side faces can close, but both bases lie on the same side and cannot seal both openings',
+          r4: 'The side faces close into a pentagonal band, then the two pentagonal bases complete a pentagonal prism'
+        },
+        stepReady: 'Flat net ready',
+        stepDone: (n) => `All ${n} steps completed. Rotation is now available`,
+        stepFmt: (cur, max, stage, dir) => `Step ${cur} / ${max}: ${stage} ${dir}`,
+        stageLabel: {
+          side: 'side face',
+          base: 'base face'
+        },
+        dirText: {
+          up: 'folds upward',
+          down: 'folds downward',
+          left: 'folds to the left',
+          right: 'folds to the right'
+        }
+      }
+    };
+
+    function t() {
+      return I18N[currentLang];
+    }
+
     function makeState() {
       return {
         currentStep: 0,
@@ -362,13 +496,9 @@
     const FOLD_HOLD_MS = 340;
     const dirPriority = { up: 0, left: 1, right: 2, down: 3 };
     const stagePriority = { side: 0, base: 1 };
-    const dirText = {
-      up: '向上折起',
-      down: '向下折起',
-      left: '向左折起',
-      right: '向右折起'
-    };
-
+    const FOLDED_YAW_STEP = 18;
+    const FOLDED_PITCH_STEP = 12;
+    let activeFigureId = 1;
     function E(tag, className = '') {
       const node = document.createElement(tag);
       if (className) node.className = className;
@@ -377,6 +507,19 @@
 
     function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
     function wait(ms){ return new Promise(resolve => setTimeout(resolve, ms)); }
+
+    function shouldIgnoreArrowShortcut(target) {
+      if (!target) return false;
+      const tag = target.tagName ? target.tagName.toLowerCase() : '';
+      return tag === 'input' || tag === 'textarea' || tag === 'select' || target.isContentEditable;
+    }
+
+    function setActiveFigure(id) {
+      activeFigureId = id;
+      document.querySelectorAll('.card[data-figure]').forEach((card) => {
+        card.classList.toggle('active-figure', Number(card.dataset.figure) === id);
+      });
+    }
 
     function makePolygonSVG(type, w, h, fill, bad = false){
       const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -454,13 +597,15 @@
 
     const FIGURES = {
       1: {
+        valid: false,
         camera: {
           flat: { rx: -8, ry: -10, ty: 0, scale: 0.95 },
           folded: { rx: -24, ry: -26, ty: 8, scale: 1.02 }
         },
         origin: { x: -75, y: -70 },
-        finalPhase: '阶段 2 失败：底面形状不匹配',
-        finalResult: { text: '三个侧面已闭合成三棱柱侧面带，但两块长方形底面封不住三角形开口', good: false },
+        finalPhaseKey: 'badShape',
+        finalResultKey: 'r1',
+        finalResultGood: false,
         root: {
           shape:'rect', w:150, h:38, color:'#fff',
           children: [
@@ -480,13 +625,15 @@
         }
       },
       2: {
+        valid: true,
         camera: {
           flat: { rx: -6, ry: -10, ty: -2, scale: 0.95 },
           folded: { rx: -25, ry: -28, ty: 12, scale: 1.04 }
         },
         origin: { x: -88, y: -95 },
-        finalPhase: '阶段 2 完成：底面匹配成功',
-        finalResult: { text: '侧面先闭合成四边形带，再加两个底面，形成四棱柱', good: true },
+        finalPhaseKey: 'success',
+        finalResultKey: 'r2',
+        finalResultGood: true,
         root: {
           shape:'rect', w:148, h:36, color:'#fff',
           children: [
@@ -511,13 +658,15 @@
         }
       },
       3: {
+        valid: false,
         camera: {
           flat: { rx: -6, ry: -10, ty: -2, scale: 0.95 },
           folded: { rx: -24, ry: -28, ty: 10, scale: 1.02 }
         },
         origin: { x: -88, y: -95 },
-        finalPhase: '阶段 2 失败：底面位置不正确',
-        finalResult: { text: '四个侧面能闭合，但两个底面都落在同一侧，不能同时封住两端开口', good: false },
+        finalPhaseKey: 'badPosition',
+        finalResultKey: 'r3',
+        finalResultGood: false,
         root: {
           shape:'rect', w:148, h:36, color:'#fff',
           children: [
@@ -542,13 +691,15 @@
         }
       },
       4: {
+        valid: true,
         camera: {
           flat: { rx: -6, ry: -8, ty: -2, scale: 0.94 },
           folded: { rx: -23, ry: -32, ty: 10, scale: 1.04 }
         },
         origin: { x: -70, y: -78 },
-        finalPhase: '阶段 2 完成：底面匹配成功',
-        finalResult: { text: '侧面先闭合成五边形带，再加两个五边形底面，形成五棱柱', good: true },
+        finalPhaseKey: 'success',
+        finalResultKey: 'r4',
+        finalResultGood: true,
         root: {
           shape:'rect', w:28, h:156, color:'#fff',
           children: [
@@ -615,18 +766,19 @@
       const model = models[id];
       const state = states[id];
       const maxSteps = model.hingeOrder.length;
+      const lang = t();
 
       if (state.currentStep < model.sideStepCount) {
-        model.phase.textContent = '阶段 1：先折侧面';
+        model.phase.textContent = lang.phases.side;
       } else if (state.currentStep < maxSteps) {
-        model.phase.textContent = '阶段 2：侧面已闭合，开始添加底面';
+        model.phase.textContent = lang.phases.bases;
       } else {
-        model.phase.textContent = model.spec.finalPhase;
+        model.phase.textContent = lang.phases[model.spec.finalPhaseKey];
       }
 
       if (state.currentStep === maxSteps) {
-        model.result.textContent = model.spec.finalResult.text;
-        model.result.className = 'result-note ' + (model.spec.finalResult.good ? 'ok' : 'bad');
+        model.result.textContent = lang.results[model.spec.finalResultKey];
+        model.result.className = 'result-note ' + (model.spec.finalResultGood ? 'ok' : 'bad');
       } else {
         model.result.textContent = '';
         model.result.className = 'result-note';
@@ -637,20 +789,66 @@
       const model = models[id];
       const state = states[id];
       const maxSteps = model.hingeOrder.length;
+      const lang = t();
 
       if (state.currentStep === 0) {
-        model.stepNote.textContent = '平面展开图已就绪';
+        model.stepNote.textContent = lang.stepReady;
         return;
       }
 
       if (state.currentStep === maxSteps) {
-        model.stepNote.textContent = `已完成全部 ${maxSteps} 步，现在可以旋转观察`;
+        model.stepNote.textContent = lang.stepDone(maxSteps);
         return;
       }
 
       const hinge = model.hingeOrder[state.currentStep - 1];
-      const stageText = hinge.face.stage === 'side' ? '侧面' : '底面';
-      model.stepNote.textContent = `第 ${state.currentStep} / ${maxSteps} 步：${stageText}${dirText[hinge.face.dir]}`;
+      const stageText = lang.stageLabel[hinge.face.stage];
+      model.stepNote.textContent = lang.stepFmt(state.currentStep, maxSteps, stageText, lang.dirText[hinge.face.dir]);
+    }
+
+    function applyLanguage() {
+      const lang = t();
+      document.documentElement.lang = currentLang === 'en' ? 'en' : 'zh-CN';
+      document.title = lang.pageTitle;
+      document.getElementById('pageTitle').textContent = lang.pageTitle;
+      document.getElementById('pageSub').innerHTML = lang.pageSub;
+      document.getElementById('pageHint').textContent = lang.pageHint;
+
+      document.getElementById('langZh').classList.toggle('active', currentLang === 'zh');
+      document.getElementById('langEn').classList.toggle('active', currentLang === 'en');
+
+      [1,2,3,4].forEach((id) => {
+        const spec = FIGURES[id];
+        document.getElementById('state' + id).textContent = spec.valid ? lang.yes : lang.no;
+        document.getElementById('note' + id).textContent = lang.notes[id];
+
+        document.getElementById('fold' + id).textContent = lang.buttons.fold;
+        document.getElementById('unfold' + id).textContent = lang.buttons.unfold;
+        document.getElementById('replay' + id).textContent = lang.buttons.replay;
+        document.getElementById('prevStep' + id).textContent = lang.buttons.prevStep;
+        document.getElementById('nextStep' + id).textContent = lang.buttons.nextStep;
+        document.getElementById('flat' + id).textContent = lang.buttons.flat;
+        document.getElementById('finish' + id).textContent = lang.buttons.finish;
+        document.getElementById('left' + id).textContent = lang.buttons.left;
+        document.getElementById('right' + id).textContent = lang.buttons.right;
+        document.getElementById('up' + id).textContent = lang.buttons.up;
+        document.getElementById('down' + id).textContent = lang.buttons.down;
+
+        if (models[id]) {
+          setPhaseAndResult(id);
+          setStepNote(id);
+          updateButtons(id);
+        }
+      });
+    }
+
+    function setLanguage(lang) {
+      currentLang = lang === 'en' ? 'en' : 'zh';
+      const url = new URL(window.location.href);
+      if (currentLang === 'en') url.searchParams.set('lang', 'en');
+      else url.searchParams.delete('lang');
+      window.history.replaceState({}, '', url);
+      applyLanguage();
     }
 
     function updateButtons(id) {
@@ -703,6 +901,7 @@
     }
 
     async function stepForward(id) {
+      setActiveFigure(id);
       const model = models[id];
       const state = states[id];
       if (state.animating || state.currentStep >= model.hingeOrder.length) return;
@@ -725,6 +924,7 @@
     }
 
     async function stepBackward(id) {
+      setActiveFigure(id);
       const model = models[id];
       const state = states[id];
       if (state.animating || state.currentStep <= 0) return;
@@ -747,6 +947,7 @@
     }
 
     async function animateFigure(id, fold) {
+      setActiveFigure(id);
       const model = models[id];
       const state = states[id];
       const maxSteps = model.hingeOrder.length;
@@ -791,6 +992,7 @@
     }
 
     function replayFigure(id) {
+      setActiveFigure(id);
       const state = states[id];
       if (state.animating) return;
       state.animationRun += 1;
@@ -800,11 +1002,13 @@
     }
 
     function stepFigure(id, delta) {
+      setActiveFigure(id);
       if (delta > 0) return stepForward(id);
       return stepBackward(id);
     }
 
     function resetFlatFigure(id) {
+      setActiveFigure(id);
       const state = states[id];
       if (state.animating) return;
       state.animationRun += 1;
@@ -813,12 +1017,14 @@
     }
 
     function finishFoldFigure(id) {
+      setActiveFigure(id);
       const state = states[id];
       if (state.animating) return;
       applyStepState(id, models[id].hingeOrder.length, true);
     }
 
     function rotateFigure(id, axis, delta) {
+      setActiveFigure(id);
       const state = states[id];
       const model = models[id];
       if (state.animating) return;
@@ -879,7 +1085,31 @@
       applyStepState(id, 0, false);
     }
 
+    document.querySelectorAll('.card[data-figure]').forEach((card) => {
+      card.addEventListener('click', () => setActiveFigure(Number(card.dataset.figure)));
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (shouldIgnoreArrowShortcut(event.target)) return;
+
+      if (event.key === 'ArrowRight') {
+        event.preventDefault();
+        stepForward(activeFigureId);
+      } else if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        stepBackward(activeFigureId);
+      } else if (event.key === 'ArrowUp') {
+        event.preventDefault();
+        rotateFigure(activeFigureId, 'yaw', -FOLDED_YAW_STEP);
+      } else if (event.key === 'ArrowDown') {
+        event.preventDefault();
+        rotateFigure(activeFigureId, 'pitch', FOLDED_PITCH_STEP);
+      }
+    });
+
     [1,2,3,4].forEach(buildFigure);
+    setActiveFigure(activeFigureId);
+    applyLanguage();
   </script>
 </body>
 </html>
