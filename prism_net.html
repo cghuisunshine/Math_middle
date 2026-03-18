@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>棱柱展开图：逐步折叠与旋转观察</title>
+  <style>
+    :root{
+      --bg:#f6f8fc;
+      --card:#ffffff;
+      --ink:#1f2937;
+      --muted:#6b7280;
+      --line:#2f241f;
+      --ok:#16a34a;
+      --bad:#dc2626;
+      --ok-soft:#dcfce7;
+      --bad-soft:#fee2e2;
+      --accent:#2563eb;
+      --shadow:0 10px 28px rgba(0,0,0,.08);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial,"Microsoft YaHei","PingFang SC",sans-serif;
+      color:var(--ink);
+      background:linear-gradient(180deg,#eef4ff 0,#f8fafc 220px);
+    }
+    .wrap{
+      max-width:1340px;
+      margin:0 auto;
+      padding:24px;
+    }
+    h1{
+      margin:0 0 10px;
+      font-size:2rem;
+    }
+    .sub{
+      color:var(--muted);
+      line-height:1.7;
+      margin-bottom:18px;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(340px,1fr));
+      gap:18px;
+    }
+    .card{
+      background:var(--card);
+      border:1px solid #e5e7eb;
+      border-radius:20px;
+      box-shadow:var(--shadow);
+      padding:16px;
+    }
+    .top{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .title{
+      font-size:1.2rem;
+      font-weight:800;
+    }
+    .state{
+      padding:7px 11px;
+      border-radius:999px;
+      font-size:.92rem;
+      font-weight:800;
+      white-space:nowrap;
+    }
+    .state.ok{
+      background:var(--ok-soft);
+      color:#166534;
+      border:1px solid #bbf7d0;
+    }
+    .state.bad{
+      background:var(--bad-soft);
+      color:#991b1b;
+      border:1px solid #fecaca;
+    }
+    .viewport{
+      height:360px;
+      position:relative;
+      border:1px dashed #d7dfeb;
+      border-radius:16px;
+      background:
+        radial-gradient(circle at top, rgba(219,234,254,.72), transparent 52%),
+        linear-gradient(180deg,#fbfdff,#eef4ff);
+      margin-bottom:12px;
+      overflow:hidden;
+    }
+    .prism-stage{
+      position:relative;
+      width:100%;
+      height:100%;
+      perspective:1200px;
+      transform-style:preserve-3d;
+    }
+    .phase-note,
+    .result-note{
+      position:absolute;
+      left:14px;
+      right:14px;
+      text-align:center;
+      z-index:5;
+      pointer-events:none;
+    }
+    .phase-note{
+      top:12px;
+      color:#334155;
+      font-size:.96rem;
+      font-weight:800;
+    }
+    .result-note{
+      bottom:16px;
+      min-height:1.3em;
+      font-size:.94rem;
+      font-weight:800;
+    }
+    .result-note.ok{ color:#166534; }
+    .result-note.bad{ color:#dc2626; }
+    .camera{
+      position:absolute;
+      inset:0;
+      transform-style:preserve-3d;
+      transition:transform 320ms ease;
+    }
+    .scene{
+      position:absolute;
+      left:50%;
+      top:50%;
+      transform-style:preserve-3d;
+    }
+    .face-wrap,
+    .hinge{
+      position:absolute;
+      transform-style:preserve-3d;
+    }
+    .face-wrap{
+      pointer-events:none;
+    }
+    .face{
+      position:absolute;
+      inset:0;
+      transform-style:preserve-3d;
+      transform-origin:center center;
+    }
+    .panel{
+      width:100%;
+      height:100%;
+      background:#fff;
+      border:2px solid var(--line);
+      backface-visibility:visible;
+      box-shadow:0 8px 14px rgba(15,23,42,.08);
+    }
+    .panel.bad{
+      background:#fff5f5;
+      border-color:#a94442;
+    }
+    .panel svg{
+      width:100%;
+      height:100%;
+      display:block;
+      overflow:visible;
+    }
+    .btns{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:10px;
+    }
+    button{
+      border:0;
+      border-radius:12px;
+      padding:10px 14px;
+      background:var(--accent);
+      color:#fff;
+      cursor:pointer;
+      font-size:.95rem;
+      transition:filter .15s ease, opacity .15s ease;
+    }
+    button.secondary{
+      background:#eef2ff;
+      color:#1e3a8a;
+    }
+    button.ghost{
+      background:#f3f4f6;
+      color:#111827;
+    }
+    button:hover{ filter:brightness(.97); }
+    .step-note{
+      min-height:1.4rem;
+      margin:-2px 0 12px;
+      text-align:center;
+      color:var(--muted);
+      font-size:.92rem;
+      font-weight:700;
+    }
+    .note{
+      min-height:64px;
+      background:#f9fafb;
+      border:1px solid #e5e7eb;
+      border-radius:14px;
+      padding:12px;
+      line-height:1.65;
+      color:#374151;
+    }
+    .small{
+      margin-top:10px;
+      color:var(--muted);
+      font-size:.92rem;
+    }
+    @media (max-width: 900px){
+      .grid{grid-template-columns:1fr}
+      .viewport{height:320px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>棱柱展开图：逐步折叠与旋转观察</h1>
+    <div class="sub">
+      这版把交互改成和 <strong>cube_nets_explorer.html</strong> 一样的学习方式：
+      既可以自动折叠/展开，也可以<strong>一步一步手动折</strong>；当所有折线都完成后，还可以继续旋转视角观察立体结果。
+    </div>
+
+    <div class="grid">
+      <div class="card">
+        <div class="top">
+          <div class="title">（1）</div>
+          <div class="state bad">不能折叠</div>
+        </div>
+        <div class="viewport"><div class="prism-stage" id="stage1"></div></div>
+        <div class="btns">
+          <button id="fold1" onclick="animateFigure(1, true)">折叠</button>
+          <button id="unfold1" class="secondary" onclick="animateFigure(1, false)">展开</button>
+          <button id="replay1" class="ghost" onclick="replayFigure(1)">重播</button>
+        </div>
+        <div class="btns">
+          <button id="prevStep1" class="secondary" onclick="stepFigure(1, -1)">上一步</button>
+          <button id="nextStep1" onclick="stepFigure(1, 1)">下一步</button>
+          <button id="flat1" class="ghost" onclick="resetFlatFigure(1)">平铺</button>
+          <button id="finish1" class="ghost" onclick="finishFoldFigure(1)">完成折叠</button>
+        </div>
+        <div class="btns">
+          <button id="left1" class="ghost" onclick="rotateFigure(1, 'yaw', -18)">左转</button>
+          <button id="right1" class="ghost" onclick="rotateFigure(1, 'yaw', 18)">右转</button>
+          <button id="up1" class="ghost" onclick="rotateFigure(1, 'pitch', -12)">上仰</button>
+          <button id="down1" class="ghost" onclick="rotateFigure(1, 'pitch', 12)">下俯</button>
+        </div>
+        <div class="step-note" id="step1"></div>
+        <div class="note">三个侧面会先围成三棱柱侧面带，但两块长方形底面封不住三角形开口，所以不是棱柱。</div>
+      </div>
+
+      <div class="card">
+        <div class="top">
+          <div class="title">（2）</div>
+          <div class="state ok">能折叠</div>
+        </div>
+        <div class="viewport"><div class="prism-stage" id="stage2"></div></div>
+        <div class="btns">
+          <button id="fold2" onclick="animateFigure(2, true)">折叠</button>
+          <button id="unfold2" class="secondary" onclick="animateFigure(2, false)">展开</button>
+          <button id="replay2" class="ghost" onclick="replayFigure(2)">重播</button>
+        </div>
+        <div class="btns">
+          <button id="prevStep2" class="secondary" onclick="stepFigure(2, -1)">上一步</button>
+          <button id="nextStep2" onclick="stepFigure(2, 1)">下一步</button>
+          <button id="flat2" class="ghost" onclick="resetFlatFigure(2)">平铺</button>
+          <button id="finish2" class="ghost" onclick="finishFoldFigure(2)">完成折叠</button>
+        </div>
+        <div class="btns">
+          <button id="left2" class="ghost" onclick="rotateFigure(2, 'yaw', -18)">左转</button>
+          <button id="right2" class="ghost" onclick="rotateFigure(2, 'yaw', 18)">右转</button>
+          <button id="up2" class="ghost" onclick="rotateFigure(2, 'pitch', -12)">上仰</button>
+          <button id="down2" class="ghost" onclick="rotateFigure(2, 'pitch', 12)">下俯</button>
+        </div>
+        <div class="step-note" id="step2"></div>
+        <div class="note">四个侧面先围成封闭四边形带，再加上两个底面，因此能形成四棱柱。</div>
+      </div>
+
+      <div class="card">
+        <div class="top">
+          <div class="title">（3）</div>
+          <div class="state bad">不能折叠</div>
+        </div>
+        <div class="viewport"><div class="prism-stage" id="stage3"></div></div>
+        <div class="btns">
+          <button id="fold3" onclick="animateFigure(3, true)">折叠</button>
+          <button id="unfold3" class="secondary" onclick="animateFigure(3, false)">展开</button>
+          <button id="replay3" class="ghost" onclick="replayFigure(3)">重播</button>
+        </div>
+        <div class="btns">
+          <button id="prevStep3" class="secondary" onclick="stepFigure(3, -1)">上一步</button>
+          <button id="nextStep3" onclick="stepFigure(3, 1)">下一步</button>
+          <button id="flat3" class="ghost" onclick="resetFlatFigure(3)">平铺</button>
+          <button id="finish3" class="ghost" onclick="finishFoldFigure(3)">完成折叠</button>
+        </div>
+        <div class="btns">
+          <button id="left3" class="ghost" onclick="rotateFigure(3, 'yaw', -18)">左转</button>
+          <button id="right3" class="ghost" onclick="rotateFigure(3, 'yaw', 18)">右转</button>
+          <button id="up3" class="ghost" onclick="rotateFigure(3, 'pitch', -12)">上仰</button>
+          <button id="down3" class="ghost" onclick="rotateFigure(3, 'pitch', 12)">下俯</button>
+        </div>
+        <div class="step-note" id="step3"></div>
+        <div class="note">四个侧面能先围成封闭四边形带，但两个底面都落在同一侧，不能同时封住两端开口。</div>
+      </div>
+
+      <div class="card">
+        <div class="top">
+          <div class="title">（4）</div>
+          <div class="state ok">能折叠</div>
+        </div>
+        <div class="viewport"><div class="prism-stage" id="stage4"></div></div>
+        <div class="btns">
+          <button id="fold4" onclick="animateFigure(4, true)">折叠</button>
+          <button id="unfold4" class="secondary" onclick="animateFigure(4, false)">展开</button>
+          <button id="replay4" class="ghost" onclick="replayFigure(4)">重播</button>
+        </div>
+        <div class="btns">
+          <button id="prevStep4" class="secondary" onclick="stepFigure(4, -1)">上一步</button>
+          <button id="nextStep4" onclick="stepFigure(4, 1)">下一步</button>
+          <button id="flat4" class="ghost" onclick="resetFlatFigure(4)">平铺</button>
+          <button id="finish4" class="ghost" onclick="finishFoldFigure(4)">完成折叠</button>
+        </div>
+        <div class="btns">
+          <button id="left4" class="ghost" onclick="rotateFigure(4, 'yaw', -18)">左转</button>
+          <button id="right4" class="ghost" onclick="rotateFigure(4, 'yaw', 18)">右转</button>
+          <button id="up4" class="ghost" onclick="rotateFigure(4, 'pitch', -12)">上仰</button>
+          <button id="down4" class="ghost" onclick="rotateFigure(4, 'pitch', 12)">下俯</button>
+        </div>
+        <div class="step-note" id="step4"></div>
+        <div class="note">五个侧面先围成封闭五边形带，再加上两个五边形底面，因此能形成五棱柱。</div>
+      </div>
+    </div>
+
+    <div class="small">提示：先用“下一步”观察各条折线依次起作用；全部折完后，旋转按钮才会启用。</div>
+  </div>
+
+  <script>
+    function makeState() {
+      return {
+        currentStep: 0,
+        animating: false,
+        animationRun: 0,
+        foldedViewYaw: 0,
+        foldedViewPitch: 0
+      };
+    }
+
+    const states = {
+      1: makeState(),
+      2: makeState(),
+      3: makeState(),
+      4: makeState()
+    };
+
+    const models = {};
+    const STEP_MOVE_MS = 650;
+    const FOLD_MOVE_MS = 850;
+    const FOLD_HOLD_MS = 340;
+    const dirPriority = { up: 0, left: 1, right: 2, down: 3 };
+    const stagePriority = { side: 0, base: 1 };
+    const dirText = {
+      up: '向上折起',
+      down: '向下折起',
+      left: '向左折起',
+      right: '向右折起'
+    };
+
+    function E(tag, className = '') {
+      const node = document.createElement(tag);
+      if (className) node.className = className;
+      return node;
+    }
+
+    function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
+    function wait(ms){ return new Promise(resolve => setTimeout(resolve, ms)); }
+
+    function makePolygonSVG(type, w, h, fill, bad = false){
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+
+      const poly = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+      let pts = '';
+      if (type === 'pentagon-up') {
+        pts = `${w*0.18},${h} ${w*0.82},${h} ${w},${h*0.42} ${w*0.68},0 ${w*0.32},0`;
+      } else if (type === 'pentagon-down') {
+        pts = `${w*0.18},0 ${w*0.82},0 ${w},${h*0.58} ${w*0.68},${h} ${w*0.32},${h}`;
+      }
+      poly.setAttribute('points', pts);
+      poly.setAttribute('fill', fill);
+      poly.setAttribute('stroke', bad ? '#a94442' : '#2f241f');
+      poly.setAttribute('stroke-width', '2.2');
+      poly.setAttribute('stroke-linejoin', 'round');
+      svg.appendChild(poly);
+      return svg;
+    }
+
+    function createFaceElement(face){
+      const el = E('div', 'face');
+      el.style.width = face.w + 'px';
+      el.style.height = face.h + 'px';
+
+      const panel = E('div', 'panel' + (face.bad ? ' bad' : ''));
+      panel.style.background = face.shape === 'rect' ? (face.color || '#fff') : 'transparent';
+
+      if (face.shape !== 'rect') {
+        panel.appendChild(makePolygonSVG(face.shape, face.w, face.h, face.color || '#fff', !!face.bad));
+      }
+
+      el.appendChild(panel);
+      return el;
+    }
+
+    function axisForDir(dir){
+      return dir === 'left' || dir === 'right' ? 'Y' : 'X';
+    }
+
+    function childOffset(parent, child){
+      if (child.dir === 'right') return { ox: parent.w, oy: 0, x: 0, y: 0 };
+      if (child.dir === 'left') return { ox: 0, oy: 0, x: -child.w, y: 0 };
+      if (child.dir === 'up') return { ox: 0, oy: 0, x: 0, y: -child.h };
+      return { ox: 0, oy: parent.h, x: 0, y: 0 };
+    }
+
+    function buildFaceTree(face, hinges, depth = 0){
+      const wrap = E('div', 'face-wrap');
+      wrap.style.width = face.w + 'px';
+      wrap.style.height = face.h + 'px';
+      wrap.appendChild(createFaceElement(face));
+
+      (face.children || []).forEach(child => {
+        const hinge = E('div', 'hinge');
+        const childNode = buildFaceTree(child, hinges, depth + 1);
+        const offset = childOffset(face, child);
+
+        hinge.style.left = offset.ox + 'px';
+        hinge.style.top = offset.oy + 'px';
+        hinge.style.transformOrigin = '0 0';
+        hinge.style.transform = `rotate${axisForDir(child.dir)}(0deg)`;
+
+        childNode.style.left = offset.x + 'px';
+        childNode.style.top = offset.y + 'px';
+
+        hinge.appendChild(childNode);
+        wrap.appendChild(hinge);
+        hinges.push({ element: hinge, face: child, depth: depth + 1 });
+      });
+
+      return wrap;
+    }
+
+    const FIGURES = {
+      1: {
+        camera: {
+          flat: { rx: -8, ry: -10, ty: 0, scale: 0.95 },
+          folded: { rx: -24, ry: -26, ty: 8, scale: 1.02 }
+        },
+        origin: { x: -75, y: -70 },
+        finalPhase: '阶段 2 失败：底面形状不匹配',
+        finalResult: { text: '三个侧面已闭合成三棱柱侧面带，但两块长方形底面封不住三角形开口', good: false },
+        root: {
+          shape:'rect', w:150, h:38, color:'#fff',
+          children: [
+            {
+              dir:'down', shape:'rect', w:150, h:38, color:'#fff', stage:'side', foldAngle:120,
+              children: [
+                {
+                  dir:'down', shape:'rect', w:150, h:38, color:'#fff', stage:'side', foldAngle:120,
+                  children: [
+                    { dir:'left', shape:'rect', w:32, h:38, color:'#fff', stage:'base', foldAngle:90, bad:true },
+                    { dir:'right', shape:'rect', w:32, h:38, color:'#fff', stage:'base', foldAngle:-90, bad:true }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      2: {
+        camera: {
+          flat: { rx: -6, ry: -10, ty: -2, scale: 0.95 },
+          folded: { rx: -25, ry: -28, ty: 12, scale: 1.04 }
+        },
+        origin: { x: -88, y: -95 },
+        finalPhase: '阶段 2 完成：底面匹配成功',
+        finalResult: { text: '侧面先闭合成四边形带，再加两个底面，形成四棱柱', good: true },
+        root: {
+          shape:'rect', w:148, h:36, color:'#fff',
+          children: [
+            { dir:'left', shape:'rect', w:34, h:36, color:'#fff', stage:'base', foldAngle:90 },
+            {
+              dir:'down', shape:'rect', w:148, h:36, color:'#fff', stage:'side', foldAngle:90,
+              children: [
+                {
+                  dir:'down', shape:'rect', w:148, h:36, color:'#fff', stage:'side', foldAngle:90,
+                  children: [
+                    {
+                      dir:'down', shape:'rect', w:148, h:36, color:'#fff', stage:'side', foldAngle:90,
+                      children: [
+                        { dir:'right', shape:'rect', w:38, h:36, color:'#fff', stage:'base', foldAngle:-90 }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      3: {
+        camera: {
+          flat: { rx: -6, ry: -10, ty: -2, scale: 0.95 },
+          folded: { rx: -24, ry: -28, ty: 10, scale: 1.02 }
+        },
+        origin: { x: -88, y: -95 },
+        finalPhase: '阶段 2 失败：底面位置不正确',
+        finalResult: { text: '四个侧面能闭合，但两个底面都落在同一侧，不能同时封住两端开口', good: false },
+        root: {
+          shape:'rect', w:148, h:36, color:'#fff',
+          children: [
+            { dir:'left', shape:'rect', w:34, h:36, color:'#fff', stage:'base', foldAngle:90, bad:true },
+            {
+              dir:'down', shape:'rect', w:148, h:36, color:'#fff', stage:'side', foldAngle:90,
+              children: [
+                {
+                  dir:'down', shape:'rect', w:148, h:36, color:'#fff', stage:'side', foldAngle:90,
+                  children: [
+                    {
+                      dir:'down', shape:'rect', w:148, h:36, color:'#fff', stage:'side', foldAngle:90,
+                      children: [
+                        { dir:'left', shape:'rect', w:34, h:36, color:'#fff', stage:'base', foldAngle:90, bad:true }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      4: {
+        camera: {
+          flat: { rx: -6, ry: -8, ty: -2, scale: 0.94 },
+          folded: { rx: -23, ry: -32, ty: 10, scale: 1.04 }
+        },
+        origin: { x: -70, y: -78 },
+        finalPhase: '阶段 2 完成：底面匹配成功',
+        finalResult: { text: '侧面先闭合成五边形带，再加两个五边形底面，形成五棱柱', good: true },
+        root: {
+          shape:'rect', w:28, h:156, color:'#fff',
+          children: [
+            {
+              dir:'right', shape:'rect', w:28, h:156, color:'#fff', stage:'side', foldAngle:-72,
+              children: [
+                { dir:'up', shape:'pentagon-up', w:60, h:48, color:'#fff', stage:'base', foldAngle:-90 },
+                {
+                  dir:'right', shape:'rect', w:28, h:156, color:'#fff', stage:'side', foldAngle:-72,
+                  children: [
+                    {
+                      dir:'right', shape:'rect', w:28, h:156, color:'#fff', stage:'side', foldAngle:-72,
+                      children: [
+                        {
+                          dir:'right', shape:'rect', w:28, h:156, color:'#fff', stage:'side', foldAngle:-72,
+                          children: [
+                            { dir:'down', shape:'pentagon-down', w:60, h:48, color:'#fff', stage:'base', foldAngle:90 }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      }
+    };
+
+    function resetViewRotation(id) {
+      const spec = FIGURES[id];
+      states[id].foldedViewYaw = spec.camera.folded.ry;
+      states[id].foldedViewPitch = spec.camera.folded.rx;
+    }
+
+    function setCameraPose(id, foldedView) {
+      const spec = FIGURES[id];
+      const state = states[id];
+      const cam = foldedView ? {
+        rx: state.foldedViewPitch,
+        ry: state.foldedViewYaw,
+        ty: spec.camera.folded.ty,
+        scale: spec.camera.folded.scale
+      } : spec.camera.flat;
+
+      models[id].camera.style.transform =
+        `translateY(${cam.ty}px) rotateX(${cam.rx}deg) rotateY(${cam.ry}deg) scale(${cam.scale})`;
+    }
+
+    function computeHingeOrder(id) {
+      const model = models[id];
+      model.hingeOrder = [...model.hinges].sort((a, b) => {
+        const stageDiff = (stagePriority[a.face.stage] ?? 9) - (stagePriority[b.face.stage] ?? 9);
+        if (stageDiff !== 0) return stageDiff;
+        const depthDiff = a.depth - b.depth;
+        if (depthDiff !== 0) return depthDiff;
+        return (dirPriority[a.face.dir] ?? 99) - (dirPriority[b.face.dir] ?? 99);
+      });
+      model.sideStepCount = model.hingeOrder.filter(item => item.face.stage === 'side').length;
+    }
+
+    function setPhaseAndResult(id) {
+      const model = models[id];
+      const state = states[id];
+      const maxSteps = model.hingeOrder.length;
+
+      if (state.currentStep < model.sideStepCount) {
+        model.phase.textContent = '阶段 1：先折侧面';
+      } else if (state.currentStep < maxSteps) {
+        model.phase.textContent = '阶段 2：侧面已闭合，开始添加底面';
+      } else {
+        model.phase.textContent = model.spec.finalPhase;
+      }
+
+      if (state.currentStep === maxSteps) {
+        model.result.textContent = model.spec.finalResult.text;
+        model.result.className = 'result-note ' + (model.spec.finalResult.good ? 'ok' : 'bad');
+      } else {
+        model.result.textContent = '';
+        model.result.className = 'result-note';
+      }
+    }
+
+    function setStepNote(id) {
+      const model = models[id];
+      const state = states[id];
+      const maxSteps = model.hingeOrder.length;
+
+      if (state.currentStep === 0) {
+        model.stepNote.textContent = '平面展开图已就绪';
+        return;
+      }
+
+      if (state.currentStep === maxSteps) {
+        model.stepNote.textContent = `已完成全部 ${maxSteps} 步，现在可以旋转观察`;
+        return;
+      }
+
+      const hinge = model.hingeOrder[state.currentStep - 1];
+      const stageText = hinge.face.stage === 'side' ? '侧面' : '底面';
+      model.stepNote.textContent = `第 ${state.currentStep} / ${maxSteps} 步：${stageText}${dirText[hinge.face.dir]}`;
+    }
+
+    function updateButtons(id) {
+      const model = models[id];
+      const state = states[id];
+      const maxSteps = model.hingeOrder.length;
+      const fullyFolded = state.currentStep === maxSteps;
+      const canRotate = fullyFolded && !state.animating;
+
+      const flags = {
+        fold: state.animating || fullyFolded,
+        unfold: state.animating || state.currentStep === 0,
+        replay: state.animating,
+        prevStep: state.animating || state.currentStep === 0,
+        nextStep: state.animating || fullyFolded,
+        flat: state.animating || state.currentStep === 0,
+        finish: state.animating || fullyFolded,
+        left: !canRotate,
+        right: !canRotate,
+        up: !canRotate,
+        down: !canRotate
+      };
+
+      Object.entries(flags).forEach(([key, disabled]) => {
+        const btn = model.buttons[key];
+        btn.disabled = disabled;
+        btn.style.opacity = disabled ? '.6' : '1';
+        btn.style.cursor = disabled ? 'not-allowed' : 'pointer';
+      });
+    }
+
+    function applyStepState(id, stepCount, animated = false) {
+      const model = models[id];
+      const state = states[id];
+      const maxSteps = model.hingeOrder.length;
+      state.currentStep = clamp(stepCount, 0, maxSteps);
+
+      model.hingeOrder.forEach((hinge, index) => {
+        const folded = index < state.currentStep;
+        const axis = axisForDir(hinge.face.dir);
+        const angle = folded ? (hinge.face.foldAngle || 0) : 0;
+        hinge.element.style.transition = animated ? `transform ${STEP_MOVE_MS}ms cubic-bezier(.2,.8,.2,1)` : 'none';
+        hinge.element.style.transform = `rotate${axis}(${angle}deg)`;
+      });
+
+      setCameraPose(id, state.currentStep > 0);
+      setPhaseAndResult(id);
+      setStepNote(id);
+      updateButtons(id);
+    }
+
+    async function stepForward(id) {
+      const model = models[id];
+      const state = states[id];
+      if (state.animating || state.currentStep >= model.hingeOrder.length) return;
+
+      state.animating = true;
+      updateButtons(id);
+
+      const hinge = model.hingeOrder[state.currentStep];
+      const axis = axisForDir(hinge.face.dir);
+      hinge.element.style.transition = `transform ${STEP_MOVE_MS}ms cubic-bezier(.2,.8,.2,1)`;
+      hinge.element.style.transform = `rotate${axis}(${hinge.face.foldAngle || 0}deg)`;
+
+      await wait(STEP_MOVE_MS + 80);
+      state.currentStep += 1;
+      state.animating = false;
+      setCameraPose(id, state.currentStep > 0);
+      setPhaseAndResult(id);
+      setStepNote(id);
+      updateButtons(id);
+    }
+
+    async function stepBackward(id) {
+      const model = models[id];
+      const state = states[id];
+      if (state.animating || state.currentStep <= 0) return;
+
+      state.animating = true;
+      updateButtons(id);
+
+      const hinge = model.hingeOrder[state.currentStep - 1];
+      const axis = axisForDir(hinge.face.dir);
+      hinge.element.style.transition = `transform ${STEP_MOVE_MS}ms cubic-bezier(.2,.8,.2,1)`;
+      hinge.element.style.transform = `rotate${axis}(0deg)`;
+
+      await wait(STEP_MOVE_MS + 80);
+      state.currentStep -= 1;
+      state.animating = false;
+      setCameraPose(id, state.currentStep > 0);
+      setPhaseAndResult(id);
+      setStepNote(id);
+      updateButtons(id);
+    }
+
+    async function animateFigure(id, fold) {
+      const model = models[id];
+      const state = states[id];
+      const maxSteps = model.hingeOrder.length;
+      if (state.animating) return;
+      if (fold && state.currentStep === maxSteps) return;
+      if (!fold && state.currentStep === 0) return;
+
+      const runId = ++state.animationRun;
+      state.animating = true;
+      updateButtons(id);
+
+      if (fold) {
+        while (state.currentStep < maxSteps) {
+          if (runId !== state.animationRun) return;
+          const hinge = model.hingeOrder[state.currentStep];
+          const axis = axisForDir(hinge.face.dir);
+          hinge.element.style.transition = `transform ${FOLD_MOVE_MS}ms cubic-bezier(.2,.8,.2,1)`;
+          hinge.element.style.transform = `rotate${axis}(${hinge.face.foldAngle || 0}deg)`;
+          await wait(FOLD_MOVE_MS + FOLD_HOLD_MS);
+          state.currentStep += 1;
+          setCameraPose(id, state.currentStep > 0);
+          setPhaseAndResult(id);
+          setStepNote(id);
+        }
+      } else {
+        while (state.currentStep > 0) {
+          if (runId !== state.animationRun) return;
+          const hinge = model.hingeOrder[state.currentStep - 1];
+          const axis = axisForDir(hinge.face.dir);
+          hinge.element.style.transition = `transform ${FOLD_MOVE_MS}ms cubic-bezier(.2,.8,.2,1)`;
+          hinge.element.style.transform = `rotate${axis}(0deg)`;
+          await wait(FOLD_MOVE_MS + FOLD_HOLD_MS);
+          state.currentStep -= 1;
+          setCameraPose(id, state.currentStep > 0);
+          setPhaseAndResult(id);
+          setStepNote(id);
+        }
+      }
+
+      state.animating = false;
+      updateButtons(id);
+    }
+
+    function replayFigure(id) {
+      const state = states[id];
+      if (state.animating) return;
+      state.animationRun += 1;
+      resetViewRotation(id);
+      applyStepState(id, 0, false);
+      setTimeout(() => animateFigure(id, true), 140);
+    }
+
+    function stepFigure(id, delta) {
+      if (delta > 0) return stepForward(id);
+      return stepBackward(id);
+    }
+
+    function resetFlatFigure(id) {
+      const state = states[id];
+      if (state.animating) return;
+      state.animationRun += 1;
+      resetViewRotation(id);
+      applyStepState(id, 0, true);
+    }
+
+    function finishFoldFigure(id) {
+      const state = states[id];
+      if (state.animating) return;
+      applyStepState(id, models[id].hingeOrder.length, true);
+    }
+
+    function rotateFigure(id, axis, delta) {
+      const state = states[id];
+      const model = models[id];
+      if (state.animating) return;
+      if (state.currentStep !== model.hingeOrder.length) return;
+
+      if (axis === 'yaw') state.foldedViewYaw += delta;
+      if (axis === 'pitch') state.foldedViewPitch += delta;
+      setCameraPose(id, true);
+    }
+
+    function buildFigure(id){
+      const spec = FIGURES[id];
+      const stage = document.getElementById('stage' + id);
+      stage.innerHTML = '';
+
+      const phase = E('div', 'phase-note');
+      const result = E('div', 'result-note');
+      const camera = E('div', 'camera');
+      const scene = E('div', 'scene');
+
+      camera.appendChild(scene);
+      stage.appendChild(phase);
+      stage.appendChild(result);
+      stage.appendChild(camera);
+
+      const hinges = [];
+      const rootNode = buildFaceTree(spec.root, hinges, 0);
+      rootNode.style.left = spec.origin.x + 'px';
+      rootNode.style.top = spec.origin.y + 'px';
+      scene.appendChild(rootNode);
+
+      models[id] = {
+        spec,
+        phase,
+        result,
+        camera,
+        stepNote: document.getElementById('step' + id),
+        hinges,
+        hingeOrder: [],
+        sideStepCount: 0,
+        buttons: {
+          fold: document.getElementById('fold' + id),
+          unfold: document.getElementById('unfold' + id),
+          replay: document.getElementById('replay' + id),
+          prevStep: document.getElementById('prevStep' + id),
+          nextStep: document.getElementById('nextStep' + id),
+          flat: document.getElementById('flat' + id),
+          finish: document.getElementById('finish' + id),
+          left: document.getElementById('left' + id),
+          right: document.getElementById('right' + id),
+          up: document.getElementById('up' + id),
+          down: document.getElementById('down' + id)
+        }
+      };
+
+      resetViewRotation(id);
+      computeHingeOrder(id);
+      applyStepState(id, 0, false);
+    }
+
+    [1,2,3,4].forEach(buildFigure);
+  </script>
+</body>
+</html>
