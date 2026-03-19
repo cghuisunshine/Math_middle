@@ -1,0 +1,1690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chapter 1 Full Q&A | Introduction to Algebra</title>
+  <style>
+    :root {
+      --bg: #f5efe4;
+      --panel: #fffaf3;
+      --card: #ffffff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #9a3412;
+      --accent-soft: #ffedd5;
+      --line: #e9d5c1;
+      --shadow: 0 14px 34px rgba(87, 48, 14, 0.12);
+      --good: #14532d;
+      --radius: 18px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Avenir Next", "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top right, rgba(154, 52, 18, 0.14), transparent 28%),
+        linear-gradient(180deg, #fbf5ee 0%, var(--bg) 100%);
+      line-height: 1.58;
+    }
+
+    .shell {
+      max-width: 1260px;
+      margin: 0 auto;
+      padding: 24px 18px 56px;
+    }
+
+    .hero,
+    .panel,
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      margin-bottom: 18px;
+      padding: 28px;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 3.1vw, 3.2rem);
+      line-height: 1.03;
+      margin-bottom: 10px;
+      max-width: 13ch;
+    }
+
+    h2 {
+      font-size: 1.08rem;
+      margin-bottom: 10px;
+    }
+
+    .subhead {
+      color: var(--muted);
+      max-width: 80ch;
+    }
+
+    .hero-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .chip {
+      border: 1px solid #f3c79a;
+      border-radius: 999px;
+      padding: 7px 12px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 320px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      padding: 18px;
+    }
+
+    .sticky {
+      position: sticky;
+      top: 18px;
+    }
+
+    .control-group + .control-group,
+    .summary + .summary {
+      margin-top: 16px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 7px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      font-weight: 700;
+    }
+
+    select,
+    input[type="search"] {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 11px 12px;
+      font-size: 0.96rem;
+      background: #fff;
+      color: var(--text);
+    }
+
+    .button-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    button {
+      border: 1px solid #e2b98f;
+      border-radius: 12px;
+      background: #fff5e8;
+      color: var(--accent);
+      padding: 10px 12px;
+      font-size: 0.94rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #fee8cb;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .stat {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.28rem;
+      margin-top: 4px;
+    }
+
+    .summary {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    .summary ul {
+      margin: 10px 0 0 18px;
+      padding: 0;
+    }
+
+    .summary li + li {
+      margin-top: 6px;
+    }
+
+    details.settings {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+    }
+
+    details.settings summary {
+      cursor: pointer;
+      font-weight: 800;
+      color: var(--text);
+    }
+
+    .settings-row {
+      margin-top: 12px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .settings-row label {
+      min-width: 92px;
+      margin: 0;
+    }
+
+    .settings-row input {
+      flex: 1 1 220px;
+      min-width: 180px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      font-size: 0.95rem;
+    }
+
+    .settings-hint {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
+    .section-nav {
+      margin: 10px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .section-nav li + li {
+      margin-top: 8px;
+    }
+
+    .nav-link {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: #fff;
+      border: 1px solid var(--line);
+      color: var(--text);
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .cards {
+      display: grid;
+      gap: 14px;
+    }
+
+    .section-anchor {
+      padding: 14px 16px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.72);
+      color: var(--accent);
+      font-weight: 800;
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+      scroll-margin-top: 18px;
+    }
+
+    .card {
+      padding: 18px;
+      background: var(--card);
+    }
+
+    .card-head {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .tag {
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: #fff7ee;
+      color: var(--accent);
+      padding: 5px 9px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .tag.prompt {
+      background: #f7f7f7;
+      color: #4b5563;
+    }
+
+    .question,
+    .answer {
+      font-size: 0.98rem;
+    }
+
+    .practice-area {
+      margin-top: 16px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+    }
+
+    .practice-area label {
+      margin-bottom: 8px;
+      color: var(--text);
+      font-size: 0.92rem;
+    }
+
+    .response-box {
+      width: 100%;
+      min-height: 96px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px;
+      font: inherit;
+      color: var(--text);
+      background: #fff;
+      resize: vertical;
+    }
+
+    .question p + p,
+    .answer p + p {
+      margin-top: 8px;
+    }
+
+    .question ul,
+    .answer ul {
+      margin: 10px 0 0 18px;
+      padding: 0;
+    }
+
+    .question li + li,
+    .answer li + li {
+      margin-top: 6px;
+    }
+
+    .answer {
+      display: none;
+      margin-top: 14px;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      color: var(--good);
+    }
+
+    .card.revealed .answer {
+      display: block;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      align-items: center;
+    }
+
+    .feedback {
+      font-size: 0.92rem;
+      font-weight: 700;
+    }
+
+    .feedback.ok {
+      color: var(--good);
+    }
+
+    .feedback.warn {
+      color: #9a6700;
+    }
+
+    .feedback.bad {
+      color: #991b1b;
+    }
+
+    .empty {
+      border: 1px dashed #ddb792;
+      border-radius: var(--radius);
+      padding: 24px;
+      text-align: center;
+      color: var(--muted);
+      background: rgba(255, 255, 255, 0.7);
+    }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-top: 18px;
+    }
+
+    code {
+      background: #fff1dc;
+      border-radius: 6px;
+      padding: 1px 6px;
+    }
+
+    @media (max-width: 960px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .sticky {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <section class="hero">
+      <h1>Chapter 1 Full Q&A</h1>
+      <p class="subhead">
+        This page now follows the full Chapter 1 answer-manual block in
+        <code>02-Introduction to Algebra 答案.pdf</code>.
+        The contents run from Section <code>1.2</code> through Section <code>1.8</code>,
+        matching Chapter 1 solution pages 1 to 8 of the solutions manual.
+      </p>
+      <div class="hero-meta">
+        <span class="chip">All Chapter 1 answer-manual sections</span>
+        <span class="chip">1.2 to 1.8</span>
+        <span class="chip">32 full Q&A cards</span>
+        <span class="chip">Single standalone HTML file</span>
+      </div>
+    </section>
+
+    <div class="layout">
+      <aside class="panel sticky">
+        <div class="control-group">
+          <label for="sectionFilter">Filter by section</label>
+          <select id="sectionFilter">
+            <option value="all">All sections</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="searchBox">Search</label>
+          <input id="searchBox" type="search" placeholder="Try: reciprocal, radicals, negative exponents" />
+        </div>
+
+        <div class="control-group">
+          <div class="button-row">
+            <button id="shuffleBtn" type="button">Shuffle</button>
+            <button id="resetBtn" type="button">Reset order</button>
+            <button id="revealAllBtn" type="button">Reveal all</button>
+            <button id="hideAllBtn" type="button">Hide all</button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <div class="stats">
+            <div class="stat">
+              Visible
+              <strong id="visibleCount">0</strong>
+            </div>
+            <div class="stat">
+              Revealed
+              <strong id="revealedCount">0</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <details class="settings">
+            <summary>AI grading (optional)</summary>
+            <div class="settings-row">
+              <label for="grade-api-url">Grade API URL</label>
+              <input id="grade-api-url" type="text" placeholder="https://example.com/grade" />
+              <button id="btn-test-api" type="button">Test</button>
+              <span id="api-status" class="feedback"></span>
+            </div>
+            <div class="settings-hint">
+              If AI grading fails, the page falls back to a local overlap check against the model answer.
+            </div>
+          </details>
+        </div>
+
+        <div class="summary">
+          <h2>Section map</h2>
+          <ul class="section-nav">
+            <li><a class="nav-link" data-target-section="1.2" href="#section-1-2">1.2 Order of operations</a></li>
+            <li><a class="nav-link" data-target-section="1.3" href="#section-1-3">1.3 Commutative and associative ideas</a></li>
+            <li><a class="nav-link" data-target-section="1.4" href="#section-1-4">1.4 Distribution and factoring</a></li>
+            <li><a class="nav-link" data-target-section="1.5" href="#section-1-5">1.5 Equations</a></li>
+            <li><a class="nav-link" data-target-section="1.6" href="#section-1-6">1.6 Integer exponents</a></li>
+            <li><a class="nav-link" data-target-section="1.7" href="#section-1-7">1.7 Fractional exponents</a></li>
+            <li><a class="nav-link" data-target-section="1.8" href="#section-1-8">1.8 Radicals</a></li>
+          </ul>
+        </div>
+
+        <div class="summary">
+          <h2>Scope note</h2>
+          <p>
+            The solutions manual does not always restate the textbook prompt word for word.
+            Where the answer key only showed the worked expression, the question text here is reconstructed directly from that visible worked solution.
+          </p>
+          <p style="margin-top: 10px;">
+            <code>Check my answer</code> uses the AI grader when available and falls back to a local text-and-math overlap check if needed.
+          </p>
+        </div>
+      </aside>
+
+      <main>
+        <section class="cards" id="cards"></section>
+        <div class="footer-note">
+          The earlier short drill page has been replaced with the full Chapter 1 answer-manual sequence you pointed out.
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    const qaData = [
+      {
+        id: 1,
+        section: "1.2",
+        title: "Order of Operations",
+        prompt: "Problem 1.2.1",
+        questionHtml: `
+          <p>Evaluate each expression using the order of operations.</p>
+          <ul>
+            <li><strong>(a)</strong> 3<sup>2</sup> + 4 × 2</li>
+            <li><strong>(b)</strong> (5 - 8)(2 + 7)</li>
+            <li><strong>(c)</strong> (3<sup>3</sup> - 5<sup>2</sup>) × 5 - 8</li>
+            <li><strong>(d)</strong> 8 / (6 - 2) + 5</li>
+            <li><strong>(e)</strong> 8<sup>2</sup> / 4<sup>2</sup> + 3 × 4</li>
+            <li><strong>(f)</strong> 11 × 6<sup>(2<sup>2</sup> - 3)</sup></li>
+          </ul>
+        `,
+        answerHtml: `
+          <ul>
+            <li><strong>(a)</strong> 17</li>
+            <li><strong>(b)</strong> -27</li>
+            <li><strong>(c)</strong> 2</li>
+            <li><strong>(d)</strong> 7</li>
+            <li><strong>(e)</strong> 16</li>
+            <li><strong>(f)</strong> 66</li>
+          </ul>
+        `
+      },
+      {
+        id: 2,
+        section: "1.3",
+        title: "Commutative and Associative Properties",
+        prompt: "Problem 1.3.1",
+        questionHtml: `
+          <p>Multiple-choice reconstruction from the solutions manual:</p>
+          <p>Rewrite <code>63 - 27</code> as <code>63 + (-27)</code> and use the commutative property to reverse the addends. Which choice matches that rewrite?</p>
+        `,
+        answerHtml: `
+          <p><strong>Choice D.</strong> The rewrite is <code>63 + (-27) = (-27) + 63 = -27 + 63</code>.</p>
+        `
+      },
+      {
+        id: 3,
+        section: "1.3",
+        title: "Commutative and Associative Properties",
+        prompt: "Problem 1.3.2",
+        questionHtml: `
+          <p>Use the commutative and associative properties of addition to reorder terms and evaluate.</p>
+          <ul>
+            <li><strong>(a)</strong> 83 - 27 - 81</li>
+            <li><strong>(b)</strong> 273 - 8198 - 274 + 8200</li>
+          </ul>
+        `,
+        answerHtml: `
+          <ul>
+            <li><strong>(a)</strong> -25</li>
+            <li><strong>(b)</strong> 1</li>
+          </ul>
+        `
+      },
+      {
+        id: 4,
+        section: "1.3",
+        title: "Commutative and Associative Properties",
+        prompt: "Problem 1.3.3",
+        questionHtml: `
+          <p>Use the commutative and associative properties of multiplication to reorder factors and evaluate.</p>
+          <ul>
+            <li><strong>(a)</strong> 63 × (2/63) × (2/7)</li>
+            <li><strong>(b)</strong> (1/4) × 48 × 97 × (1/12)</li>
+          </ul>
+        `,
+        answerHtml: `
+          <ul>
+            <li><strong>(a)</strong> 4/7</li>
+            <li><strong>(b)</strong> 97</li>
+          </ul>
+        `
+      },
+      {
+        id: 5,
+        section: "1.3",
+        title: "Commutative and Associative Properties",
+        prompt: "Problem 1.3.4",
+        questionHtml: `
+          <p>If two numbers are the same, can you reverse them in a subtraction expression without changing the value?</p>
+        `,
+        answerHtml: `
+          <p><strong>Yes.</strong> If the two numbers are equal, then both differences are 0. Example: <code>5 - 5 = 5 - 5</code>.</p>
+        `
+      },
+      {
+        id: 6,
+        section: "1.4",
+        title: "Distribution and Factoring",
+        prompt: "Problem 1.4.1",
+        questionHtml: `
+          <p>Expand and evaluate using the distributive property.</p>
+          <ul>
+            <li><strong>(a)</strong> 6(3 + 5)</li>
+            <li><strong>(b)</strong> (4 + 8)(-2)</li>
+            <li><strong>(c)</strong> 7(5 - 2)</li>
+            <li><strong>(d)</strong> (8 - 13)(-3)</li>
+          </ul>
+        `,
+        answerHtml: `
+          <ul>
+            <li><strong>(a)</strong> 48</li>
+            <li><strong>(b)</strong> -24</li>
+            <li><strong>(c)</strong> 21</li>
+            <li><strong>(d)</strong> 15</li>
+          </ul>
+        `
+      },
+      {
+        id: 7,
+        section: "1.4",
+        title: "Distribution and Factoring",
+        prompt: "Problem 1.4.2",
+        questionHtml: `
+          <p>Richard made a sign mistake while distributing in <code>(-2)(5 - 3)</code>. Correct the work.</p>
+        `,
+        answerHtml: `
+          <p>Richard forgot the negative sign before the 3.</p>
+          <p>The correct distribution is <code>(-2)(5 - 3) = (-2)×5 + (-2)×(-3) = -10 + 6 = -4</code>.</p>
+        `
+      },
+      {
+        id: 8,
+        section: "1.4",
+        title: "Distribution and Factoring",
+        prompt: "Problem 1.4.3",
+        questionHtml: `
+          <p>Factor out the common factor 4.</p>
+          <ul>
+            <li><strong>(a)</strong> 88 + 16</li>
+            <li><strong>(b)</strong> 400 - 32</li>
+            <li><strong>(c)</strong> -24 + 16 + 72</li>
+            <li><strong>(d)</strong> 92 - 160 + 36</li>
+          </ul>
+        `,
+        answerHtml: `
+          <ul>
+            <li><strong>(a)</strong> 4(22 + 4)</li>
+            <li><strong>(b)</strong> 4(100 - 8)</li>
+            <li><strong>(c)</strong> 4(-6 + 4 + 18)</li>
+            <li><strong>(d)</strong> 4(23 - 40 + 9)</li>
+          </ul>
+        `
+      },
+      {
+        id: 9,
+        section: "1.4",
+        title: "Distribution and Factoring",
+        prompt: "Problem 1.4.4",
+        questionHtml: `
+          <p>Simplify <code>(99 + 88 - 77 + 66) / 11</code>.</p>
+        `,
+        answerHtml: `
+          <p>Each term in the numerator is divisible by 11, so factor out the 11 and cancel.</p>
+          <p><strong>Answer:</strong> 16</p>
+        `
+      },
+      {
+        id: 10,
+        section: "1.4",
+        title: "Distribution and Factoring",
+        prompt: "Problem 1.4.5",
+        questionHtml: `
+          <p>Simplify each fraction by canceling common factors.</p>
+          <ul>
+            <li><strong>(a)</strong> (4 × 6 × 7) / (7 × 4)</li>
+            <li><strong>(b)</strong> 24 / 27</li>
+          </ul>
+        `,
+        answerHtml: `
+          <ul>
+            <li><strong>(a)</strong> 6</li>
+            <li><strong>(b)</strong> 8/9</li>
+          </ul>
+        `
+      },
+      {
+        id: 11,
+        section: "1.5",
+        title: "Equations",
+        prompt: "Problem 1.5.1",
+        questionHtml: `
+          <p>Stanley subtracted the equation <code>3 = 4 - 1</code> from the equation <code>16 = 2 + 4×3 + 2</code> and got</p>
+          <p><code>16 - 3 = 2 + 4×3 + 2 - 4 - 1.</code></p>
+          <p>Is the new equation true? If not, where did Stanley go wrong?</p>
+        `,
+        answerHtml: `
+          <p><strong>No.</strong> The left side is 13, but the right side is 11.</p>
+          <p>The mistake is that subtracting <code>4 - 1</code> should produce <code>-(4 - 1) = -4 + 1</code>, not <code>-4 - 1</code>.</p>
+        `
+      },
+      {
+        id: 12,
+        section: "1.5",
+        title: "Equations",
+        prompt: "Problem 1.5.2",
+        questionHtml: `
+          <p>If we take the reciprocal of both sides of an equation, are the two reciprocals equal?</p>
+        `,
+        answerHtml: `
+          <p><strong>Yes, as long as neither side is 0.</strong> If <code>a = b</code> and both are nonzero, then <code>1/a = 1/b</code>.</p>
+        `
+      },
+      {
+        id: 13,
+        section: "1.5",
+        title: "Equations",
+        prompt: "Problem 1.5.3",
+        questionHtml: `
+          <p>If <code>a = b</code> and <code>c = d</code>, and neither <code>a</code> nor <code>c</code> is 0, is it true that <code>a/c = b/d</code>?</p>
+        `,
+        answerHtml: `
+          <p><strong>Yes.</strong> Taking reciprocals of <code>c = d</code> gives <code>1/c = 1/d</code>, and multiplying by <code>a = b</code> leads to <code>a/c = b/d</code>.</p>
+        `
+      },
+      {
+        id: 14,
+        section: "1.6",
+        title: "Integer Exponents",
+        prompt: "Problem 1.6.1",
+        questionHtml: `
+          <p>Evaluate each expression.</p>
+          <ul>
+            <li><strong>(a)</strong> 7<sup>3</sup></li>
+            <li><strong>(b)</strong> 9584 × 0</li>
+            <li><strong>(c)</strong> A nonzero number raised to the 0 power</li>
+            <li><strong>(d)</strong> (-10)<sup>5</sup></li>
+            <li><strong>(e)</strong> 5<sup>-3</sup></li>
+            <li><strong>(f)</strong> (-1/3)<sup>-4</sup></li>
+          </ul>
+        `,
+        answerHtml: `
+          <ul>
+            <li><strong>(a)</strong> 343</li>
+            <li><strong>(b)</strong> 0</li>
+            <li><strong>(c)</strong> 1</li>
+            <li><strong>(d)</strong> -100,000</li>
+            <li><strong>(e)</strong> 1/125</li>
+            <li><strong>(f)</strong> 81</li>
+          </ul>
+        `
+      },
+      {
+        id: 15,
+        section: "1.6",
+        title: "Integer Exponents",
+        prompt: "Problem 1.6.2",
+        questionHtml: `
+          <p>Find <code>x</code>.</p>
+          <ul>
+            <li><strong>(a)</strong> 2<sup>5</sup> × 2<sup>9</sup> = 2<sup>x</sup></li>
+            <li><strong>(b)</strong> 5<sup>9</sup> / 5<sup>4</sup> = 5<sup>x</sup></li>
+            <li><strong>(c)</strong> (4<sup>3</sup>)<sup>7</sup> = 4<sup>x</sup></li>
+            <li><strong>(d)</strong> 1/4 = 2<sup>x</sup></li>
+            <li><strong>(e)</strong> (9<sup>2</sup> × 3) / 27<sup>2</sup> = 3<sup>x</sup></li>
+            <li><strong>(f)</strong> 125 = 25<sup>3</sup> / 5<sup>x</sup></li>
+          </ul>
+        `,
+        answerHtml: `
+          <ul>
+            <li><strong>(a)</strong> 14</li>
+            <li><strong>(b)</strong> 5</li>
+            <li><strong>(c)</strong> 21</li>
+            <li><strong>(d)</strong> -2</li>
+            <li><strong>(e)</strong> -1</li>
+            <li><strong>(f)</strong> 3</li>
+          </ul>
+        `
+      },
+      {
+        id: 16,
+        section: "1.6",
+        title: "Integer Exponents",
+        prompt: "Problem 1.6.3",
+        questionHtml: `
+          <p>Find <code>a</code> and <code>b</code> if</p>
+          <p><code>(3<sup>a</sup> × 8<sup>2</sup>)<sup>5</sup> = 3<sup>15</sup> × 8<sup>b</sup>.</code></p>
+        `,
+        answerHtml: `
+          <p>Matching exponents gives <code>5a = 15</code> and <code>b = 10</code>.</p>
+          <p><strong>Answer:</strong> <code>a = 3</code>, <code>b = 10</code></p>
+        `
+      },
+      {
+        id: 17,
+        section: "1.6",
+        title: "Integer Exponents",
+        prompt: "Problem 1.6.4",
+        questionHtml: `
+          <p>Are <code>(-3)<sup>5</sup></code> and <code>-3<sup>5</sup></code> equal?</p>
+        `,
+        answerHtml: `
+          <p><strong>Yes.</strong> Both equal -243 because the exponent is odd, so the sign stays negative in either interpretation here.</p>
+        `
+      },
+      {
+        id: 18,
+        section: "1.6",
+        title: "Integer Exponents",
+        prompt: "Problem 1.6.5",
+        questionHtml: `
+          <p>For which integers <code>n</code> is <code>(-2)<sup>n</sup></code> positive?</p>
+        `,
+        answerHtml: `
+          <p><strong>Exactly when <code>n</code> is even.</strong></p>
+          <p>Positive even powers and negative even powers are positive, and <code>n = 0</code> also gives a positive value.</p>
+        `
+      },
+      {
+        id: 19,
+        section: "1.6",
+        title: "Integer Exponents",
+        prompt: "Problem 1.6.6",
+        questionHtml: `
+          <p>Evaluate each expression.</p>
+          <ul>
+            <li><strong>(a)</strong> 32 × 25 × 2<sup>-2</sup> × (5/2)<sup>-3</sup></li>
+            <li><strong>(b)</strong> ((-2<sup>4</sup> × 3<sup>3</sup>)<sup>3</sup> × 8 × 27) / ((2<sup>3</sup> × 3<sup>3</sup>)<sup>4</sup>)</li>
+            <li><strong>(c)</strong> (-40)<sup>7</sup> / (2<sup>30</sup> × 25<sup>3</sup>)</li>
+          </ul>
+        `,
+        answerHtml: `
+          <ul>
+            <li><strong>(a)</strong> 64/5</li>
+            <li><strong>(b)</strong> -8</li>
+            <li><strong>(c)</strong> -5/512</li>
+          </ul>
+        `
+      },
+      {
+        id: 20,
+        section: "1.6",
+        title: "Integer Exponents",
+        prompt: "Problem 1.6.7",
+        questionHtml: `
+          <p>Solve <code>8<sup>x</sup> = 2</code>.</p>
+        `,
+        answerHtml: `
+          <p>Since <code>8 = 2<sup>3</sup></code>, we have <code>(2<sup>3</sup>)<sup>x</sup> = 2</code>, so <code>2<sup>3x</sup> = 2<sup>1</sup></code>.</p>
+          <p><strong>Answer:</strong> <code>x = 1/3</code></p>
+        `
+      },
+      {
+        id: 21,
+        section: "1.7",
+        title: "Fractional Exponents",
+        prompt: "Problem 1.7.1",
+        questionHtml: `
+          <p>Evaluate each expression.</p>
+          <ul>
+            <li><strong>(a)</strong> 64<sup>1/3</sup></li>
+            <li><strong>(b)</strong> 10000<sup>1/2</sup></li>
+            <li><strong>(c)</strong> (-216)<sup>1/3</sup></li>
+            <li><strong>(d)</strong> 7056<sup>1/2</sup></li>
+          </ul>
+        `,
+        answerHtml: `
+          <ul>
+            <li><strong>(a)</strong> 4</li>
+            <li><strong>(b)</strong> 100</li>
+            <li><strong>(c)</strong> -6</li>
+            <li><strong>(d)</strong> 84</li>
+          </ul>
+        `
+      },
+      {
+        id: 22,
+        section: "1.7",
+        title: "Fractional Exponents",
+        prompt: "Problem 1.7.2",
+        questionHtml: `
+          <p>Evaluate <code>0<sup>1/2</sup></code>.</p>
+        `,
+        answerHtml: `
+          <p><strong>Answer:</strong> 0</p>
+        `
+      },
+      {
+        id: 23,
+        section: "1.7",
+        title: "Fractional Exponents",
+        prompt: "Problem 1.7.3",
+        questionHtml: `
+          <p>Evaluate each expression.</p>
+          <ul>
+            <li><strong>(a)</strong> 4<sup>5/2</sup></li>
+            <li><strong>(b)</strong> (-1)<sup>36/5</sup></li>
+            <li><strong>(c)</strong> 27<sup>5/3</sup></li>
+            <li><strong>(d)</strong> (-8)<sup>-4/3</sup></li>
+          </ul>
+        `,
+        answerHtml: `
+          <ul>
+            <li><strong>(a)</strong> 32</li>
+            <li><strong>(b)</strong> 1</li>
+            <li><strong>(c)</strong> 243</li>
+            <li><strong>(d)</strong> 1/16</li>
+          </ul>
+        `
+      },
+      {
+        id: 24,
+        section: "1.7",
+        title: "Fractional Exponents",
+        prompt: "Problem 1.7.4",
+        questionHtml: `
+          <p>Answer each question.</p>
+          <ul>
+            <li><strong>(a)</strong> Is there a nonnegative number whose fourth power is 4, but which is not a whole number?</li>
+            <li><strong>(b)</strong> Is there a positive or negative number whose fourth power is -4?</li>
+          </ul>
+        `,
+        answerHtml: `
+          <ul>
+            <li><strong>(a)</strong> Yes. The number is <code>4<sup>1/4</sup></code>, approximately 1.414.</li>
+            <li><strong>(b)</strong> No. A fourth power cannot be negative.</li>
+          </ul>
+        `
+      },
+      {
+        id: 25,
+        section: "1.7",
+        title: "Fractional Exponents",
+        prompt: "Problem 1.7.5",
+        questionHtml: `
+          <p>Evaluate each expression.</p>
+          <ul>
+            <li><strong>(a)</strong> (5<sup>1/3</sup>)<sup>2</sup> × 5<sup>4/3</sup></li>
+            <li><strong>(b)</strong> (-2<sup>1/3</sup>)<sup>9</sup></li>
+            <li><strong>(c)</strong> (12<sup>1/2</sup>)<sup>3/2</sup> × 3<sup>1/4</sup> × 2<sup>1/2</sup></li>
+            <li><strong>(d)</strong> ((8<sup>2</sup> × 5<sup>3</sup>)<sup>3/5</sup>) / (2<sup>3/5</sup> × 5<sup>-1/5</sup>)</li>
+          </ul>
+        `,
+        answerHtml: `
+          <ul>
+            <li><strong>(a)</strong> 25</li>
+            <li><strong>(b)</strong> -8</li>
+            <li><strong>(c)</strong> 12</li>
+            <li><strong>(d)</strong> 200</li>
+          </ul>
+        `
+      },
+      {
+        id: 26,
+        section: "1.8",
+        title: "Radicals",
+        prompt: "Problem 1.8.1",
+        questionHtml: `
+          <p>Evaluate or simplify each radical expression.</p>
+          <ul>
+            <li><strong>(a)</strong> √121</li>
+            <li><strong>(b)</strong> √36000</li>
+            <li><strong>(c)</strong> √1323</li>
+            <li><strong>(d)</strong> √6.76</li>
+            <li><strong>(e)</strong> (√2)<sup>8</sup></li>
+            <li><strong>(f)</strong> (-√27)<sup>3</sup></li>
+          </ul>
+        `,
+        answerHtml: `
+          <ul>
+            <li><strong>(a)</strong> 11</li>
+            <li><strong>(b)</strong> 60√10</li>
+            <li><strong>(c)</strong> 21√3</li>
+            <li><strong>(d)</strong> 2.6</li>
+            <li><strong>(e)</strong> 16</li>
+            <li><strong>(f)</strong> -81√3</li>
+          </ul>
+        `
+      },
+      {
+        id: 27,
+        section: "1.8",
+        title: "Radicals",
+        prompt: "Problem 1.8.2",
+        questionHtml: `
+          <p>Evaluate each expression.</p>
+          <ul>
+            <li><strong>(a)</strong> ∛80</li>
+            <li><strong>(b)</strong> ⁴√81</li>
+            <li><strong>(c)</strong> √(32/625)</li>
+            <li><strong>(d)</strong> ∛(-0.001)</li>
+            <li><strong>(e)</strong> (∛7)<sup>9</sup></li>
+            <li><strong>(f)</strong> ⁴√(2<sup>4/3</sup>)</li>
+          </ul>
+        `,
+        answerHtml: `
+          <ul>
+            <li><strong>(a)</strong> 2∛10</li>
+            <li><strong>(b)</strong> 3</li>
+            <li><strong>(c)</strong> (2√2) / 5</li>
+            <li><strong>(d)</strong> -0.1</li>
+            <li><strong>(e)</strong> 343</li>
+            <li><strong>(f)</strong> ∛2</li>
+          </ul>
+        `
+      },
+      {
+        id: 28,
+        section: "1.8",
+        title: "Radicals",
+        prompt: "Problem 1.8.3",
+        questionHtml: `
+          <p>When can a cube root such as <code>∛n</code> be simplified by prime factorization?</p>
+        `,
+        answerHtml: `
+          <p>If the prime factorization of <code>n</code> contains any prime with exponent at least 3, then a perfect cube can be factored out of the radical.</p>
+          <p>Example from the solutions manual: <code>11250 = 2 × 3<sup>2</sup> × 5<sup>4</sup></code>, so <code>∛11250 = 5∛90</code>.</p>
+        `
+      },
+      {
+        id: 29,
+        section: "1.8",
+        title: "Radicals",
+        prompt: "Problem 1.8.4",
+        questionHtml: `
+          <p>Simplify each expression.</p>
+          <ul>
+            <li><strong>(a)</strong> √28 + √63 - √175</li>
+            <li><strong>(b)</strong> √135 - 3√1500 + √960</li>
+            <li><strong>(c)</strong> ∛375 - ∛192</li>
+            <li><strong>(d)</strong> ∛(256/27) + ∛32 - ∛(12/81)</li>
+          </ul>
+        `,
+        answerHtml: `
+          <ul>
+            <li><strong>(a)</strong> 0</li>
+            <li><strong>(b)</strong> -19√15</li>
+            <li><strong>(c)</strong> ∛3</li>
+            <li><strong>(d)</strong> 3∛4</li>
+          </ul>
+        `
+      },
+      {
+        id: 30,
+        section: "1.8",
+        title: "Radicals",
+        prompt: "Problem 1.8.5",
+        questionHtml: `
+          <p>Find <code>x</code>.</p>
+          <ul>
+            <li><strong>(a)</strong> √3 × ∛3 = 3<sup>x</sup></li>
+            <li><strong>(b)</strong> √8 × ⁵√4 = 2<sup>x</sup></li>
+          </ul>
+        `,
+        answerHtml: `
+          <ul>
+            <li><strong>(a)</strong> 5/6</li>
+            <li><strong>(b)</strong> 19/10</li>
+          </ul>
+        `
+      },
+      {
+        id: 31,
+        section: "1.8",
+        title: "Radicals",
+        prompt: "Problem 1.8.6",
+        questionHtml: `
+          <p>Write the expression in the form <code>a√b</code>, where <code>b</code> is squarefree:</p>
+          <p><code>(√600 - √150 + 3√54) / (6√32 - 2√50 - √288)</code></p>
+        `,
+        answerHtml: `
+          <p>The radicals simplify and combine to <code>7√3</code>.</p>
+          <p><strong>Answer:</strong> <code>a = 7</code>, <code>b = 3</code></p>
+        `
+      },
+      {
+        id: 32,
+        section: "1.8",
+        title: "Radicals",
+        prompt: "Problem 1.8.7",
+        questionHtml: `
+          <p>Write the expression in the form <code>a√b</code>, where <code>b</code> is squarefree:</p>
+          <p><code>(-√20 + 2√245) / (√270 - √120)</code></p>
+        `,
+        answerHtml: `
+          <p>The expression simplifies to <code>2√6</code>.</p>
+          <p><strong>Answer:</strong> <code>a = 2</code>, <code>b = 6</code></p>
+        `
+      }
+    ];
+
+    const cardsEl = document.getElementById("cards");
+    const sectionFilterEl = document.getElementById("sectionFilter");
+    const searchBoxEl = document.getElementById("searchBox");
+    const visibleCountEl = document.getElementById("visibleCount");
+    const revealedCountEl = document.getElementById("revealedCount");
+    const shuffleBtn = document.getElementById("shuffleBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const revealAllBtn = document.getElementById("revealAllBtn");
+    const hideAllBtn = document.getElementById("hideAllBtn");
+    const navLinks = [...document.querySelectorAll(".nav-link")];
+    const gradeApiUrlEl = document.getElementById("grade-api-url");
+    const btnTestApi = document.getElementById("btn-test-api");
+    const apiStatusEl = document.getElementById("api-status");
+    const responseState = new Map();
+    const revealedIds = new Set();
+    const DEFAULT_GRADE_API_URL = "https://lakesideart.gochatus.org/grade-service/grade";
+    const GRADE_API_STORAGE_KEY = "chapter1AlgebraPracticeGradeApiUrl";
+
+    let currentOrder = [...qaData];
+    let filters = { section: "all", search: "" };
+
+    function stripHtml(text) {
+      return text.replace(/<[^>]*>/g, " ").toLowerCase();
+    }
+
+    function uniqueSections(data) {
+      return [...new Set(data.map(item => item.section))];
+    }
+
+    function populateFilter() {
+      uniqueSections(qaData).forEach(section => {
+        const option = document.createElement("option");
+        option.value = section;
+        option.textContent = section;
+        sectionFilterEl.appendChild(option);
+      });
+    }
+
+    function matchesFilters(item) {
+      const matchesSection = filters.section === "all" || item.section === filters.section;
+      const haystack = stripHtml(
+        `${item.section} ${item.title} ${item.prompt} ${item.questionHtml} ${item.answerHtml}`
+      );
+      const matchesSearch = !filters.search || haystack.includes(filters.search);
+      return matchesSection && matchesSearch;
+    }
+
+    function updateStats() {
+      const visibleCards = [...cardsEl.querySelectorAll(".card")];
+      const revealedCards = visibleCards.filter(card => card.classList.contains("revealed"));
+      visibleCountEl.textContent = String(visibleCards.length);
+      revealedCountEl.textContent = String(revealedCards.length);
+    }
+
+    function setCardRevealed(card, shouldReveal) {
+      card.classList.toggle("revealed", shouldReveal);
+      const itemId = Number(card.dataset.itemId);
+      if (shouldReveal) {
+        revealedIds.add(itemId);
+      } else {
+        revealedIds.delete(itemId);
+      }
+
+      const button = card.querySelector(".toggle");
+      button.textContent = shouldReveal ? "Hide answer" : "Reveal answer";
+      updateStats();
+    }
+
+    function toggleAnswer(card) {
+      setCardRevealed(card, !card.classList.contains("revealed"));
+    }
+
+    function setFeedback(card, text, kind) {
+      const feedbackEl = card.querySelector(".feedback");
+      if (!feedbackEl) {
+        return;
+      }
+
+      feedbackEl.textContent = text || "";
+      feedbackEl.className = `feedback${kind ? ` ${kind}` : ""}`;
+
+      const itemId = Number(card.dataset.itemId);
+      const saved = responseState.get(itemId) || {};
+      responseState.set(itemId, {
+        ...saved,
+        feedbackText: text || "",
+        feedbackKind: kind || ""
+      });
+    }
+
+    function setApiStatus(text, kind) {
+      if (!apiStatusEl) {
+        return;
+      }
+
+      apiStatusEl.textContent = text || "";
+      apiStatusEl.className = `feedback${kind ? ` ${kind}` : ""}`;
+    }
+
+    function getGradeApiUrl() {
+      if (!gradeApiUrlEl) {
+        return null;
+      }
+
+      const url = (gradeApiUrlEl.value || "").trim();
+      return url || null;
+    }
+
+    function saveGradeApiUrl() {
+      if (!gradeApiUrlEl) {
+        return;
+      }
+
+      try {
+        localStorage.setItem(GRADE_API_STORAGE_KEY, (gradeApiUrlEl.value || "").trim());
+      } catch {}
+    }
+
+    async function fetchJsonWithTimeout(url, options, timeoutMs) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+
+      try {
+        const resp = await fetch(url, { ...options, signal: controller.signal });
+        const text = await resp.text().catch(() => "");
+        let data = null;
+
+        try {
+          data = text ? JSON.parse(text) : null;
+        } catch {
+          data = null;
+        }
+
+        return { ok: resp.ok, status: resp.status, data, text };
+      } catch (error) {
+        if (error && error.name === "AbortError") {
+          return { ok: false, status: 0, data: null, text: "", aborted: true };
+        }
+        throw error;
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
+    function extractFirstGradeResult(data) {
+      if (!data) {
+        return null;
+      }
+
+      if (Array.isArray(data.results) && data.results[0]) {
+        return data.results[0];
+      }
+      if (data.result && Array.isArray(data.result.results) && data.result.results[0]) {
+        return data.result.results[0];
+      }
+      if (data.model_result && Array.isArray(data.model_result.results) && data.model_result.results[0]) {
+        return data.model_result.results[0];
+      }
+      return null;
+    }
+
+    function deriveHealthUrl(gradeUrl) {
+      try {
+        const url = new URL(gradeUrl);
+        url.search = "";
+        url.hash = "";
+
+        if (url.pathname.endsWith("/grade")) {
+          url.pathname = url.pathname.replace(/\/grade$/, "/health");
+        } else {
+          url.pathname = url.pathname.replace(/\/+$/, "") + "/health";
+        }
+
+        return url.toString();
+      } catch {
+        return null;
+      }
+    }
+
+    async function testApi() {
+      const gradeUrl = getGradeApiUrl();
+      if (!gradeUrl) {
+        setApiStatus("Set a URL first.", "bad");
+        return;
+      }
+
+      setApiStatus("Testing...");
+
+      try {
+        const healthUrl = deriveHealthUrl(gradeUrl);
+        if (!healthUrl) {
+          setApiStatus("Invalid URL.", "bad");
+          return;
+        }
+
+        const { ok, status, data, aborted } = await fetchJsonWithTimeout(healthUrl, { method: "GET" }, 4000);
+        if (aborted) {
+          setApiStatus("Health check timed out.", "bad");
+          return;
+        }
+
+        if (!ok) {
+          setApiStatus(`Health check failed (${status}).`, "bad");
+          return;
+        }
+
+        const looksHealthy = !!(data && (data.status === "ok" || data.ok === true));
+        setApiStatus(looksHealthy ? "OK" : "OK (nonstandard response)", looksHealthy ? "ok" : "");
+      } catch {
+        setApiStatus("Health check failed.", "bad");
+      }
+    }
+
+    function normalizeTokens(text) {
+      return String(text || "")
+        .toLowerCase()
+        .replace(/[−–]/g, "-")
+        .replace(/[^a-z0-9./+\-\s]/g, " ")
+        .split(/\s+/)
+        .filter(Boolean);
+    }
+
+    function compactText(text) {
+      return normalizeTokens(text).join("");
+    }
+
+    function keywordTokens(text) {
+      const stopwords = new Set([
+        "a", "an", "and", "answer", "as", "at", "be", "both", "but", "by", "choice",
+        "correct", "each", "equals", "evaluate", "example", "expression", "find", "for",
+        "form", "if", "in", "is", "it", "neither", "no", "not", "of", "or", "problem",
+        "rewrite", "show", "simplify", "since", "so", "that", "the", "then", "there",
+        "this", "to", "true", "use", "value", "when", "where", "which", "with", "write",
+        "x", "y"
+      ]);
+
+      return normalizeTokens(text).filter(token => /\d/.test(token) || (token.length > 2 && !stopwords.has(token)));
+    }
+
+    function evaluateAnswer(userText, correctText) {
+      const compactUser = compactText(userText);
+      const compactCorrect = compactText(correctText);
+
+      if (!compactCorrect) {
+        return {
+          kind: "warn",
+          message: "No model answer text is available for checking on this card."
+        };
+      }
+
+      if (compactUser && compactUser === compactCorrect) {
+        return {
+          kind: "ok",
+          message: "Likely correct. Your answer matches the model answer very closely."
+        };
+      }
+
+      const userTokens = keywordTokens(userText);
+      const correctTokens = keywordTokens(correctText);
+
+      if (!userTokens.length || !correctTokens.length) {
+        return {
+          kind: "warn",
+          message: "The automatic check needs a little more text or math content to compare."
+        };
+      }
+
+      const correctSet = new Set(correctTokens);
+      const matchedCount = userTokens.filter(token => correctSet.has(token)).length;
+      const precision = matchedCount / userTokens.length;
+      const recall = matchedCount / correctTokens.length;
+      const score = precision + recall === 0 ? 0 : (2 * precision * recall) / (precision + recall);
+      const percent = Math.round(score * 100);
+
+      if (precision === 1 && recall >= 0.45) {
+        return {
+          kind: "ok",
+          message: `Likely correct. Strong token match with the model answer (${percent}%).`
+        };
+      }
+
+      if (score >= 0.55) {
+        return {
+          kind: "ok",
+          message: `Likely correct. Strong overlap with the model answer (${percent}%).`
+        };
+      }
+
+      if (score >= 0.25 || matchedCount >= 3) {
+        return {
+          kind: "warn",
+          message: `Partial match (${percent}%). Compare your work with the model answer below.`
+        };
+      }
+
+      return {
+        kind: "bad",
+        message: `Low match (${percent}%). Check the model answer and try again.`
+      };
+    }
+
+    async function gradeOne({ questionText, userText, correctText }) {
+      const gradeUrl = getGradeApiUrl();
+      const aiTimeoutMs = 60000;
+
+      if (gradeUrl) {
+        const pair = { question: questionText, answer: userText };
+        if (correctText) {
+          pair.reference_answer = correctText;
+        }
+
+        const { ok, status, data, text, aborted } = await fetchJsonWithTimeout(
+          gradeUrl,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ pairs: [pair] })
+          },
+          aiTimeoutMs
+        );
+
+        if (aborted) {
+          throw new Error(`timeout_after_${Math.round(aiTimeoutMs / 1000)}s`);
+        }
+
+        const first = extractFirstGradeResult(data);
+        if (!ok || !first) {
+          const reason = data && data.error ? data.error : `bad_response_${status}`;
+          const detail = text ? ` (${text.slice(0, 160)})` : "";
+          throw new Error(reason + detail);
+        }
+
+        const verdict = first.verdict === "correct" ? "correct" : "wrong";
+        return {
+          verdict,
+          explanation: (first.explanation || "").trim(),
+          mode: "ai"
+        };
+      }
+
+      const local = evaluateAnswer(userText, correctText);
+      return {
+        verdict: local.kind === "ok" ? "correct" : "wrong",
+        explanation: local.message,
+        mode: "local"
+      };
+    }
+
+    async function checkMyAnswer(card) {
+      const textarea = card.querySelector(".response-box");
+      const answerEl = card.querySelector(".answer");
+      const questionEl = card.querySelector(".question");
+      const itemId = Number(card.dataset.itemId);
+      const checkBtn = card.querySelector(".check-answer");
+      const userText = textarea ? textarea.value.trim() : "";
+      const correctText = answerEl ? answerEl.textContent.trim() : "";
+      const saved = responseState.get(itemId) || {};
+      const questionText = questionEl ? questionEl.textContent.trim() : "";
+
+      responseState.set(itemId, { ...saved, value: userText });
+
+      if (!userText) {
+        setFeedback(card, "No answer entered. The model answer is shown below.", "bad");
+        setCardRevealed(card, true);
+        return;
+      }
+
+      if (checkBtn) {
+        checkBtn.disabled = true;
+      }
+
+      setFeedback(card, getGradeApiUrl() ? "Checking with AI grader..." : "Checking...", "");
+
+      try {
+        const result = await gradeOne({ questionText, userText, correctText });
+        const isCorrect = result.verdict === "correct";
+        const prefix = isCorrect ? "Correct. " : "Wrong. ";
+        setFeedback(card, prefix + (result.explanation || ""), isCorrect ? "ok" : "bad");
+      } catch (error) {
+        console.warn("Grading failed:", error);
+        const local = evaluateAnswer(userText, correctText);
+        setFeedback(
+          card,
+          `AI grading unavailable; using overlap check. ${local.kind === "ok" ? "Correct." : local.kind === "warn" ? "Partial match." : "Wrong."} ${local.message}`,
+          local.kind
+        );
+      } finally {
+        if (checkBtn) {
+          checkBtn.disabled = false;
+        }
+        setCardRevealed(card, true);
+      }
+    }
+
+    function render() {
+      cardsEl.innerHTML = "";
+      const filtered = currentOrder.filter(matchesFilters);
+
+      if (!filtered.length) {
+        const empty = document.createElement("div");
+        empty.className = "empty";
+        empty.textContent = "No cards match the current filter.";
+        cardsEl.appendChild(empty);
+        visibleCountEl.textContent = "0";
+        revealedCountEl.textContent = "0";
+        return;
+      }
+
+      let lastRenderedSection = null;
+
+      filtered.forEach(item => {
+        if (lastRenderedSection !== item.section) {
+          const anchor = document.createElement("div");
+          anchor.className = "section-anchor";
+          anchor.id = `section-${item.section.replace(".", "-")}`;
+          anchor.dataset.sectionAnchor = item.section;
+          anchor.textContent = `${item.section} ${item.title}`;
+          cardsEl.appendChild(anchor);
+          lastRenderedSection = item.section;
+        }
+
+        const card = document.createElement("article");
+        card.className = "card";
+        card.dataset.itemId = String(item.id);
+        card.innerHTML = `
+          <div class="card-head">
+            <span class="tag">${item.section}</span>
+            <span class="tag">${item.title}</span>
+            <span class="tag prompt">${item.prompt}</span>
+          </div>
+          <div class="question">${item.questionHtml}</div>
+          <div class="practice-area">
+            <label for="response-${item.id}">Your answer</label>
+            <textarea
+              class="response-box"
+              id="response-${item.id}"
+              placeholder="Type your answer here, then click Check my answer."
+            ></textarea>
+          </div>
+          <div class="answer">${item.answerHtml}</div>
+          <div class="card-actions">
+            <button class="check-answer" type="button">Check my answer</button>
+            <button class="toggle" type="button">Reveal answer</button>
+            <span class="feedback"></span>
+          </div>
+        `;
+
+        const saved = responseState.get(item.id);
+        const textarea = card.querySelector(".response-box");
+        if (saved && textarea) {
+          textarea.value = saved.value || "";
+        }
+
+        if (saved && saved.feedbackText) {
+          setFeedback(card, saved.feedbackText, saved.feedbackKind);
+        }
+
+        if (revealedIds.has(item.id)) {
+          setCardRevealed(card, true);
+        } else {
+          setCardRevealed(card, false);
+        }
+
+        if (textarea) {
+          textarea.addEventListener("input", event => {
+            const prior = responseState.get(item.id) || {};
+            responseState.set(item.id, { ...prior, value: event.target.value });
+          });
+        }
+
+        card.querySelector(".check-answer").addEventListener("click", () => checkMyAnswer(card));
+        card.querySelector(".toggle").addEventListener("click", () => toggleAnswer(card));
+        cardsEl.appendChild(card);
+      });
+
+      updateStats();
+    }
+
+    function shuffleInPlace(list) {
+      for (let i = list.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [list[i], list[j]] = [list[j], list[i]];
+      }
+    }
+
+    function jumpToSection(section) {
+      const targetId = `section-${section.replace(".", "-")}`;
+
+      requestAnimationFrame(() => {
+        const target = document.getElementById(targetId);
+        if (!target) {
+          return;
+        }
+
+        target.scrollIntoView({ behavior: "smooth", block: "start" });
+        history.replaceState(null, "", `#${targetId}`);
+      });
+    }
+
+    sectionFilterEl.addEventListener("change", event => {
+      filters.section = event.target.value;
+      render();
+    });
+
+    searchBoxEl.addEventListener("input", event => {
+      filters.search = event.target.value.trim().toLowerCase();
+      render();
+    });
+
+    shuffleBtn.addEventListener("click", () => {
+      currentOrder = [...currentOrder];
+      shuffleInPlace(currentOrder);
+      render();
+    });
+
+    resetBtn.addEventListener("click", () => {
+      currentOrder = [...qaData];
+      render();
+    });
+
+    revealAllBtn.addEventListener("click", () => {
+      cardsEl.querySelectorAll(".card").forEach(card => {
+        if (!card.classList.contains("revealed")) {
+          toggleAnswer(card);
+        }
+      });
+    });
+
+    hideAllBtn.addEventListener("click", () => {
+      cardsEl.querySelectorAll(".card").forEach(card => {
+        if (card.classList.contains("revealed")) {
+          toggleAnswer(card);
+        }
+      });
+    });
+
+    if (gradeApiUrlEl) {
+      let savedGradeApiUrl = null;
+      try {
+        savedGradeApiUrl = localStorage.getItem(GRADE_API_STORAGE_KEY);
+      } catch {
+        savedGradeApiUrl = null;
+      }
+
+      gradeApiUrlEl.value = savedGradeApiUrl === null ? DEFAULT_GRADE_API_URL : savedGradeApiUrl;
+      gradeApiUrlEl.addEventListener("change", () => {
+        saveGradeApiUrl();
+        setApiStatus("", "");
+      });
+    }
+
+    if (btnTestApi) {
+      btnTestApi.addEventListener("click", testApi);
+    }
+
+    navLinks.forEach(link => {
+      link.addEventListener("click", event => {
+        event.preventDefault();
+        const section = link.dataset.targetSection;
+        currentOrder = [...qaData];
+        filters.section = "all";
+        filters.search = "";
+        sectionFilterEl.value = "all";
+        searchBoxEl.value = "";
+        render();
+        jumpToSection(section);
+      });
+    });
+
+    populateFilter();
+    render();
+
+    if (window.location.hash.startsWith("#section-")) {
+      const section = window.location.hash.slice("#section-".length).replace("-", ".");
+      jumpToSection(section);
+    }
+  </script>
+</body>
+</html>
