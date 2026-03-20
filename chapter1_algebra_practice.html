@@ -619,20 +619,21 @@
         title: "Distribution and Factoring",
         prompt: "Problem 1.4.1",
         questionHtml: `
-          <p>Expand and evaluate using the distributive property.</p>
+          <p>Evaluate each of the following first by computing the expression inside the parentheses, then by using the distributive property to expand the product. For example,</p>
+          <p><code>2 × (8 - 3) = 2 × 5 = 10</code>,<br><code>2 × (8 - 3) = 2 × 8 - 2 × 3 = 16 - 6 = 10</code>.</p>
           <ul>
-            <li><strong>(a)</strong> 6(3 + 5)</li>
-            <li><strong>(b)</strong> (4 + 8)(-2)</li>
-            <li><strong>(c)</strong> 7(5 - 2)</li>
-            <li><strong>(d)</strong> (8 - 13)(-3)</li>
+            <li><strong>(a)</strong> 6 × (3 + 5)</li>
+            <li><strong>(b)</strong> (4 + 8) × (-2)</li>
+            <li><strong>(c)</strong> 7 × (5 - 2)</li>
+            <li><strong>(d)</strong> (8 - 13) × (-3)</li>
           </ul>
         `,
         answerHtml: `
           <ul>
-            <li><strong>(a)</strong> 48</li>
-            <li><strong>(b)</strong> -24</li>
-            <li><strong>(c)</strong> 21</li>
-            <li><strong>(d)</strong> 15</li>
+            <li><strong>(a)</strong> <code>6 × (3 + 5) = 6 × 8 = 48</code>, and <code>6 × 3 + 6 × 5 = 18 + 30 = 48</code>.</li>
+            <li><strong>(b)</strong> <code>(4 + 8) × (-2) = 12 × (-2) = -24</code>, and <code>4 × (-2) + 8 × (-2) = -8 - 16 = -24</code>.</li>
+            <li><strong>(c)</strong> <code>7 × (5 - 2) = 7 × 3 = 21</code>, and <code>7 × 5 - 7 × 2 = 35 - 14 = 21</code>.</li>
+            <li><strong>(d)</strong> <code>(8 - 13) × (-3) = (-5) × (-3) = 15</code>, and <code>8 × (-3) - 13 × (-3) = -24 - (-39) = 15</code>.</li>
           </ul>
         `
       },
@@ -642,11 +643,14 @@
         title: "Distribution and Factoring",
         prompt: "Problem 1.4.2",
         questionHtml: `
-          <p>Richard made a sign mistake while distributing in <code>(-2)(5 - 3)</code>. Correct the work.</p>
+          <p>Richard expanded the product <code>(-2) × (5 - 3)</code> like this:</p>
+          <p><code>(-2) × (5 - 3) = (-2) × 5 + (-2) × (3) = -10 + (-6) = -16</code>.</p>
+          <p>Where did he go wrong?</p>
         `,
         answerHtml: `
-          <p>Richard forgot the negative sign before the 3.</p>
-          <p>The correct distribution is <code>(-2)(5 - 3) = (-2)×5 + (-2)×(-3) = -10 + 6 = -4</code>.</p>
+          <p>He distributed incorrectly across the subtraction.</p>
+          <p>Since <code>5 - 3 = 5 + (-3)</code>, the correct expansion is <code>(-2) × 5 + (-2) × (-3)</code>, not <code>(-2) × 5 + (-2) × 3</code>.</p>
+          <p>So the value is <code>-10 + 6 = -4</code>, not <code>-16</code>.</p>
         `
       },
       {
@@ -655,7 +659,7 @@
         title: "Distribution and Factoring",
         prompt: "Problem 1.4.3",
         questionHtml: `
-          <p>Factor out the common factor 4.</p>
+          <p>Factor a 4 out of each expression. For example, <code>36 + 44 = 4 × (9 + 11)</code>.</p>
           <ul>
             <li><strong>(a)</strong> 88 + 16</li>
             <li><strong>(b)</strong> 400 - 32</li>
@@ -678,11 +682,11 @@
         title: "Distribution and Factoring",
         prompt: "Problem 1.4.4",
         questionHtml: `
-          <p>Simplify <code>(99 + 88 - 77 + 66) / 11</code>.</p>
+          <p>Evaluate <code>(99 + 88 - 77 + 66) / 11</code> by factoring the numerator first.</p>
         `,
         answerHtml: `
-          <p>Each term in the numerator is divisible by 11, so factor out the 11 and cancel.</p>
-          <p><strong>Answer:</strong> 16</p>
+          <p>Factor 11 from the numerator:</p>
+          <p><code>(99 + 88 - 77 + 66) / 11 = 11(9 + 8 - 7 + 6) / 11 = 9 + 8 - 7 + 6 = 16</code>.</p>
         `
       },
       {
@@ -694,14 +698,19 @@
           <p>Simplify each fraction by canceling common factors.</p>
           <ul>
             <li><strong>(a)</strong> (4 × 6 × 7) / (7 × 4)</li>
-            <li><strong>(b)</strong> 24 / 27</li>
+            <li><strong>(b)</strong> (3 × 8) / 27</li>
           </ul>
+          <p><strong>Sidenote:</strong> You can use the distributive property to perform some products quickly in your head. For example,</p>
+          <p><code>8 × 89 = 8 × (90 - 1) = 8 × 90 - 8 × 1 = 720 - 8 = 712</code>,</p>
+          <p><code>21 × 398 = 21 × (400 - 2) = 21 × 400 - 21 × 2 = 8400 - 42 = 8358</code>.</p>
+          <p>Try it yourself on these products: <code>7 × 88</code>, <code>12 × 399</code>, <code>23 × 1997</code>.</p>
         `,
         answerHtml: `
           <ul>
             <li><strong>(a)</strong> 6</li>
             <li><strong>(b)</strong> 8/9</li>
           </ul>
+          <p>Mental-math products: <code>7 × 88 = 616</code>, <code>12 × 399 = 4788</code>, <code>23 × 1997 = 45931</code>.</p>
         `
       },
       {
