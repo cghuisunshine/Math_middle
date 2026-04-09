@@ -365,6 +365,95 @@
       resize: vertical;
     }
 
+    .math-preview {
+      margin-top: 12px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: #fffaf6;
+    }
+
+    .math-preview-label {
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .math-preview-empty {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.92rem;
+    }
+
+    .math-preview-output {
+      margin-top: 8px;
+      min-height: 1.5em;
+      font-size: 1.08rem;
+      line-height: 1.7;
+      word-break: break-word;
+    }
+
+    .math-preview-output[hidden],
+    .math-preview-empty[hidden] {
+      display: none;
+    }
+
+    .math-inline {
+      display: inline-flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.12em;
+    }
+
+    .math-var {
+      font-style: italic;
+    }
+
+    .math-frac {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      vertical-align: middle;
+      margin: 0 0.12em;
+      line-height: 1.1;
+    }
+
+    .math-frac .top,
+    .math-frac .bottom {
+      padding: 0 0.2em;
+    }
+
+    .math-frac .bar {
+      width: 100%;
+      border-top: 1.5px solid currentColor;
+      margin: 0.08em 0;
+    }
+
+    .math-sqrt {
+      display: inline-flex;
+      align-items: flex-start;
+      vertical-align: middle;
+      margin-right: 0.08em;
+    }
+
+    .math-sqrt-sign {
+      font-size: 1.2em;
+      line-height: 1;
+      margin-right: 0.05em;
+    }
+
+    .math-radicand {
+      border-top: 1.5px solid currentColor;
+      padding: 0.08em 0.18em 0 0.12em;
+    }
+
+    .math-paren {
+      display: inline-block;
+      padding: 0 0.02em;
+    }
+
     .answer-wrap {
       display: none;
       margin-top: 14px;
@@ -586,6 +675,417 @@
 
     function stripHtml(text) {
       return String(text || "").replace(/<[^>]*>/g, " ").toLowerCase();
+    }
+
+    function escapeHtml(text) {
+      return String(text || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function preprocessMathInput(text) {
+      let normalized = String(text || "")
+        .replace(/[−–]/g, "-")
+        .replace(/\\cdot|\\times/g, "*")
+        .replace(/\\div/g, "/")
+        .replace(/√/g, "sqrt");
+
+      let prior = "";
+      while (prior !== normalized) {
+        prior = normalized;
+        normalized = normalized
+          .replace(/\\frac\s*\{([^{}]+)\}\s*\{([^{}]+)\}/g, "($1)/($2)")
+          .replace(/\\sqrt\s*\{([^{}]+)\}/g, "sqrt($1)");
+      }
+
+      return normalized.replace(/[{}]/g, match => (match === "{" ? "(" : ")"));
+    }
+
+    function tokenizeMath(text) {
+      const tokens = [];
+      let index = 0;
+
+      while (index < text.length) {
+        const chunk = text.slice(index);
+
+        if (/^\s+/.test(chunk)) {
+          index += chunk.match(/^\s+/)[0].length;
+          continue;
+        }
+
+        const relation = chunk.match(/^(<=|>=|!=)/);
+        if (relation) {
+          tokens.push({ type: "op", value: relation[1] });
+          index += relation[1].length;
+          continue;
+        }
+
+        const number = chunk.match(/^\d+(?:\.\d+)?/);
+        if (number) {
+          tokens.push({ type: "number", value: number[0] });
+          index += number[0].length;
+          continue;
+        }
+
+        const identifier = chunk.match(/^[A-Za-z]+/);
+        if (identifier) {
+          const value = identifier[0];
+          tokens.push({ type: value === "sqrt" ? "sqrt" : "identifier", value });
+          index += value.length;
+          continue;
+        }
+
+        if (/^[()+\-*/^=<>]/.test(chunk)) {
+          tokens.push({ type: "op", value: chunk[0] });
+          index += 1;
+          continue;
+        }
+
+        return null;
+      }
+
+      return tokens;
+    }
+
+    function parseMathExpression(text) {
+      const tokens = tokenizeMath(text);
+      if (!tokens) {
+        return null;
+      }
+
+      let index = 0;
+
+      function peek() {
+        return tokens[index] || null;
+      }
+
+      function consume(value) {
+        const token = peek();
+        if (!token || token.value !== value) {
+          return false;
+        }
+        index += 1;
+        return true;
+      }
+
+      function startsPrimary(token) {
+        return !!token && (
+          token.type === "number" ||
+          token.type === "identifier" ||
+          token.type === "sqrt" ||
+          token.value === "("
+        );
+      }
+
+      function parsePrimary() {
+        const token = peek();
+        if (!token) {
+          return null;
+        }
+
+        if (token.type === "number") {
+          index += 1;
+          return { type: "number", value: token.value };
+        }
+
+        if (token.type === "identifier") {
+          index += 1;
+          return { type: "identifier", value: token.value };
+        }
+
+        if (token.type === "sqrt") {
+          index += 1;
+          if (!consume("(")) {
+            return null;
+          }
+          const radicand = parseRelation();
+          if (!radicand || !consume(")")) {
+            return null;
+          }
+          return { type: "sqrt", value: radicand };
+        }
+
+        if (consume("(")) {
+          const inner = parseRelation();
+          if (!inner || !consume(")")) {
+            return null;
+          }
+          return { type: "group", value: inner };
+        }
+
+        return null;
+      }
+
+      function parseUnary() {
+        if (consume("+")) {
+          return parseUnary();
+        }
+
+        if (consume("-")) {
+          const value = parseUnary();
+          return value ? { type: "unary", op: "-", value } : null;
+        }
+
+        return parsePrimary();
+      }
+
+      function parsePower() {
+        let left = parseUnary();
+        if (!left) {
+          return null;
+        }
+
+        if (consume("^")) {
+          const right = parsePower();
+          if (!right) {
+            return null;
+          }
+          left = { type: "binary", op: "^", left, right };
+        }
+
+        return left;
+      }
+
+      function parseTerm() {
+        let left = parsePower();
+        if (!left) {
+          return null;
+        }
+
+        while (true) {
+          const token = peek();
+          if (!token) {
+            break;
+          }
+
+          if (consume("*")) {
+            const right = parsePower();
+            if (!right) {
+              return null;
+            }
+            left = { type: "binary", op: "*", left, right, implicit: false };
+            continue;
+          }
+
+          if (consume("/")) {
+            const right = parsePower();
+            if (!right) {
+              return null;
+            }
+            left = { type: "binary", op: "/", left, right };
+            continue;
+          }
+
+          if (startsPrimary(token)) {
+            const right = parsePower();
+            if (!right) {
+              return null;
+            }
+            left = { type: "binary", op: "*", left, right, implicit: true };
+            continue;
+          }
+
+          break;
+        }
+
+        return left;
+      }
+
+      function parseAdditive() {
+        let left = parseTerm();
+        if (!left) {
+          return null;
+        }
+
+        while (true) {
+          if (consume("+")) {
+            const right = parseTerm();
+            if (!right) {
+              return null;
+            }
+            left = { type: "binary", op: "+", left, right };
+            continue;
+          }
+
+          if (consume("-")) {
+            const right = parseTerm();
+            if (!right) {
+              return null;
+            }
+            left = { type: "binary", op: "-", left, right };
+            continue;
+          }
+
+          break;
+        }
+
+        return left;
+      }
+
+      function parseRelation() {
+        let left = parseAdditive();
+        if (!left) {
+          return null;
+        }
+
+        while (true) {
+          const token = peek();
+          if (!token || !["=", "<", ">", "<=", ">=", "!="].includes(token.value)) {
+            break;
+          }
+
+          index += 1;
+          const right = parseAdditive();
+          if (!right) {
+            return null;
+          }
+          left = { type: "binary", op: token.value, left, right };
+        }
+
+        return left;
+      }
+
+      const ast = parseRelation();
+      return ast && index === tokens.length ? ast : null;
+    }
+
+    function wrapMathGroup(content) {
+      return `<span class="math-inline">${content}</span>`;
+    }
+
+    function renderMathAst(node, parentPrecedence = 0) {
+      if (!node) {
+        return "";
+      }
+
+      const precedence = {
+        relation: 1,
+        add: 2,
+        mul: 3,
+        unary: 4,
+        power: 5
+      };
+
+      function withParens(content) {
+        return wrapMathGroup(
+          `<span class="math-paren">(</span>${content}<span class="math-paren">)</span>`
+        );
+      }
+
+      if (node.type === "number") {
+        return escapeHtml(node.value);
+      }
+
+      if (node.type === "identifier") {
+        return node.value.length === 1
+          ? `<span class="math-var">${escapeHtml(node.value)}</span>`
+          : escapeHtml(node.value);
+      }
+
+      if (node.type === "group") {
+        return withParens(renderMathAst(node.value));
+      }
+
+      if (node.type === "sqrt") {
+        return wrapMathGroup(
+          `<span class="math-sqrt"><span class="math-sqrt-sign">√</span><span class="math-radicand">${renderMathAst(node.value)}</span></span>`
+        );
+      }
+
+      if (node.type === "unary") {
+        const content = `−${renderMathAst(node.value, precedence.unary)}`;
+        return parentPrecedence > precedence.unary ? withParens(content) : content;
+      }
+
+      if (node.type === "binary") {
+        if (node.op === "^") {
+          const leftNeedsParens = ["binary", "unary"].includes(node.left.type);
+          const left = leftNeedsParens
+            ? withParens(renderMathAst(node.left))
+            : renderMathAst(node.left, precedence.power);
+          const right = renderMathAst(node.right);
+          const rendered = `${left}<sup>${right}</sup>`;
+          return parentPrecedence > precedence.power ? withParens(rendered) : rendered;
+        }
+
+        if (node.op === "/") {
+          const rendered = wrapMathGroup(
+            `<span class="math-frac"><span class="top">${renderMathAst(node.left)}</span><span class="bar"></span><span class="bottom">${renderMathAst(node.right)}</span></span>`
+          );
+          return parentPrecedence > precedence.mul ? withParens(rendered) : rendered;
+        }
+
+        if (["+", "-", "*"].includes(node.op)) {
+          const currentPrecedence = node.op === "*" ? precedence.mul : precedence.add;
+          const operator = node.op === "*"
+            ? (node.implicit ? " " : " × ")
+            : node.op === "+"
+              ? " + "
+              : " − ";
+          const left = renderMathAst(node.left, currentPrecedence);
+          const right = renderMathAst(node.right, currentPrecedence);
+          const rendered = `${left}${operator}${right}`;
+          return parentPrecedence > currentPrecedence ? withParens(rendered) : rendered;
+        }
+
+        if (["=", "<", ">", "<=", ">=", "!="].includes(node.op)) {
+          const relationMap = {
+            "=": " = ",
+            "<": " < ",
+            ">": " > ",
+            "<=": " ≤ ",
+            ">=": " ≥ ",
+            "!=": " ≠ "
+          };
+          const rendered = `${renderMathAst(node.left, precedence.relation)}${relationMap[node.op]}${renderMathAst(node.right, precedence.relation)}`;
+          return parentPrecedence > precedence.relation ? withParens(rendered) : rendered;
+        }
+      }
+
+      return escapeHtml(String(node.value || ""));
+    }
+
+    function renderLooseMathText(text) {
+      return escapeHtml(text)
+        .replace(/([A-Za-z0-9)\]])\^\(([^()]+)\)/g, "$1<sup>$2</sup>")
+        .replace(/([A-Za-z0-9)\]])\^([A-Za-z0-9]+)/g, "$1<sup>$2</sup>")
+        .replace(/([A-Za-z0-9)\]])_([A-Za-z0-9]+)/g, "$1<sub>$2</sub>")
+        .replace(/<=/g, "≤")
+        .replace(/>=/g, "≥")
+        .replace(/!=/g, "≠")
+        .replace(/\*/g, "×");
+    }
+
+    function renderMathPreview(text) {
+      const normalized = preprocessMathInput(text);
+      const lines = normalized.split(/\n/);
+
+      return lines.map(line => {
+        const trimmed = line.trim();
+        if (!trimmed) {
+          return "";
+        }
+
+        const ast = parseMathExpression(trimmed);
+        return ast ? renderMathAst(ast) : renderLooseMathText(trimmed);
+      }).join("<br>");
+    }
+
+    function updateMathPreview(card, value) {
+      const previewEmptyEl = card.querySelector(".math-preview-empty");
+      const previewOutputEl = card.querySelector(".math-preview-output");
+      const hasContent = !!String(value || "").trim();
+
+      if (!previewEmptyEl || !previewOutputEl) {
+        return;
+      }
+
+      previewEmptyEl.hidden = hasContent;
+      previewOutputEl.hidden = !hasContent;
+      previewOutputEl.innerHTML = hasContent ? renderMathPreview(value) : "";
     }
 
     function populateFilters() {
@@ -1018,6 +1518,11 @@
                 id="response-${entry.id}"
                 placeholder="Type your answer here, then click Check my answer."
               ></textarea>
+              <div class="math-preview" aria-live="polite">
+                <div class="math-preview-label">Live math preview</div>
+                <div class="math-preview-empty">Start typing to preview your math notation.</div>
+                <div class="math-preview-output" hidden></div>
+              </div>
             </div>
             <div class="answer-wrap">${entry.answerHtml}</div>
             <div class="card-actions">
@@ -1032,6 +1537,9 @@
           if (saved && textarea) {
             textarea.value = saved.value || "";
           }
+          if (textarea) {
+            updateMathPreview(article, textarea.value);
+          }
           if (saved && saved.feedbackText) {
             setFeedback(article, saved.feedbackText, saved.feedbackKind);
           }
@@ -1040,6 +1548,7 @@
             textarea.addEventListener("input", event => {
               const prior = responseState.get(entry.id) || {};
               responseState.set(entry.id, { ...prior, value: event.target.value });
+              updateMathPreview(article, event.target.value);
             });
           }
           article.querySelector(".check-answer").addEventListener("click", () => checkMyAnswer(article));
