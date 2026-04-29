@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>In-Class Exercises: Special Products</title>
+  <style>
+    :root {
+      --bg: #f7f8fb;
+      --card: #ffffff;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --blue: #2563eb;
+      --blue-soft: #eaf1ff;
+      --red: #b91c1c;
+      --red-soft: #fff1f2;
+      --line: #e5e7eb;
+      --ok: #047857;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+        "Microsoft YaHei", Arial, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    header {
+      background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+      color: white;
+      padding: 28px 18px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+    }
+
+    header p {
+      margin: 8px auto 0;
+      max-width: 760px;
+      opacity: 0.95;
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255,255,255,0.94);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+      padding: 12px 16px;
+    }
+
+    .toolbar-inner {
+      max-width: 980px;
+      margin: 0 auto;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .mode-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 1px solid var(--line);
+      background: white;
+      color: var(--ink);
+      padding: 8px 12px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 650;
+    }
+
+    button.active {
+      border-color: var(--blue);
+      background: var(--blue);
+      color: white;
+    }
+
+    button.check {
+      border-radius: 10px;
+      color: white;
+      background: var(--blue);
+      border-color: var(--blue);
+      margin-top: 10px;
+    }
+
+    button.reveal {
+      border-radius: 10px;
+      background: var(--blue-soft);
+      border-color: #bfdbfe;
+      color: #1d4ed8;
+      margin-top: 10px;
+    }
+
+    main {
+      max-width: 980px;
+      margin: 22px auto 60px;
+      padding: 0 16px;
+    }
+
+    .formula-box {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--blue);
+      border-radius: 16px;
+      padding: 18px;
+      margin-bottom: 18px;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+    }
+
+    .formula {
+      font-size: 1.25rem;
+      font-weight: 750;
+      margin: 10px 0 0;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .exercise-card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      margin: 18px 0;
+      overflow: hidden;
+      box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+    }
+
+    .exercise-title {
+      background: var(--red-soft);
+      border-bottom: 1px solid #fecdd3;
+      color: var(--red);
+      padding: 14px 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .exercise-title h2 {
+      margin: 0;
+      font-size: 1.25rem;
+    }
+
+    .exercise-body {
+      padding: 18px;
+    }
+
+    .question-list {
+      display: grid;
+      gap: 16px;
+      margin-top: 12px;
+    }
+
+    .question {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      background: #fcfcfd;
+    }
+
+    .q-top {
+      display: flex;
+      gap: 8px;
+      align-items: baseline;
+      flex-wrap: wrap;
+      font-size: 1.08rem;
+      font-weight: 650;
+    }
+
+    .q-num {
+      color: var(--blue);
+      font-weight: 800;
+    }
+
+    .q-expression {
+      font-family: "Times New Roman", Georgia, serif;
+      font-size: 1.2rem;
+    }
+
+    .answer-row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: 12px;
+      flex-wrap: wrap;
+    }
+
+    input {
+      flex: 1 1 260px;
+      min-width: 180px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 1rem;
+      background: white;
+    }
+
+    .feedback {
+      margin-top: 8px;
+      font-weight: 700;
+      min-height: 1.5em;
+    }
+
+    .feedback.ok {
+      color: var(--ok);
+    }
+
+    .feedback.no {
+      color: var(--red);
+    }
+
+    .solution {
+      display: none;
+      margin-top: 10px;
+      padding: 10px 12px;
+      background: var(--blue-soft);
+      border: 1px solid #bfdbfe;
+      border-radius: 10px;
+      color: #1e3a8a;
+    }
+
+    .solution.show {
+      display: block;
+    }
+
+    .work-space {
+      margin-top: 12px;
+      height: 70px;
+      background-image: repeating-linear-gradient(
+        to bottom,
+        transparent 0,
+        transparent 27px,
+        #e5e7eb 28px
+      );
+      border: 1px dashed #d1d5db;
+      border-radius: 10px;
+      background-color: white;
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .zh, .en {
+      display: inline;
+    }
+
+    body.mode-en .zh {
+      display: none !important;
+    }
+
+    body.mode-zh .en {
+      display: none !important;
+    }
+
+    body.mode-both .pair {
+      display: block;
+    }
+
+    body.mode-both .pair .en {
+      display: block;
+      color: var(--muted);
+      font-size: 0.94em;
+      margin-top: 2px;
+    }
+
+    body.mode-both .pair .zh {
+      display: block;
+    }
+
+    @media print {
+      header, .toolbar, .answer-row, .feedback, .solution, button {
+        display: none !important;
+      }
+
+      body {
+        background: white;
+      }
+
+      main {
+        margin: 0;
+        max-width: none;
+      }
+
+      .exercise-card, .formula-box {
+        box-shadow: none;
+        break-inside: avoid;
+      }
+
+      .work-space {
+        height: 90px;
+      }
+    }
+  </style>
+</head>
+<body class="mode-both">
+  <header>
+    <h1>
+      <span class="zh">随堂练习：平方差与完全平方公式</span>
+      <span class="en">In-Class Exercises: Difference of Squares and Perfect Squares</span>
+    </h1>
+    <p>
+      <span class="zh">练习展开、化简和代入求值。可切换为 English、En+Zh 或中文模式。</span>
+      <span class="en">Practise expanding, simplifying, and evaluating expressions. Switch between English, En+Zh, and Chinese modes.</span>
+    </p>
+  </header>
+
+  <div class="toolbar">
+    <div class="toolbar-inner">
+      <strong>
+        <span class="zh">语言模式</span>
+        <span class="en">Language Mode</span>
+      </strong>
+      <div class="mode-buttons">
+        <button id="btn-en" onclick="setMode('en')">English</button>
+        <button id="btn-both" class="active" onclick="setMode('both')">En + Zh</button>
+        <button id="btn-zh" onclick="setMode('zh')">中文</button>
+      </div>
+    </div>
+  </div>
+
+  <main>
+    <section class="formula-box">
+      <div class="pair">
+        <strong class="zh">本节核心公式</strong>
+        <strong class="en">Key formulas</strong>
+      </div>
+      <div class="formula">(a + b)(a - b) = a² - b²</div>
+      <div class="formula">(a + b)² = a² + 2ab + b²</div>
+      <div class="formula">(a - b)² = a² - 2ab + b²</div>
+      <p class="note">
+        <span class="zh">提示：可以先观察结构，再选择合适的公式。</span>
+        <span class="en">Tip: first look at the structure, then choose the matching formula.</span>
+      </p>
+    </section>
+
+    <div id="app"></div>
+  </main>
+
+  <script>
+    const exercises = [
+      {
+        titleZh: "随堂练习 1",
+        titleEn: "In-Class Exercise 1",
+        instructionZh: "计算：",
+        instructionEn: "Calculate / expand:",
+        questions: [
+          {
+            expr: "(a + 2)(a - 2)",
+            answer: "a^2-4",
+            display: "a² - 4",
+            solutionZh: "(a + 2)(a - 2) = a² - 2² = a² - 4",
+            solutionEn: "(a + 2)(a - 2) = a² - 2² = a² - 4"
+          },
+          {
+            expr: "(3a + 2b)(3a - 2b)",
+            answer: "9a^2-4b^2",
+            display: "9a² - 4b²",
+            solutionZh: "(3a + 2b)(3a - 2b) = (3a)² - (2b)² = 9a² - 4b²",
+            solutionEn: "(3a + 2b)(3a - 2b) = (3a)² - (2b)² = 9a² - 4b²"
+          },
+          {
+            expr: "(-x - 1)(1 - x)",
+            answer: "x^2-1",
+            display: "x² - 1",
+            solutionZh: "(-x - 1)(1 - x) = -(x + 1)(1 - x) = (x + 1)(x - 1) = x² - 1",
+            solutionEn: "(-x - 1)(1 - x) = -(x + 1)(1 - x) = (x + 1)(x - 1) = x² - 1"
+          },
+          {
+            expr: "(-4k + 3)(-4k - 3)",
+            answer: "16k^2-9",
+            display: "16k² - 9",
+            solutionZh: "(-4k + 3)(-4k - 3) = (-4k)² - 3² = 16k² - 9",
+            solutionEn: "(-4k + 3)(-4k - 3) = (-4k)² - 3² = 16k² - 9"
+          }
+        ]
+      },
+      {
+        titleZh: "随堂练习 2",
+        titleEn: "In-Class Exercise 2",
+        instructionZh: "计算：",
+        instructionEn: "Calculate / simplify:",
+        questions: [
+          {
+            expr: "704 × 696",
+            answer: "489984",
+            display: "489984",
+            solutionZh: "704 × 696 = (700 + 4)(700 - 4) = 700² - 4² = 490000 - 16 = 489984",
+            solutionEn: "704 × 696 = (700 + 4)(700 - 4) = 700² - 4² = 490000 - 16 = 489984"
+          },
+          {
+            expr: "(x + 2y)(x - 2y) + (x + 1)(x - 1)",
+            answer: "2x^2-4y^2-1",
+            display: "2x² - 4y² - 1",
+            solutionZh: "(x + 2y)(x - 2y) + (x + 1)(x - 1) = x² - 4y² + x² - 1 = 2x² - 4y² - 1",
+            solutionEn: "(x + 2y)(x - 2y) + (x + 1)(x - 1) = x² - 4y² + x² - 1 = 2x² - 4y² - 1"
+          },
+          {
+            expr: "x(x - 1) - (x - 1/3)(x + 1/3)",
+            answer: "-x+1/9",
+            display: "-x + 1/9",
+            solutionZh: "x(x - 1) - (x - 1/3)(x + 1/3) = x² - x - (x² - 1/9) = -x + 1/9",
+            solutionEn: "x(x - 1) - (x - 1/3)(x + 1/3) = x² - x - (x² - 1/9) = -x + 1/9"
+          }
+        ]
+      },
+      {
+        titleZh: "随堂练习 3",
+        titleEn: "In-Class Exercise 3",
+        instructionZh: "计算：",
+        instructionEn: "Calculate / expand:",
+        questions: [
+          {
+            expr: "(1/2x + 2y)²",
+            answer: "1/4x^2+2xy+4y^2",
+            display: "1/4x² + 2xy + 4y²",
+            solutionZh: "(1/2x + 2y)² = (1/2x)² + 2·(1/2x)·2y + (2y)² = 1/4x² + 2xy + 4y²",
+            solutionEn: "(1/2x + 2y)² = (1/2x)² + 2·(1/2x)·2y + (2y)² = 1/4x² + 2xy + 4y²"
+          },
+          {
+            expr: "(2xy - 1/5x)²",
+            answer: "4x^2y^2-4/5x^2y+1/25x^2",
+            display: "4x²y² - 4/5x²y + 1/25x²",
+            solutionZh: "(2xy - 1/5x)² = (2xy)² - 2·2xy·1/5x + (1/5x)² = 4x²y² - 4/5x²y + 1/25x²",
+            solutionEn: "(2xy - 1/5x)² = (2xy)² - 2·2xy·1/5x + (1/5x)² = 4x²y² - 4/5x²y + 1/25x²"
+          },
+          {
+            expr: "(-3m + n)²",
+            answer: "9m^2-6mn+n^2",
+            display: "9m² - 6mn + n²",
+            solutionZh: "(-3m + n)² = (-3m)² + 2·(-3m)·n + n² = 9m² - 6mn + n²",
+            solutionEn: "(-3m + n)² = (-3m)² + 2·(-3m)·n + n² = 9m² - 6mn + n²"
+          },
+          {
+            expr: "Given a + b = -3, find 2a² + 4ab + 2b²",
+            exprZh: "已知 a + b = -3，求 2a² + 4ab + 2b² 的值",
+            answer: "18",
+            display: "18",
+            solutionZh: "2a² + 4ab + 2b² = 2(a² + 2ab + b²) = 2(a + b)² = 2 × (-3)² = 18",
+            solutionEn: "2a² + 4ab + 2b² = 2(a² + 2ab + b²) = 2(a + b)² = 2 × (-3)² = 18"
+          }
+        ]
+      }
+    ];
+
+    function normalizeAnswer(value) {
+      return value
+        .toLowerCase()
+        .replace(/\s+/g, "")
+        .replace(/²/g, "^2")
+        .replace(/×/g, "*")
+        .replace(/−/g, "-")
+        .replace(/\*/g, "")
+        .replace(/\((.*?)\)/g, "$1");
+    }
+
+    function render() {
+      const app = document.getElementById("app");
+      app.innerHTML = "";
+
+      exercises.forEach((ex, exIndex) => {
+        const card = document.createElement("section");
+        card.className = "exercise-card";
+
+        card.innerHTML = `
+          <div class="exercise-title">
+            <h2>
+              <span class="zh">${ex.titleZh}</span>
+              <span class="en">${ex.titleEn}</span>
+            </h2>
+            <span class="note">
+              <span class="zh">先手写，再检查答案</span>
+              <span class="en">Write your work first, then check</span>
+            </span>
+          </div>
+          <div class="exercise-body">
+            <p class="pair">
+              <strong class="zh">${ex.instructionZh}</strong>
+              <strong class="en">${ex.instructionEn}</strong>
+            </p>
+            <div class="question-list">
+              ${ex.questions.map((q, qIndex) => {
+                const id = `q-${exIndex}-${qIndex}`;
+                const exprLine = q.exprZh
+                  ? `<span class="zh">${q.exprZh}</span><span class="en">${q.expr}</span>`
+                  : `<span>${q.expr}</span>`;
+                return `
+                  <div class="question">
+                    <div class="q-top">
+                      <span class="q-num">(${qIndex + 1})</span>
+                      <span class="q-expression">${exprLine}</span>
+                    </div>
+                    <div class="work-space" aria-label="working space"></div>
+                    <div class="answer-row">
+                      <input id="${id}" placeholder="Type your answer / 输入答案" />
+                      <button class="check" onclick="checkAnswer('${id}', '${q.answer}')">
+                        <span class="zh">检查</span><span class="en">Check</span>
+                      </button>
+                      <button class="reveal" onclick="toggleSolution('${id}-sol')">
+                        <span class="zh">显示解答</span><span class="en">Show solution</span>
+                      </button>
+                    </div>
+                    <div id="${id}-fb" class="feedback"></div>
+                    <div id="${id}-sol" class="solution">
+                      <div><strong><span class="zh">答案：</span><span class="en">Answer: </span></strong>${q.display}</div>
+                      <div class="pair">
+                        <span class="zh">${q.solutionZh}</span>
+                        <span class="en">${q.solutionEn}</span>
+                      </div>
+                    </div>
+                  </div>
+                `;
+              }).join("")}
+            </div>
+          </div>
+        `;
+
+        app.appendChild(card);
+      });
+    }
+
+    function setMode(mode) {
+      document.body.className = "mode-" + mode;
+      ["en", "both", "zh"].forEach(m => {
+        document.getElementById("btn-" + m).classList.toggle("active", m === mode);
+      });
+    }
+
+    function checkAnswer(inputId, expected) {
+      const input = document.getElementById(inputId);
+      const fb = document.getElementById(inputId + "-fb");
+      const got = normalizeAnswer(input.value);
+      const exp = normalizeAnswer(expected);
+
+      if (got === exp) {
+        fb.className = "feedback ok";
+        fb.innerHTML = `<span class="zh">正确！</span><span class="en">Correct!</span>`;
+      } else {
+        fb.className = "feedback no";
+        fb.innerHTML = `<span class="zh">再试一次，注意符号和同类项。</span><span class="en">Try again. Check signs and like terms.</span>`;
+      }
+    }
+
+    function toggleSolution(id) {
+      document.getElementById(id).classList.toggle("show");
+    }
+
+    render();
+  </script>
+</body>
+</html>
