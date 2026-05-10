@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>In-Class Exercises: Special Products</title>
+  <link rel="icon" href="data:," />
   <style>
     :root {
       --bg: #f7f8fb;
@@ -189,8 +190,39 @@
     }
 
     .q-expression {
-      font-family: "Times New Roman", Georgia, serif;
+      font-family: "Cambria Math", "STIX Two Math", "Times New Roman", Georgia, serif;
       font-size: 1.2rem;
+    }
+
+    .math-expression,
+    .answer-preview {
+      font-family: "Cambria Math", "STIX Two Math", "Times New Roman", Georgia, serif;
+    }
+
+    .math-expression sup,
+    .answer-preview sup {
+      font-size: 0.72em;
+      line-height: 0;
+    }
+
+    .frac {
+      display: inline-block;
+      vertical-align: -0.48em;
+      margin: 0 0.08em;
+      text-align: center;
+      line-height: 1;
+      font-size: 0.86em;
+    }
+
+    .frac .num {
+      display: block;
+      border-bottom: 1px solid currentColor;
+      padding: 0 0.12em 0.03em;
+    }
+
+    .frac .den {
+      display: block;
+      padding: 0.03em 0.12em 0;
     }
 
     .answer-row {
@@ -223,11 +255,6 @@
 
     .answer-preview:empty {
       display: none;
-    }
-
-    .answer-preview sup {
-      font-size: 0.72em;
-      line-height: 0;
     }
 
     .feedback {
@@ -518,8 +545,8 @@
               ${ex.questions.map((q, qIndex) => {
                 const id = `q-${exIndex}-${qIndex}`;
                 const exprLine = q.exprZh
-                  ? `<span class="zh">${q.exprZh}</span><span class="en">${q.expr}</span>`
-                  : `<span>${q.expr}</span>`;
+                  ? `<span class="zh math-expression">${formatMathExpression(q.exprZh)}</span><span class="en math-expression">${formatMathExpression(q.expr)}</span>`
+                  : `<span class="math-expression">${formatMathExpression(q.expr)}</span>`;
                 return `
                   <div class="question">
                     <div class="q-top">
@@ -539,10 +566,10 @@
                     <div id="${id}-preview" class="answer-preview" aria-live="polite"></div>
                     <div id="${id}-fb" class="feedback"></div>
                     <div id="${id}-sol" class="solution">
-                      <div><strong><span class="zh">答案：</span><span class="en">Answer: </span></strong>${q.display}</div>
+                      <div><strong><span class="zh">答案：</span><span class="en">Answer: </span></strong><span class="math-expression">${formatMathExpression(q.display)}</span></div>
                       <div class="pair">
-                        <span class="zh">${q.solutionZh}</span>
-                        <span class="en">${q.solutionEn}</span>
+                        <span class="zh math-expression">${formatMathExpression(q.solutionZh)}</span>
+                        <span class="en math-expression">${formatMathExpression(q.solutionEn)}</span>
                       </div>
                     </div>
                   </div>
@@ -565,15 +592,43 @@
         .replace(/'/g, "&#39;");
     }
 
-    function formatMathPreview(value) {
-      return escapeHtml(value.trim())
+    function normalizeSuperscripts(value) {
+      const superscripts = {
+        "⁰": "0",
+        "¹": "1",
+        "²": "2",
+        "³": "3",
+        "⁴": "4",
+        "⁵": "5",
+        "⁶": "6",
+        "⁷": "7",
+        "⁸": "8",
+        "⁹": "9",
+        "⁺": "+",
+        "⁻": "-"
+      };
+
+      return value.replace(/[⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻]+/g, match =>
+        "^" + Array.from(match).map(char => superscripts[char]).join("")
+      );
+    }
+
+    function formatMathExpression(value) {
+      const text = escapeHtml(normalizeSuperscripts(value.trim()))
         .replace(/\*/g, "·")
         .replace(/×/g, "·")
         .replace(/−/g, "-")
-        .replace(/\^([+-]?\d+|[A-Za-z]+|\([^)]+\))/g, "<sup>$1</sup>")
         .replace(/\s*([+=])\s*/g, " $1 ")
-        .replace(/([^\s])\s*-\s*/g, "$1 - ")
+        .replace(/([^\s(])\s*-\s*/g, "$1 - ")
         .replace(/\s+/g, " ");
+
+      return text
+        .replace(/\^([+-]?\d+|[A-Za-z]+|\([^)]+\))/g, "<sup>$1</sup>")
+        .replace(/\b(\d+)\/(\d+)(?=[A-Za-z(]|<sup>|[\s)+\-·=]|$)/g, '<span class="frac"><span class="num">$1</span><span class="den">$2</span></span>');
+    }
+
+    function formatMathPreview(value) {
+      return formatMathExpression(value);
     }
 
     function updateAnswerPreview(inputId) {
