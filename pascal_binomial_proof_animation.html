@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>杨辉三角与二项式展开：动画证明</title>
+  <style>
+    :root{
+      --bg:#f7f3ea;
+      --card:#fffdf8;
+      --ink:#2b2118;
+      --muted:#6d6258;
+      --accent:#b86b22;
+      --accent2:#3c7d7e;
+      --line:#e2d4bf;
+      --good:#1f7a4d;
+      --warn:#b86b22;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans SC", sans-serif;
+      color:var(--ink);
+      background: radial-gradient(circle at top left, #fff7e8 0, var(--bg) 45%, #f2ebdd 100%);
+      line-height:1.65;
+    }
+    header{
+      padding:34px 18px 18px;
+      text-align:center;
+    }
+    h1{margin:0;font-size:clamp(1.7rem,4vw,3rem);letter-spacing:.03em}
+    .subtitle{max-width:850px;margin:10px auto 0;color:var(--muted);font-size:1.05rem}
+    main{max-width:1100px;margin:0 auto;padding:16px 18px 60px}
+    .grid{display:grid;grid-template-columns:1fr;gap:18px}
+    @media (min-width:900px){.grid.two{grid-template-columns:1.05fr .95fr}}
+    section,.card{
+      background:rgba(255,253,248,.94);
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:22px;
+      box-shadow:0 14px 40px rgba(80,55,25,.08);
+    }
+    h2{margin:0 0 10px;font-size:1.45rem}
+    h3{margin:18px 0 8px;font-size:1.1rem}
+    .formula{
+      font-family:"Times New Roman", Georgia, serif;
+      font-size:1.28rem;
+      background:#fff6e8;
+      border-left:5px solid var(--accent);
+      padding:12px 14px;
+      border-radius:12px;
+      overflow-x:auto;
+      white-space:nowrap;
+    }
+    .controls{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+    button,select{
+      border:1px solid #d5b98f;
+      background:#fff9ef;
+      color:var(--ink);
+      border-radius:999px;
+      padding:10px 15px;
+      font-weight:650;
+      cursor:pointer;
+      box-shadow:0 4px 12px rgba(80,55,25,.08);
+    }
+    button:hover,select:hover{transform:translateY(-1px)}
+    button.primary{background:var(--accent);color:white;border-color:var(--accent)}
+    .pascal-wrap{overflow:auto;padding:18px 6px 4px;min-height:430px}
+    .row{display:flex;justify-content:center;gap:8px;margin:8px 0;min-height:64px}
+    .cell{
+      width:64px;height:64px;border-radius:50%;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+      background:#fff;border:1px solid #dbc5a4;
+      box-shadow:0 5px 13px rgba(95,65,25,.11);
+      transition:.45s ease;
+      opacity:0;
+      transform:translateY(-10px) scale(.88);
+    }
+    .cell-coef{font-weight:800;font-size:1.02rem;line-height:1}
+    .cell-monomial{font-family:"Times New Roman", Georgia, serif;font-size:.66rem;line-height:1;color:var(--muted)}
+    .cell-monomial sup{font-size:.64em}
+    .cell-expression{font-size:.74rem}
+    .cell.show{opacity:1;transform:translateY(0) scale(1)}
+    .cell.edge{background:#fff3dc;color:#8c4c00}
+    .cell.sum{background:#e8f7f5;color:#155b5d;border-color:#9acdcc;transform:scale(1.12)}
+    .cell.target{outline:3px solid rgba(184,107,34,.35)}
+    .cell.term-active{
+      background:#e8f7f5;
+      color:#155b5d;
+      border-color:#7dbdbc;
+      outline:3px solid rgba(60,125,126,.28);
+      transform:translateY(0) scale(1.14);
+    }
+    .arrows{height:32px;text-align:center;color:var(--accent2);font-weight:700;font-size:.95rem}
+    .expansion{
+      display:grid;gap:8px;
+      font-family:"Times New Roman", Georgia, serif;
+      font-size:1.18rem;
+    }
+    .term{
+      padding:10px 12px;border-radius:12px;background:#fff;border:1px dashed #d7c29f;
+      opacity:.35;transform:translateX(-10px);transition:.5s ease;
+    }
+    .term.show{opacity:1;transform:translateX(0);border-style:solid;background:#fffaf2}
+    .term-main{font-weight:700}
+    .term-source{margin-top:6px;color:var(--muted);font-size:.96rem;line-height:1.5}
+    .term-source .source-math{color:var(--ink)}
+    .term .coef{font-weight:800;color:var(--accent)}
+    .proof-step{display:none;animation:fade .45s ease both}
+    .proof-step.active{display:block}
+    @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .tag{display:inline-block;border-radius:999px;padding:2px 9px;background:#efe2d1;color:#6d4317;font-weight:700;font-size:.86rem;margin-right:4px}
+    .note{color:var(--muted);font-size:.96rem}
+    .check{background:#eef8ef;border-left:5px solid var(--good);padding:12px 14px;border-radius:12px}
+    .mini{font-size:.95rem;color:var(--muted)}
+    .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>杨辉三角为什么给出 (a+b)<sup>n</sup> 的系数？</h1>
+    <p class="subtitle">用动画看清楚：每一行的“中间数 = 上一行相邻两数之和”，正好来自多项式乘法中同类项的合并。</p>
+  </header>
+
+  <main class="grid">
+    <section>
+      <h2>1. 先看目标</h2>
+      <div class="formula">(a+b)<sup>n</sup> 展开后，每一项前面的数字就是第 n 行的数字。</div>
+      <p>例如第 4 行是 1, 4, 6, 4, 1，所以 (a+b)<sup>4</sup> 的五个系数就是 1, 4, 6, 4, 1。这里从第 0 行开始数：</p>
+      <p class="mini">第 0 行：1；第 1 行：1, 1；第 2 行：1, 2, 1；第 3 行：1, 3, 3, 1。</p>
+    </section>
+
+    <div class="grid two">
+      <section>
+        <h2>2. 动画生成杨辉三角</h2>
+        <div class="controls">
+          <button class="primary" id="buildBtn">▶ 逐行生成</button>
+          <button id="highlightBtn">看“相邻相加”</button>
+          <button id="resetBtn">重置</button>
+        </div>
+        <div class="pascal-wrap" id="pascal"></div>
+        <p class="note">规律：两边永远是 1；中间每个数等于上一行左上、右上两个数的和。</p>
+      </section>
+
+      <section>
+        <h2>3. 用它写出展开式</h2>
+        <div class="controls">
+          <select id="powerSelect">
+            <option value="4">(a+b)^4</option>
+            <option value="5">(a+b)^5</option>
+            <option value="6">(a+b)^6</option>
+          </select>
+          <button class="primary" id="expandBtn">▶ 展开动画</button>
+          <button id="expandStepBtn">下一步展开</button>
+        </div>
+        <div class="expansion" id="expansion"></div>
+      </section>
+    </div>
+
+    <section>
+      <h2>4. 数学证明：为什么这个规律正确？</h2>
+      <div class="controls">
+        <button class="primary" id="proofNext">下一步证明</button>
+        <button id="proofReset">从头看</button>
+      </div>
+
+      <div class="proof-step active">
+        <h3><span class="tag">Step 1</span>先看已经知道的一行</h3>
+        <p>第 3 行是 1, 3, 3, 1，所以</p>
+        <div class="formula">(a+b)<sup>3</sup> = a<sup>3</sup> + 3a<sup>2</sup>b + 3ab<sup>2</sup> + b<sup>3</sup></div>
+        <p>每一项前面的数字，就是这一行里的数字。现在我们要看：乘上一个新的 (a+b) 后，下一行为什么会变成 1, 4, 6, 4, 1。</p>
+      </div>
+
+      <div class="proof-step">
+        <h3><span class="tag">Step 2</span>每一项都会分成两项</h3>
+        <p>因为 (a+b)<sup>4</sup> = (a+b)<sup>3</sup>(a+b)，所以第 3 行里的每一项都要分别乘 a 和 b。</p>
+        <div class="formula">3a<sup>2</sup>b &middot; a = 3a<sup>3</sup>b</div>
+        <div class="formula">3a<sup>2</sup>b &middot; b = 3a<sup>2</sup>b<sup>2</sup></div>
+        <p>也就是说，一个旧项会给下一行送出两份贡献：一份乘 a，一份乘 b。</p>
+      </div>
+
+      <div class="proof-step">
+        <h3><span class="tag">Step 3</span>中间的数来自左右两边相加</h3>
+        <p>展开时，同样的字母项要合并。比如 a<sup>2</sup>b<sup>2</sup> 可以从两条路来：</p>
+        <ul>
+          <li>上一行的 3a<sup>2</sup>b 乘以 b，得到 3a<sup>2</sup>b<sup>2</sup>。</li>
+          <li>上一行的 3ab<sup>2</sup> 乘以 a，也得到 3a<sup>2</sup>b<sup>2</sup>。</li>
+        </ul>
+        <div class="formula">3a<sup>2</sup>b<sup>2</sup> + 3a<sup>2</sup>b<sup>2</sup> = 6a<sup>2</sup>b<sup>2</sup></div>
+        <p>所以第 4 行中间的 6，就是上一行相邻两个 3 相加得到的。</p>
+      </div>
+
+      <div class="proof-step">
+        <h3><span class="tag">Step 4</span>两边为什么还是 1？</h3>
+        <p>最左边的 a<sup>4</sup> 只能由 a<sup>3</sup> 乘 a 得到，没有第二条路，所以前面的数字是 1。</p>
+        <p>最右边的 b<sup>4</sup> 只能由 b<sup>3</sup> 乘 b 得到，也没有第二条路，所以前面的数字也是 1。</p>
+        <div class="check">因此：下一行的两边是 1；中间每个数都是上一行相邻两个数相加。这个规则每次从一行走到下一行都成立，所以杨辉三角正好给出 (a+b)<sup>n</sup> 的系数。</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>5. 题目中的结果</h2>
+      <div class="formula">(a+b)<sup>4</sup> = a<sup>4</sup> + 4a<sup>3</sup>b + 6a<sup>2</sup>b<sup>2</sup> + 4ab<sup>3</sup> + b<sup>4</sup></div>
+      <div class="formula">(a+b)<sup>5</sup> = a<sup>5</sup> + 5a<sup>4</sup>b + 10a<sup>3</sup>b<sup>2</sup> + 10a<sup>2</sup>b<sup>3</sup> + 5ab<sup>4</sup> + b<sup>5</sup></div>
+      <h3>用多项式乘法验证 (a+b)<sup>4</sup></h3>
+      <p>已知 (a+b)<sup>3</sup> = a<sup>3</sup> + 3a<sup>2</sup>b + 3ab<sup>2</sup> + b<sup>3</sup>，两边乘 (a+b)：</p>
+      <div class="formula">(a<sup>3</sup> + 3a<sup>2</sup>b + 3ab<sup>2</sup> + b<sup>3</sup>)(a+b)</div>
+      <div class="formula">= a<sup>4</sup> + a<sup>3</sup>b + 3a<sup>3</sup>b + 3a<sup>2</sup>b<sup>2</sup> + 3a<sup>2</sup>b<sup>2</sup> + 3ab<sup>3</sup> + ab<sup>3</sup> + b<sup>4</sup></div>
+      <div class="formula">= a<sup>4</sup> + 4a<sup>3</sup>b + 6a<sup>2</sup>b<sup>2</sup> + 4ab<sup>3</sup> + b<sup>4</sup></div>
+      <p>中间的 4, 6, 4 正好来自上一行 1, 3, 3, 1 的相邻相加：1+3=4，3+3=6，3+1=4。</p>
+    </section>
+  </main>
+
+  <script>
+    const rows = [
+      [1],
+      [1,1],
+      [1,2,1],
+      [1,3,3,1],
+      [1,4,6,4,1],
+      [1,5,10,10,5,1],
+      [1,6,15,20,15,6,1]
+    ];
+
+    const pascal = document.getElementById('pascal');
+    const sleep = ms => new Promise(r => setTimeout(r, ms));
+    const AUTO_FIRST_STEP_DELAY_MS = 450;
+    const AUTO_STEP_PAUSE_MS = 1800;
+    const AUTO_FINAL_PAUSE_MS = 900;
+    let expansionRun = 0;
+    let manualExpansion = null;
+    let manualStepBusy = false;
+
+    function cancelExpansionAnimation(){
+      expansionRun += 1;
+      manualExpansion = null;
+      updateStepButtonLabel();
+    }
+
+    function renderEmptyTriangle(){
+      pascal.innerHTML = '';
+      rows.forEach((row, r) => {
+        const rowEl = document.createElement('div');
+        rowEl.className = 'row';
+        row.forEach((num, c) => {
+          const cell = document.createElement('div');
+          cell.className = 'cell' + (c===0 || c===row.length-1 ? ' edge' : '');
+          cell.dataset.r = r;
+          cell.dataset.c = c;
+          setCellDisplay(cell, r, c, num);
+          rowEl.appendChild(cell);
+        });
+        pascal.appendChild(rowEl);
+      });
+    }
+
+    function monomialHTML(rowIndex, termIndex){
+      const aPow = rowIndex - termIndex;
+      const bPow = termIndex;
+      return `a<sup>${aPow}</sup>b<sup>${bPow}</sup>`;
+    }
+
+    function setCellDisplay(cell, rowIndex, termIndex, value){
+      const expressionClass = String(value).length > 2 ? ' cell-expression' : '';
+      cell.innerHTML = `<span class="cell-coef${expressionClass}">${value}</span><span class="cell-monomial">${monomialHTML(rowIndex, termIndex)}</span>`;
+    }
+
+    async function showTriangleThroughRow(rowIndex){
+      [...pascal.querySelectorAll('.cell')].forEach(cell => {
+        cell.classList.remove('sum','target','term-active');
+      });
+
+      for(let r=0;r<=rowIndex;r++){
+        const cells = [...pascal.querySelectorAll(`.cell[data-r="${r}"]`)];
+        for(const cell of cells){
+          if(!cell.classList.contains('show')){
+            cell.classList.add('show');
+            await sleep(35);
+          }
+        }
+      }
+    }
+
+    function highlightExpansionTerm(rowIndex, termIndex){
+      [...pascal.querySelectorAll('.cell.term-active,.cell.sum')].forEach(cell => {
+        cell.classList.remove('term-active','sum');
+      });
+      const previousRow = rowIndex - 1;
+      const sourceIndexes = [];
+      if(termIndex > 0) sourceIndexes.push(termIndex - 1);
+      if(termIndex < rowIndex) sourceIndexes.push(termIndex);
+      sourceIndexes.forEach(sourceIndex => {
+        const sourceCell = pascal.querySelector(`.cell[data-r="${previousRow}"][data-c="${sourceIndex}"]`);
+        if(sourceCell){
+          sourceCell.classList.add('show','sum');
+        }
+      });
+      const cell = pascal.querySelector(`.cell[data-r="${rowIndex}"][data-c="${termIndex}"]`);
+      if(cell){
+        cell.classList.add('show','term-active');
+      }
+    }
+
+    function clearExpansionHighlights(){
+      [...pascal.querySelectorAll('.cell.term-active,.cell.sum')].forEach(cell => {
+        cell.classList.remove('term-active','sum');
+      });
+    }
+
+    async function buildTriangle(){
+      cancelExpansionAnimation();
+      renderEmptyTriangle();
+      for(let r=0;r<rows.length;r++){
+        const cells = [...pascal.querySelectorAll(`.cell[data-r="${r}"]`)];
+        for(const cell of cells){
+          cell.classList.add('show');
+          await sleep(80);
+        }
+        await sleep(220);
+      }
+    }
+
+    async function highlightRule(){
+      cancelExpansionAnimation();
+      const triangleCells = () => [...pascal.querySelectorAll('.cell')];
+      if(!triangleCells().every(c=>c.classList.contains('show'))) await buildTriangle();
+      triangleCells().forEach(c=>c.classList.remove('sum','target','term-active'));
+      for(let r=2;r<rows.length;r++){
+        for(let c=1;c<rows[r].length-1;c++){
+          triangleCells().forEach(x=>x.classList.remove('sum','target','term-active'));
+          const left = pascal.querySelector(`.cell[data-r="${r-1}"][data-c="${c-1}"]`);
+          const right = pascal.querySelector(`.cell[data-r="${r-1}"][data-c="${c}"]`);
+          const target = pascal.querySelector(`.cell[data-r="${r}"][data-c="${c}"]`);
+          left.classList.add('sum');
+          right.classList.add('sum');
+          target.classList.add('target');
+          setCellDisplay(target, r, c, `${rows[r-1][c-1]}+${rows[r-1][c]}=${rows[r][c]}`);
+          await sleep(900);
+          setCellDisplay(target, r, c, rows[r][c]);
+        }
+      }
+      triangleCells().forEach(c=>c.classList.remove('sum','target','term-active'));
+    }
+
+    function termHTML(coef, n, k){
+      const aPow = n-k;
+      const bPow = k;
+      let part = '';
+      if(coef !== 1) part += `<span class="coef">${coef}</span>`;
+      if(aPow > 0) part += `a${aPow===1?'':`<sup>${aPow}</sup>`}`;
+      if(bPow > 0) part += `b${bPow===1?'':`<sup>${bPow}</sup>`}`;
+      if(part === '') part = '1';
+      return part;
+    }
+
+    function multiplicationSourceHTML(n, k){
+      const previousRow = n - 1;
+      const reason = `因为 (a+b)<sup>${n}</sup> = (a+b)<sup>${previousRow}</sup>(a+b)，所以第 ${previousRow} 行里的每一项都要分别乘 a 和 b。`;
+      if(k === 0){
+        const oldTerm = termHTML(rows[previousRow][0], previousRow, 0);
+        return `${reason}<br><span class="source-math">${oldTerm} &middot; a</span> 得到这一项，所以最左边的系数还是 1。`;
+      }
+      if(k === n){
+        const oldTerm = termHTML(rows[previousRow][previousRow], previousRow, previousRow);
+        return `${reason}<br><span class="source-math">${oldTerm} &middot; b</span> 得到这一项，所以最右边的系数还是 1。`;
+      }
+
+      const leftCoef = rows[previousRow][k - 1];
+      const rightCoef = rows[previousRow][k];
+      const leftOldTerm = termHTML(leftCoef, previousRow, k - 1);
+      const rightOldTerm = termHTML(rightCoef, previousRow, k);
+      const leftNewTerm = termHTML(leftCoef, n, k);
+      const rightNewTerm = termHTML(rightCoef, n, k);
+      return `${reason}<br><span class="source-math">${leftOldTerm} &middot; b = ${leftNewTerm}</span>，<span class="source-math">${rightOldTerm} &middot; a = ${rightNewTerm}</span>，所以系数是 ${leftCoef}+${rightCoef}=${rows[n][k]}。`;
+    }
+
+    function buildExpansionContent(n){
+      const box = document.getElementById('expansion');
+      box.innerHTML = '';
+      const title = document.createElement('div');
+      title.className = 'formula';
+      title.innerHTML = `(a+b)<sup>${n}</sup> = `;
+      box.appendChild(title);
+      const line = document.createElement('div');
+      line.className = 'term show';
+      line.innerHTML = `系数取第 ${n} 行：<span class="mono">${rows[n].join(', ')}</span>`;
+      box.appendChild(line);
+      let full = '';
+      rows[n].forEach((coef,k)=>{
+        const term = termHTML(coef,n,k);
+        const div = document.createElement('div');
+        div.className = 'term';
+        div.innerHTML = `<div class="term-main">第 ${k+1} 项：${term}</div><div class="term-source">${multiplicationSourceHTML(n, k)}</div>`;
+        box.appendChild(div);
+        full += (k===0?'':' + ') + term;
+      });
+      const final = document.createElement('div');
+      final.className = 'formula';
+      final.innerHTML = `(a+b)<sup>${n}</sup> = ${full}`;
+      box.appendChild(final);
+      final.style.opacity = '0';
+      final.style.transition = '.5s ease';
+      return {termDivs:[...box.querySelectorAll('.term:not(.show)')], final};
+    }
+
+    function revealExpansionTerm(n, termDiv, k){
+      highlightExpansionTerm(n, k);
+      termDiv.classList.add('show');
+    }
+
+    function showExpansionFinal(final){
+      clearExpansionHighlights();
+      final.style.opacity = '1';
+    }
+
+    function updateStepButtonLabel(){
+      const button = document.getElementById('expandStepBtn');
+      if(!button) return;
+      if(!manualExpansion){
+        button.textContent = '下一步展开';
+      }else if(manualExpansion.finalShown){
+        button.textContent = '重新逐步展开';
+      }else if(manualExpansion.nextIndex >= manualExpansion.termDivs.length){
+        button.textContent = '显示完整式';
+      }else{
+        button.textContent = '下一步展开';
+      }
+    }
+
+    async function prepareManualExpansion(){
+      const runId = ++expansionRun;
+      const n = Number(document.getElementById('powerSelect').value);
+      renderEmptyTriangle();
+      await showTriangleThroughRow(n - 1);
+      if(runId !== expansionRun) return null;
+      const content = buildExpansionContent(n);
+      manualExpansion = {
+        n,
+        runId,
+        termDivs: content.termDivs,
+        final: content.final,
+        nextIndex: 0,
+        finalShown: false
+      };
+      updateStepButtonLabel();
+      return manualExpansion;
+    }
+
+    async function stepExpansion(){
+      if(manualStepBusy) return;
+      manualStepBusy = true;
+      try{
+        const selectedN = Number(document.getElementById('powerSelect').value);
+        if(!manualExpansion || manualExpansion.n !== selectedN || manualExpansion.finalShown){
+          manualExpansion = await prepareManualExpansion();
+          if(!manualExpansion) return;
+        }
+
+        if(manualExpansion.nextIndex < manualExpansion.termDivs.length){
+          const k = manualExpansion.nextIndex;
+          revealExpansionTerm(manualExpansion.n, manualExpansion.termDivs[k], k);
+          manualExpansion.nextIndex += 1;
+        }else{
+          showExpansionFinal(manualExpansion.final);
+          manualExpansion.finalShown = true;
+        }
+        updateStepButtonLabel();
+      }finally{
+        manualStepBusy = false;
+      }
+    }
+
+    async function expandPower(){
+      const runId = ++expansionRun;
+      manualExpansion = null;
+      updateStepButtonLabel();
+      const n = Number(document.getElementById('powerSelect').value);
+      renderEmptyTriangle();
+      await showTriangleThroughRow(n - 1);
+      if(runId !== expansionRun) return;
+      const {termDivs, final} = buildExpansionContent(n);
+
+      for(let k=0;k<termDivs.length;k++){
+        await sleep(k === 0 ? AUTO_FIRST_STEP_DELAY_MS : AUTO_STEP_PAUSE_MS);
+        if(runId !== expansionRun) return;
+        revealExpansionTerm(n, termDivs[k], k);
+      }
+      await sleep(AUTO_FINAL_PAUSE_MS);
+      if(runId !== expansionRun) return;
+      showExpansionFinal(final);
+    }
+
+    let proofIndex = 0;
+    const steps = [...document.querySelectorAll('.proof-step')];
+    function showProof(i){
+      steps.forEach((s,idx)=>s.classList.toggle('active', idx===i));
+    }
+
+    document.getElementById('buildBtn').addEventListener('click', buildTriangle);
+    document.getElementById('highlightBtn').addEventListener('click', highlightRule);
+    document.getElementById('resetBtn').addEventListener('click', () => {
+      cancelExpansionAnimation();
+      renderEmptyTriangle();
+    });
+    document.getElementById('expandBtn').addEventListener('click', expandPower);
+    document.getElementById('expandStepBtn').addEventListener('click', stepExpansion);
+    document.getElementById('proofNext').addEventListener('click', () => {
+      proofIndex = (proofIndex + 1) % steps.length;
+      showProof(proofIndex);
+    });
+    document.getElementById('proofReset').addEventListener('click', () => {
+      proofIndex = 0;
+      showProof(proofIndex);
+    });
+
+    renderEmptyTriangle();
+    expandPower();
+  </script>
+</body>
+</html>
