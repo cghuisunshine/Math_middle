@@ -114,6 +114,68 @@
     .check{background:#eef8ef;border-left:5px solid var(--good);padding:12px 14px;border-radius:12px}
     .mini{font-size:.95rem;color:var(--muted)}
     .mono{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+    .selection-intro{color:var(--muted);margin-bottom:18px}
+    .selection-items{display:grid;gap:18px}
+    .selection-item{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:20px;
+      box-shadow:0 10px 26px rgba(80,55,25,.07);
+    }
+    .selection-title{
+      font-family:"Times New Roman", Georgia, serif;
+      font-size:clamp(2rem,4.6vw,3.4rem);
+      font-weight:800;
+      margin:0 0 6px;
+    }
+    .selection-note{color:var(--muted);font-size:1rem;margin-bottom:16px}
+    .selection-block{border-top:1px solid #eef2f7;padding:16px 0}
+    .selection-block:first-of-type{border-top:0;padding-top:0}
+    .selection-label{font-size:.98rem;font-weight:700;color:#4b5563;margin-bottom:8px}
+    .math-line{
+      font-family:"Times New Roman", Georgia, serif;
+      font-size:clamp(1.55rem,4vw,2.8rem);
+      line-height:1.35;
+      display:flex;
+      flex-wrap:wrap;
+      align-items:center;
+      gap:5px;
+    }
+    .factor{display:inline-block;white-space:nowrap}
+    .choice{
+      display:inline-block;
+      min-width:.55em;
+      text-align:center;
+      border-radius:8px;
+      padding:0 3px;
+    }
+    .selected-a{
+      color:#1d4ed8;
+      background:#dbeafe;
+      outline:4px solid rgba(37,99,235,.28);
+      font-weight:900;
+    }
+    .selected-b{
+      color:#b91c1c;
+      background:#fee2e2;
+      outline:4px solid rgba(220,38,38,.24);
+      font-weight:900;
+    }
+    .not-selected{color:#c0c7d2}
+    .equals{padding:0 10px;color:#6b7280}
+    .result{
+      font-family:"Times New Roman", Georgia, serif;
+      font-weight:800;
+      color:var(--ink);
+    }
+    .selection-summary{margin-top:18px}
+    @media (max-width:650px){
+      .selection-item{padding:16px}
+      .selection-block{padding:14px 0}
+      .math-line{gap:2px}
+      .equals{padding:0 4px}
+    }
   </style>
 </head>
 <body>
@@ -199,7 +261,14 @@
     </section>
 
     <section>
-      <h2>5. 题目中的结果</h2>
+      <h2>5. 用“每个括号选 a 或 b”解释每一项怎样形成</h2>
+      <p class="selection-intro">下面把 (a+b)<sup>4</sup> 看成四个括号相乘。每次从每个括号里选出一个字母：选了几个 a、几个 b，就会形成对应的项；同类选择的总个数，就是这一项前面的系数。</p>
+      <div id="selectionContent" class="selection-items"></div>
+      <div class="check selection-summary">所以：<b>a<sup>4</sup></b> 只有 1 种选法，<b>a<sup>3</sup>b</b> 有 4 种，<b>a<sup>2</sup>b<sup>2</sup></b> 有 6 种，<b>ab<sup>3</sup></b> 有 4 种，<b>b<sup>4</sup></b> 有 1 种。于是系数正好是 <b>1, 4, 6, 4, 1</b>。</div>
+    </section>
+
+    <section>
+      <h2>6. 题目中的结果</h2>
       <div class="formula">(a+b)<sup>4</sup> = a<sup>4</sup> + 4a<sup>3</sup>b + 6a<sup>2</sup>b<sup>2</sup> + 4ab<sup>3</sup> + b<sup>4</sup></div>
       <div class="formula">(a+b)<sup>5</sup> = a<sup>5</sup> + 5a<sup>4</sup>b + 10a<sup>3</sup>b<sup>2</sup> + 10a<sup>2</sup>b<sup>3</sup> + 5ab<sup>4</sup> + b<sup>5</sup></div>
       <h3>用多项式乘法验证 (a+b)<sup>4</sup></h3>
@@ -220,6 +289,34 @@
       [1,4,6,4,1],
       [1,5,10,10,5,1],
       [1,6,15,20,15,6,1]
+    ];
+
+    const selectionItems = [
+      {
+        title: 'a<sup>4</sup>',
+        note: '从 4 个括号里都选 a，所以只会出现 1 次。',
+        patterns: ['aaaa']
+      },
+      {
+        title: 'a<sup>3</sup>b',
+        note: '4 个位置里有 1 个位置选 b，其余选 a，所以有 4 种不同选法。',
+        patterns: ['aaab', 'aaba', 'abaa', 'baaa']
+      },
+      {
+        title: 'a<sup>2</sup>b<sup>2</sup>',
+        note: '4 个位置里选 2 个位置放 b（或选 2 个位置放 a），所以有 6 种不同选法。',
+        patterns: ['aabb', 'abab', 'abba', 'baab', 'baba', 'bbaa']
+      },
+      {
+        title: 'ab<sup>3</sup>',
+        note: '4 个位置里有 1 个位置选 a，其余选 b，所以有 4 种不同选法。',
+        patterns: ['abbb', 'babb', 'bbab', 'bbba']
+      },
+      {
+        title: 'b<sup>4</sup>',
+        note: '从 4 个括号里都选 b，所以只会出现 1 次。',
+        patterns: ['bbbb']
+      }
     ];
 
     const pascal = document.getElementById('pascal');
@@ -263,6 +360,48 @@
     function setCellDisplay(cell, rowIndex, termIndex, value){
       const expressionClass = String(value).length > 2 ? ' cell-expression' : '';
       cell.innerHTML = `<span class="cell-coef${expressionClass}">${value}</span><span class="cell-monomial">${monomialHTML(rowIndex, termIndex)}</span>`;
+    }
+
+    function selectionResult(pattern){
+      const aCount = [...pattern].filter(x => x === 'a').length;
+      const bCount = [...pattern].filter(x => x === 'b').length;
+      let s = '';
+      if(aCount === 1) s += 'a';
+      if(aCount > 1) s += `a<sup>${aCount}</sup>`;
+      if(bCount === 1) s += 'b';
+      if(bCount > 1) s += `b<sup>${bCount}</sup>`;
+      return s;
+    }
+
+    function selectionFactor(selected){
+      const aClass = selected === 'a' ? 'choice selected-a' : 'choice not-selected';
+      const bClass = selected === 'b' ? 'choice selected-b' : 'choice not-selected';
+      return `<span class="factor">(<span class="${aClass}">a</span>+<span class="${bClass}">b</span>)</span>`;
+    }
+
+    function selectionLine(pattern, index){
+      return `
+        <div class="selection-block">
+          <div class="selection-label">选法 ${index + 1}</div>
+          <div class="math-line">
+            ${[...pattern].map(selectionFactor).join('')}
+            <span class="equals">=</span>
+            <span class="result">${selectionResult(pattern)}</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSelectionProof(){
+      const box = document.getElementById('selectionContent');
+      if(!box) return;
+      box.innerHTML = selectionItems.map(item => `
+        <section class="selection-item">
+          <div class="selection-title">${item.title}</div>
+          <div class="selection-note">${item.note}</div>
+          ${item.patterns.map(selectionLine).join('')}
+        </section>
+      `).join('');
     }
 
     async function showTriangleThroughRow(rowIndex){
@@ -513,6 +652,7 @@
       showProof(proofIndex);
     });
 
+    renderSelectionProof();
     renderEmptyTriangle();
     expandPower();
   </script>
