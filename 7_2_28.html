@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cylinder Volume Word Problems / 圆柱体积应用题讲解</title>
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)'], ['$', '$']],
+        displayMath: [['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: "Noto Serif SC", "Songti SC", "SimSun", serif;
+      background: #f6f7fb;
+      color: #222;
+      line-height: 1.8;
+    }
+
+    .page {
+      max-width: 980px;
+      margin: 0 auto;
+      background: white;
+      padding: 32px;
+      border-radius: 18px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+      font-size: 30px;
+    }
+
+    h2 {
+      margin-top: 40px;
+      padding-bottom: 8px;
+      border-bottom: 3px solid #222;
+      font-size: 24px;
+    }
+
+    .question {
+      background: #fff8e8;
+      border-left: 6px solid #f0b429;
+      padding: 18px 22px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      font-size: 21px;
+    }
+
+    .answer {
+      background: #eef8f1;
+      border-left: 6px solid #42a05f;
+      padding: 18px 22px;
+      border-radius: 12px;
+      margin-top: 20px;
+    }
+
+    .step {
+      margin: 20px 0;
+      padding: 16px 18px;
+      background: #f7f9ff;
+      border-radius: 12px;
+      border-left: 5px solid #5271ff;
+    }
+
+    .final-answer {
+      margin-top: 22px;
+      padding: 18px;
+      background: #e8f0ff;
+      border: 2px solid #5271ff;
+      border-radius: 14px;
+      font-size: 22px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .diagram {
+      text-align: center;
+      margin: 30px 0;
+    }
+
+    svg {
+      max-width: 100%;
+      height: auto;
+    }
+
+    .label {
+      font-size: 18px;
+      fill: #222;
+      font-family: "Times New Roman", serif;
+      font-style: italic;
+    }
+
+    .normal-label {
+      font-size: 17px;
+      fill: #222;
+      font-family: "Noto Serif SC", "SimSun", serif;
+    }
+
+    .blue {
+      stroke: #1296db;
+      stroke-width: 3;
+      fill: none;
+    }
+
+    .shape {
+      stroke: #111;
+      stroke-width: 2;
+      fill: rgba(255,255,255,0.4);
+    }
+
+    .dash {
+      stroke-dasharray: 6 4;
+    }
+
+    button {
+      margin-top: 12px;
+      padding: 10px 18px;
+      border: none;
+      background: #222;
+      color: white;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    button:hover {
+      background: #444;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .note {
+      color: #555;
+      font-size: 17px;
+    }
+
+    .toolbar {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 18px;
+    }
+
+    .mode-buttons {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .mode-buttons button {
+      margin-top: 0;
+      background: #e8e8e8;
+      color: #222;
+    }
+
+    .mode-buttons button.active {
+      background: #222;
+      color: white;
+    }
+
+    .zh, .en {
+      display: inline;
+    }
+
+    .pair {
+      display: inline;
+    }
+
+    body.mode-en .zh {
+      display: none !important;
+    }
+
+    body.mode-zh .en {
+      display: none !important;
+    }
+
+    body.mode-both .pair {
+      display: block;
+    }
+
+    body.mode-both .pair .zh,
+    body.mode-both .pair .en {
+      display: block;
+    }
+
+    body.mode-both .pair .en {
+      color: #555;
+      font-size: 0.94em;
+      margin-top: 2px;
+    }
+
+    body.mode-both button .en::before {
+      content: " / ";
+    }
+
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+
+      .page {
+        box-shadow: none;
+        border-radius: 0;
+      }
+
+      button {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body class="mode-both">
+  <div class="page">
+    <div class="toolbar">
+      <div class="mode-buttons" role="group" aria-label="Language mode">
+        <button id="btn-en" onclick="setMode('en')">English</button>
+        <button id="btn-both" class="active" onclick="setMode('both')">En + Zh</button>
+        <button id="btn-zh" onclick="setMode('zh')">中文</button>
+      </div>
+    </div>
+
+    <h1 class="pair">
+      <span class="zh">圆柱体积应用题讲解</span>
+      <span class="en">Cylinder Volume Word Problems</span>
+    </h1>
+
+    <h2 class="pair">
+      <span class="zh">第 2 题</span>
+      <span class="en">Problem 2</span>
+    </h2>
+
+    <div class="question pair">
+      <span class="zh">
+        一只圆柱形桶内装满了水，已知桶的底面直径为 \(a\)，高为 \(b\)。
+        又知另一个长方体形容器的长为 \(b\)，宽为 \(a\)。
+        如果把这只圆柱形桶中的水全部倒入这个长方体形容器中，水不溢出，
+        那么水面的高度是多少？
+      </span>
+      <span class="en">
+        A cylindrical bucket is filled with water. Its base diameter is \(a\), and its height is \(b\).
+        Another rectangular container has length \(b\) and width \(a\).
+        If all the water from the cylindrical bucket is poured into the rectangular container without overflowing,
+        what is the height of the water?
+      </span>
+    </div>
+
+    <button onclick="toggleAnswer('answer2')"><span class="zh">显示 / 隐藏答案</span><span class="en">Show / Hide Answer</span></button>
+
+    <div id="answer2" class="answer hidden">
+      <div class="step pair">
+        <span class="zh">圆柱形桶的底面直径是 \(a\)，所以半径是：</span><span class="en">The cylindrical bucket has base diameter \(a\), so its radius is:</span>
+        \[
+        r=\frac a2
+        \]
+      </div>
+
+      <div class="step pair">
+        <span class="zh">圆柱桶中水的体积为：</span><span class="en">The volume of water in the cylinder is:</span>
+        \[
+        V=\pi r^2h
+        \]
+        <span class="zh">代入 \(r=\frac a2\)，高为 \(b\)：</span><span class="en">Substitute \(r=\frac a2\) and height \(b\):</span>
+        \[
+        V=\pi\left(\frac a2\right)^2b
+        \]
+        \[
+        V=\frac{\pi a^2b}{4}
+        \]
+      </div>
+
+      <div class="step pair">
+        <span class="zh">长方体容器的底面积为：</span><span class="en">The base area of the rectangular container is:</span>
+        \[
+        S=b\times a=ab
+        \]
+      </div>
+
+      <div class="step pair">
+        <span class="zh">水面的高度等于水的体积除以底面积：</span><span class="en">The water height equals volume divided by base area:</span>
+        \[
+        h=\frac{V}{S}
+        \]
+        \[
+        h=\frac{\frac{\pi a^2b}{4}}{ab}
+        \]
+        \[
+        h=\frac{\pi a}{4}
+        \]
+      </div>
+
+      <div class="final-answer pair">
+        <span class="zh">答案：</span><span class="en">Answer:</span>\[
+        \boxed{\frac{\pi a}{4}}
+        \]
+      </div>
+    </div>
+
+    <h2 class="pair">
+      <span class="zh">第 3 题</span>
+      <span class="en">Problem 3</span>
+    </h2>
+
+    <div class="question pair">
+      <span class="zh">
+        如图，单位：cm。图（1）的瓶子中盛满了水。
+        如果将这个瓶子中的水全部倒入图（2）这样的杯子中，
+        那么一共需要多少个这样的杯子？
+      </span>
+      <span class="en">
+        As shown, all measurements are in cm. The bottle in figure (1) is filled with water.
+        If all the water is poured into cups like the one in figure (2),
+        how many such cups are needed in total?
+      </span>
+    </div>
+
+    <div class="diagram">
+      <svg width="780" height="350" viewBox="0 0 780 350">
+        <!-- Bottle lower cylinder -->
+        <ellipse class="shape" cx="260" cy="160" rx="110" ry="25"></ellipse>
+        <line class="shape" x1="150" y1="160" x2="150" y2="270"></line>
+        <line class="shape" x1="370" y1="160" x2="370" y2="270"></line>
+        <ellipse class="shape" cx="260" cy="270" rx="110" ry="25"></ellipse>
+        <path class="shape dash" d="M150 270 Q260 245 370 270"></path>
+
+        <!-- Bottle upper cylinder -->
+        <ellipse class="shape" cx="260" cy="70" rx="55" ry="18"></ellipse>
+        <line class="shape" x1="205" y1="70" x2="205" y2="160"></line>
+        <line class="shape" x1="315" y1="70" x2="315" y2="160"></line>
+        <path class="shape dash" d="M205 160 Q260 142 315 160"></path>
+        <ellipse class="shape dash" cx="260" cy="160" rx="55" ry="18"></ellipse>
+
+        <!-- Bottle dimension a -->
+        <line class="blue" x1="205" y1="45" x2="315" y2="45"></line>
+        <polygon points="205,45 218,38 218,52" fill="#1296db"></polygon>
+        <polygon points="315,45 302,38 302,52" fill="#1296db"></polygon>
+        <text class="label" x="255" y="36" text-anchor="middle">a</text>
+
+        <!-- Bottle dimension 2a -->
+        <line class="blue" x1="150" y1="305" x2="370" y2="305"></line>
+        <polygon points="150,305 163,298 163,312" fill="#1296db"></polygon>
+        <polygon points="370,305 357,298 357,312" fill="#1296db"></polygon>
+        <text class="label" x="260" y="332" text-anchor="middle">2a</text>
+
+        <!-- h dimension -->
+        <line class="blue" x1="120" y1="70" x2="120" y2="160"></line>
+        <polygon points="120,70 113,83 127,83" fill="#1296db"></polygon>
+        <polygon points="120,160 113,147 127,147" fill="#1296db"></polygon>
+        <text class="label" x="100" y="120" text-anchor="middle" transform="rotate(-90 100 120)">h</text>
+
+        <!-- H dimension -->
+        <line class="blue" x1="120" y1="160" x2="120" y2="270"></line>
+        <polygon points="120,160 113,173 127,173" fill="#1296db"></polygon>
+        <polygon points="120,270 113,257 127,257" fill="#1296db"></polygon>
+        <text class="label" x="100" y="220" text-anchor="middle" transform="rotate(-90 100 220)">H</text>
+
+        <text class="normal-label" x="260" y="345" text-anchor="middle">（1）瓶子</text>
+
+        <!-- Cup -->
+        <ellipse class="shape" cx="560" cy="155" rx="35" ry="13"></ellipse>
+        <line class="shape" x1="525" y1="155" x2="525" y2="250"></line>
+        <line class="shape" x1="595" y1="155" x2="595" y2="250"></line>
+        <ellipse class="shape" cx="560" cy="250" rx="35" ry="13"></ellipse>
+        <path class="shape dash" d="M525 250 Q560 237 595 250"></path>
+
+        <!-- Cup height 8 -->
+        <line class="blue" x1="505" y1="155" x2="505" y2="250"></line>
+        <polygon points="505,155 498,168 512,168" fill="#1296db"></polygon>
+        <polygon points="505,250 498,237 512,237" fill="#1296db"></polygon>
+        <text class="label" x="485" y="205" text-anchor="middle" transform="rotate(-90 485 205)">8</text>
+
+        <!-- Cup diameter 1/2 a -->
+        <line class="blue" x1="525" y1="280" x2="595" y2="280"></line>
+        <polygon points="525,280 538,273 538,287" fill="#1296db"></polygon>
+        <polygon points="595,280 582,273 582,287" fill="#1296db"></polygon>
+        <text class="label" x="560" y="312" text-anchor="middle">\( \frac{1}{2}a \)</text>
+
+        <text class="normal-label" x="560" y="345" text-anchor="middle">（2）杯子</text>
+      </svg>
+    </div>
+
+    <button onclick="toggleAnswer('answer3')"><span class="zh">显示 / 隐藏答案</span><span class="en">Show / Hide Answer</span></button>
+
+    <div id="answer3" class="answer hidden">
+      <div class="step pair">
+        <span class="zh">瓶子由上下两个圆柱组成。</span><span class="en">The bottle is made of two stacked cylinders.</span>
+      </div>
+
+      <div class="step pair">
+        <span class="zh">下半部分圆柱的直径是 \(2a\)，所以半径是：</span><span class="en">The lower cylinder has diameter \(2a\), so its radius is:</span>
+        \[
+        r=a
+        \]
+        <span class="zh">高为 \(H\)，所以体积为：</span><span class="en">Its height is \(H\), so its volume is:</span>
+        \[
+        V_1=\pi a^2H
+        \]
+      </div>
+
+      <div class="step pair">
+        <span class="zh">上半部分圆柱的直径是 \(a\)，所以半径是：</span><span class="en">The upper cylinder has diameter \(a\), so its radius is:</span>
+        \[
+        r=\frac a2
+        \]
+        <span class="zh">高为 \(h\)，所以体积为：</span><span class="en">Its height is \(h\), so its volume is:</span>
+        \[
+        V_2=\pi\left(\frac a2\right)^2h
+        \]
+        \[
+        V_2=\frac{\pi a^2h}{4}
+        \]
+      </div>
+
+      <div class="step pair">
+        <span class="zh">因此，瓶子中水的总体积为：</span><span class="en">Therefore, the total volume of water in the bottle is:</span>
+        \[
+        V=\pi a^2H+\frac{\pi a^2h}{4}
+        \]
+      </div>
+
+      <div class="step pair">
+        <span class="zh">杯子的直径是：</span><span class="en">The cup diameter is:</span>
+        \[
+        \frac12a
+        \]
+        <span class="zh">所以杯子的半径是：</span><span class="en">So the cup radius is:</span>
+        \[
+        \frac14a
+        \]
+        <span class="zh">杯子的高是 \(8\)，所以一个杯子的体积为：</span><span class="en">The cup height is \(8\), so the volume of one cup is:</span>
+        \[
+        V_{\text{cup}}=\pi\left(\frac a4\right)^2\cdot 8
+        \]
+        \[
+        V_{\text{cup}}=\frac{\pi a^2}{2}
+        \]
+      </div>
+
+      <div class="step pair">
+        <span class="zh">需要的杯子数量为：</span><span class="en">The number of cups needed is:</span>
+        \[
+        \frac{V}{V_{\text{cup}}}
+        \]
+        \[
+        =
+        \frac{\pi a^2H+\frac{\pi a^2h}{4}}
+        {\frac{\pi a^2}{2}}
+        \]
+        \[
+        =
+        2H+\frac h2
+        \]
+      </div>
+
+      <div class="final-answer pair">
+        <span class="zh">答案：</span><span class="en">Answer:</span>\[
+        \boxed{2H+\frac h2}
+        \]
+      </div>
+
+      <p class="note pair">
+        <span class="zh">如果题目要求“必须是整数个杯子，且不能溢出”，则需要向上取整：</span><span class="en">If the number of cups must be an integer and there can be no overflow, round up:</span>
+      </p>
+
+      <div class="final-answer pair">
+        \[
+        \boxed{\left\lceil 2H+\frac h2 \right\rceil}
+        \]
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleAnswer(id) {
+      const el = document.getElementById(id);
+      el.classList.toggle("hidden");
+    }
+
+    function setMode(mode) {
+      document.body.className = "mode-" + mode;
+      ["en", "both", "zh"].forEach(m => {
+        document.getElementById("btn-" + m).classList.toggle("active", m === mode);
+      });
+    }
+  </script>
+</body>
+</html>
