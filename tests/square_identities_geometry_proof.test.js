@@ -9,7 +9,7 @@ test("geometry proof page contains both square identities and interactive contro
 
   const html = fs.readFileSync(htmlPath, "utf8");
 
-  assert.match(html, /Geometry Proofs of Square Identities/);
+  assert.match(html, /Geometry Proofs of Algebraic Identities/);
   assert.match(html, /\(a\+b\)<sup>2<\/sup> = a<sup>2<\/sup> \+ 2ab \+ b<sup>2<\/sup>/);
   assert.match(html, /\(a-b\)<sup>2<\/sup> = a<sup>2<\/sup> - 2ab \+ b<sup>2<\/sup>/);
   assert.match(html, /id="sumDiagram"/);
@@ -40,4 +40,17 @@ test("geometry proof page includes the difference of squares identity", () => {
   assert.match(html, /function renderDifferenceSquaresDiagram/);
   assert.match(html, /L-shaped region/i);
   assert.match(html, /rectangle whose sides are a \+ b and a - b/i);
+});
+
+test("geometry proof page includes an interactive rectangle product identity", () => {
+  assert.ok(fs.existsSync(htmlPath), `${htmlPath} should exist`);
+
+  const html = fs.readFileSync(htmlPath, "utf8");
+
+  assert.match(html, /id="cSlider"/);
+  assert.match(html, /id="dSlider"/);
+  assert.match(html, /id="rectangleProductDiagram"/);
+  assert.match(html, /\(a\+b\)\(c\+d\) = ac \+ ad \+ bc \+ bd/);
+  assert.match(html, /function renderRectangleProductDiagram/);
+  assert.match(html, /renderRectangleProductDiagram\(a, b, c, d\)/);
 });

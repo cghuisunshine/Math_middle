@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="icon" href="data:," />
-  <title>Geometry Proofs of Square Identities</title>
+  <title>Geometry Proofs of Algebraic Identities</title>
   <style>
     :root {
       --bg: #f6f7f4;
@@ -271,9 +271,9 @@
 <body>
   <main class="shell">
     <header>
-      <h1>Geometry Proofs of Square Identities</h1>
+      <h1>Geometry Proofs of Algebraic Identities</h1>
       <p class="intro">
-        The formulas are area statements. Cut a square into smaller rectangles, name each
+        The formulas are area statements. Cut squares and rectangles into smaller rectangles, name each
         area, and then add or subtract the pieces that make the same total region.
       </p>
     </header>
@@ -288,6 +288,18 @@
         <input id="bSlider" type="range" min="1" max="5" value="2" step="1" />
       </div>
       <button type="button" id="resetButton">Reset</button>
+    </section>
+
+    <section class="controls" aria-label="Rectangle identity controls">
+      <div>
+        <label for="cSlider">Side length c: <span class="value" id="cValue">5</span></label>
+        <input id="cSlider" type="range" min="1" max="10" value="5" step="1" />
+      </div>
+      <div>
+        <label for="dSlider">Side length d: <span class="value" id="dValue">3</span></label>
+        <input id="dSlider" type="range" min="1" max="10" value="3" step="1" />
+      </div>
+      <div aria-hidden="true"></div>
     </section>
 
     <section class="grid" aria-label="Geometry proofs">
@@ -357,6 +369,28 @@
           <p class="note">Because rearranging pieces does not change area, the leftover area a<sup>2</sup> - b<sup>2</sup> equals the rectangle area (a + b)(a - b).</p>
         </div>
       </article>
+
+      <article class="proof wide">
+        <div class="proof-header">
+          <h2>4. Splitting a rectangle with sides a + b and c + d</h2>
+          <div class="formula">(a+b)(c+d) = ac + ad + bc + bd</div>
+        </div>
+
+        <div class="diagram-wrap">
+          <svg id="rectangleProductDiagram" viewBox="0 0 760 430" role="img" aria-label="A rectangle of side lengths a plus b and c plus d split into ac, ad, bc, and bd rectangles"></svg>
+        </div>
+
+        <div class="steps">
+          <h3>Area argument</h3>
+          <ol>
+            <li>Draw one rectangle whose side lengths are <strong>a + b</strong> and <strong>c + d</strong>. Its total area is <span class="formula">(a+b)(c+d)</span>.</li>
+            <li>Split one side into lengths <strong>a</strong> and <strong>b</strong>, and the other side into lengths <strong>c</strong> and <strong>d</strong>.</li>
+            <li>The four smaller rectangles have areas <strong>ac</strong>, <strong>ad</strong>, <strong>bc</strong>, and <strong>bd</strong>.</li>
+            <li>Add the pieces: <span class="formula">ac + ad + bc + bd</span>.</li>
+          </ol>
+          <p class="note">The same rectangle is measured two ways: once as one large product, and once as the sum of its four smaller rectangular areas.</p>
+        </div>
+      </article>
     </section>
 
     <section class="summary">
@@ -377,6 +411,11 @@
           Removing a <strong>b<sup>2</sup></strong> corner from an <strong>a<sup>2</sup></strong> square leaves pieces that rearrange
           into a rectangle with side lengths <strong>a + b</strong> and <strong>a - b</strong>.
         </div>
+        <div class="fact">
+          <strong>When multiplying two sums</strong>
+          A rectangle with side lengths <strong>a + b</strong> and <strong>c + d</strong> splits into four rectangles whose
+          areas are <strong>ac</strong>, <strong>ad</strong>, <strong>bc</strong>, and <strong>bd</strong>.
+        </div>
       </div>
     </section>
   </main>
@@ -384,11 +423,16 @@
   <script>
     const aSlider = document.getElementById("aSlider");
     const bSlider = document.getElementById("bSlider");
+    const cSlider = document.getElementById("cSlider");
+    const dSlider = document.getElementById("dSlider");
     const aValue = document.getElementById("aValue");
     const bValue = document.getElementById("bValue");
+    const cValue = document.getElementById("cValue");
+    const dValue = document.getElementById("dValue");
     const sumDiagram = document.getElementById("sumDiagram");
     const differenceDiagram = document.getElementById("differenceDiagram");
     const differenceSquaresDiagram = document.getElementById("differenceSquaresDiagram");
+    const rectangleProductDiagram = document.getElementById("rectangleProductDiagram");
     const resetButton = document.getElementById("resetButton");
 
     function svgEl(tag, attrs = {}) {
@@ -567,31 +611,79 @@
       addText(differenceSquaresDiagram, rightX + rectWidth / 2, topY + squareSize + 28, "rectangle area = (a+b)(a-b)");
     }
 
+    function renderRectangleProductDiagram(a, b, c, d) {
+      rectangleProductDiagram.replaceChildren();
+      const x = 92;
+      const y = 68;
+      const maxWidth = 560;
+      const maxHeight = 270;
+      const unit = Math.min(maxWidth / (a + b), maxHeight / (c + d));
+      const aSize = a * unit;
+      const bSize = b * unit;
+      const cSize = c * unit;
+      const dSize = d * unit;
+      const width = aSize + bSize;
+      const height = cSize + dSize;
+
+      addRect(rectangleProductDiagram, x, y, aSize, cSize, "var(--green)", "var(--green-line)", "ac");
+      addRect(rectangleProductDiagram, x + aSize, y, bSize, cSize, "var(--blue)", "var(--blue-line)", "bc");
+      addRect(rectangleProductDiagram, x, y + cSize, aSize, dSize, "var(--amber)", "var(--amber-line)", "ad");
+      addRect(rectangleProductDiagram, x + aSize, y + cSize, bSize, dSize, "var(--red)", "var(--red-line)", "bd");
+
+      rectangleProductDiagram.appendChild(svgEl("rect", {
+        x,
+        y,
+        width,
+        height,
+        fill: "none",
+        stroke: "#1f2937",
+        "stroke-width": 2.5,
+      }));
+
+      addLine(rectangleProductDiagram, x + aSize, y, x + aSize, y + height);
+      addLine(rectangleProductDiagram, x, y + cSize, x + width, y + cSize);
+      addText(rectangleProductDiagram, x + aSize / 2, y - 18, "a");
+      addText(rectangleProductDiagram, x + aSize + bSize / 2, y - 18, "b");
+      addText(rectangleProductDiagram, x - 24, y + cSize / 2, "c");
+      addText(rectangleProductDiagram, x - 24, y + cSize + dSize / 2, "d");
+      addText(rectangleProductDiagram, x + width / 2, y + height + 30, "whole width = a + b");
+      addText(rectangleProductDiagram, x + width + 56, y + height / 2, "whole height = c + d");
+    }
+
     function getLengths() {
       const a = Number(aSlider.value);
       let b = Number(bSlider.value);
+      const c = Number(cSlider.value);
+      const d = Number(dSlider.value);
       if (b >= a) {
         b = a - 1;
         bSlider.value = String(b);
       }
-      return { a, b };
+      return { a, b, c, d };
     }
 
     function update() {
-      const { a, b } = getLengths();
+      const { a, b, c, d } = getLengths();
       aValue.textContent = String(a);
       bValue.textContent = String(b);
+      cValue.textContent = String(c);
+      dValue.textContent = String(d);
       bSlider.max = String(Math.max(1, a - 1));
       renderSumDiagram(a, b);
       renderDifferenceDiagram(a, b);
       renderDifferenceSquaresDiagram(a, b);
+      renderRectangleProductDiagram(a, b, c, d);
     }
 
     aSlider.addEventListener("input", update);
     bSlider.addEventListener("input", update);
+    cSlider.addEventListener("input", update);
+    dSlider.addEventListener("input", update);
     resetButton.addEventListener("click", () => {
       aSlider.value = "7";
       bSlider.value = "2";
+      cSlider.value = "5";
+      dSlider.value = "3";
       update();
     });
 
