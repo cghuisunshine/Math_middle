@@ -68,6 +68,47 @@
       font-size: 17px;
     }
 
+    .mode-switch {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 18px;
+    }
+
+    .mode-switch button {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: #ffffff;
+      color: var(--ink);
+      padding: 7px 11px;
+      font: inherit;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .mode-switch button[aria-pressed="true"] {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    [data-lang] {
+      display: none;
+    }
+
+    body[data-mode="zh"] [data-lang="zh"],
+    body[data-mode="en"] [data-lang="en"],
+    body[data-mode="both"] [data-lang] {
+      display: inline;
+    }
+
+    body[data-mode="both"] [data-lang="en"]::before {
+      content: " / ";
+      color: var(--muted);
+      font-weight: 400;
+    }
+
     .section {
       background: var(--paper);
       border: 1px solid var(--border);
@@ -205,227 +246,253 @@
     }
   </style>
 </head>
-<body>
+<body data-mode="zh">
   <main class="page">
     <header>
-      <div class="badge">七年级下册数学 · 单项式与多项式除法</div>
-      <h1>圈出题目：提取与解答</h1>
-      <p class="subtitle">根据图片中圈出的题目整理成 HTML 学习页，包含题目、步骤和最终答案。</p>
+      <div class="badge"><span data-lang="zh">七年级下册数学 · 单项式与多项式除法</span><span data-lang="en">Grade 7 Math · Monomial and Polynomial Division</span></div>
+      <h1><span data-lang="zh">圈出题目：提取与解答</span><span data-lang="en">Circled Questions: Extraction and Solutions</span></h1>
+      <p class="subtitle"><span data-lang="zh">根据图片中圈出的题目整理成 HTML 学习页，包含题目、步骤和最终答案。</span><span data-lang="en">An HTML study page made from the circled questions in the images, with problems, steps, and final answers.</span></p>
+      <div class="mode-switch" role="group" aria-label="Language mode">
+        <button type="button" data-mode="zh" aria-pressed="true">中文</button>
+        <button type="button" data-mode="both" aria-pressed="false">En + Zh</button>
+        <button type="button" data-mode="en" aria-pressed="false">En</button>
+      </div>
     </header>
 
     <div class="note">
-      <strong>方法提醒：</strong> 单项式相除时，系数相除，同底数幂指数相减；多项式除以单项式时，每一项分别除以这个单项式。
+      <strong><span data-lang="zh">方法提醒：</span><span data-lang="en">Method reminder:</span></strong> <span data-lang="zh">单项式相除时，系数相除，同底数幂指数相减；多项式除以单项式时，每一项分别除以这个单项式。</span><span data-lang="en">When dividing monomials, divide the coefficients and subtract exponents with the same base. When dividing a polynomial by a monomial, divide each term by that monomial.</span>
     </div>
 
     <section class="section">
-      <h2>第一张图：随堂练习</h2>
+      <h2><span data-lang="zh">第一张图：随堂练习</span><span data-lang="en">First Image: In-Class Practice</span></h2>
 
-      <h3>1. 计算</h3>
+      <h3><span data-lang="zh">1. 计算</span><span data-lang="en">1. Calculate</span></h3>
       <div class="grid">
         <article class="card">
-          <div class="q-title"><span class="q-num">1(1)</span><span class="tag">单项式除法</span></div>
+          <div class="q-title"><span class="q-num">1(1)</span><span class="tag"><span data-lang="zh">单项式除法</span><span data-lang="en">Monomial division</span></span></div>
           <div class="math">2a⁶b³ ÷ a³b²</div>
           <details open>
-            <summary>查看步骤</summary>
+            <summary><span data-lang="zh">查看步骤</span><span data-lang="en">Show steps</span></summary>
             <ol class="steps">
-              <li>系数：2 ÷ 1 = 2</li>
-              <li>a 的指数：6 − 3 = 3</li>
-              <li>b 的指数：3 − 2 = 1</li>
+              <li><span data-lang="zh">系数：2 ÷ 1 = 2</span><span data-lang="en">Coefficient: 2 ÷ 1 = 2</span></li>
+              <li><span data-lang="zh">a 的指数：6 − 3 = 3</span><span data-lang="en">Exponent of a: 6 − 3 = 3</span></li>
+              <li><span data-lang="zh">b 的指数：3 − 2 = 1</span><span data-lang="en">Exponent of b: 3 − 2 = 1</span></li>
             </ol>
           </details>
-          <div class="answer">答案：2a³b</div>
+          <div class="answer"><span data-lang="zh">答案：2a³b</span><span data-lang="en">Answer: 2a³b</span></div>
         </article>
 
         <article class="card">
-          <div class="q-title"><span class="q-num">1(2)</span><span class="tag">分数系数</span></div>
+          <div class="q-title"><span class="q-num">1(2)</span><span class="tag"><span data-lang="zh">分数系数</span><span data-lang="en">Fraction coefficients</span></span></div>
           <div class="math">(1/48)x³y² ÷ (1/16)x²y</div>
           <details open>
-            <summary>查看步骤</summary>
+            <summary><span data-lang="zh">查看步骤</span><span data-lang="en">Show steps</span></summary>
             <ol class="steps">
-              <li>系数：(1/48) ÷ (1/16) = 1/3</li>
-              <li>x 的指数：3 − 2 = 1</li>
-              <li>y 的指数：2 − 1 = 1</li>
+              <li><span data-lang="zh">系数：(1/48) ÷ (1/16) = 1/3</span><span data-lang="en">Coefficient: (1/48) ÷ (1/16) = 1/3</span></li>
+              <li><span data-lang="zh">x 的指数：3 − 2 = 1</span><span data-lang="en">Exponent of x: 3 − 2 = 1</span></li>
+              <li><span data-lang="zh">y 的指数：2 − 1 = 1</span><span data-lang="en">Exponent of y: 2 − 1 = 1</span></li>
             </ol>
           </details>
-          <div class="answer">答案：(1/3)xy</div>
+          <div class="answer"><span data-lang="zh">答案：(1/3)xy</span><span data-lang="en">Answer: (1/3)xy</span></div>
         </article>
 
         <article class="card">
-          <div class="q-title"><span class="q-num">1(3)</span><span class="tag">先化简括号</span></div>
+          <div class="q-title"><span class="q-num">1(3)</span><span class="tag"><span data-lang="zh">先化简括号</span><span data-lang="en">Simplify parentheses first</span></span></div>
           <div class="math">3m²n³ ÷ (mn)²</div>
           <details open>
-            <summary>查看步骤</summary>
+            <summary><span data-lang="zh">查看步骤</span><span data-lang="en">Show steps</span></summary>
             <ol class="steps">
-              <li>(mn)² = m²n²</li>
-              <li>3m²n³ ÷ m²n² = 3n</li>
+              <li><span data-lang="zh">(mn)² = m²n²</span><span data-lang="en">(mn)² = m²n²</span></li>
+              <li><span data-lang="zh">3m²n³ ÷ m²n² = 3n</span><span data-lang="en">3m²n³ ÷ m²n² = 3n</span></li>
             </ol>
           </details>
-          <div class="answer">答案：3n</div>
+          <div class="answer"><span data-lang="zh">答案：3n</span><span data-lang="en">Answer: 3n</span></div>
         </article>
 
         <article class="card">
-          <div class="q-title"><span class="q-num">1(4)</span><span class="tag">乘方后相除</span></div>
+          <div class="q-title"><span class="q-num">1(4)</span><span class="tag"><span data-lang="zh">乘方后相除</span><span data-lang="en">Power first, then divide</span></span></div>
           <div class="math">(2x²y)³ ÷ 6x³y²</div>
           <details open>
-            <summary>查看步骤</summary>
+            <summary><span data-lang="zh">查看步骤</span><span data-lang="en">Show steps</span></summary>
             <ol class="steps">
-              <li>(2x²y)³ = 8x⁶y³</li>
-              <li>8x⁶y³ ÷ 6x³y² = (4/3)x³y</li>
+              <li><span data-lang="zh">(2x²y)³ = 8x⁶y³</span><span data-lang="en">(2x²y)³ = 8x⁶y³</span></li>
+              <li><span data-lang="zh">8x⁶y³ ÷ 6x³y² = (4/3)x³y</span><span data-lang="en">8x⁶y³ ÷ 6x³y² = (4/3)x³y</span></li>
             </ol>
           </details>
-          <div class="answer">答案：(4/3)x³y</div>
+          <div class="answer"><span data-lang="zh">答案：(4/3)x³y</span><span data-lang="en">Answer: (4/3)x³y</span></div>
         </article>
       </div>
 
-      <h3>2. 计算</h3>
+      <h3><span data-lang="zh">2. 计算</span><span data-lang="en">2. Calculate</span></h3>
       <div class="grid">
         <article class="card">
-          <div class="q-title"><span class="q-num">2(1)</span><span class="tag">多项式除以单项式</span></div>
+          <div class="q-title"><span class="q-num">2(1)</span><span class="tag"><span data-lang="zh">多项式除以单项式</span><span data-lang="en">Polynomial divided by a monomial</span></span></div>
           <div class="math">(3xy + y) ÷ y</div>
           <details open>
-            <summary>查看步骤</summary>
+            <summary><span data-lang="zh">查看步骤</span><span data-lang="en">Show steps</span></summary>
             <ol class="steps">
-              <li>3xy ÷ y = 3x</li>
-              <li>y ÷ y = 1</li>
+              <li><span data-lang="zh">3xy ÷ y = 3x</span><span data-lang="en">3xy ÷ y = 3x</span></li>
+              <li><span data-lang="zh">y ÷ y = 1</span><span data-lang="en">y ÷ y = 1</span></li>
             </ol>
           </details>
-          <div class="answer">答案：3x + 1</div>
+          <div class="answer"><span data-lang="zh">答案：3x + 1</span><span data-lang="en">Answer: 3x + 1</span></div>
         </article>
 
         <article class="card">
-          <div class="q-title"><span class="q-num">2(2)</span><span class="tag">提取公共因式</span></div>
+          <div class="q-title"><span class="q-num">2(2)</span><span class="tag"><span data-lang="zh">提取公共因式</span><span data-lang="en">Factor out the common factor</span></span></div>
           <div class="math">(ma + mb + mc) ÷ m</div>
           <details open>
-            <summary>查看步骤</summary>
+            <summary><span data-lang="zh">查看步骤</span><span data-lang="en">Show steps</span></summary>
             <ol class="steps">
-              <li>ma ÷ m = a</li>
-              <li>mb ÷ m = b</li>
-              <li>mc ÷ m = c</li>
+              <li><span data-lang="zh">ma ÷ m = a</span><span data-lang="en">ma ÷ m = a</span></li>
+              <li><span data-lang="zh">mb ÷ m = b</span><span data-lang="en">mb ÷ m = b</span></li>
+              <li><span data-lang="zh">mc ÷ m = c</span><span data-lang="en">mc ÷ m = c</span></li>
             </ol>
           </details>
-          <div class="answer">答案：a + b + c</div>
+          <div class="answer"><span data-lang="zh">答案：a + b + c</span><span data-lang="en">Answer: a + b + c</span></div>
         </article>
 
         <article class="card">
-          <div class="q-title"><span class="q-num">2(3)</span><span class="tag">注意负号</span></div>
+          <div class="q-title"><span class="q-num">2(3)</span><span class="tag"><span data-lang="zh">注意负号</span><span data-lang="en">Watch the negative sign</span></span></div>
           <div class="math">(6c²d − c³d³) ÷ (−2c²d)</div>
           <details open>
-            <summary>查看步骤</summary>
+            <summary><span data-lang="zh">查看步骤</span><span data-lang="en">Show steps</span></summary>
             <ol class="steps">
-              <li>6c²d ÷ (−2c²d) = −3</li>
-              <li>−c³d³ ÷ (−2c²d) = (1/2)cd²</li>
+              <li><span data-lang="zh">6c²d ÷ (−2c²d) = −3</span><span data-lang="en">6c²d ÷ (−2c²d) = −3</span></li>
+              <li><span data-lang="zh">−c³d³ ÷ (−2c²d) = (1/2)cd²</span><span data-lang="en">−c³d³ ÷ (−2c²d) = (1/2)cd²</span></li>
             </ol>
           </details>
-          <div class="answer">答案：(1/2)cd² − 3</div>
+          <div class="answer"><span data-lang="zh">答案：(1/2)cd² − 3</span><span data-lang="en">Answer: (1/2)cd² − 3</span></div>
         </article>
 
         <article class="card">
-          <div class="q-title"><span class="q-num">2(4)</span><span class="tag">逐项相除</span></div>
+          <div class="q-title"><span class="q-num">2(4)</span><span class="tag"><span data-lang="zh">逐项相除</span><span data-lang="en">Divide term by term</span></span></div>
           <div class="math">(4x²y + 3xy²) ÷ 7xy</div>
           <details open>
-            <summary>查看步骤</summary>
+            <summary><span data-lang="zh">查看步骤</span><span data-lang="en">Show steps</span></summary>
             <ol class="steps">
-              <li>4x²y ÷ 7xy = (4/7)x</li>
-              <li>3xy² ÷ 7xy = (3/7)y</li>
+              <li><span data-lang="zh">4x²y ÷ 7xy = (4/7)x</span><span data-lang="en">4x²y ÷ 7xy = (4/7)x</span></li>
+              <li><span data-lang="zh">3xy² ÷ 7xy = (3/7)y</span><span data-lang="en">3xy² ÷ 7xy = (3/7)y</span></li>
             </ol>
           </details>
-          <div class="answer">答案：(4/7)x + (3/7)y</div>
+          <div class="answer"><span data-lang="zh">答案：(4/7)x + (3/7)y</span><span data-lang="en">Answer: (4/7)x + (3/7)y</span></div>
         </article>
       </div>
     </section>
 
     <section class="section">
-      <h2>第二张图：习题 1.4 · 知识技能 1</h2>
-      <h3>1. 计算</h3>
+      <h2><span data-lang="zh">第二张图：习题 1.4 · 知识技能 1</span><span data-lang="en">Second Image: Exercise 1.4 · Knowledge Skill 1</span></h2>
+      <h3><span data-lang="zh">1. 计算</span><span data-lang="en">1. Calculate</span></h3>
 
       <div class="grid">
         <article class="card">
-          <div class="q-title"><span class="q-num">1(1)</span><span class="tag">先除后乘</span></div>
+          <div class="q-title"><span class="q-num">1(1)</span><span class="tag"><span data-lang="zh">先除后乘</span><span data-lang="en">Divide first, then multiply</span></span></div>
           <div class="math">8a⁴b³c ÷ 2a²b³ · (−2/3 a³bc²)</div>
           <details open>
-            <summary>查看步骤</summary>
+            <summary><span data-lang="zh">查看步骤</span><span data-lang="en">Show steps</span></summary>
             <ol class="steps">
-              <li>8a⁴b³c ÷ 2a²b³ = 4a²c</li>
-              <li>4a²c · (−2/3 a³bc²) = −(8/3)a⁵bc³</li>
+              <li><span data-lang="zh">8a⁴b³c ÷ 2a²b³ = 4a²c</span><span data-lang="en">8a⁴b³c ÷ 2a²b³ = 4a²c</span></li>
+              <li><span data-lang="zh">4a²c · (−2/3 a³bc²) = −(8/3)a⁵bc³</span><span data-lang="en">4a²c · (−2/3 a³bc²) = −(8/3)a⁵bc³</span></li>
             </ol>
           </details>
-          <div class="answer">答案：−(8/3)a⁵bc³</div>
+          <div class="answer"><span data-lang="zh">答案：−(8/3)a⁵bc³</span><span data-lang="en">Answer: −(8/3)a⁵bc³</span></div>
         </article>
 
         <article class="card">
-          <div class="q-title"><span class="q-num">1(2)</span><span class="tag">乘方与除法</span></div>
+          <div class="q-title"><span class="q-num">1(2)</span><span class="tag"><span data-lang="zh">乘方与除法</span><span data-lang="en">Powers and division</span></span></div>
           <div class="math">(3x²y)² · (−15xy³) ÷ (−9x⁴y²)</div>
           <details open>
-            <summary>查看步骤</summary>
+            <summary><span data-lang="zh">查看步骤</span><span data-lang="en">Show steps</span></summary>
             <ol class="steps">
-              <li>(3x²y)² = 9x⁴y²</li>
-              <li>9x⁴y² · (−15xy³) ÷ (−9x⁴y²) = 15xy³</li>
+              <li><span data-lang="zh">(3x²y)² = 9x⁴y²</span><span data-lang="en">(3x²y)² = 9x⁴y²</span></li>
+              <li><span data-lang="zh">9x⁴y² · (−15xy³) ÷ (−9x⁴y²) = 15xy³</span><span data-lang="en">9x⁴y² · (−15xy³) ÷ (−9x⁴y²) = 15xy³</span></li>
             </ol>
           </details>
-          <div class="answer">答案：15xy³</div>
+          <div class="answer"><span data-lang="zh">答案：15xy³</span><span data-lang="en">Answer: 15xy³</span></div>
         </article>
 
         <article class="card">
-          <div class="q-title"><span class="q-num">1(3)</span><span class="tag">三项分别除</span></div>
+          <div class="q-title"><span class="q-num">1(3)</span><span class="tag"><span data-lang="zh">三项分别除</span><span data-lang="en">Divide the three terms separately</span></span></div>
           <div class="math">(−4a³ + 6a²b³ + 3a³b³) ÷ (−4a²)</div>
           <details open>
-            <summary>查看步骤</summary>
+            <summary><span data-lang="zh">查看步骤</span><span data-lang="en">Show steps</span></summary>
             <ol class="steps">
-              <li>−4a³ ÷ (−4a²) = a</li>
-              <li>6a²b³ ÷ (−4a²) = −(3/2)b³</li>
-              <li>3a³b³ ÷ (−4a²) = −(3/4)ab³</li>
+              <li><span data-lang="zh">−4a³ ÷ (−4a²) = a</span><span data-lang="en">−4a³ ÷ (−4a²) = a</span></li>
+              <li><span data-lang="zh">6a²b³ ÷ (−4a²) = −(3/2)b³</span><span data-lang="en">6a²b³ ÷ (−4a²) = −(3/2)b³</span></li>
+              <li><span data-lang="zh">3a³b³ ÷ (−4a²) = −(3/4)ab³</span><span data-lang="en">3a³b³ ÷ (−4a²) = −(3/4)ab³</span></li>
             </ol>
           </details>
-          <div class="answer">答案：a − (3/2)b³ − (3/4)ab³</div>
+          <div class="answer"><span data-lang="zh">答案：a − (3/2)b³ − (3/4)ab³</span><span data-lang="en">Answer: a − (3/2)b³ − (3/4)ab³</span></div>
         </article>
 
         <article class="card">
-          <div class="q-title"><span class="q-num">1(4)</span><span class="tag">除以分式单项式</span></div>
+          <div class="q-title"><span class="q-num">1(4)</span><span class="tag"><span data-lang="zh">除以分式单项式</span><span data-lang="en">Divide by a fractional monomial</span></span></div>
           <div class="math">((2/5)mn³ − m²n² + (1/6)n⁴) ÷ ((2/3)n²)</div>
           <details open>
-            <summary>查看步骤</summary>
+            <summary><span data-lang="zh">查看步骤</span><span data-lang="en">Show steps</span></summary>
             <ol class="steps">
-              <li>(2/5)mn³ ÷ (2/3)n² = (3/5)mn</li>
-              <li>−m²n² ÷ (2/3)n² = −(3/2)m²</li>
-              <li>(1/6)n⁴ ÷ (2/3)n² = (1/4)n²</li>
+              <li><span data-lang="zh">(2/5)mn³ ÷ (2/3)n² = (3/5)mn</span><span data-lang="en">(2/5)mn³ ÷ (2/3)n² = (3/5)mn</span></li>
+              <li><span data-lang="zh">−m²n² ÷ (2/3)n² = −(3/2)m²</span><span data-lang="en">−m²n² ÷ (2/3)n² = −(3/2)m²</span></li>
+              <li><span data-lang="zh">(1/6)n⁴ ÷ (2/3)n² = (1/4)n²</span><span data-lang="en">(1/6)n⁴ ÷ (2/3)n² = (1/4)n²</span></li>
             </ol>
           </details>
-          <div class="answer">答案：(3/5)mn − (3/2)m² + (1/4)n²</div>
+          <div class="answer"><span data-lang="zh">答案：(3/5)mn − (3/2)m² + (1/4)n²</span><span data-lang="en">Answer: (3/5)mn − (3/2)m² + (1/4)n²</span></div>
         </article>
 
         <article class="card">
-          <div class="q-title"><span class="q-num">1(5)</span><span class="tag">每一项乘 5/y</span></div>
+          <div class="q-title"><span class="q-num">1(5)</span><span class="tag"><span data-lang="zh">每一项乘 5/y</span><span data-lang="en">Multiply each term by 5/y</span></span></div>
           <div class="math">((1/10)xy² + (1/4)y² − (1/2)y) ÷ ((1/5)y)</div>
           <details open>
-            <summary>查看步骤</summary>
+            <summary><span data-lang="zh">查看步骤</span><span data-lang="en">Show steps</span></summary>
             <ol class="steps">
-              <li>(1/10)xy² ÷ (1/5)y = (1/2)xy</li>
-              <li>(1/4)y² ÷ (1/5)y = (5/4)y</li>
-              <li>−(1/2)y ÷ (1/5)y = −5/2</li>
+              <li><span data-lang="zh">(1/10)xy² ÷ (1/5)y = (1/2)xy</span><span data-lang="en">(1/10)xy² ÷ (1/5)y = (1/2)xy</span></li>
+              <li><span data-lang="zh">(1/4)y² ÷ (1/5)y = (5/4)y</span><span data-lang="en">(1/4)y² ÷ (1/5)y = (5/4)y</span></li>
+              <li><span data-lang="zh">−(1/2)y ÷ (1/5)y = −5/2</span><span data-lang="en">−(1/2)y ÷ (1/5)y = −5/2</span></li>
             </ol>
           </details>
-          <div class="answer">答案：(1/2)xy + (5/4)y − 5/2</div>
+          <div class="answer"><span data-lang="zh">答案：(1/2)xy + (5/4)y − 5/2</span><span data-lang="en">Answer: (1/2)xy + (5/4)y − 5/2</span></div>
         </article>
 
         <article class="card">
-          <div class="q-title"><span class="q-num">1(6)</span><span class="tag">先展开括号</span></div>
+          <div class="q-title"><span class="q-num">1(6)</span><span class="tag"><span data-lang="zh">先展开括号</span><span data-lang="en">Expand the parentheses first</span></span></div>
           <div class="math">[(x + 1)(x + 2) − 2] ÷ x</div>
           <details open>
-            <summary>查看步骤</summary>
+            <summary><span data-lang="zh">查看步骤</span><span data-lang="en">Show steps</span></summary>
             <ol class="steps">
-              <li>(x + 1)(x + 2) = x² + 3x + 2</li>
-              <li>x² + 3x + 2 − 2 = x² + 3x</li>
-              <li>(x² + 3x) ÷ x = x + 3</li>
+              <li><span data-lang="zh">(x + 1)(x + 2) = x² + 3x + 2</span><span data-lang="en">(x + 1)(x + 2) = x² + 3x + 2</span></li>
+              <li><span data-lang="zh">x² + 3x + 2 − 2 = x² + 3x</span><span data-lang="en">x² + 3x + 2 − 2 = x² + 3x</span></li>
+              <li><span data-lang="zh">(x² + 3x) ÷ x = x + 3</span><span data-lang="en">(x² + 3x) ÷ x = x + 3</span></li>
             </ol>
           </details>
-          <div class="answer">答案：x + 3</div>
+          <div class="answer"><span data-lang="zh">答案：x + 3</span><span data-lang="en">Answer: x + 3</span></div>
         </article>
       </div>
     </section>
 
     <footer>
-      Made for study review · 可直接保存为 .html 文件打开或打印
+      <span data-lang="zh">用于学习复习 · 可直接保存为 .html 文件打开或打印</span><span data-lang="en">Made for study review · Save as an .html file to open or print directly</span>
     </footer>
   </main>
+  <script>
+    const storageKey = 'circledQuestionsLanguageMode';
+    const modeButtons = document.querySelectorAll('.mode-switch button');
+
+    function setLanguageMode(mode) {
+      const selectedMode = ['zh', 'both', 'en'].includes(mode) ? mode : 'zh';
+      document.body.dataset.mode = selectedMode;
+      document.documentElement.lang = selectedMode === 'en' ? 'en' : 'zh-CN';
+      document.title = selectedMode === 'en' ? 'Circled Questions: Extraction and Solutions' : '圈出题目：提取与解答';
+      localStorage.setItem(storageKey, selectedMode);
+      modeButtons.forEach((button) => {
+        button.setAttribute('aria-pressed', String(button.dataset.mode === selectedMode));
+      });
+    }
+
+    modeButtons.forEach((button) => {
+      button.addEventListener('click', () => setLanguageMode(button.dataset.mode));
+    });
+
+    setLanguageMode(localStorage.getItem(storageKey));
+  </script>
 </body>
 </html>
