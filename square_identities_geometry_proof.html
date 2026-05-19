@@ -208,6 +208,25 @@
       padding-top: 12px;
     }
 
+    .process-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .process-panel {
+      min-width: 0;
+    }
+
+    .process-panel p {
+      color: var(--text);
+      font-size: 0.92rem;
+      font-weight: 700;
+      margin: 0 0 6px;
+      min-height: 2.8em;
+    }
+
     .summary {
       background: var(--panel);
       border: 1px solid var(--border);
@@ -238,6 +257,7 @@
     @media (max-width: 860px) {
       .grid,
       .summary-grid,
+      .process-grid,
       .controls {
         grid-template-columns: 1fr;
       }
@@ -284,8 +304,8 @@
         <input id="aSlider" type="range" min="4" max="10" value="7" step="1" />
       </div>
       <div>
-        <label for="bSlider">Side length b: <span class="value" id="bValue">2</span></label>
-        <input id="bSlider" type="range" min="1" max="5" value="2" step="1" />
+        <label for="bSlider">Side length b: <span class="value" id="bValue">5</span></label>
+        <input id="bSlider" type="range" min="2" max="6" value="5" step="1" />
       </div>
       <button type="button" id="resetButton">Reset</button>
     </section>
@@ -391,6 +411,46 @@
           <p class="note">The same rectangle is measured two ways: once as one large product, and once as the sum of its four smaller rectangular areas.</p>
         </div>
       </article>
+
+      <article class="proof wide">
+        <div class="proof-header">
+          <h2>5. Removing strips from an a by b rectangle</h2>
+          <div class="formula">(a-c)(b-d) = ab - bc - ad + cd</div>
+        </div>
+
+        <div class="diagram-wrap">
+          <svg id="subtractionProductDiagram" viewBox="0 0 760 430" role="img" aria-label="An a by b rectangle with a c by b strip and an a by d strip removed, with the c by d overlap added back"></svg>
+          <div class="process-grid" aria-label="Step-by-step subtraction diagrams">
+            <div class="process-panel">
+              <p>1. Subtract bc = c(b-d) + cd</p>
+              <svg id="minusBcDiagram" viewBox="0 0 360 260" role="img" aria-label="The big a by b rectangle with the c by b strip subtracted"></svg>
+            </div>
+            <div class="process-panel">
+              <p>2. Subtract ad = d(a-c) + cd, so cd is hit again</p>
+              <svg id="minusAdDiagram" viewBox="0 0 360 260" role="img" aria-label="After subtracting bc, subtracting the a by d strip removes the cd corner a second time"></svg>
+            </div>
+            <div class="process-panel">
+              <p>3. Add cd back to cancel the extra subtraction</p>
+              <svg id="addBackCdDiagram" viewBox="0 0 360 260" role="img" aria-label="The cd corner is added back so the remaining area is a minus c times b minus d"></svg>
+            </div>
+          </div>
+        </div>
+
+        <div class="steps">
+          <h3>Area argument</h3>
+          <ol>
+            <li>Start with one rectangle whose side lengths are <strong>a</strong> and <strong>b</strong>. Its area is <strong>ab</strong>.</li>
+            <li>Split the width into <strong>a - c</strong> and <strong>c</strong>, and split the height into <strong>b - d</strong> and <strong>d</strong>.</li>
+            <li>The four pieces show <span class="formula">ab = (a-c)(b-d) + c(b-d) + d(a-c) + cd</span>.</li>
+            <li>The right strip is <strong>bc = c(b-d) + cd</strong>. Subtract it first: <span class="formula">ab - bc = (a-c)(b-d) + d(a-c)</span>.</li>
+            <li>The bottom strip is <strong>ad = d(a-c) + cd</strong>. Subtract it next: <span class="formula">ab - bc - ad = (a-c)(b-d) - cd</span>.</li>
+            <li>The extra <strong>-cd</strong> appears because the <strong>cd</strong> corner belongs to both removed rectangles, so subtracting <strong>bc</strong> and <strong>ad</strong> removes that corner twice.</li>
+            <li>Add one <strong>cd</strong> back: <span class="formula">ab - bc - ad + cd = (a-c)(b-d)</span>.</li>
+            <li>Rearrange to get <span class="formula">(a-c)(b-d) = ab - bc - ad + cd</span>.</li>
+          </ol>
+          <p class="note">Equivalently, if you compute ab - bc - ad, the cd corner has been removed twice. Adding one cd restores the correct remaining rectangle.</p>
+        </div>
+      </article>
     </section>
 
     <section class="summary">
@@ -416,6 +476,11 @@
           A rectangle with side lengths <strong>a + b</strong> and <strong>c + d</strong> splits into four rectangles whose
           areas are <strong>ac</strong>, <strong>ad</strong>, <strong>bc</strong>, and <strong>bd</strong>.
         </div>
+        <div class="fact">
+          <strong>When subtracting from two sides</strong>
+          An <strong>a</strong> by <strong>b</strong> rectangle can be trimmed by a <strong>bc</strong> strip and an
+          <strong>ad</strong> strip; the shared <strong>cd</strong> corner is restored once.
+        </div>
       </div>
     </section>
   </main>
@@ -433,6 +498,10 @@
     const differenceDiagram = document.getElementById("differenceDiagram");
     const differenceSquaresDiagram = document.getElementById("differenceSquaresDiagram");
     const rectangleProductDiagram = document.getElementById("rectangleProductDiagram");
+    const subtractionProductDiagram = document.getElementById("subtractionProductDiagram");
+    const minusBcDiagram = document.getElementById("minusBcDiagram");
+    const minusAdDiagram = document.getElementById("minusAdDiagram");
+    const addBackCdDiagram = document.getElementById("addBackCdDiagram");
     const resetButton = document.getElementById("resetButton");
 
     function svgEl(tag, attrs = {}) {
@@ -650,14 +719,131 @@
       addText(rectangleProductDiagram, x + width + 56, y + height / 2, "whole height = c + d");
     }
 
+    function renderSubtractionProductDiagram(a, b, c, d) {
+      subtractionProductDiagram.replaceChildren();
+      const x = 92;
+      const y = 68;
+      const maxWidth = 560;
+      const maxHeight = 270;
+      const unit = Math.min(maxWidth / a, maxHeight / b);
+      const cSize = c * unit;
+      const dSize = d * unit;
+      const keptWidth = (a - c) * unit;
+      const keptHeight = (b - d) * unit;
+      const width = a * unit;
+      const height = b * unit;
+
+      addRect(subtractionProductDiagram, x, y, keptWidth, keptHeight, "var(--green)", "var(--green-line)", "(a-c)(b-d)");
+      addRect(subtractionProductDiagram, x + keptWidth, y, cSize, keptHeight, "var(--blue)", "var(--blue-line)", "c(b-d)");
+      addRect(subtractionProductDiagram, x, y + keptHeight, keptWidth, dSize, "var(--red)", "var(--red-line)", "d(a-c)");
+      addRect(subtractionProductDiagram, x + keptWidth, y + keptHeight, cSize, dSize, "var(--amber)", "var(--amber-line)", "cd");
+
+      subtractionProductDiagram.appendChild(svgEl("rect", {
+        x,
+        y,
+        width,
+        height,
+        fill: "none",
+        stroke: "#1f2937",
+        "stroke-width": 2.5,
+      }));
+
+      addLine(subtractionProductDiagram, x + keptWidth, y, x + keptWidth, y + height);
+      addLine(subtractionProductDiagram, x, y + keptHeight, x + width, y + keptHeight);
+      addText(subtractionProductDiagram, x + keptWidth / 2, y - 18, "a - c");
+      addText(subtractionProductDiagram, x + keptWidth + cSize / 2, y - 18, "c");
+      addText(subtractionProductDiagram, x - 26, y + keptHeight / 2, "b - d");
+      addText(subtractionProductDiagram, x - 26, y + keptHeight + dSize / 2, "d");
+      addText(subtractionProductDiagram, x + width / 2, y + height + 28, "original area = ab");
+      addText(subtractionProductDiagram, x + width + 58, y + keptHeight / 2, "bc = c(b-d)+cd");
+      addText(subtractionProductDiagram, x + width / 2, y + height + 54, "ad = d(a-c)+cd");
+      addText(subtractionProductDiagram, x + width / 2, y + height + 78, "ab - bc - ad = kept area - cd; add cd back");
+    }
+
+    function renderSubtractionStepDiagrams(a, b, c, d) {
+      const diagrams = [minusBcDiagram, minusAdDiagram, addBackCdDiagram];
+      diagrams.forEach((diagram) => diagram.replaceChildren());
+
+      const x = 44;
+      const y = 56;
+      const maxWidth = 250;
+      const maxHeight = 132;
+      const unit = Math.min(maxWidth / a, maxHeight / b);
+      const cSize = c * unit;
+      const dSize = d * unit;
+      const keptWidth = (a - c) * unit;
+      const keptHeight = (b - d) * unit;
+      const width = a * unit;
+      const height = b * unit;
+      const removed = "#eef0ed";
+      const removedLine = "#9ca3af";
+
+      addText(minusBcDiagram, x + width / 2, 28, "ab - bc");
+      addRect(minusBcDiagram, x, y, keptWidth, height, "var(--green)", "var(--green-line)", "remaining");
+      addRect(minusBcDiagram, x + keptWidth, y, cSize, keptHeight, "var(--red)", "var(--red-line)", "-c(b-d)");
+      addRect(minusBcDiagram, x + keptWidth, y + keptHeight, cSize, dSize, "var(--red)", "var(--red-line)", "-cd");
+      addLine(minusBcDiagram, x + keptWidth, y, x + keptWidth, y + height);
+      addLine(minusBcDiagram, x + keptWidth, y + keptHeight, x + width, y + keptHeight);
+      addText(minusBcDiagram, x + width / 2, y + height + 30, "bc is the whole right strip");
+
+      addText(minusAdDiagram, x + width / 2, 28, "ab - bc - ad");
+      addRect(minusAdDiagram, x, y, keptWidth, keptHeight, "var(--green)", "var(--green-line)", "(a-c)(b-d)");
+      addRect(minusAdDiagram, x + keptWidth, y, cSize, keptHeight, removed, removedLine, "bc gone");
+      addRect(minusAdDiagram, x, y + keptHeight, keptWidth, dSize, "var(--red)", "var(--red-line)", "-d(a-c)");
+      addRect(minusAdDiagram, x + keptWidth, y + keptHeight, cSize, dSize, "var(--amber)", "var(--amber-line)", "-cd again");
+      minusAdDiagram.appendChild(svgEl("rect", {
+        x,
+        y: y + keptHeight,
+        width,
+        height: dSize,
+        fill: "none",
+        stroke: "var(--red-line)",
+        "stroke-width": 4,
+      }));
+      addLine(minusAdDiagram, x + keptWidth, y, x + keptWidth, y + height);
+      addLine(minusAdDiagram, x, y + keptHeight, x + width, y + keptHeight);
+      addText(minusAdDiagram, x + width / 2, y + height + 30, "ad is the whole bottom strip");
+      addText(minusAdDiagram, x + width / 2, y + height + 54, "result is kept area - cd");
+
+      addText(addBackCdDiagram, x + width / 2, 28, "ab - bc - ad + cd");
+      addRect(addBackCdDiagram, x, y, keptWidth, keptHeight, "var(--green)", "var(--green-line)", "(a-c)(b-d)");
+      addRect(addBackCdDiagram, x + keptWidth, y, cSize, keptHeight, removed, removedLine, "bc");
+      addRect(addBackCdDiagram, x, y + keptHeight, keptWidth, dSize, removed, removedLine, "ad");
+      addRect(addBackCdDiagram, x + keptWidth, y + keptHeight, cSize, dSize, "var(--amber)", "var(--amber-line)", "+cd");
+      addLine(addBackCdDiagram, x + keptWidth, y, x + keptWidth, y + height);
+      addLine(addBackCdDiagram, x, y + keptHeight, x + width, y + keptHeight);
+      addText(addBackCdDiagram, x + width / 2, y + height + 30, "+cd cancels the extra -cd");
+      addText(addBackCdDiagram, x + width / 2, y + height + 54, "final remaining area is (a-c)(b-d)");
+
+      diagrams.forEach((diagram) => {
+        diagram.appendChild(svgEl("rect", {
+          x,
+          y,
+          width,
+          height,
+          fill: "none",
+          stroke: "#1f2937",
+          "stroke-width": 2,
+        }));
+      });
+    }
+
     function getLengths() {
       const a = Number(aSlider.value);
       let b = Number(bSlider.value);
-      const c = Number(cSlider.value);
-      const d = Number(dSlider.value);
+      let c = Number(cSlider.value);
+      let d = Number(dSlider.value);
       if (b >= a) {
         b = a - 1;
         bSlider.value = String(b);
+      }
+      if (c >= a) {
+        c = a - 1;
+        cSlider.value = String(c);
+      }
+      if (d >= b) {
+        d = b - 1;
+        dSlider.value = String(d);
       }
       return { a, b, c, d };
     }
@@ -669,10 +855,14 @@
       cValue.textContent = String(c);
       dValue.textContent = String(d);
       bSlider.max = String(Math.max(1, a - 1));
+      cSlider.max = String(Math.max(1, a - 1));
+      dSlider.max = String(Math.max(1, b - 1));
       renderSumDiagram(a, b);
       renderDifferenceDiagram(a, b);
       renderDifferenceSquaresDiagram(a, b);
       renderRectangleProductDiagram(a, b, c, d);
+      renderSubtractionProductDiagram(a, b, c, d);
+      renderSubtractionStepDiagrams(a, b, c, d);
     }
 
     aSlider.addEventListener("input", update);
@@ -681,7 +871,7 @@
     dSlider.addEventListener("input", update);
     resetButton.addEventListener("click", () => {
       aSlider.value = "7";
-      bSlider.value = "2";
+      bSlider.value = "5";
       cSlider.value = "5";
       dSlider.value = "3";
       update();
