@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Why Minus a Negative Means Add</title>
+  <style>
+    :root {
+      --bg: #f7f9ff;
+      --card: #ffffff;
+      --ink: #1f2937;
+      --muted: #5b6472;
+      --blue: #2563eb;
+      --green: #16a34a;
+      --red: #dc2626;
+      --yellow: #facc15;
+      --border: #dbe3f0;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: "Comic Sans MS", "Trebuchet MS", Arial, sans-serif;
+      background: linear-gradient(180deg, #eef4ff, var(--bg));
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    .page {
+      max-width: 920px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+
+    header {
+      text-align: center;
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 24px;
+      padding: 28px 20px;
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.08);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      color: var(--blue);
+    }
+
+    .subtitle {
+      margin: 0;
+      font-size: 1.25rem;
+      color: var(--muted);
+    }
+
+    section {
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 22px;
+      padding: 22px;
+      margin-top: 20px;
+      box-shadow: 0 6px 18px rgba(31, 41, 55, 0.05);
+    }
+
+    h2 {
+      margin-top: 0;
+      color: var(--blue);
+      font-size: 1.75rem;
+    }
+
+    .big-formula {
+      text-align: center;
+      font-size: clamp(2rem, 6vw, 3.5rem);
+      font-weight: 900;
+      margin: 18px 0;
+      color: var(--green);
+    }
+
+    .speech {
+      background: #fff7cc;
+      border-left: 8px solid var(--yellow);
+      padding: 16px 18px;
+      border-radius: 16px;
+      font-size: 1.2rem;
+      margin: 16px 0;
+    }
+
+    .example-box {
+      background: #f1f7ff;
+      border: 2px dashed #93c5fd;
+      border-radius: 18px;
+      padding: 18px;
+      margin: 16px 0;
+    }
+
+    .cards {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin: 16px 0;
+    }
+
+    .money-card, .debt-card {
+      width: 70px;
+      height: 70px;
+      border-radius: 16px;
+      display: grid;
+      place-items: center;
+      font-size: 2rem;
+      font-weight: 900;
+      border: 3px solid;
+    }
+
+    .money-card {
+      background: #dcfce7;
+      border-color: #22c55e;
+      color: var(--green);
+    }
+
+    .debt-card {
+      background: #fee2e2;
+      border-color: #ef4444;
+      color: var(--red);
+    }
+
+    .number-line-wrap {
+      overflow-x: auto;
+      padding: 10px 0;
+    }
+
+    .number-line {
+      min-width: 680px;
+      position: relative;
+      height: 120px;
+      margin: 10px 0 0;
+    }
+
+    .line {
+      position: absolute;
+      left: 30px;
+      right: 30px;
+      top: 55px;
+      height: 4px;
+      background: var(--ink);
+      border-radius: 999px;
+    }
+
+    .ticks {
+      position: absolute;
+      left: 30px;
+      right: 30px;
+      top: 42px;
+      display: grid;
+      grid-template-columns: repeat(11, 1fr);
+    }
+
+    .tick {
+      text-align: center;
+      position: relative;
+      font-weight: 700;
+    }
+
+    .tick::before {
+      content: "";
+      display: block;
+      width: 4px;
+      height: 28px;
+      background: var(--ink);
+      margin: 0 auto 6px;
+      border-radius: 999px;
+    }
+
+    .arrow {
+      position: absolute;
+      top: 10px;
+      left: 402px;
+      width: 160px;
+      height: 42px;
+      border-top: 6px solid var(--green);
+      border-radius: 90% 90% 0 0;
+    }
+
+    .arrow::after {
+      content: "▶";
+      position: absolute;
+      right: -12px;
+      top: -19px;
+      color: var(--green);
+      font-size: 1.5rem;
+    }
+
+    .arrow-label {
+      position: absolute;
+      top: 0;
+      left: 420px;
+      color: var(--green);
+      font-weight: 900;
+      font-size: 1.1rem;
+    }
+
+    .steps {
+      display: grid;
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .step {
+      background: #fafafa;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 14px 16px;
+      font-size: 1.1rem;
+    }
+
+    .highlight {
+      color: var(--red);
+      font-weight: 900;
+    }
+
+    .positive {
+      color: var(--green);
+      font-weight: 900;
+    }
+
+    .mini-quiz button {
+      font-family: inherit;
+      font-size: 1rem;
+      font-weight: 700;
+      background: var(--blue);
+      color: white;
+      border: 0;
+      border-radius: 12px;
+      padding: 10px 16px;
+      cursor: pointer;
+    }
+
+    .answer {
+      display: none;
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      background: #dcfce7;
+      border: 2px solid #86efac;
+      font-weight: 700;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      margin-top: 24px;
+      font-size: 0.95rem;
+    }
+
+    @media print {
+      body { background: white; }
+      section, header { box-shadow: none; break-inside: avoid; }
+      .mini-quiz button { display: none; }
+      .answer { display: block; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1>Why Does Minus a Negative Mean Add?</h1>
+      <p class="subtitle">A primary-school friendly explanation using debts, cards, and a number line</p>
+    </header>
+
+    <section>
+      <h2>1. The Big Idea</h2>
+      <p>First, remember two simple meanings:</p>
+      <div class="speech">
+        <strong>Minus</strong> means take away.<br>
+        <strong>Negative</strong> means below zero, or owing something.
+      </div>
+      <div class="big-formula">5 − (−3) = 5 + 3 = 8</div>
+      <p>When we subtract a negative number, we are <strong>taking away something bad</strong>. That makes the answer bigger.</p>
+    </section>
+
+    <section>
+      <h2>2. Story: Removing a Debt</h2>
+      <div class="example-box">
+        <p>Imagine you have <strong>$5</strong>.</p>
+        <p>A negative number is like a debt.</p>
+        <p><span class="highlight">−3</span> means: “I owe $3.”</p>
+      </div>
+
+      <p>Now look at this:</p>
+      <div class="big-formula">5 − (−3)</div>
+
+      <div class="speech">
+        This means: “I have $5, and someone removes my $3 debt.”
+      </div>
+
+      <p>If someone removes your $3 debt, you become $3 richer.</p>
+      <div class="big-formula">5 − (−3) = 8</div>
+    </section>
+
+    <section>
+      <h2>3. Card Model</h2>
+      <p>Use two kinds of cards:</p>
+      <div class="cards">
+        <div class="money-card">+</div>
+        <div class="debt-card">−</div>
+      </div>
+      <p><span class="positive">+</span> card means one dollar you have.</p>
+      <p><span class="highlight">−</span> card means one dollar you owe.</p>
+
+      <div class="example-box">
+        <p>Start with five positive cards:</p>
+        <div class="cards">
+          <div class="money-card">+</div>
+          <div class="money-card">+</div>
+          <div class="money-card">+</div>
+          <div class="money-card">+</div>
+          <div class="money-card">+</div>
+        </div>
+        <p>That is <strong>5</strong>.</p>
+      </div>
+
+      <p>Subtracting <span class="highlight">−3</span> means taking away three debt cards. Taking away debt helps you, so the number goes up by 3.</p>
+      <div class="big-formula">5 − (−3) = 5 + 3</div>
+    </section>
+
+    <section>
+      <h2>4. Number Line Explanation</h2>
+      <p>For normal subtraction, we move left. For example, <strong>5 − 3</strong> means move left 3 steps.</p>
+      <p>But subtracting a negative means move the opposite way. So <strong>5 − (−3)</strong> means move right 3 steps.</p>
+
+      <div class="number-line-wrap">
+        <div class="number-line" aria-label="Number line from negative five to positive five">
+          <div class="arrow-label">move right 3</div>
+          <div class="arrow"></div>
+          <div class="line"></div>
+          <div class="ticks">
+            <div class="tick">−5</div>
+            <div class="tick">−4</div>
+            <div class="tick">−3</div>
+            <div class="tick">−2</div>
+            <div class="tick">−1</div>
+            <div class="tick">0</div>
+            <div class="tick">1</div>
+            <div class="tick">2</div>
+            <div class="tick">3</div>
+            <div class="tick">4</div>
+            <div class="tick">5</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="step">Start at <strong>5</strong>.</div>
+        <div class="step">Subtracting a negative means go the opposite way.</div>
+        <div class="step">Move right 3 steps: <strong>5 → 6 → 7 → 8</strong>.</div>
+      </div>
+    </section>
+
+    <section>
+      <h2>5. Easy Sentence to Remember</h2>
+      <div class="speech">
+        “Subtracting a negative means taking away something bad, so the number gets bigger.”
+      </div>
+      <div class="big-formula">a − (−b) = a + b</div>
+    </section>
+
+    <section class="mini-quiz">
+      <h2>6. Try It</h2>
+      <p><strong>Question:</strong> What is 7 − (−2)?</p>
+      <button onclick="document.getElementById('answer1').style.display='block'">Show Answer</button>
+      <div class="answer" id="answer1">
+        7 − (−2) = 7 + 2 = 9. Taking away a debt of 2 makes the number 2 bigger.
+      </div>
+    </section>
+
+    <footer>
+      Made for explaining negative numbers to primary school students.
+    </footer>
+  </main>
+</body>
+</html>
