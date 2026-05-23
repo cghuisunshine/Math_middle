@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>七年级下册第1章题型综合考试</title>
+  <title>Grade 7 Book 2 Chapter 1 Mixed Exam</title>
   <style>
     * {
       box-sizing: border-box;
@@ -58,6 +58,25 @@
     .meta span {
       border-bottom: 1px solid var(--strong-line);
       padding-bottom: 6px;
+    }
+
+    .en,
+    .zh {
+      display: inline;
+    }
+
+    .en + .zh::before {
+      content: " / ";
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    [data-lang-mode="en"] .zh {
+      display: none;
+    }
+
+    [data-lang-mode="en"] .en + .zh::before {
+      content: "";
     }
 
     .toc {
@@ -142,17 +161,53 @@
       padding: 2px 3px 0;
     }
 
-    .print {
+    .actions {
       position: fixed;
       right: 18px;
       bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .lang-switch {
+      display: flex;
+      gap: 0;
       border: 1px solid var(--line);
       border-radius: 6px;
-      background: #1f2328;
-      color: white;
-      padding: 9px 12px;
+      overflow: hidden;
+      background: var(--paper);
+    }
+
+    .lang-switch button,
+    .print {
+      border: 1px solid var(--line);
+      border-radius: 6px;
       cursor: pointer;
       font-size: 14px;
+    }
+
+    .lang-switch button {
+      border: 0;
+      border-radius: 0;
+      background: var(--paper);
+      color: var(--text);
+      padding: 9px 10px;
+    }
+
+    .lang-switch button + button {
+      border-left: 1px solid var(--line);
+    }
+
+    .lang-switch button[aria-pressed="true"] {
+      background: #1f2328;
+      color: white;
+    }
+
+    .print {
+      padding: 9px 12px;
+      background: #1f2328;
+      color: white;
     }
 
     @media (max-width: 720px) {
@@ -181,6 +236,7 @@
       }
 
       .toc,
+      .lang-switch,
       .print {
         display: none;
       }
@@ -200,315 +256,339 @@
     }
   </style>
 </head>
-<body>
+<body data-lang-mode="en-zh">
   <main>
     <header>
-      <h1>七年级下册第1章题型综合考试</h1>
+      <h1><span class="en">Grade 7 Book 2 Chapter 1 Mixed Exam</span><span class="zh">七年级下册第1章题型综合考试</span></h1>
       <div class="meta">
-        <span>姓名：</span>
-        <span>班级：</span>
-        <span>用时：90 分钟</span>
-        <span>总题数：49 题</span>
+        <span><span class="en">Name:</span><span class="zh">姓名：</span></span>
+        <span><span class="en">Class:</span><span class="zh">班级：</span></span>
+        <span><span class="en">Time: 90 minutes</span><span class="zh">用时：90 分钟</span></span>
+        <span><span class="en">Total: 49 questions</span><span class="zh">总题数：49 题</span></span>
       </div>
     </header>
 
-    <nav class="toc" aria-label="章节导航">
-      <a href="#s1">1.1 同底数幂的乘法</a>
-      <a href="#s2">1.2 幂的乘方与积的乘方</a>
-      <a href="#s3">1.3 同底数幂的除法</a>
-      <a href="#s4">1.4 整式的乘法</a>
-      <a href="#s5">1.5 平方差公式</a>
-      <a href="#s6">1.6 完全平方公式</a>
-      <a href="#s7">1.7 整式的除法</a>
+    <nav class="toc" aria-label="Chapter navigation">
+      <a href="#s1"><span class="en">1.1 Multiplication of Powers with the Same Base</span><span class="zh">1.1 同底数幂的乘法</span></a>
+      <a href="#s2"><span class="en">1.2 Powers of Powers and Products</span><span class="zh">1.2 幂的乘方与积的乘方</span></a>
+      <a href="#s3"><span class="en">1.3 Division of Powers with the Same Base</span><span class="zh">1.3 同底数幂的除法</span></a>
+      <a href="#s4"><span class="en">1.4 Multiplication of Polynomials</span><span class="zh">1.4 整式的乘法</span></a>
+      <a href="#s5"><span class="en">1.5 Difference of Squares Formula</span><span class="zh">1.5 平方差公式</span></a>
+      <a href="#s6"><span class="en">1.6 Perfect Square Formula</span><span class="zh">1.6 完全平方公式</span></a>
+      <a href="#s7"><span class="en">1.7 Division of Polynomials</span><span class="zh">1.7 整式的除法</span></a>
     </nav>
 
     <section id="s1">
-      <h2>专题1.1 同底数幂的乘法</h2>
+      <h2><span class="en">Topic 1.1 Multiplication of Powers with the Same Base</span><span class="zh">专题1.1 同底数幂的乘法</span></h2>
       <ol>
         <li>
-          <span class="type">题型01 同底数幂相乘</span>
-          计算：a<sup>5</sup> · a<sup>3</sup> · a。
+          <span class="type"><span class="en">Type 01 Multiplying powers with the same base</span><span class="zh">题型01 同底数幂相乘</span></span>
+          <span class="en">Calculate: a<sup>5</sup> · a<sup>3</sup> · a.</span><span class="zh">计算：a<sup>5</sup> · a<sup>3</sup> · a。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型02 不同底数转化为同底数幂的运算</span>
-          计算：2<sup>6</sup> · 4<sup>2</sup> · 8，并把结果写成 2<sup>n</sup> 的形式。
+          <span class="type"><span class="en">Type 02 Converting different bases to the same base</span><span class="zh">题型02 不同底数转化为同底数幂的运算</span></span>
+          <span class="en">Calculate 2<sup>6</sup> · 4<sup>2</sup> · 8, and write the result in the form 2<sup>n</sup>.</span><span class="zh">计算：2<sup>6</sup> · 4<sup>2</sup> · 8，并把结果写成 2<sup>n</sup> 的形式。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型03 同底数幂乘法的逆用</span>
-          已知 2<sup>m</sup> = 8，2<sup>n</sup> = 16，求 2<sup>m+n</sup> 的值。
+          <span class="type"><span class="en">Type 03 Reverse use of same-base multiplication</span><span class="zh">题型03 同底数幂乘法的逆用</span></span>
+          <span class="en">Given 2<sup>m</sup> = 8 and 2<sup>n</sup> = 16, find the value of 2<sup>m+n</sup>.</span><span class="zh">已知 2<sup>m</sup> = 8，2<sup>n</sup> = 16，求 2<sup>m+n</sup> 的值。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型04 已知代数式的值，求式子的值</span>
-          已知 x<sup>m</sup> = 3，x<sup>n</sup> = 5，求 2x<sup>m+n</sup> 的值。
+          <span class="type"><span class="en">Type 04 Finding an expression value from known expression values</span><span class="zh">题型04 已知代数式的值，求式子的值</span></span>
+          <span class="en">Given x<sup>m</sup> = 3 and x<sup>n</sup> = 5, find the value of 2x<sup>m+n</sup>.</span><span class="zh">已知 x<sup>m</sup> = 3，x<sup>n</sup> = 5，求 2x<sup>m+n</sup> 的值。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型05 新定义有关同底数幂的运算</span>
-          定义 a ★ b = 3<sup>a</sup> · 3<sup>b</sup>，求 2 ★ 4，并写成 3 的幂。
+          <span class="type"><span class="en">Type 05 New-operation problems with same-base powers</span><span class="zh">题型05 新定义有关同底数幂的运算</span></span>
+          <span class="en">Define a ★ b = 3<sup>a</sup> · 3<sup>b</sup>. Find 2 ★ 4 and write it as a power of 3.</span><span class="zh">定义 a ★ b = 3<sup>a</sup> · 3<sup>b</sup>，求 2 ★ 4，并写成 3 的幂。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型06 与同底数幂运算有关的规律探究问题</span>
-          观察：3<sup>1</sup>，3<sup>2</sup>，3<sup>3</sup>，3<sup>4</sup>，...。若 A = 3<sup>2</sup> · 3<sup>5</sup> · 3<sup>8</sup>，请写出 A 的指数，并说明指数的规律。
+          <span class="type"><span class="en">Type 06 Pattern investigation with same-base powers</span><span class="zh">题型06 与同底数幂运算有关的规律探究问题</span></span>
+          <span class="en">Observe 3<sup>1</sup>, 3<sup>2</sup>, 3<sup>3</sup>, 3<sup>4</sup>, .... If A = 3<sup>2</sup> · 3<sup>5</sup> · 3<sup>8</sup>, write the exponent of A and explain the pattern in the exponents.</span><span class="zh">观察：3<sup>1</sup>，3<sup>2</sup>，3<sup>3</sup>，3<sup>4</sup>，...。若 A = 3<sup>2</sup> · 3<sup>5</sup> · 3<sup>8</sup>，请写出 A 的指数，并说明指数的规律。</span>
           <div class="work wide-work"></div>
         </li>
       </ol>
     </section>
 
     <section id="s2">
-      <h2>专题1.2 幂的乘方与积的乘方</h2>
+      <h2><span class="en">Topic 1.2 Powers of Powers and Products</span><span class="zh">专题1.2 幂的乘方与积的乘方</span></h2>
       <ol start="7">
         <li>
-          <span class="type">题型01 幂的乘方运算</span>
-          计算：(x<sup>3</sup>)<sup>4</sup>。
+          <span class="type"><span class="en">Type 01 Power of a power</span><span class="zh">题型01 幂的乘方运算</span></span>
+          <span class="en">Calculate: (x<sup>3</sup>)<sup>4</sup>.</span><span class="zh">计算：(x<sup>3</sup>)<sup>4</sup>。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型02 幂的乘方的逆用</span>
-          已知 (2<sup>m</sup>)<sup>3</sup> = 2<sup>12</sup>，求 m 的值。
+          <span class="type"><span class="en">Type 02 Reverse use of power of a power</span><span class="zh">题型02 幂的乘方的逆用</span></span>
+          <span class="en">Given (2<sup>m</sup>)<sup>3</sup> = 2<sup>12</sup>, find m.</span><span class="zh">已知 (2<sup>m</sup>)<sup>3</sup> = 2<sup>12</sup>，求 m 的值。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型03 利用幂的乘方比较大小</span>
-          比较 5<sup>12</sup> 与 25<sup>6</sup> 的大小，并说明理由。
+          <span class="type"><span class="en">Type 03 Comparing sizes using power-of-a-power rules</span><span class="zh">题型03 利用幂的乘方比较大小</span></span>
+          <span class="en">Compare 5<sup>12</sup> and 25<sup>6</sup>, and explain your reasoning.</span><span class="zh">比较 5<sup>12</sup> 与 25<sup>6</sup> 的大小，并说明理由。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型04 积的乘方运算</span>
-          计算：(-2a<sup>2</sup>b)<sup>3</sup>。
+          <span class="type"><span class="en">Type 04 Power of a product</span><span class="zh">题型04 积的乘方运算</span></span>
+          <span class="en">Calculate: (-2a<sup>2</sup>b)<sup>3</sup>.</span><span class="zh">计算：(-2a<sup>2</sup>b)<sup>3</sup>。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型05 积的乘方的逆用</span>
-          已知 xy = -3，求 (2xy)<sup>3</sup> 的值。
+          <span class="type"><span class="en">Type 05 Reverse use of power of a product</span><span class="zh">题型05 积的乘方的逆用</span></span>
+          <span class="en">Given xy = -3, find the value of (2xy)<sup>3</sup>.</span><span class="zh">已知 xy = -3，求 (2xy)<sup>3</sup> 的值。</span>
           <div class="work"></div>
         </li>
       </ol>
     </section>
 
     <section id="s3">
-      <h2>专题1.3 同底数幂的除法</h2>
+      <h2><span class="en">Topic 1.3 Division of Powers with the Same Base</span><span class="zh">专题1.3 同底数幂的除法</span></h2>
       <ol start="12">
         <li>
-          <span class="type">题型01 同底数幂的除法</span>
-          计算：a<sup>9</sup> ÷ a<sup>4</sup>。
+          <span class="type"><span class="en">Type 01 Dividing powers with the same base</span><span class="zh">题型01 同底数幂的除法</span></span>
+          <span class="en">Calculate: a<sup>9</sup> ÷ a<sup>4</sup>.</span><span class="zh">计算：a<sup>9</sup> ÷ a<sup>4</sup>。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型02 同底数幂除法的逆用</span>
-          已知 x<sup>m</sup> = 81，x<sup>n</sup> = 3，求 x<sup>m-n</sup>。
+          <span class="type"><span class="en">Type 02 Reverse use of same-base division</span><span class="zh">题型02 同底数幂除法的逆用</span></span>
+          <span class="en">Given x<sup>m</sup> = 81 and x<sup>n</sup> = 3, find x<sup>m-n</sup>.</span><span class="zh">已知 x<sup>m</sup> = 81，x<sup>n</sup> = 3，求 x<sup>m-n</sup>。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型03 幂的混合运算</span>
-          化简：b<sup>7</sup> · b<sup>3</sup> ÷ b<sup>5</sup>。
+          <span class="type"><span class="en">Type 03 Mixed operations with powers</span><span class="zh">题型03 幂的混合运算</span></span>
+          <span class="en">Simplify: b<sup>7</sup> · b<sup>3</sup> ÷ b<sup>5</sup>.</span><span class="zh">化简：b<sup>7</sup> · b<sup>3</sup> ÷ b<sup>5</sup>。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型04 零指数幂</span>
-          计算：(-7)<sup>0</sup> + 5<sup>0</sup>。
+          <span class="type"><span class="en">Type 04 Zero exponents</span><span class="zh">题型04 零指数幂</span></span>
+          <span class="en">Calculate: (-7)<sup>0</sup> + 5<sup>0</sup>.</span><span class="zh">计算：(-7)<sup>0</sup> + 5<sup>0</sup>。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型05 负整数指数幂</span>
-          计算：2<sup>-3</sup> + 10<sup>-1</sup>。
+          <span class="type"><span class="en">Type 05 Negative integer exponents</span><span class="zh">题型05 负整数指数幂</span></span>
+          <span class="en">Calculate: 2<sup>-3</sup> + 10<sup>-1</sup>.</span><span class="zh">计算：2<sup>-3</sup> + 10<sup>-1</sup>。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型06 零指数幂、负整数指数幂综合计算</span>
-          化简：a<sup>3</sup>b<sup>-2</sup> ÷ (a<sup>-1</sup>b)。
+          <span class="type"><span class="en">Type 06 Combined zero and negative exponent calculation</span><span class="zh">题型06 零指数幂、负整数指数幂综合计算</span></span>
+          <span class="en">Simplify: a<sup>3</sup>b<sup>-2</sup> ÷ (a<sup>-1</sup>b).</span><span class="zh">化简：a<sup>3</sup>b<sup>-2</sup> ÷ (a<sup>-1</sup>b)。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型07 用科学计数法表示绝对值小于1的数</span>
-          用科学计数法表示 0.00056。
+          <span class="type"><span class="en">Type 07 Scientific notation for numbers with absolute value less than 1</span><span class="zh">题型07 用科学计数法表示绝对值小于1的数</span></span>
+          <span class="en">Write 0.00056 in scientific notation.</span><span class="zh">用科学计数法表示 0.00056。</span>
           <div class="work"></div>
         </li>
       </ol>
     </section>
 
     <section id="s4">
-      <h2>专题1.4 整式的乘法</h2>
+      <h2><span class="en">Topic 1.4 Multiplication of Polynomials</span><span class="zh">专题1.4 整式的乘法</span></h2>
       <ol start="19">
         <li>
-          <span class="type">题型01 计算单项式乘单项式</span>
-          计算：(-3a<sup>2</sup>b)(4ab<sup>3</sup>)。
+          <span class="type"><span class="en">Type 01 Multiplying a monomial by a monomial</span><span class="zh">题型01 计算单项式乘单项式</span></span>
+          <span class="en">Calculate: (-3a<sup>2</sup>b)(4ab<sup>3</sup>).</span><span class="zh">计算：(-3a<sup>2</sup>b)(4ab<sup>3</sup>)。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型02 计算单项式乘多项式</span>
-          计算：2x(3x<sup>2</sup> - 4x + 5)。
+          <span class="type"><span class="en">Type 02 Multiplying a monomial by a polynomial</span><span class="zh">题型02 计算单项式乘多项式</span></span>
+          <span class="en">Calculate: 2x(3x<sup>2</sup> - 4x + 5).</span><span class="zh">计算：2x(3x<sup>2</sup> - 4x + 5)。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型03 计算多项式乘多项式</span>
-          计算：(x + 3)(x - 5)。
+          <span class="type"><span class="en">Type 03 Multiplying a polynomial by a polynomial</span><span class="zh">题型03 计算多项式乘多项式</span></span>
+          <span class="en">Calculate: (x + 3)(x - 5).</span><span class="zh">计算：(x + 3)(x - 5)。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型04 已知多项式乘积不含某项求字母的值</span>
-          若 (x + 2)(x + k) 的展开式中不含一次项，求 k。
+          <span class="type"><span class="en">Type 04 Finding a variable when a product has no certain term</span><span class="zh">题型04 已知多项式乘积不含某项求字母的值</span></span>
+          <span class="en">If the expansion of (x + 2)(x + k) has no linear term, find k.</span><span class="zh">若 (x + 2)(x + k) 的展开式中不含一次项，求 k。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型05 整式乘法混合运算</span>
-          化简：(x + 2)(x - 3) - x(x - 1)。
+          <span class="type"><span class="en">Type 05 Mixed multiplication of polynomials</span><span class="zh">题型05 整式乘法混合运算</span></span>
+          <span class="en">Simplify: (x + 2)(x - 3) - x(x - 1).</span><span class="zh">化简：(x + 2)(x - 3) - x(x - 1)。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型06 多项式乘多项式一化简求值</span>
-          先化简，再求值：(x + 1)(x - 2) + (x - 3)<sup>2</sup>，其中 x = 2。
+          <span class="type"><span class="en">Type 06 Simplifying and evaluating polynomial products</span><span class="zh">题型06 多项式乘多项式一化简求值</span></span>
+          <span class="en">Simplify first, then evaluate: (x + 1)(x - 2) + (x - 3)<sup>2</sup>, where x = 2.</span><span class="zh">先化简，再求值：(x + 1)(x - 2) + (x - 3)<sup>2</sup>，其中 x = 2。</span>
           <div class="work wide-work"></div>
         </li>
         <li>
-          <span class="type">题型07 (x+p)(x+q)型多项式乘法</span>
-          计算：(x + 4)(x - 7)。
+          <span class="type"><span class="en">Type 07 Polynomial multiplication of the form (x+p)(x+q)</span><span class="zh">题型07 (x+p)(x+q)型多项式乘法</span></span>
+          <span class="en">Calculate: (x + 4)(x - 7).</span><span class="zh">计算：(x + 4)(x - 7)。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型08 多项式乘法中的规律性问题</span>
-          观察 (x - 1)(x + 1) = x<sup>2</sup> - 1。利用这个规律计算：(x - 1)(x + 1)(x<sup>2</sup> + 1)。
+          <span class="type"><span class="en">Type 08 Pattern problems in polynomial multiplication</span><span class="zh">题型08 多项式乘法中的规律性问题</span></span>
+          <span class="en">Observe (x - 1)(x + 1) = x<sup>2</sup> - 1. Use this pattern to calculate (x - 1)(x + 1)(x<sup>2</sup> + 1).</span><span class="zh">观察 (x - 1)(x + 1) = x<sup>2</sup> - 1。利用这个规律计算：(x - 1)(x + 1)(x<sup>2</sup> + 1)。</span>
           <div class="work wide-work"></div>
         </li>
         <li>
-          <span class="type">题型09 整式乘法与图形面积</span>
-          一个长方形的长为 2x + 3，宽为 x + 4。用含 x 的式子表示它的面积。
+          <span class="type"><span class="en">Type 09 Polynomial multiplication and area</span><span class="zh">题型09 整式乘法与图形面积</span></span>
+          <span class="en">A rectangle has length 2x + 3 and width x + 4. Express its area in terms of x.</span><span class="zh">一个长方形的长为 2x + 3，宽为 x + 4。用含 x 的式子表示它的面积。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型10 整式运算中的新定义型问题</span>
-          定义 f(a,b) = (x + a)(x + b)。求 f(2,-5) 的展开式。
+          <span class="type"><span class="en">Type 10 New-definition problems in polynomial operations</span><span class="zh">题型10 整式运算中的新定义型问题</span></span>
+          <span class="en">Define f(a,b) = (x + a)(x + b). Find the expanded form of f(2,-5).</span><span class="zh">定义 f(a,b) = (x + a)(x + b)。求 f(2,-5) 的展开式。</span>
           <div class="work"></div>
         </li>
       </ol>
     </section>
 
     <section id="s5">
-      <h2>专题1.5 平方差公式</h2>
+      <h2><span class="en">Topic 1.5 Difference of Squares Formula</span><span class="zh">专题1.5 平方差公式</span></h2>
       <ol start="29">
         <li>
-          <span class="type">题型01 判断是否可用平方差公式运算</span>
-          判断 (2x + 3)(2x - 3) 能否用平方差公式计算；若能，请直接写出结果。
+          <span class="type"><span class="en">Type 01 Deciding whether the difference of squares applies</span><span class="zh">题型01 判断是否可用平方差公式运算</span></span>
+          <span class="en">Decide whether (2x + 3)(2x - 3) can be calculated using the difference of squares formula. If yes, write the result directly.</span><span class="zh">判断 (2x + 3)(2x - 3) 能否用平方差公式计算；若能，请直接写出结果。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型02 运用平方差公式进行运算</span>
-          计算：(5a - 2b)(5a + 2b)。
+          <span class="type"><span class="en">Type 02 Calculating with the difference of squares formula</span><span class="zh">题型02 运用平方差公式进行运算</span></span>
+          <span class="en">Calculate: (5a - 2b)(5a + 2b).</span><span class="zh">计算：(5a - 2b)(5a + 2b)。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型03 利用平方差公式进行简便运算</span>
-          用简便方法计算：1002 × 998。
+          <span class="type"><span class="en">Type 03 Efficient calculation with the difference of squares formula</span><span class="zh">题型03 利用平方差公式进行简便运算</span></span>
+          <span class="en">Use an efficient method to calculate 1002 × 998.</span><span class="zh">用简便方法计算：1002 × 998。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型04 与平方差公式有关的化简求值</span>
-          先化简，再求值：(x + y)(x - y) + y<sup>2</sup>，其中 x = 5，y = 3。
+          <span class="type"><span class="en">Type 04 Simplifying and evaluating with the difference of squares formula</span><span class="zh">题型04 与平方差公式有关的化简求值</span></span>
+          <span class="en">Simplify first, then evaluate: (x + y)(x - y) + y<sup>2</sup>, where x = 5 and y = 3.</span><span class="zh">先化简，再求值：(x + y)(x - y) + y<sup>2</sup>，其中 x = 5，y = 3。</span>
           <div class="work wide-work"></div>
         </li>
         <li>
-          <span class="type">题型05 利用平方差公式求解连乘问题</span>
-          计算：(2 + 1)(2<sup>2</sup> + 1)(2<sup>4</sup> + 1)(2<sup>8</sup> + 1)。
+          <span class="type"><span class="en">Type 05 Solving repeated-product problems with the difference of squares formula</span><span class="zh">题型05 利用平方差公式求解连乘问题</span></span>
+          <span class="en">Calculate: (2 + 1)(2<sup>2</sup> + 1)(2<sup>4</sup> + 1)(2<sup>8</sup> + 1).</span><span class="zh">计算：(2 + 1)(2<sup>2</sup> + 1)(2<sup>4</sup> + 1)(2<sup>8</sup> + 1)。</span>
           <div class="work wide-work"></div>
         </li>
         <li>
-          <span class="type">题型06 平方差公式在几何图形中的应用</span>
-          一个大正方形边长为 x + 6，小正方形边长为 x - 6。用平方差公式表示两个正方形面积之差。
+          <span class="type"><span class="en">Type 06 Geometric applications of the difference of squares formula</span><span class="zh">题型06 平方差公式在几何图形中的应用</span></span>
+          <span class="en">A large square has side length x + 6, and a small square has side length x - 6. Use the difference of squares formula to express the difference of their areas.</span><span class="zh">一个大正方形边长为 x + 6，小正方形边长为 x - 6。用平方差公式表示两个正方形面积之差。</span>
           <div class="work wide-work"></div>
         </li>
       </ol>
     </section>
 
     <section id="s6">
-      <h2>专题1.6 完全平方公式</h2>
+      <h2><span class="en">Topic 1.6 Perfect Square Formula</span><span class="zh">专题1.6 完全平方公式</span></h2>
       <ol start="35">
         <li>
-          <span class="type">题型01 判断是否完全平方公式运算</span>
-          判断 9x<sup>2</sup> + 12x + 4 是否为完全平方式；若是，请写成平方的形式。
+          <span class="type"><span class="en">Type 01 Deciding whether an expression is a perfect square</span><span class="zh">题型01 判断是否完全平方公式运算</span></span>
+          <span class="en">Decide whether 9x<sup>2</sup> + 12x + 4 is a perfect square expression. If yes, write it in squared form.</span><span class="zh">判断 9x<sup>2</sup> + 12x + 4 是否为完全平方式；若是，请写成平方的形式。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型02 运用完全平方公式进行运算</span>
-          计算：(3a - 2b)<sup>2</sup>。
+          <span class="type"><span class="en">Type 02 Calculating with the perfect square formula</span><span class="zh">题型02 运用完全平方公式进行运算</span></span>
+          <span class="en">Calculate: (3a - 2b)<sup>2</sup>.</span><span class="zh">计算：(3a - 2b)<sup>2</sup>。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型03 求完全平方式中的字母系数</span>
-          若 x<sup>2</sup> + kx + 25 是完全平方式，求 k 的值。
+          <span class="type"><span class="en">Type 03 Finding a coefficient in a perfect square expression</span><span class="zh">题型03 求完全平方式中的字母系数</span></span>
+          <span class="en">If x<sup>2</sup> + kx + 25 is a perfect square expression, find k.</span><span class="zh">若 x<sup>2</sup> + kx + 25 是完全平方式，求 k 的值。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型04 平方差与完全平方综合进行运算</span>
-          化简：(x + 3)<sup>2</sup> - (x - 3)<sup>2</sup>。
+          <span class="type"><span class="en">Type 04 Combining difference of squares and perfect square formulas</span><span class="zh">题型04 平方差与完全平方综合进行运算</span></span>
+          <span class="en">Simplify: (x + 3)<sup>2</sup> - (x - 3)<sup>2</sup>.</span><span class="zh">化简：(x + 3)<sup>2</sup> - (x - 3)<sup>2</sup>。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型05 利用完全平方公式进行简便运算</span>
-          用简便方法计算：101<sup>2</sup>。
+          <span class="type"><span class="en">Type 05 Efficient calculation with the perfect square formula</span><span class="zh">题型05 利用完全平方公式进行简便运算</span></span>
+          <span class="en">Use an efficient method to calculate 101<sup>2</sup>.</span><span class="zh">用简便方法计算：101<sup>2</sup>。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型06 与乘法公式有关的化简求值问题</span>
-          先化简，再求值：(a + b)<sup>2</sup> - (a - b)<sup>2</sup>，其中 a = 7，b = 2。
+          <span class="type"><span class="en">Type 06 Simplifying and evaluating with multiplication formulas</span><span class="zh">题型06 与乘法公式有关的化简求值问题</span></span>
+          <span class="en">Simplify first, then evaluate: (a + b)<sup>2</sup> - (a - b)<sup>2</sup>, where a = 7 and b = 2.</span><span class="zh">先化简，再求值：(a + b)<sup>2</sup> - (a - b)<sup>2</sup>，其中 a = 7，b = 2。</span>
           <div class="work wide-work"></div>
         </li>
         <li>
-          <span class="type">题型07 通过对完全平方公式变形求值</span>
-          已知 x + <span class="frac"><span>1</span><span>x</span></span> = 5，求 x<sup>2</sup> + <span class="frac"><span>1</span><span>x<sup>2</sup></span></span> 的值。
+          <span class="type"><span class="en">Type 07 Evaluating by transforming the perfect square formula</span><span class="zh">题型07 通过对完全平方公式变形求值</span></span>
+          <span class="en">Given x + <span class="frac"><span>1</span><span>x</span></span> = 5, find the value of x<sup>2</sup> + <span class="frac"><span>1</span><span>x<sup>2</sup></span></span>.</span><span class="zh">已知 x + <span class="frac"><span>1</span><span>x</span></span> = 5，求 x<sup>2</sup> + <span class="frac"><span>1</span><span>x<sup>2</sup></span></span> 的值。</span>
           <div class="work wide-work"></div>
         </li>
         <li>
-          <span class="type">题型08 利用完全平方式求代数式的最值问题</span>
-          求代数式 x<sup>2</sup> - 6x + 11 的最小值。
+          <span class="type"><span class="en">Type 08 Finding an extremum using a perfect square form</span><span class="zh">题型08 利用完全平方式求代数式的最值问题</span></span>
+          <span class="en">Find the minimum value of x<sup>2</sup> - 6x + 11.</span><span class="zh">求代数式 x<sup>2</sup> - 6x + 11 的最小值。</span>
           <div class="work wide-work"></div>
         </li>
         <li>
-          <span class="type">题型09 完全平方公式在几何图形中的应用</span>
-          一个边长为 a + b 的正方形，被分成边长分别含 a、b 的小区域。请用面积关系写出 (a + b)<sup>2</sup> 的展开式。
+          <span class="type"><span class="en">Type 09 Geometric applications of the perfect square formula</span><span class="zh">题型09 完全平方公式在几何图形中的应用</span></span>
+          <span class="en">A square with side length a + b is divided into smaller regions whose side lengths include a and b. Use the area relationship to write the expansion of (a + b)<sup>2</sup>.</span><span class="zh">一个边长为 a + b 的正方形，被分成边长分别含 a、b 的小区域。请用面积关系写出 (a + b)<sup>2</sup> 的展开式。</span>
           <div class="work wide-work"></div>
         </li>
       </ol>
     </section>
 
     <section id="s7">
-      <h2>专题1.7 整式的除法</h2>
+      <h2><span class="en">Topic 1.7 Division of Polynomials</span><span class="zh">专题1.7 整式的除法</span></h2>
       <ol start="44">
         <li>
-          <span class="type">题型01 单项式除以单项式</span>
-          计算：12a<sup>5</sup>b<sup>3</sup> ÷ (-3a<sup>2</sup>b)。
+          <span class="type"><span class="en">Type 01 Dividing a monomial by a monomial</span><span class="zh">题型01 单项式除以单项式</span></span>
+          <span class="en">Calculate: 12a<sup>5</sup>b<sup>3</sup> ÷ (-3a<sup>2</sup>b).</span><span class="zh">计算：12a<sup>5</sup>b<sup>3</sup> ÷ (-3a<sup>2</sup>b)。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型02 多项式除以单项式</span>
-          计算：(6x<sup>3</sup> - 9x<sup>2</sup> + 3x) ÷ 3x。
+          <span class="type"><span class="en">Type 02 Dividing a polynomial by a monomial</span><span class="zh">题型02 多项式除以单项式</span></span>
+          <span class="en">Calculate: (6x<sup>3</sup> - 9x<sup>2</sup> + 3x) ÷ 3x.</span><span class="zh">计算：(6x<sup>3</sup> - 9x<sup>2</sup> + 3x) ÷ 3x。</span>
           <div class="work"></div>
         </li>
         <li>
-          <span class="type">题型03 含整式除法的整式四则混合运算</span>
-          化简：[(-2a<sup>2</sup>b)<sup>2</sup> · (3ab)] ÷ (6a<sup>3</sup>b<sup>2</sup>)。
+          <span class="type"><span class="en">Type 03 Mixed polynomial operations involving division</span><span class="zh">题型03 含整式除法的整式四则混合运算</span></span>
+          <span class="en">Simplify: [(-2a<sup>2</sup>b)<sup>2</sup> · (3ab)] ÷ (6a<sup>3</sup>b<sup>2</sup>).</span><span class="zh">化简：[(-2a<sup>2</sup>b)<sup>2</sup> · (3ab)] ÷ (6a<sup>3</sup>b<sup>2</sup>)。</span>
           <div class="work wide-work"></div>
         </li>
         <li>
-          <span class="type">题型04 整式的混合运算之化简求值</span>
-          先化简，再求值：[(x<sup>3</sup> - 2x<sup>2</sup> + x) ÷ x] - (x - 1)<sup>2</sup>，其中 x = 4。
+          <span class="type"><span class="en">Type 04 Simplifying and evaluating mixed polynomial operations</span><span class="zh">题型04 整式的混合运算之化简求值</span></span>
+          <span class="en">Simplify first, then evaluate: [(x<sup>3</sup> - 2x<sup>2</sup> + x) ÷ x] - (x - 1)<sup>2</sup>, where x = 4.</span><span class="zh">先化简，再求值：[(x<sup>3</sup> - 2x<sup>2</sup> + x) ÷ x] - (x - 1)<sup>2</sup>，其中 x = 4。</span>
           <div class="work wide-work"></div>
         </li>
         <li>
-          <span class="type">题型05 含整式除法的新定义型问题</span>
-          定义 P ⊘ m 表示把多项式 P 的每一项都除以单项式 m。计算：(6a<sup>3</sup>b - 9a<sup>2</sup>b<sup>2</sup>) ⊘ (3ab)。
+          <span class="type"><span class="en">Type 05 New-definition problems involving polynomial division</span><span class="zh">题型05 含整式除法的新定义型问题</span></span>
+          <span class="en">Define P ⊘ m to mean dividing each term of polynomial P by monomial m. Calculate (6a<sup>3</sup>b - 9a<sup>2</sup>b<sup>2</sup>) ⊘ (3ab).</span><span class="zh">定义 P ⊘ m 表示把多项式 P 的每一项都除以单项式 m。计算：(6a<sup>3</sup>b - 9a<sup>2</sup>b<sup>2</sup>) ⊘ (3ab)。</span>
           <div class="work wide-work"></div>
         </li>
         <li>
-          <span class="type">题型06 利用竖式的方法求整式中多项式除以单项式</span>
-          用竖式或验算的方法计算：(x<sup>2</sup> + 5x + 6) ÷ (x + 2)。
+          <span class="type"><span class="en">Type 06 Using long division or checking to divide polynomials</span><span class="zh">题型06 利用竖式的方法求整式中多项式除以单项式</span></span>
+          <span class="en">Use long division or a checking method to calculate (x<sup>2</sup> + 5x + 6) ÷ (x + 2).</span><span class="zh">用竖式或验算的方法计算：(x<sup>2</sup> + 5x + 6) ÷ (x + 2)。</span>
           <div class="work wide-work"></div>
         </li>
       </ol>
     </section>
   </main>
-  <button class="print" type="button" onclick="window.print()">Print / Save PDF</button>
+  <div class="actions">
+    <div class="lang-switch" role="group" aria-label="Language mode">
+      <button type="button" data-mode="en-zh" aria-pressed="true">En+Zh</button>
+      <button type="button" data-mode="en" aria-pressed="false">En</button>
+    </div>
+    <button class="print" type="button" onclick="window.print()">Print / Save PDF</button>
+  </div>
+  <script>
+    const languageModeButtons = document.querySelectorAll(".lang-switch button");
+    const savedLanguageMode = localStorage.getItem("chapter1ExamLanguageMode");
+
+    function setLanguageMode(mode) {
+      document.body.dataset.langMode = mode;
+      document.documentElement.lang = mode === "en" ? "en" : "en";
+      localStorage.setItem("chapter1ExamLanguageMode", mode);
+      languageModeButtons.forEach((button) => {
+        button.setAttribute("aria-pressed", String(button.dataset.mode === mode));
+      });
+    }
+
+    setLanguageMode(savedLanguageMode === "en" ? "en" : "en-zh");
+    languageModeButtons.forEach((button) => {
+      button.addEventListener("click", () => setLanguageMode(button.dataset.mode));
+    });
+  </script>
 </body>
 </html>
