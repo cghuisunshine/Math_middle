@@ -1,0 +1,514 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>七年级下册第1章题型综合考试</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    :root {
+      color-scheme: light;
+      --bg: #f6f7f9;
+      --paper: #ffffff;
+      --text: #1f2328;
+      --muted: #626b77;
+      --line: #d8dee4;
+      --strong-line: #8c959f;
+      --accent: #1f7a4d;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Noto Sans SC", "Microsoft YaHei", sans-serif;
+      line-height: 1.62;
+    }
+
+    main {
+      width: min(1080px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0 56px;
+    }
+
+    header {
+      margin-bottom: 20px;
+      padding-bottom: 18px;
+      border-bottom: 2px solid var(--text);
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 30px;
+      line-height: 1.25;
+      letter-spacing: 0;
+    }
+
+    .meta {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .meta span {
+      border-bottom: 1px solid var(--strong-line);
+      padding-bottom: 6px;
+    }
+
+    .toc {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 18px 0 24px;
+    }
+
+    .toc a {
+      color: #1f2328;
+      text-decoration: none;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: var(--paper);
+      padding: 6px 10px;
+      font-size: 14px;
+    }
+
+    section {
+      margin: 0 0 28px;
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 20px;
+      line-height: 1.35;
+      letter-spacing: 0;
+    }
+
+    ol {
+      margin: 0;
+      padding-left: 28px;
+    }
+
+    li {
+      margin: 0 0 18px;
+      padding-left: 4px;
+      break-inside: avoid;
+    }
+
+    .type {
+      display: block;
+      margin-bottom: 4px;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .work {
+      height: 42px;
+      margin-top: 8px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .wide-work {
+      height: 76px;
+    }
+
+    sup {
+      line-height: 0;
+    }
+
+    .frac {
+      display: inline-grid;
+      grid-template-rows: auto auto;
+      vertical-align: middle;
+      text-align: center;
+      line-height: 1.1;
+      margin: 0 2px;
+    }
+
+    .frac span:first-child {
+      border-bottom: 1px solid currentColor;
+      padding: 0 3px 2px;
+    }
+
+    .frac span:last-child {
+      padding: 2px 3px 0;
+    }
+
+    .print {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #1f2328;
+      color: white;
+      padding: 9px 12px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    @media (max-width: 720px) {
+      main {
+        width: min(100% - 20px, 1080px);
+        padding-top: 22px;
+      }
+
+      .meta {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      section {
+        padding: 16px;
+      }
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      main {
+        width: 100%;
+        padding: 0;
+      }
+
+      .toc,
+      .print {
+        display: none;
+      }
+
+      section {
+        border: 0;
+        border-radius: 0;
+        padding: 0;
+        margin-bottom: 18px;
+        break-inside: avoid;
+      }
+
+      h2 {
+        border-bottom: 1px solid var(--text);
+        padding-bottom: 4px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>七年级下册第1章题型综合考试</h1>
+      <div class="meta">
+        <span>姓名：</span>
+        <span>班级：</span>
+        <span>用时：90 分钟</span>
+        <span>总题数：49 题</span>
+      </div>
+    </header>
+
+    <nav class="toc" aria-label="章节导航">
+      <a href="#s1">1.1 同底数幂的乘法</a>
+      <a href="#s2">1.2 幂的乘方与积的乘方</a>
+      <a href="#s3">1.3 同底数幂的除法</a>
+      <a href="#s4">1.4 整式的乘法</a>
+      <a href="#s5">1.5 平方差公式</a>
+      <a href="#s6">1.6 完全平方公式</a>
+      <a href="#s7">1.7 整式的除法</a>
+    </nav>
+
+    <section id="s1">
+      <h2>专题1.1 同底数幂的乘法</h2>
+      <ol>
+        <li>
+          <span class="type">题型01 同底数幂相乘</span>
+          计算：a<sup>5</sup> · a<sup>3</sup> · a。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型02 不同底数转化为同底数幂的运算</span>
+          计算：2<sup>6</sup> · 4<sup>2</sup> · 8，并把结果写成 2<sup>n</sup> 的形式。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型03 同底数幂乘法的逆用</span>
+          已知 2<sup>m</sup> = 8，2<sup>n</sup> = 16，求 2<sup>m+n</sup> 的值。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型04 已知代数式的值，求式子的值</span>
+          已知 x<sup>m</sup> = 3，x<sup>n</sup> = 5，求 2x<sup>m+n</sup> 的值。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型05 新定义有关同底数幂的运算</span>
+          定义 a ★ b = 3<sup>a</sup> · 3<sup>b</sup>，求 2 ★ 4，并写成 3 的幂。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型06 与同底数幂运算有关的规律探究问题</span>
+          观察：3<sup>1</sup>，3<sup>2</sup>，3<sup>3</sup>，3<sup>4</sup>，...。若 A = 3<sup>2</sup> · 3<sup>5</sup> · 3<sup>8</sup>，请写出 A 的指数，并说明指数的规律。
+          <div class="work wide-work"></div>
+        </li>
+      </ol>
+    </section>
+
+    <section id="s2">
+      <h2>专题1.2 幂的乘方与积的乘方</h2>
+      <ol start="7">
+        <li>
+          <span class="type">题型01 幂的乘方运算</span>
+          计算：(x<sup>3</sup>)<sup>4</sup>。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型02 幂的乘方的逆用</span>
+          已知 (2<sup>m</sup>)<sup>3</sup> = 2<sup>12</sup>，求 m 的值。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型03 利用幂的乘方比较大小</span>
+          比较 5<sup>12</sup> 与 25<sup>6</sup> 的大小，并说明理由。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型04 积的乘方运算</span>
+          计算：(-2a<sup>2</sup>b)<sup>3</sup>。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型05 积的乘方的逆用</span>
+          已知 xy = -3，求 (2xy)<sup>3</sup> 的值。
+          <div class="work"></div>
+        </li>
+      </ol>
+    </section>
+
+    <section id="s3">
+      <h2>专题1.3 同底数幂的除法</h2>
+      <ol start="12">
+        <li>
+          <span class="type">题型01 同底数幂的除法</span>
+          计算：a<sup>9</sup> ÷ a<sup>4</sup>。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型02 同底数幂除法的逆用</span>
+          已知 x<sup>m</sup> = 81，x<sup>n</sup> = 3，求 x<sup>m-n</sup>。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型03 幂的混合运算</span>
+          化简：b<sup>7</sup> · b<sup>3</sup> ÷ b<sup>5</sup>。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型04 零指数幂</span>
+          计算：(-7)<sup>0</sup> + 5<sup>0</sup>。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型05 负整数指数幂</span>
+          计算：2<sup>-3</sup> + 10<sup>-1</sup>。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型06 零指数幂、负整数指数幂综合计算</span>
+          化简：a<sup>3</sup>b<sup>-2</sup> ÷ (a<sup>-1</sup>b)。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型07 用科学计数法表示绝对值小于1的数</span>
+          用科学计数法表示 0.00056。
+          <div class="work"></div>
+        </li>
+      </ol>
+    </section>
+
+    <section id="s4">
+      <h2>专题1.4 整式的乘法</h2>
+      <ol start="19">
+        <li>
+          <span class="type">题型01 计算单项式乘单项式</span>
+          计算：(-3a<sup>2</sup>b)(4ab<sup>3</sup>)。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型02 计算单项式乘多项式</span>
+          计算：2x(3x<sup>2</sup> - 4x + 5)。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型03 计算多项式乘多项式</span>
+          计算：(x + 3)(x - 5)。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型04 已知多项式乘积不含某项求字母的值</span>
+          若 (x + 2)(x + k) 的展开式中不含一次项，求 k。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型05 整式乘法混合运算</span>
+          化简：(x + 2)(x - 3) - x(x - 1)。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型06 多项式乘多项式一化简求值</span>
+          先化简，再求值：(x + 1)(x - 2) + (x - 3)<sup>2</sup>，其中 x = 2。
+          <div class="work wide-work"></div>
+        </li>
+        <li>
+          <span class="type">题型07 (x+p)(x+q)型多项式乘法</span>
+          计算：(x + 4)(x - 7)。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型08 多项式乘法中的规律性问题</span>
+          观察 (x - 1)(x + 1) = x<sup>2</sup> - 1。利用这个规律计算：(x - 1)(x + 1)(x<sup>2</sup> + 1)。
+          <div class="work wide-work"></div>
+        </li>
+        <li>
+          <span class="type">题型09 整式乘法与图形面积</span>
+          一个长方形的长为 2x + 3，宽为 x + 4。用含 x 的式子表示它的面积。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型10 整式运算中的新定义型问题</span>
+          定义 f(a,b) = (x + a)(x + b)。求 f(2,-5) 的展开式。
+          <div class="work"></div>
+        </li>
+      </ol>
+    </section>
+
+    <section id="s5">
+      <h2>专题1.5 平方差公式</h2>
+      <ol start="29">
+        <li>
+          <span class="type">题型01 判断是否可用平方差公式运算</span>
+          判断 (2x + 3)(2x - 3) 能否用平方差公式计算；若能，请直接写出结果。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型02 运用平方差公式进行运算</span>
+          计算：(5a - 2b)(5a + 2b)。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型03 利用平方差公式进行简便运算</span>
+          用简便方法计算：1002 × 998。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型04 与平方差公式有关的化简求值</span>
+          先化简，再求值：(x + y)(x - y) + y<sup>2</sup>，其中 x = 5，y = 3。
+          <div class="work wide-work"></div>
+        </li>
+        <li>
+          <span class="type">题型05 利用平方差公式求解连乘问题</span>
+          计算：(2 + 1)(2<sup>2</sup> + 1)(2<sup>4</sup> + 1)(2<sup>8</sup> + 1)。
+          <div class="work wide-work"></div>
+        </li>
+        <li>
+          <span class="type">题型06 平方差公式在几何图形中的应用</span>
+          一个大正方形边长为 x + 6，小正方形边长为 x - 6。用平方差公式表示两个正方形面积之差。
+          <div class="work wide-work"></div>
+        </li>
+      </ol>
+    </section>
+
+    <section id="s6">
+      <h2>专题1.6 完全平方公式</h2>
+      <ol start="35">
+        <li>
+          <span class="type">题型01 判断是否完全平方公式运算</span>
+          判断 9x<sup>2</sup> + 12x + 4 是否为完全平方式；若是，请写成平方的形式。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型02 运用完全平方公式进行运算</span>
+          计算：(3a - 2b)<sup>2</sup>。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型03 求完全平方式中的字母系数</span>
+          若 x<sup>2</sup> + kx + 25 是完全平方式，求 k 的值。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型04 平方差与完全平方综合进行运算</span>
+          化简：(x + 3)<sup>2</sup> - (x - 3)<sup>2</sup>。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型05 利用完全平方公式进行简便运算</span>
+          用简便方法计算：101<sup>2</sup>。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型06 与乘法公式有关的化简求值问题</span>
+          先化简，再求值：(a + b)<sup>2</sup> - (a - b)<sup>2</sup>，其中 a = 7，b = 2。
+          <div class="work wide-work"></div>
+        </li>
+        <li>
+          <span class="type">题型07 通过对完全平方公式变形求值</span>
+          已知 x + <span class="frac"><span>1</span><span>x</span></span> = 5，求 x<sup>2</sup> + <span class="frac"><span>1</span><span>x<sup>2</sup></span></span> 的值。
+          <div class="work wide-work"></div>
+        </li>
+        <li>
+          <span class="type">题型08 利用完全平方式求代数式的最值问题</span>
+          求代数式 x<sup>2</sup> - 6x + 11 的最小值。
+          <div class="work wide-work"></div>
+        </li>
+        <li>
+          <span class="type">题型09 完全平方公式在几何图形中的应用</span>
+          一个边长为 a + b 的正方形，被分成边长分别含 a、b 的小区域。请用面积关系写出 (a + b)<sup>2</sup> 的展开式。
+          <div class="work wide-work"></div>
+        </li>
+      </ol>
+    </section>
+
+    <section id="s7">
+      <h2>专题1.7 整式的除法</h2>
+      <ol start="44">
+        <li>
+          <span class="type">题型01 单项式除以单项式</span>
+          计算：12a<sup>5</sup>b<sup>3</sup> ÷ (-3a<sup>2</sup>b)。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型02 多项式除以单项式</span>
+          计算：(6x<sup>3</sup> - 9x<sup>2</sup> + 3x) ÷ 3x。
+          <div class="work"></div>
+        </li>
+        <li>
+          <span class="type">题型03 含整式除法的整式四则混合运算</span>
+          化简：[(-2a<sup>2</sup>b)<sup>2</sup> · (3ab)] ÷ (6a<sup>3</sup>b<sup>2</sup>)。
+          <div class="work wide-work"></div>
+        </li>
+        <li>
+          <span class="type">题型04 整式的混合运算之化简求值</span>
+          先化简，再求值：[(x<sup>3</sup> - 2x<sup>2</sup> + x) ÷ x] - (x - 1)<sup>2</sup>，其中 x = 4。
+          <div class="work wide-work"></div>
+        </li>
+        <li>
+          <span class="type">题型05 含整式除法的新定义型问题</span>
+          定义 P ⊘ m 表示把多项式 P 的每一项都除以单项式 m。计算：(6a<sup>3</sup>b - 9a<sup>2</sup>b<sup>2</sup>) ⊘ (3ab)。
+          <div class="work wide-work"></div>
+        </li>
+        <li>
+          <span class="type">题型06 利用竖式的方法求整式中多项式除以单项式</span>
+          用竖式或验算的方法计算：(x<sup>2</sup> + 5x + 6) ÷ (x + 2)。
+          <div class="work wide-work"></div>
+        </li>
+      </ol>
+    </section>
+  </main>
+  <button class="print" type="button" onclick="window.print()">Print / Save PDF</button>
+</body>
+</html>
