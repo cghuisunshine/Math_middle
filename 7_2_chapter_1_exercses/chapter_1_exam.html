@@ -139,6 +139,30 @@
       height: 76px;
     }
 
+    .answer {
+      margin: 10px 0 0;
+      padding: 10px 12px;
+      border: 1px solid #d8dee4;
+      border-radius: 8px;
+      background: #f6f8fa;
+    }
+
+    .answer summary {
+      cursor: pointer;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .answers h3 {
+      margin: 18px 0 8px;
+      font-size: 17px;
+      line-height: 1.35;
+    }
+
+    .solutions li {
+      margin-bottom: 10px;
+    }
+
     sup {
       line-height: 0;
     }
@@ -166,8 +190,11 @@
       right: 18px;
       bottom: 18px;
       display: flex;
+      flex-wrap: wrap;
       align-items: center;
+      justify-content: flex-end;
       gap: 8px;
+      max-width: calc(100% - 36px);
     }
 
     .lang-switch {
@@ -180,6 +207,7 @@
     }
 
     .lang-switch button,
+    .answer-toggle,
     .print {
       border: 1px solid var(--line);
       border-radius: 6px;
@@ -210,6 +238,12 @@
       color: white;
     }
 
+    .answer-toggle {
+      padding: 9px 12px;
+      background: var(--paper);
+      color: var(--text);
+    }
+
     @media (max-width: 720px) {
       main {
         width: min(100% - 20px, 1080px);
@@ -237,6 +271,7 @@
 
       .toc,
       .lang-switch,
+      .answer-toggle,
       .print {
         display: none;
       }
@@ -252,6 +287,10 @@
       h2 {
         border-bottom: 1px solid var(--text);
         padding-bottom: 4px;
+      }
+
+      details.answer:not([open]) > *:not(summary) {
+        display: block;
       }
     }
   </style>
@@ -276,6 +315,7 @@
       <a href="#s5"><span class="en">1.5 Difference of Squares Formula</span><span class="zh">1.5 平方差公式</span></a>
       <a href="#s6"><span class="en">1.6 Perfect Square Formula</span><span class="zh">1.6 完全平方公式</span></a>
       <a href="#s7"><span class="en">1.7 Division of Polynomials</span><span class="zh">1.7 整式的除法</span></a>
+      <a href="#answers"><span class="en">Answers</span><span class="zh">答案</span></a>
     </nav>
 
     <section id="s1">
@@ -564,8 +604,112 @@
         </li>
       </ol>
     </section>
+
+    <section id="answers" class="answers">
+      <h2><span class="en">Answer Sections with Solution Steps</span><span class="zh">答案与解题步骤</span></h2>
+
+      <h3><span class="en">Topic 1.1 Answers</span><span class="zh">专题1.1 答案</span></h3>
+      <details class="answer">
+        <summary><span class="en">Solution steps for Questions 1-6</span><span class="zh">第1-6题解题步骤</span></summary>
+        <ol class="solutions">
+          <li><span class="en">a<sup>5</sup> · a<sup>3</sup> · a = a<sup>5+3+1</sup> = a<sup>9</sup>.</span><span class="zh">a<sup>5</sup> · a<sup>3</sup> · a = a<sup>5+3+1</sup> = a<sup>9</sup>。</span></li>
+          <li><span class="en">4<sup>2</sup> = (2<sup>2</sup>)<sup>2</sup> = 2<sup>4</sup> and 8 = 2<sup>3</sup>, so the product is 2<sup>6+4+3</sup> = 2<sup>13</sup>.</span><span class="zh">4<sup>2</sup> = (2<sup>2</sup>)<sup>2</sup> = 2<sup>4</sup>，8 = 2<sup>3</sup>，所以乘积为 2<sup>6+4+3</sup> = 2<sup>13</sup>。</span></li>
+          <li><span class="en">2<sup>m+n</sup> = 2<sup>m</sup> · 2<sup>n</sup> = 8 · 16 = 128.</span><span class="zh">2<sup>m+n</sup> = 2<sup>m</sup> · 2<sup>n</sup> = 8 · 16 = 128。</span></li>
+          <li><span class="en">2x<sup>m+n</sup> = 2 · x<sup>m</sup> · x<sup>n</sup> = 2 · 3 · 5 = 30.</span><span class="zh">2x<sup>m+n</sup> = 2 · x<sup>m</sup> · x<sup>n</sup> = 2 · 3 · 5 = 30。</span></li>
+          <li><span class="en">2 ★ 4 = 3<sup>2</sup> · 3<sup>4</sup> = 3<sup>6</sup>.</span><span class="zh">2 ★ 4 = 3<sup>2</sup> · 3<sup>4</sup> = 3<sup>6</sup>。</span></li>
+          <li><span class="en">Add the exponents: 2 + 5 + 8 = 15. The exponent pattern is increasing by 3 each time, so A = 3<sup>15</sup>.</span><span class="zh">指数相加：2 + 5 + 8 = 15。指数按每次增加 3 的规律排列，所以 A = 3<sup>15</sup>。</span></li>
+        </ol>
+      </details>
+
+      <h3><span class="en">Topic 1.2 Answers</span><span class="zh">专题1.2 答案</span></h3>
+      <details class="answer">
+        <summary><span class="en">Solution steps for Questions 7-11</span><span class="zh">第7-11题解题步骤</span></summary>
+        <ol class="solutions" start="7">
+          <li><span class="en">(x<sup>3</sup>)<sup>4</sup> = x<sup>3·4</sup> = x<sup>12</sup>.</span><span class="zh">(x<sup>3</sup>)<sup>4</sup> = x<sup>3·4</sup> = x<sup>12</sup>。</span></li>
+          <li><span class="en">(2<sup>m</sup>)<sup>3</sup> = 2<sup>3m</sup> = 2<sup>12</sup>, so 3m = 12 and m = 4.</span><span class="zh">(2<sup>m</sup>)<sup>3</sup> = 2<sup>3m</sup> = 2<sup>12</sup>，所以 3m = 12，m = 4。</span></li>
+          <li><span class="en">25<sup>6</sup> = (5<sup>2</sup>)<sup>6</sup> = 5<sup>12</sup>, so the two numbers are equal.</span><span class="zh">25<sup>6</sup> = (5<sup>2</sup>)<sup>6</sup> = 5<sup>12</sup>，所以两数相等。</span></li>
+          <li><span class="en">(-2a<sup>2</sup>b)<sup>3</sup> = (-2)<sup>3</sup>(a<sup>2</sup>)<sup>3</sup>b<sup>3</sup> = -8a<sup>6</sup>b<sup>3</sup>.</span><span class="zh">(-2a<sup>2</sup>b)<sup>3</sup> = (-2)<sup>3</sup>(a<sup>2</sup>)<sup>3</sup>b<sup>3</sup> = -8a<sup>6</sup>b<sup>3</sup>。</span></li>
+          <li><span class="en">xy = -3, so (2xy)<sup>3</sup> = [2(-3)]<sup>3</sup> = (-6)<sup>3</sup> = -216.</span><span class="zh">xy = -3，所以 (2xy)<sup>3</sup> = [2(-3)]<sup>3</sup> = (-6)<sup>3</sup> = -216。</span></li>
+        </ol>
+      </details>
+
+      <h3><span class="en">Topic 1.3 Answers</span><span class="zh">专题1.3 答案</span></h3>
+      <details class="answer">
+        <summary><span class="en">Solution steps for Questions 12-18</span><span class="zh">第12-18题解题步骤</span></summary>
+        <ol class="solutions" start="12">
+          <li><span class="en">a<sup>9</sup> ÷ a<sup>4</sup> = a<sup>9-4</sup> = a<sup>5</sup>.</span><span class="zh">a<sup>9</sup> ÷ a<sup>4</sup> = a<sup>9-4</sup> = a<sup>5</sup>。</span></li>
+          <li><span class="en">x<sup>m-n</sup> = x<sup>m</sup> ÷ x<sup>n</sup> = 81 ÷ 3 = 27.</span><span class="zh">x<sup>m-n</sup> = x<sup>m</sup> ÷ x<sup>n</sup> = 81 ÷ 3 = 27。</span></li>
+          <li><span class="en">b<sup>7</sup> · b<sup>3</sup> ÷ b<sup>5</sup> = b<sup>7+3-5</sup> = b<sup>5</sup>.</span><span class="zh">b<sup>7</sup> · b<sup>3</sup> ÷ b<sup>5</sup> = b<sup>7+3-5</sup> = b<sup>5</sup>。</span></li>
+          <li><span class="en">Each nonzero number to the zero power is 1, so (-7)<sup>0</sup> + 5<sup>0</sup> = 1 + 1 = 2.</span><span class="zh">非零数的零次幂都等于 1，所以 (-7)<sup>0</sup> + 5<sup>0</sup> = 1 + 1 = 2。</span></li>
+          <li><span class="en">2<sup>-3</sup> + 10<sup>-1</sup> = <span class="frac"><span>1</span><span>8</span></span> + <span class="frac"><span>1</span><span>10</span></span> = <span class="frac"><span>9</span><span>40</span></span>.</span><span class="zh">2<sup>-3</sup> + 10<sup>-1</sup> = <span class="frac"><span>1</span><span>8</span></span> + <span class="frac"><span>1</span><span>10</span></span> = <span class="frac"><span>9</span><span>40</span></span>。</span></li>
+          <li><span class="en">a<sup>3</sup>b<sup>-2</sup> ÷ (a<sup>-1</sup>b) = a<sup>3-(-1)</sup>b<sup>-2-1</sup> = a<sup>4</sup>b<sup>-3</sup> = <span class="frac"><span>a<sup>4</sup></span><span>b<sup>3</sup></span></span>.</span><span class="zh">a<sup>3</sup>b<sup>-2</sup> ÷ (a<sup>-1</sup>b) = a<sup>3-(-1)</sup>b<sup>-2-1</sup> = a<sup>4</sup>b<sup>-3</sup> = <span class="frac"><span>a<sup>4</sup></span><span>b<sup>3</sup></span></span>。</span></li>
+          <li><span class="en">Move the decimal point four places right: 0.00056 = 5.6 × 10<sup>-4</sup>.</span><span class="zh">小数点向右移动 4 位：0.00056 = 5.6 × 10<sup>-4</sup>。</span></li>
+        </ol>
+      </details>
+
+      <h3><span class="en">Topic 1.4 Answers</span><span class="zh">专题1.4 答案</span></h3>
+      <details class="answer">
+        <summary><span class="en">Solution steps for Questions 19-28</span><span class="zh">第19-28题解题步骤</span></summary>
+        <ol class="solutions" start="19">
+          <li><span class="en">(-3a<sup>2</sup>b)(4ab<sup>3</sup>) = -12a<sup>3</sup>b<sup>4</sup>.</span><span class="zh">(-3a<sup>2</sup>b)(4ab<sup>3</sup>) = -12a<sup>3</sup>b<sup>4</sup>。</span></li>
+          <li><span class="en">2x(3x<sup>2</sup> - 4x + 5) = 6x<sup>3</sup> - 8x<sup>2</sup> + 10x.</span><span class="zh">2x(3x<sup>2</sup> - 4x + 5) = 6x<sup>3</sup> - 8x<sup>2</sup> + 10x。</span></li>
+          <li><span class="en">(x + 3)(x - 5) = x<sup>2</sup> - 2x - 15.</span><span class="zh">(x + 3)(x - 5) = x<sup>2</sup> - 2x - 15。</span></li>
+          <li><span class="en">(x + 2)(x + k) = x<sup>2</sup> + (k + 2)x + 2k. No linear term means k + 2 = 0, so k = -2.</span><span class="zh">(x + 2)(x + k) = x<sup>2</sup> + (k + 2)x + 2k。没有一次项表示 k + 2 = 0，所以 k = -2。</span></li>
+          <li><span class="en">(x + 2)(x - 3) - x(x - 1) = (x<sup>2</sup> - x - 6) - (x<sup>2</sup> - x) = -6.</span><span class="zh">(x + 2)(x - 3) - x(x - 1) = (x<sup>2</sup> - x - 6) - (x<sup>2</sup> - x) = -6。</span></li>
+          <li><span class="en">(x + 1)(x - 2) + (x - 3)<sup>2</sup> = 2x<sup>2</sup> - 7x + 7. When x = 2, the value is 1.</span><span class="zh">(x + 1)(x - 2) + (x - 3)<sup>2</sup> = 2x<sup>2</sup> - 7x + 7。当 x = 2 时，值为 1。</span></li>
+          <li><span class="en">(x + 4)(x - 7) = x<sup>2</sup> - 3x - 28.</span><span class="zh">(x + 4)(x - 7) = x<sup>2</sup> - 3x - 28。</span></li>
+          <li><span class="en">(x - 1)(x + 1)(x<sup>2</sup> + 1) = (x<sup>2</sup> - 1)(x<sup>2</sup> + 1) = x<sup>4</sup> - 1.</span><span class="zh">(x - 1)(x + 1)(x<sup>2</sup> + 1) = (x<sup>2</sup> - 1)(x<sup>2</sup> + 1) = x<sup>4</sup> - 1。</span></li>
+          <li><span class="en">Area = (2x + 3)(x + 4) = 2x<sup>2</sup> + 11x + 12.</span><span class="zh">面积 = (2x + 3)(x + 4) = 2x<sup>2</sup> + 11x + 12。</span></li>
+          <li><span class="en">f(2,-5) = (x + 2)(x - 5) = x<sup>2</sup> - 3x - 10.</span><span class="zh">f(2,-5) = (x + 2)(x - 5) = x<sup>2</sup> - 3x - 10。</span></li>
+        </ol>
+      </details>
+
+      <h3><span class="en">Topic 1.5 Answers</span><span class="zh">专题1.5 答案</span></h3>
+      <details class="answer">
+        <summary><span class="en">Solution steps for Questions 29-34</span><span class="zh">第29-34题解题步骤</span></summary>
+        <ol class="solutions" start="29">
+          <li><span class="en">Yes. (2x + 3)(2x - 3) = (2x)<sup>2</sup> - 3<sup>2</sup> = 4x<sup>2</sup> - 9.</span><span class="zh">能。 (2x + 3)(2x - 3) = (2x)<sup>2</sup> - 3<sup>2</sup> = 4x<sup>2</sup> - 9。</span></li>
+          <li><span class="en">(5a - 2b)(5a + 2b) = 25a<sup>2</sup> - 4b<sup>2</sup>.</span><span class="zh">(5a - 2b)(5a + 2b) = 25a<sup>2</sup> - 4b<sup>2</sup>。</span></li>
+          <li><span class="en">1002 × 998 = (1000 + 2)(1000 - 2) = 1000<sup>2</sup> - 2<sup>2</sup> = 999996.</span><span class="zh">1002 × 998 = (1000 + 2)(1000 - 2) = 1000<sup>2</sup> - 2<sup>2</sup> = 999996。</span></li>
+          <li><span class="en">(x + y)(x - y) + y<sup>2</sup> = x<sup>2</sup> - y<sup>2</sup> + y<sup>2</sup> = x<sup>2</sup>. When x = 5, the value is 25.</span><span class="zh">(x + y)(x - y) + y<sup>2</sup> = x<sup>2</sup> - y<sup>2</sup> + y<sup>2</sup> = x<sup>2</sup>。当 x = 5 时，值为 25。</span></li>
+          <li><span class="en">Multiply by (2 - 1) = 1, then use the pattern: (2 - 1)(2 + 1)(2<sup>2</sup> + 1)(2<sup>4</sup> + 1)(2<sup>8</sup> + 1) = 2<sup>16</sup> - 1 = 65535.</span><span class="zh">乘上 (2 - 1) = 1 后使用规律：(2 - 1)(2 + 1)(2<sup>2</sup> + 1)(2<sup>4</sup> + 1)(2<sup>8</sup> + 1) = 2<sup>16</sup> - 1 = 65535。</span></li>
+          <li><span class="en">(x + 6)<sup>2</sup> - (x - 6)<sup>2</sup> = [(x + 6) - (x - 6)][(x + 6) + (x - 6)] = 12 · 2x = 24x.</span><span class="zh">(x + 6)<sup>2</sup> - (x - 6)<sup>2</sup> = [(x + 6) - (x - 6)][(x + 6) + (x - 6)] = 12 · 2x = 24x。</span></li>
+        </ol>
+      </details>
+
+      <h3><span class="en">Topic 1.6 Answers</span><span class="zh">专题1.6 答案</span></h3>
+      <details class="answer">
+        <summary><span class="en">Solution steps for Questions 35-43</span><span class="zh">第35-43题解题步骤</span></summary>
+        <ol class="solutions" start="35">
+          <li><span class="en">Yes. 9x<sup>2</sup> + 12x + 4 = (3x + 2)<sup>2</sup>.</span><span class="zh">是。9x<sup>2</sup> + 12x + 4 = (3x + 2)<sup>2</sup>。</span></li>
+          <li><span class="en">(3a - 2b)<sup>2</sup> = 9a<sup>2</sup> - 12ab + 4b<sup>2</sup>.</span><span class="zh">(3a - 2b)<sup>2</sup> = 9a<sup>2</sup> - 12ab + 4b<sup>2</sup>。</span></li>
+          <li><span class="en">x<sup>2</sup> + kx + 25 = (x ± 5)<sup>2</sup>, so k = 10 or k = -10.</span><span class="zh">x<sup>2</sup> + kx + 25 = (x ± 5)<sup>2</sup>，所以 k = 10 或 k = -10。</span></li>
+          <li><span class="en">(x + 3)<sup>2</sup> - (x - 3)<sup>2</sup> = [(x + 3) - (x - 3)][(x + 3) + (x - 3)] = 12x.</span><span class="zh">(x + 3)<sup>2</sup> - (x - 3)<sup>2</sup> = [(x + 3) - (x - 3)][(x + 3) + (x - 3)] = 12x。</span></li>
+          <li><span class="en">101<sup>2</sup> = (100 + 1)<sup>2</sup> = 10000 + 200 + 1 = 10201.</span><span class="zh">101<sup>2</sup> = (100 + 1)<sup>2</sup> = 10000 + 200 + 1 = 10201。</span></li>
+          <li><span class="en">(a + b)<sup>2</sup> - (a - b)<sup>2</sup> = 4ab. With a = 7 and b = 2, the value is 56.</span><span class="zh">(a + b)<sup>2</sup> - (a - b)<sup>2</sup> = 4ab。当 a = 7，b = 2 时，值为 56。</span></li>
+          <li><span class="en">Square both sides: (x + <span class="frac"><span>1</span><span>x</span></span>)<sup>2</sup> = x<sup>2</sup> + 2 + <span class="frac"><span>1</span><span>x<sup>2</sup></span></span> = 25, so x<sup>2</sup> + <span class="frac"><span>1</span><span>x<sup>2</sup></span></span> = 23.</span><span class="zh">两边平方：(x + <span class="frac"><span>1</span><span>x</span></span>)<sup>2</sup> = x<sup>2</sup> + 2 + <span class="frac"><span>1</span><span>x<sup>2</sup></span></span> = 25，所以 x<sup>2</sup> + <span class="frac"><span>1</span><span>x<sup>2</sup></span></span> = 23。</span></li>
+          <li><span class="en">x<sup>2</sup> - 6x + 11 = (x - 3)<sup>2</sup> + 2, so the minimum value is 2.</span><span class="zh">x<sup>2</sup> - 6x + 11 = (x - 3)<sup>2</sup> + 2，所以最小值为 2。</span></li>
+          <li><span class="en">The area model gives (a + b)<sup>2</sup> = a<sup>2</sup> + 2ab + b<sup>2</sup>.</span><span class="zh">面积关系得到 (a + b)<sup>2</sup> = a<sup>2</sup> + 2ab + b<sup>2</sup>。</span></li>
+        </ol>
+      </details>
+
+      <h3><span class="en">Topic 1.7 Answers</span><span class="zh">专题1.7 答案</span></h3>
+      <details class="answer">
+        <summary><span class="en">Solution steps for Questions 44-49</span><span class="zh">第44-49题解题步骤</span></summary>
+        <ol class="solutions" start="44">
+          <li><span class="en">12a<sup>5</sup>b<sup>3</sup> ÷ (-3a<sup>2</sup>b) = -4a<sup>3</sup>b<sup>2</sup>.</span><span class="zh">12a<sup>5</sup>b<sup>3</sup> ÷ (-3a<sup>2</sup>b) = -4a<sup>3</sup>b<sup>2</sup>。</span></li>
+          <li><span class="en">(6x<sup>3</sup> - 9x<sup>2</sup> + 3x) ÷ 3x = 2x<sup>2</sup> - 3x + 1.</span><span class="zh">(6x<sup>3</sup> - 9x<sup>2</sup> + 3x) ÷ 3x = 2x<sup>2</sup> - 3x + 1。</span></li>
+          <li><span class="en">[(-2a<sup>2</sup>b)<sup>2</sup> · (3ab)] ÷ (6a<sup>3</sup>b<sup>2</sup>) = (4a<sup>4</sup>b<sup>2</sup> · 3ab) ÷ (6a<sup>3</sup>b<sup>2</sup>) = 2a<sup>2</sup>b.</span><span class="zh">[(-2a<sup>2</sup>b)<sup>2</sup> · (3ab)] ÷ (6a<sup>3</sup>b<sup>2</sup>) = (4a<sup>4</sup>b<sup>2</sup> · 3ab) ÷ (6a<sup>3</sup>b<sup>2</sup>) = 2a<sup>2</sup>b。</span></li>
+          <li><span class="en">[(x<sup>3</sup> - 2x<sup>2</sup> + x) ÷ x] - (x - 1)<sup>2</sup> = (x<sup>2</sup> - 2x + 1) - (x - 1)<sup>2</sup> = 0, so the value is 0 when x = 4.</span><span class="zh">[(x<sup>3</sup> - 2x<sup>2</sup> + x) ÷ x] - (x - 1)<sup>2</sup> = (x<sup>2</sup> - 2x + 1) - (x - 1)<sup>2</sup> = 0，所以 x = 4 时值为 0。</span></li>
+          <li><span class="en">(6a<sup>3</sup>b - 9a<sup>2</sup>b<sup>2</sup>) ⊘ (3ab) = 2a<sup>2</sup> - 3ab.</span><span class="zh">(6a<sup>3</sup>b - 9a<sup>2</sup>b<sup>2</sup>) ⊘ (3ab) = 2a<sup>2</sup> - 3ab。</span></li>
+          <li><span class="en">x<sup>2</sup> + 5x + 6 = (x + 2)(x + 3), so (x<sup>2</sup> + 5x + 6) ÷ (x + 2) = x + 3.</span><span class="zh">x<sup>2</sup> + 5x + 6 = (x + 2)(x + 3)，所以 (x<sup>2</sup> + 5x + 6) ÷ (x + 2) = x + 3。</span></li>
+        </ol>
+      </details>
+    </section>
   </main>
   <div class="actions">
+    <button class="answer-toggle" type="button" onclick="toggleAllAnswers(true)">Show Answers</button>
+    <button class="answer-toggle" type="button" onclick="toggleAllAnswers(false)">Hide Answers</button>
     <div class="lang-switch" role="group" aria-label="Language mode">
       <button type="button" data-mode="en-zh" aria-pressed="true">En+Zh</button>
       <button type="button" data-mode="en" aria-pressed="false">En</button>
@@ -582,6 +726,12 @@
       localStorage.setItem("chapter1ExamLanguageMode", mode);
       languageModeButtons.forEach((button) => {
         button.setAttribute("aria-pressed", String(button.dataset.mode === mode));
+      });
+    }
+
+    function toggleAllAnswers(open) {
+      document.querySelectorAll('details.answer').forEach((detail) => {
+        detail.open = open;
       });
     }
 
