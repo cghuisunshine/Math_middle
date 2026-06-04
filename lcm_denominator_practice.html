@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LCM Denominator Practice</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 30px 20px;
+      background: #f8fafc;
+      color: #1f2937;
+    }
+
+    h1 {
+      text-align: center;
+      color: #111827;
+      margin-bottom: 10px;
+    }
+
+    .intro {
+      background: #eef2ff;
+      border-left: 5px solid #6366f1;
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin-bottom: 28px;
+    }
+
+    .question-card {
+      background: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 22px;
+      margin-bottom: 22px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    .question-card h2 {
+      margin-top: 0;
+      color: #2563eb;
+    }
+
+    .math {
+      font-size: 1.25rem;
+      text-align: center;
+      margin: 12px 0;
+      color: #111827;
+    }
+
+    button {
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #1d4ed8;
+    }
+
+    .answer {
+      display: none;
+      margin-top: 16px;
+      padding: 14px 16px;
+      background: #ecfdf5;
+      border-left: 5px solid #10b981;
+      border-radius: 8px;
+      font-size: 1.1rem;
+    }
+
+    .method {
+      background: #fff7ed;
+      border-left: 5px solid #f97316;
+      padding: 16px 20px;
+      border-radius: 8px;
+      margin-top: 30px;
+    }
+  </style>
+</head>
+<body>
+  <h1>LCM Denominator Practice</h1>
+
+  <div class="intro">
+    <p><strong>Instructions:</strong> Alice, Bob, and Carol each choose a fraction with numerator <strong>1</strong>. For each question, find all possible denominators of Carol's fraction.</p>
+    <p>Each problem combines two ideas: the LCM of coefficients and the maximum exponent of the variable.</p>
+  </div>
+
+  <div class="question-card">
+    <h2>Question 1</h2>
+    <p>The simplest common denominator of Alice's and Bob's fractions is:</p>
+    <div class="math">12x<sup>2</sup></div>
+    <p>The simplest common denominator of Bob's and Carol's fractions is:</p>
+    <div class="math">18x<sup>4</sup></div>
+    <p>The simplest common denominator of Alice's and Carol's fractions is:</p>
+    <div class="math">36x<sup>4</sup></div>
+    <p>Find all possible denominators of Carol's fraction.</p>
+    <button onclick="toggleAnswer('answer1', this)">Show Answer</button>
+    <div class="answer" id="answer1">Answer: <strong>18x<sup>4</sup> or 36x<sup>4</sup></strong></div>
+  </div>
+
+  <div class="question-card">
+    <h2>Question 2</h2>
+    <p>The simplest common denominator of Alice's and Bob's fractions is:</p>
+    <div class="math">20x<sup>3</sup></div>
+    <p>The simplest common denominator of Bob's and Carol's fractions is:</p>
+    <div class="math">30x<sup>5</sup></div>
+    <p>The simplest common denominator of Alice's and Carol's fractions is:</p>
+    <div class="math">60x<sup>5</sup></div>
+    <p>Find all possible denominators of Carol's fraction.</p>
+    <button onclick="toggleAnswer('answer2', this)">Show Answer</button>
+    <div class="answer" id="answer2">Answer: <strong>15x<sup>5</sup>, 30x<sup>5</sup>, or 60x<sup>5</sup></strong></div>
+  </div>
+
+  <div class="question-card">
+    <h2>Question 3</h2>
+    <p>The simplest common denominator of Alice's and Bob's fractions is:</p>
+    <div class="math">24x<sup>4</sup></div>
+    <p>The simplest common denominator of Bob's and Carol's fractions is:</p>
+    <div class="math">40x<sup>6</sup></div>
+    <p>The simplest common denominator of Alice's and Carol's fractions is:</p>
+    <div class="math">120x<sup>6</sup></div>
+    <p>Find all possible denominators of Carol's fraction.</p>
+    <button onclick="toggleAnswer('answer3', this)">Show Answer</button>
+    <div class="answer" id="answer3">Answer: <strong>40x<sup>6</sup> or 120x<sup>6</sup></strong></div>
+  </div>
+
+  <div class="question-card">
+    <h2>Question 4</h2>
+    <p>The simplest common denominator of Alice's and Bob's fractions is:</p>
+    <div class="math">45x<sup>2</sup></div>
+    <p>The simplest common denominator of Bob's and Carol's fractions is:</p>
+    <div class="math">75x<sup>5</sup></div>
+    <p>The simplest common denominator of Alice's and Carol's fractions is:</p>
+    <div class="math">225x<sup>5</sup></div>
+    <p>Find all possible denominators of Carol's fraction.</p>
+    <button onclick="toggleAnswer('answer4', this)">Show Answer</button>
+    <div class="answer" id="answer4">Answer: <strong>75x<sup>5</sup> or 225x<sup>5</sup></strong></div>
+  </div>
+
+  <div class="question-card">
+    <h2>Question 5</h2>
+    <p>The simplest common denominator of Alice's and Bob's fractions is:</p>
+    <div class="math">28x<sup>3</sup></div>
+    <p>The simplest common denominator of Bob's and Carol's fractions is:</p>
+    <div class="math">42x<sup>7</sup></div>
+    <p>The simplest common denominator of Alice's and Carol's fractions is:</p>
+    <div class="math">84x<sup>7</sup></div>
+    <p>Find all possible denominators of Carol's fraction.</p>
+    <button onclick="toggleAnswer('answer5', this)">Show Answer</button>
+    <div class="answer" id="answer5">Answer: <strong>21x<sup>7</sup>, 42x<sup>7</sup>, or 84x<sup>7</sup></strong></div>
+  </div>
+
+  <div class="method">
+    <h2>Helpful Method</h2>
+    <p>Split each question into two smaller parts:</p>
+    <p><strong>1. Coefficient part:</strong> use LCM of the numbers.</p>
+    <p><strong>2. Exponent part:</strong> use the larger exponent of x.</p>
+    <p>Then combine the possible coefficient with the possible exponent.</p>
+  </div>
+
+  <script>
+    function toggleAnswer(id, button) {
+      const answer = document.getElementById(id);
+      if (answer.style.display === 'block') {
+        answer.style.display = 'none';
+        button.textContent = 'Show Answer';
+      } else {
+        answer.style.display = 'block';
+        button.textContent = 'Hide Answer';
+      }
+    }
+  </script>
+</body>
+</html>
