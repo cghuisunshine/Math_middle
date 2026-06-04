@@ -345,8 +345,27 @@
         </div>
         <div class="solution">
           <span class="label solution-label">Solution</span>
-          <p>Carol’s expression must have \(x^3\) in the denominator because both LCDs involving Carol contain \(x^3\).</p>
-          <p>The coefficient must work with both \(12x^3\) and \(6x^3\). The possible denominators are:</p>
+          <p>We can separate the coefficient and the power of \(x\) when finding an LCD.</p>
+          <p>For terms such as</p>
+          \[2x^2,\quad 4x,\quad 6x^3\]
+          <p>we find the LCD in two parts:</p>
+          \[\text{LCD}=\text{LCM of the coefficients}\times \text{highest power of }x\]
+          <p>For example, with \(4x^2\) and \(6x^3\), the coefficient part is</p>
+          \[\operatorname{lcm}(4,6)=12\]
+          <p>and the variable part is</p>
+          \[\operatorname{lcm}(x^2,x^3)=x^3\]
+          <p>So</p>
+          \[\operatorname{lcm}(4x^2,6x^3)=12x^3\]
+          <p>In general,</p>
+          \[\operatorname{lcm}(a x^m,b x^n)=\operatorname{lcm}(a,b)x^{\max(m,n)}\]
+          <p>That is why we solve this problem by separating the coefficient part and the power of \(x\) part.</p>
+          <p>From the coefficient parts of the three LCDs, we need</p>
+          \[\operatorname{lcm}(a,b)=4,\quad \operatorname{lcm}(b,c)=12,\quad \operatorname{lcm}(a,c)=6\]
+          <p>From the powers of \(x\), we need</p>
+          \[\max(m,n)=2,\quad \max(n,k)=3,\quad \max(m,k)=3\]
+          <p>Since \(\max(m,n)=2\), both Alice's and Bob's powers are at most \(2\). Therefore Carol must supply the \(x^3\), so \(k=3\).</p>
+          <p>The coefficient \(c\) for Carol's denominator must satisfy the two LCD conditions involving Carol. The possible values are \(c=3\) or \(c=6\).</p>
+          <p>Therefore the possible denominators are</p>
           \[3x^3 \quad \text{or} \quad 6x^3\]
           <p class="answer">Answer: \(\boxed{\frac1{3x^3}}\) or \(\boxed{\frac1{6x^3}}\)</p>
         </div>
