@@ -75,12 +75,60 @@
       font-size: 1.1rem;
     }
 
+    .answer p {
+      margin: 8px 0;
+    }
+
+    .answer ul {
+      margin: 8px 0 0 22px;
+      padding: 0;
+    }
+
+    .answer table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0;
+      background: white;
+      font-size: 0.95rem;
+    }
+
+    .answer th,
+    .answer td {
+      border: 1px solid #bbf7d0;
+      padding: 7px 8px;
+      text-align: center;
+    }
+
+    .note {
+      color: #4b5563;
+      font-size: 0.98rem;
+    }
+
     .method {
       background: #fff7ed;
       border-left: 5px solid #f97316;
       padding: 16px 20px;
       border-radius: 8px;
       margin-top: 30px;
+    }
+
+    .method table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 18px;
+      background: white;
+    }
+
+    .method th,
+    .method td {
+      border: 1px solid #fed7aa;
+      padding: 8px 10px;
+      text-align: center;
+    }
+
+    .method th:first-child,
+    .method td:first-child {
+      text-align: left;
     }
   </style>
 </head>
@@ -89,7 +137,8 @@
 
   <div class="intro">
     <p><strong>Instructions:</strong> Alice, Bob, and Carol each choose a fraction with numerator <strong>1</strong>. For each question, find all possible denominators of Carol's fraction.</p>
-    <p>Each problem combines two ideas: the LCM of coefficients and the maximum exponent of the variable.</p>
+    <p>For each problem, split every LCD into prime-power parts and a power of x. Then solve each part separately.</p>
+    <p class="note">Note: Alice and Bob can also have multiple possible denominators. The Alice and Bob entries shown in the answer tables are examples that make the listed Carol denominator work.</p>
   </div>
 
   <div class="question-card">
@@ -102,7 +151,47 @@
     <div class="math">36x<sup>4</sup></div>
     <p>Find all possible denominators of Carol's fraction.</p>
     <button onclick="toggleAnswer('answer1', this)">Show Answer</button>
-    <div class="answer" id="answer1">Answer: <strong>18x<sup>4</sup> or 36x<sup>4</sup></strong></div>
+    <div class="answer" id="answer1">
+      <p><strong>Answer:</strong> <strong>9x<sup>4</sup> or 18x<sup>4</sup></strong></p>
+      <p><strong>Prime-power check:</strong> 12 = 2<sup>2</sup> · 3, 18 = 2 · 3<sup>2</sup>, and 36 = 2<sup>2</sup> · 3<sup>2</sup>.</p>
+      <ul>
+        <li><strong>x:</strong> Alice and Bob only reach x<sup>2</sup>, but the two LCDs with Carol reach x<sup>4</sup>. So Carol must have x<sup>4</sup>.</li>
+        <li><strong>2:</strong> Bob and Carol only reach 2<sup>1</sup>, so Carol can have 2<sup>0</sup> or 2<sup>1</sup>.</li>
+        <li><strong>3:</strong> The two LCDs with Carol require 3<sup>2</sup>, so Carol must have 3<sup>2</sup>.</li>
+      </ul>
+      <p>Combine: 2<sup>0</sup> · 3<sup>2</sup> · x<sup>4</sup> = 9x<sup>4</sup>, or 2<sup>1</sup> · 3<sup>2</sup> · x<sup>4</sup> = 18x<sup>4</sup>.</p>
+      <p><strong>Check with Alice and Bob:</strong></p>
+      <table>
+        <thead>
+          <tr>
+            <th>Carol</th>
+            <th>Alice</th>
+            <th>Bob</th>
+            <th>LCD(A, B)</th>
+            <th>LCD(B, C)</th>
+            <th>LCD(A, C)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>9x<sup>4</sup></td>
+            <td>12x<sup>2</sup></td>
+            <td>6</td>
+            <td>12x<sup>2</sup></td>
+            <td>18x<sup>4</sup></td>
+            <td>36x<sup>4</sup></td>
+          </tr>
+          <tr>
+            <td>18x<sup>4</sup></td>
+            <td>12x<sup>2</sup></td>
+            <td>6</td>
+            <td>12x<sup>2</sup></td>
+            <td>18x<sup>4</sup></td>
+            <td>36x<sup>4</sup></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <div class="question-card">
@@ -115,7 +204,64 @@
     <div class="math">60x<sup>5</sup></div>
     <p>Find all possible denominators of Carol's fraction.</p>
     <button onclick="toggleAnswer('answer2', this)">Show Answer</button>
-    <div class="answer" id="answer2">Answer: <strong>15x<sup>5</sup>, 30x<sup>5</sup>, or 60x<sup>5</sup></strong></div>
+    <div class="answer" id="answer2">
+      <p><strong>Answer:</strong> <strong>3x<sup>5</sup>, 6x<sup>5</sup>, 15x<sup>5</sup>, or 30x<sup>5</sup></strong></p>
+      <p><strong>Prime-power check:</strong> 20 = 2<sup>2</sup> · 5, 30 = 2 · 3 · 5, and 60 = 2<sup>2</sup> · 3 · 5.</p>
+      <ul>
+        <li><strong>x:</strong> Alice and Bob only reach x<sup>3</sup>, but the two LCDs with Carol reach x<sup>5</sup>. So Carol must have x<sup>5</sup>.</li>
+        <li><strong>2:</strong> Bob and Carol only reach 2<sup>1</sup>, so Carol can have 2<sup>0</sup> or 2<sup>1</sup>.</li>
+        <li><strong>3:</strong> Alice and Bob have no factor 3 in their LCD, but the two LCDs with Carol do. So Carol must have 3<sup>1</sup>.</li>
+        <li><strong>5:</strong> All three LCDs have 5<sup>1</sup>, so Carol can have 5<sup>0</sup> or 5<sup>1</sup>.</li>
+      </ul>
+      <p>Combine: 2<sup>0 or 1</sup> · 3<sup>1</sup> · 5<sup>0 or 1</sup> · x<sup>5</sup>, giving 3x<sup>5</sup>, 6x<sup>5</sup>, 15x<sup>5</sup>, or 30x<sup>5</sup>.</p>
+      <p><strong>Check with Alice and Bob:</strong></p>
+      <table>
+        <thead>
+          <tr>
+            <th>Carol</th>
+            <th>Alice</th>
+            <th>Bob</th>
+            <th>LCD(A, B)</th>
+            <th>LCD(B, C)</th>
+            <th>LCD(A, C)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>3x<sup>5</sup></td>
+            <td>20x<sup>3</sup></td>
+            <td>10</td>
+            <td>20x<sup>3</sup></td>
+            <td>30x<sup>5</sup></td>
+            <td>60x<sup>5</sup></td>
+          </tr>
+          <tr>
+            <td>6x<sup>5</sup></td>
+            <td>20x<sup>3</sup></td>
+            <td>10</td>
+            <td>20x<sup>3</sup></td>
+            <td>30x<sup>5</sup></td>
+            <td>60x<sup>5</sup></td>
+          </tr>
+          <tr>
+            <td>15x<sup>5</sup></td>
+            <td>20x<sup>3</sup></td>
+            <td>10</td>
+            <td>20x<sup>3</sup></td>
+            <td>30x<sup>5</sup></td>
+            <td>60x<sup>5</sup></td>
+          </tr>
+          <tr>
+            <td>30x<sup>5</sup></td>
+            <td>20x<sup>3</sup></td>
+            <td>10</td>
+            <td>20x<sup>3</sup></td>
+            <td>30x<sup>5</sup></td>
+            <td>60x<sup>5</sup></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <div class="question-card">
@@ -128,7 +274,64 @@
     <div class="math">120x<sup>6</sup></div>
     <p>Find all possible denominators of Carol's fraction.</p>
     <button onclick="toggleAnswer('answer3', this)">Show Answer</button>
-    <div class="answer" id="answer3">Answer: <strong>40x<sup>6</sup> or 120x<sup>6</sup></strong></div>
+    <div class="answer" id="answer3">
+      <p><strong>Answer:</strong> <strong>5x<sup>6</sup>, 10x<sup>6</sup>, 20x<sup>6</sup>, or 40x<sup>6</sup></strong></p>
+      <p><strong>Prime-power check:</strong> 24 = 2<sup>3</sup> · 3, 40 = 2<sup>3</sup> · 5, and 120 = 2<sup>3</sup> · 3 · 5.</p>
+      <ul>
+        <li><strong>x:</strong> Alice and Bob only reach x<sup>4</sup>, but the two LCDs with Carol reach x<sup>6</sup>. So Carol must have x<sup>6</sup>.</li>
+        <li><strong>2:</strong> All three LCDs require 2<sup>3</sup>. Alice and Bob could supply that, so Carol can have 2<sup>0</sup>, 2<sup>1</sup>, 2<sup>2</sup>, or 2<sup>3</sup>.</li>
+        <li><strong>3:</strong> Bob and Carol have no factor 3 in their LCD, so Carol cannot have a factor 3.</li>
+        <li><strong>5:</strong> Alice and Bob have no factor 5 in their LCD, but the two LCDs with Carol do. So Carol must have 5<sup>1</sup>.</li>
+      </ul>
+      <p>Combine: 2<sup>0, 1, 2, or 3</sup> · 5 · x<sup>6</sup>, giving 5x<sup>6</sup>, 10x<sup>6</sup>, 20x<sup>6</sup>, or 40x<sup>6</sup>.</p>
+      <p><strong>Check with Alice and Bob:</strong></p>
+      <table>
+        <thead>
+          <tr>
+            <th>Carol</th>
+            <th>Alice</th>
+            <th>Bob</th>
+            <th>LCD(A, B)</th>
+            <th>LCD(B, C)</th>
+            <th>LCD(A, C)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>5x<sup>6</sup></td>
+            <td>24x<sup>4</sup></td>
+            <td>8</td>
+            <td>24x<sup>4</sup></td>
+            <td>40x<sup>6</sup></td>
+            <td>120x<sup>6</sup></td>
+          </tr>
+          <tr>
+            <td>10x<sup>6</sup></td>
+            <td>24x<sup>4</sup></td>
+            <td>8</td>
+            <td>24x<sup>4</sup></td>
+            <td>40x<sup>6</sup></td>
+            <td>120x<sup>6</sup></td>
+          </tr>
+          <tr>
+            <td>20x<sup>6</sup></td>
+            <td>24x<sup>4</sup></td>
+            <td>8</td>
+            <td>24x<sup>4</sup></td>
+            <td>40x<sup>6</sup></td>
+            <td>120x<sup>6</sup></td>
+          </tr>
+          <tr>
+            <td>40x<sup>6</sup></td>
+            <td>24x<sup>4</sup></td>
+            <td>8</td>
+            <td>24x<sup>4</sup></td>
+            <td>40x<sup>6</sup></td>
+            <td>120x<sup>6</sup></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <div class="question-card">
@@ -141,7 +344,47 @@
     <div class="math">225x<sup>5</sup></div>
     <p>Find all possible denominators of Carol's fraction.</p>
     <button onclick="toggleAnswer('answer4', this)">Show Answer</button>
-    <div class="answer" id="answer4">Answer: <strong>75x<sup>5</sup> or 225x<sup>5</sup></strong></div>
+    <div class="answer" id="answer4">
+      <p><strong>Answer:</strong> <strong>25x<sup>5</sup> or 75x<sup>5</sup></strong></p>
+      <p><strong>Prime-power check:</strong> 45 = 3<sup>2</sup> · 5, 75 = 3 · 5<sup>2</sup>, and 225 = 3<sup>2</sup> · 5<sup>2</sup>.</p>
+      <ul>
+        <li><strong>x:</strong> Alice and Bob only reach x<sup>2</sup>, but the two LCDs with Carol reach x<sup>5</sup>. So Carol must have x<sup>5</sup>.</li>
+        <li><strong>3:</strong> Bob and Carol only reach 3<sup>1</sup>, so Carol can have 3<sup>0</sup> or 3<sup>1</sup>.</li>
+        <li><strong>5:</strong> The two LCDs with Carol require 5<sup>2</sup>, so Carol must have 5<sup>2</sup>.</li>
+      </ul>
+      <p>Combine: 3<sup>0</sup> · 5<sup>2</sup> · x<sup>5</sup> = 25x<sup>5</sup>, or 3<sup>1</sup> · 5<sup>2</sup> · x<sup>5</sup> = 75x<sup>5</sup>.</p>
+      <p><strong>Check with Alice and Bob:</strong></p>
+      <table>
+        <thead>
+          <tr>
+            <th>Carol</th>
+            <th>Alice</th>
+            <th>Bob</th>
+            <th>LCD(A, B)</th>
+            <th>LCD(B, C)</th>
+            <th>LCD(A, C)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>25x<sup>5</sup></td>
+            <td>45x<sup>2</sup></td>
+            <td>15</td>
+            <td>45x<sup>2</sup></td>
+            <td>75x<sup>5</sup></td>
+            <td>225x<sup>5</sup></td>
+          </tr>
+          <tr>
+            <td>75x<sup>5</sup></td>
+            <td>45x<sup>2</sup></td>
+            <td>15</td>
+            <td>45x<sup>2</sup></td>
+            <td>75x<sup>5</sup></td>
+            <td>225x<sup>5</sup></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <div class="question-card">
@@ -154,15 +397,108 @@
     <div class="math">84x<sup>7</sup></div>
     <p>Find all possible denominators of Carol's fraction.</p>
     <button onclick="toggleAnswer('answer5', this)">Show Answer</button>
-    <div class="answer" id="answer5">Answer: <strong>21x<sup>7</sup>, 42x<sup>7</sup>, or 84x<sup>7</sup></strong></div>
+    <div class="answer" id="answer5">
+      <p><strong>Answer:</strong> <strong>3x<sup>7</sup>, 6x<sup>7</sup>, 21x<sup>7</sup>, or 42x<sup>7</sup></strong></p>
+      <p><strong>Prime-power check:</strong> 28 = 2<sup>2</sup> · 7, 42 = 2 · 3 · 7, and 84 = 2<sup>2</sup> · 3 · 7.</p>
+      <ul>
+        <li><strong>x:</strong> Alice and Bob only reach x<sup>3</sup>, but the two LCDs with Carol reach x<sup>7</sup>. So Carol must have x<sup>7</sup>.</li>
+        <li><strong>2:</strong> Bob and Carol only reach 2<sup>1</sup>, so Carol can have 2<sup>0</sup> or 2<sup>1</sup>.</li>
+        <li><strong>3:</strong> Alice and Bob have no factor 3 in their LCD, but the two LCDs with Carol do. So Carol must have 3<sup>1</sup>.</li>
+        <li><strong>7:</strong> All three LCDs have 7<sup>1</sup>, so Carol can have 7<sup>0</sup> or 7<sup>1</sup>.</li>
+      </ul>
+      <p>Combine: 2<sup>0 or 1</sup> · 3<sup>1</sup> · 7<sup>0 or 1</sup> · x<sup>7</sup>, giving 3x<sup>7</sup>, 6x<sup>7</sup>, 21x<sup>7</sup>, or 42x<sup>7</sup>.</p>
+      <p><strong>Check with Alice and Bob:</strong></p>
+      <table>
+        <thead>
+          <tr>
+            <th>Carol</th>
+            <th>Alice</th>
+            <th>Bob</th>
+            <th>LCD(A, B)</th>
+            <th>LCD(B, C)</th>
+            <th>LCD(A, C)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>3x<sup>7</sup></td>
+            <td>28x<sup>3</sup></td>
+            <td>14</td>
+            <td>28x<sup>3</sup></td>
+            <td>42x<sup>7</sup></td>
+            <td>84x<sup>7</sup></td>
+          </tr>
+          <tr>
+            <td>6x<sup>7</sup></td>
+            <td>28x<sup>3</sup></td>
+            <td>14</td>
+            <td>28x<sup>3</sup></td>
+            <td>42x<sup>7</sup></td>
+            <td>84x<sup>7</sup></td>
+          </tr>
+          <tr>
+            <td>21x<sup>7</sup></td>
+            <td>28x<sup>3</sup></td>
+            <td>14</td>
+            <td>28x<sup>3</sup></td>
+            <td>42x<sup>7</sup></td>
+            <td>84x<sup>7</sup></td>
+          </tr>
+          <tr>
+            <td>42x<sup>7</sup></td>
+            <td>28x<sup>3</sup></td>
+            <td>14</td>
+            <td>28x<sup>3</sup></td>
+            <td>42x<sup>7</sup></td>
+            <td>84x<sup>7</sup></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <div class="method">
     <h2>Helpful Method</h2>
-    <p>Split each question into two smaller parts:</p>
-    <p><strong>1. Coefficient part:</strong> use LCM of the numbers.</p>
-    <p><strong>2. Exponent part:</strong> use the larger exponent of x.</p>
-    <p>Then combine the possible coefficient with the possible exponent.</p>
+    <p>Do not treat the coefficient as one large number. First factor each coefficient into primes. Then treat each prime and x as separate maximum problems.</p>
+    <p>The rule is always:</p>
+    <p class="math">max(two people's powers) = LCD power</p>
+    <p>For example, in Question 1 the LCDs are:</p>
+    <table>
+      <thead>
+        <tr>
+          <th>LCD</th>
+          <th>power of 2</th>
+          <th>power of 3</th>
+          <th>power of x</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>12x<sup>2</sup></td>
+          <td>2<sup>2</sup></td>
+          <td>3<sup>1</sup></td>
+          <td>x<sup>2</sup></td>
+        </tr>
+        <tr>
+          <td>18x<sup>4</sup></td>
+          <td>2<sup>1</sup></td>
+          <td>3<sup>2</sup></td>
+          <td>x<sup>4</sup></td>
+        </tr>
+        <tr>
+          <td>36x<sup>4</sup></td>
+          <td>2<sup>2</sup></td>
+          <td>3<sup>2</sup></td>
+          <td>x<sup>4</sup></td>
+        </tr>
+      </tbody>
+    </table>
+    <p>So Question 1 becomes three smaller questions:</p>
+    <p><strong>For x:</strong> Alice and Bob only reach x<sup>2</sup>, but the two LCDs involving Carol reach x<sup>4</sup>. Carol must have x<sup>4</sup>.</p>
+    <p><strong>For 2:</strong> Bob and Carol together only reach 2<sup>1</sup>, so Carol can have 2<sup>0</sup> or 2<sup>1</sup>.</p>
+    <p><strong>For 3:</strong> both LCDs involving Carol require 3<sup>2</sup>, so Carol must have 3<sup>2</sup>.</p>
+    <p>Therefore Carol's denominator is 2<sup>0</sup> · 3<sup>2</sup> · x<sup>4</sup> or 2<sup>1</sup> · 3<sup>2</sup> · x<sup>4</sup>, which gives 9x<sup>4</sup> or 18x<sup>4</sup>.</p>
+    <p>Use the same method for every question: split into prime powers, solve each maximum problem, then combine the possible parts at the end.</p>
   </div>
 
   <script>
