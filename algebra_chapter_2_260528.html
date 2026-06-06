@@ -149,6 +149,25 @@
 
     ul { margin-top: 6px; }
 
+    .factor-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 18px;
+      background: white;
+    }
+
+    .factor-table th,
+    .factor-table td {
+      border: 1px solid var(--border);
+      padding: 8px 10px;
+      text-align: center;
+    }
+
+    .factor-table th:first-child,
+    .factor-table td:first-child {
+      text-align: left;
+    }
+
     @media print {
       body { background: white; }
       header { background: white; color: black; border-bottom: 2px solid #111; }
@@ -345,27 +364,50 @@
         </div>
         <div class="solution">
           <span class="label solution-label">Solution</span>
-          <p>We can separate the coefficient and the power of \(x\) when finding an LCD.</p>
-          <p>For terms such as</p>
-          \[2x^2,\quad 4x,\quad 6x^3\]
-          <p>we find the LCD in two parts:</p>
-          \[\text{LCD}=\text{LCM of the coefficients}\times \text{highest power of }x\]
-          <p>For example, with \(4x^2\) and \(6x^3\), the coefficient part is</p>
-          \[\operatorname{lcm}(4,6)=12\]
-          <p>and the variable part is</p>
-          \[\operatorname{lcm}(x^2,x^3)=x^3\]
-          <p>So</p>
-          \[\operatorname{lcm}(4x^2,6x^3)=12x^3\]
-          <p>In general,</p>
-          \[\operatorname{lcm}(a x^m,b x^n)=\operatorname{lcm}(a,b)x^{\max(m,n)}\]
-          <p>That is why we solve this problem by separating the coefficient part and the power of \(x\) part.</p>
-          <p>From the coefficient parts of the three LCDs, we need</p>
-          \[\operatorname{lcm}(a,b)=4,\quad \operatorname{lcm}(b,c)=12,\quad \operatorname{lcm}(a,c)=6\]
-          <p>From the powers of \(x\), we need</p>
-          \[\max(m,n)=2,\quad \max(n,k)=3,\quad \max(m,k)=3\]
-          <p>Since \(\max(m,n)=2\), both Alice's and Bob's powers are at most \(2\). Therefore Carol must supply the \(x^3\), so \(k=3\).</p>
-          <p>The coefficient \(c\) for Carol's denominator must satisfy the two LCD conditions involving Carol. The possible values are \(c=3\) or \(c=6\).</p>
-          <p>Therefore the possible denominators are</p>
+          <p>To find an LCD, split every denominator into prime-power parts. Here the independent parts are powers of \(2\), powers of \(3\), and powers of \(x\):</p>
+          \[\text{LCD}=(\text{highest power of }2)(\text{highest power of }3)(\text{highest power of }x)\]
+          <p>The three LCDs are</p>
+          \[4x^2,\quad 12x^3,\quad 6x^3\]
+          <p>Rewrite the coefficients using primes:</p>
+          \[4=2^2,\qquad 12=2^2\cdot3,\qquad 6=2\cdot3\]
+          <table class="factor-table">
+            <thead>
+              <tr>
+                <th>LCD</th>
+                <th>power of \(2\)</th>
+                <th>power of \(3\)</th>
+                <th>power of \(x\)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>\(4x^2\)</td>
+                <td>\(2^2\)</td>
+                <td>\(3^0\)</td>
+                <td>\(x^2\)</td>
+              </tr>
+              <tr>
+                <td>\(12x^3\)</td>
+                <td>\(2^2\)</td>
+                <td>\(3^1\)</td>
+                <td>\(x^3\)</td>
+              </tr>
+              <tr>
+                <td>\(6x^3\)</td>
+                <td>\(2^1\)</td>
+                <td>\(3^1\)</td>
+                <td>\(x^3\)</td>
+              </tr>
+            </tbody>
+          </table>
+          <p>Now solve three smaller maximum problems: one for \(2\), one for \(3\), and one for \(x\).</p>
+          <p>Let Carol's denominator contain \(2^g3^hx^i\). From the \(x\)-part,</p>
+          \[\max(A_x,B_x)=2,\qquad \max(B_x,C_x)=3,\qquad \max(A_x,C_x)=3\]
+          <p>Since Alice and Bob together only reach \(x^2\), Carol must provide \(x^3\). So \(i=3\).</p>
+          <p>For the number part, the power of \(3\) must come from Carol, so \(h=1\). The power of \(2\) in Carol can be \(g=0\) or \(g=1\).</p>
+          <p>Therefore Carol's denominator is</p>
+          \[2^g\cdot3^1\cdot x^3\]
+          <p>where \(g=0\) or \(g=1\). So the possible denominators are</p>
           \[3x^3 \quad \text{or} \quad 6x^3\]
           <p class="answer">Answer: \(\boxed{\frac1{3x^3}}\) or \(\boxed{\frac1{6x^3}}\)</p>
         </div>
@@ -374,56 +416,49 @@
       <div class="qa">
         <div class="solution">
           <span class="label solution-label">Further Explained</span>
-          <p>Problem 2.41 can be taught as two simple problems combined.</p>
-          <p>The original problem separates into</p>
-          \[\operatorname{lcm}(a x^m, b x^n)=\operatorname{lcm}(a,b)x^{\max(m,n)}\]
-          <p>So we can design two simpler questions.</p>
+          <p>We can use exactly the same method for \(2\), \(3\), and \(x\).</p>
+          <p>The rule is always:</p>
+          \[\max(\text{two people's powers})=\text{LCD power}\]
+          <p>Suppose the denominators are</p>
+          \[A=2^a3^b x^c,\qquad B=2^d3^e x^f,\qquad C=2^g3^h x^i\]
+          <p>From the three LCDs:</p>
+          \[\text{LCD}(A,B)=4x^2=2^2\cdot3^0\cdot x^2\]
+          \[\text{LCD}(B,C)=12x^3=2^2\cdot3^1\cdot x^3\]
+          \[\text{LCD}(A,C)=6x^3=2^1\cdot3^1\cdot x^3\]
 
-          <h3>Simple Question 1: Coefficients only</h3>
-          <p>Alice, Bob, and Carol each choose a fraction with numerator \(1\) and a constant integer denominator.</p>
-          <p>The simplest common denominator of Alice's and Bob's fractions is \(4\).</p>
-          <p>The simplest common denominator of Bob's and Carol's fractions is \(12\).</p>
-          <p>The simplest common denominator of Alice's and Carol's fractions is \(6\).</p>
-          <p>Find all possible denominators of Carol's fraction.</p>
-          <p>So we are solving:</p>
-          \[\operatorname{lcm}(a,b)=4\]
-          \[\operatorname{lcm}(b,c)=12\]
-          \[\operatorname{lcm}(a,c)=6\]
-          <p>Answer:</p>
-          \[c=3 \quad \text{or} \quad c=6\]
-          <p>So Carol's possible expressions are:</p>
-          \[\boxed{\frac{1}{3}} \quad \text{or} \quad \boxed{\frac{1}{6}}\]
+          <h3>For \(x\)</h3>
+          \[\max(c,f)=2\]
+          \[\max(f,i)=3\]
+          \[\max(c,i)=3\]
+          <p>So \(i=3\). Carol must have \(x^3\).</p>
 
-          <h3>Simple Question 2: Exponents only, coefficient is 1</h3>
-          <p>Alice, Bob, and Carol each choose a fraction with numerator \(1\) and denominator a power of \(x\).</p>
-          <p>The simplest common denominator of Alice's and Bob's fractions is \(x^2\).</p>
-          <p>The simplest common denominator of Bob's and Carol's fractions is \(x^3\).</p>
-          <p>The simplest common denominator of Alice's and Carol's fractions is \(x^3\).</p>
-          <p>Find Carol's denominator.</p>
-          <p>So we are solving:</p>
-          \[\operatorname{lcm}(x^m,x^n)=x^2\]
-          \[\operatorname{lcm}(x^n,x^k)=x^3\]
-          \[\operatorname{lcm}(x^m,x^k)=x^3\]
-          <p>This means:</p>
-          \[\max(m,n)=2\]
-          \[\max(n,k)=3\]
-          \[\max(m,k)=3\]
-          <p>Since Alice and Bob only reach \(x^2\), Carol must provide the \(x^3\).</p>
-          <p>So:</p>
-          \[k=3\]
-          <p>Carol's denominator is:</p>
-          \[\boxed{x^3}\]
-          <p>Carol's expression is:</p>
-          \[\boxed{\frac{1}{x^3}}\]
+          <h3>For \(2\)</h3>
+          \[\max(a,d)=2\]
+          \[\max(d,g)=2\]
+          \[\max(a,g)=1\]
+          <p>The last equation says \(a\le1\) and \(g\le1\). But the first equation needs a \(2^2\). Since Alice cannot provide it, Bob must provide it:</p>
+          \[d=2\]
+          <p>Then the second equation is already satisfied because Bob has \(2^2\). Carol can have</p>
+          \[g=0 \quad \text{or} \quad g=1\]
+          <p>So Carol may have no factor \(2\), or one factor \(2\).</p>
 
-          <p>Then the full original problem combines the two answers.</p>
-          <p>Coefficient part:</p>
-          \[3 \quad \text{or} \quad 6\]
-          <p>Exponent part:</p>
-          \[x^3\]
-          <p>So Carol's full possible expressions are:</p>
-          \[\boxed{\frac{1}{3x^3}} \quad \text{or} \quad \boxed{\frac{1}{6x^3}}\]
-          <p>This is a good teaching approach because students first learn the coefficient LCM and exponent maximum separately, then combine them.</p>
+          <h3>For \(3\)</h3>
+          \[\max(b,e)=0\]
+          \[\max(e,h)=1\]
+          \[\max(b,h)=1\]
+          <p>The first equation says</p>
+          \[b=0,\qquad e=0\]
+          <p>Then the second and third equations both require Carol to provide \(3^1\):</p>
+          \[h=1\]
+
+          <p>Therefore Carol has</p>
+          \[2^g\cdot3^1\cdot x^3\]
+          <p>where</p>
+          \[g=0 \quad \text{or} \quad g=1\]
+          <p>Therefore the possible denominators are</p>
+          \[3x^3 \quad \text{or} \quad 6x^3\]
+          <p class="answer">Answer: \(\boxed{\frac1{3x^3}}\) or \(\boxed{\frac1{6x^3}}\)</p>
+          <p>Treat \(2\), \(3\), and \(x\) separately. For each part, ask: "Which person must have the highest power to make each LCD?" Then combine the answers at the end.</p>
         </div>
       </div>
     </section>
