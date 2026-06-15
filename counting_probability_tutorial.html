@@ -248,15 +248,16 @@
 
     .tts-floating-controls {
       position: fixed;
-      left: 50%;
+      right: 16px;
       bottom: 16px;
       z-index: 30;
+      width: max-content;
       padding: 10px;
       background: rgba(255,255,255,.96);
       border: 1px solid var(--line);
       border-radius: 14px;
       box-shadow: 0 8px 20px rgba(23, 32, 51, .12);
-      transform: translateX(-50%);
+      transform: none;
     }
 
     #ttsAudio { display: none; }
@@ -512,10 +513,9 @@
       main { padding-top: 18px; }
       .overview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .tts-floating-controls {
-        left: 12px;
         right: 12px;
         bottom: 12px;
-        justify-content: center;
+        width: max-content;
         transform: none;
       }
       .lesson-grid { grid-template-columns: 1fr; }
