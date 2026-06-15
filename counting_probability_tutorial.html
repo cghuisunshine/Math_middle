@@ -594,8 +594,7 @@
       <div id="ttsPanel">
         <span id="ttsStatus" class="tts-status" aria-live="polite">Ready</span>
         <div class="tts-controls tts-floating-controls">
-          <button id="ttsPlay" type="button">Play</button>
-          <button id="ttsStop" type="button" class="secondary">Stop</button>
+          <button id="ttsPlay" type="button" aria-pressed="false">Play</button>
         </div>
         <audio id="ttsAudio" preload="metadata" src="audio/counting-probability-narration.mp3"></audio>
       </div>
@@ -1019,13 +1018,11 @@
 
     const ttsAudio = document.getElementById('ttsAudio');
     const ttsPlay = document.getElementById('ttsPlay');
-    const ttsStop = document.getElementById('ttsStop');
     const ttsStatus = document.getElementById('ttsStatus');
     let narrationWords = [];
     let narrationSpans = [];
     let activeNarrationIndex = -1;
     let narrationReady = false;
-    let narrationStopRequested = false;
 
     function cleanNarrationText(text) {
       return text.replace(/\s+/g, ' ').trim();
@@ -1194,7 +1191,8 @@
     ttsPlay.addEventListener('click', async () => {
       try {
         if (!(await prepareNarration())) return;
-        if (ttsAudio.paused) {
+        if (ttsAudio.paused || ttsAudio.ended) {
+          if (ttsAudio.ended) ttsAudio.currentTime = 0;
           await ttsAudio.play();
         } else {
           ttsAudio.pause();
@@ -1205,35 +1203,23 @@
       }
     });
 
-    ttsStop.addEventListener('click', () => {
-      const wasPaused = ttsAudio.paused;
-      narrationStopRequested = !wasPaused;
-      if (!wasPaused) ttsAudio.pause();
-      ttsAudio.currentTime = 0;
-      clearNarrationHighlight();
-      if (wasPaused) {
-        ttsPlay.textContent = 'Play';
-        ttsStatus.textContent = 'Ready';
-      }
-    });
-
     ttsAudio.addEventListener('play', () => {
       ttsPlay.textContent = 'Pause';
+      ttsPlay.setAttribute('aria-pressed', 'true');
       ttsStatus.textContent = 'Playing';
     });
 
     ttsAudio.addEventListener('pause', () => {
       ttsPlay.textContent = 'Play';
-      if (narrationStopRequested) {
-        ttsStatus.textContent = 'Ready';
-        narrationStopRequested = false;
-      } else if (!ttsAudio.ended) {
+      ttsPlay.setAttribute('aria-pressed', 'false');
+      if (!ttsAudio.ended) {
         ttsStatus.textContent = 'Paused';
       }
     });
 
     ttsAudio.addEventListener('ended', () => {
       ttsPlay.textContent = 'Play';
+      ttsPlay.setAttribute('aria-pressed', 'false');
       ttsStatus.textContent = 'Ready';
     });
 
