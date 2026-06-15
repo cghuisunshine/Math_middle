@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Introduction to Number Theory — Problem-Solving Tutorial</title>
+<style>
+  :root{
+    --bg:#f7f8fb;
+    --paper:#ffffff;
+    --ink:#1f2937;
+    --muted:#6b7280;
+    --brand:#2563eb;
+    --brand2:#0f766e;
+    --soft:#eaf2ff;
+    --soft2:#ecfdf5;
+    --warn:#fff7ed;
+    --line:#d7deea;
+    --proof:#f8fafc;
+    --shadow:0 10px 28px rgba(15,23,42,.08);
+    --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, "Noto Sans", sans-serif;
+    color:var(--ink);
+    background:
+      radial-gradient(circle at top left, rgba(37,99,235,.14), transparent 30%),
+      linear-gradient(180deg,#f8fbff 0%, var(--bg) 100%);
+    line-height:1.62;
+  }
+  header{
+    padding:42px 22px 34px;
+    color:white;
+    background:
+      linear-gradient(135deg, rgba(30,64,175,.98), rgba(15,118,110,.96)),
+      radial-gradient(circle at 85% 20%, rgba(255,255,255,.25), transparent 24%);
+  }
+  .wrap{max-width:1150px;margin:0 auto}
+  .hero{
+    display:grid;
+    grid-template-columns:1.3fr .7fr;
+    gap:24px;
+    align-items:center;
+  }
+  h1{
+    margin:0 0 12px;
+    font-size:clamp(2rem,5vw,4.1rem);
+    line-height:1.05;
+    letter-spacing:-.04em;
+  }
+  .subtitle{font-size:1.08rem;opacity:.95;max-width:760px}
+  .hero-card{
+    background:rgba(255,255,255,.13);
+    border:1px solid rgba(255,255,255,.28);
+    border-radius:var(--radius);
+    padding:20px;
+    backdrop-filter:blur(10px);
+  }
+  .hero-card strong{display:block;font-size:1.1rem;margin-bottom:8px}
+  .hero-card ul{margin:8px 0 0 20px;padding:0}
+  nav{
+    position:sticky;
+    top:0;
+    z-index:3;
+    background:rgba(255,255,255,.88);
+    backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    max-width:1150px;
+    margin:0 auto;
+    padding:12px 16px;
+    display:flex;
+    gap:10px;
+    overflow:auto;
+    white-space:nowrap;
+  }
+  .nav-inner a{
+    color:#1e3a8a;
+    text-decoration:none;
+    padding:8px 12px;
+    border-radius:999px;
+    background:#eff6ff;
+    font-size:.92rem;
+    border:1px solid #dbeafe;
+  }
+  main{max-width:1150px;margin:0 auto;padding:26px 18px 70px}
+  section{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    margin:22px 0;
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .unit-head{
+    padding:22px 24px;
+    background:linear-gradient(90deg,#f8fbff,#ffffff);
+    border-bottom:1px solid var(--line);
+    display:flex;
+    gap:14px;
+    align-items:flex-start;
+  }
+  .badge{
+    min-width:42px;height:42px;border-radius:12px;
+    display:grid;place-items:center;
+    color:white;background:var(--brand);
+    font-weight:800;
+    box-shadow:0 6px 12px rgba(37,99,235,.25);
+  }
+  h2{margin:0;font-size:1.55rem;line-height:1.2}
+  .unit-goal{color:var(--muted);margin:7px 0 0}
+  .content{padding:22px 24px}
+  h3{margin:24px 0 8px;font-size:1.18rem;color:#0f172a}
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:16px;
+    margin:16px 0;
+  }
+  .box{
+    border-radius:16px;
+    border:1px solid var(--line);
+    padding:16px 18px;
+    background:#fff;
+  }
+  .idea{background:var(--soft);border-color:#bfdbfe}
+  .proof{background:var(--proof);border-color:#cbd5e1}
+  .example{background:var(--soft2);border-color:#bbf7d0}
+  .warning{background:var(--warn);border-color:#fed7aa}
+  .label{
+    font-size:.76rem;
+    font-weight:800;
+    color:#334155;
+    letter-spacing:.08em;
+    text-transform:uppercase;
+    margin-bottom:6px;
+  }
+  .math{
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    background:#f1f5f9;
+    padding:2px 6px;
+    border-radius:6px;
+  }
+  details{
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:12px 14px;
+    background:#fafafa;
+    margin:10px 0;
+  }
+  summary{cursor:pointer;font-weight:700;color:#1d4ed8}
+  .practice ol{margin-top:8px}
+  .mini-table{
+    width:100%;
+    border-collapse:collapse;
+    margin:12px 0;
+    font-size:.95rem;
+  }
+  .mini-table th,.mini-table td{
+    border:1px solid var(--line);
+    padding:8px 10px;
+    text-align:left;
+  }
+  .mini-table th{background:#f1f5f9}
+  .toc-card{
+    background:white;
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    padding:22px;
+    margin:24px 0;
+  }
+  .toc-grid{
+    display:grid;
+    grid-template-columns:repeat(3,minmax(0,1fr));
+    gap:12px;
+  }
+  .toc-grid a{
+    padding:12px;
+    border:1px solid var(--line);
+    border-radius:14px;
+    background:#f8fafc;
+    color:#0f172a;
+    text-decoration:none;
+  }
+  .checkline{
+    display:flex;
+    gap:10px;
+    align-items:flex-start;
+    margin:8px 0;
+  }
+  input[type="checkbox"]{width:18px;height:18px;margin-top:4px}
+  footer{
+    padding:28px 18px;
+    border-top:1px solid var(--line);
+    background:white;
+    color:var(--muted);
+    text-align:center;
+  }
+  .formula-center{
+    text-align:center;
+    font-size:1.1rem;
+    margin:12px 0;
+  }
+  .two-col{
+    columns:2;
+    column-gap:28px;
+  }
+  .pill{
+    display:inline-block;
+    padding:3px 9px;
+    border-radius:999px;
+    background:#eef2ff;
+    color:#3730a3;
+    font-size:.84rem;
+    margin:2px 4px 2px 0;
+  }
+  .toplink{float:right;font-size:.9rem;color:#2563eb;text-decoration:none}
+  @media (max-width:850px){
+    .hero{grid-template-columns:1fr}
+    .grid,.toc-grid{grid-template-columns:1fr}
+    .two-col{columns:1}
+    .unit-head{padding:18px}
+    .content{padding:18px}
+  }
+  @media print{
+    nav,.toplink{display:none}
+    body{background:white}
+    header{color:#111;background:white;border-bottom:2px solid #111}
+    section,.toc-card{box-shadow:none;break-inside:avoid}
+    details{break-inside:avoid}
+    details > *{display:block}
+  }
+</style>
+<script>
+  window.MathJax = {
+    tex: {inlineMath: [['\\(','\\)'], ['$', '$']], displayMath: [['\\[','\\]']]},
+    svg: {fontCache: 'global'}
+  };
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+</head>
+<body>
+<header id="top">
+  <div class="wrap hero">
+    <div>
+      <h1>Introduction to Number Theory</h1>
+      <p class="subtitle">A problem-solving tutorial with examples, proofs, hidden answers, and practice. Designed for secondary students who want to understand why number theory works, not just memorize rules.</p>
+    </div>
+    <div class="hero-card">
+      <strong>How to study this page</strong>
+      <ul>
+        <li>Try the example before opening the answer.</li>
+        <li>Read the proof as a “why it works” explanation.</li>
+        <li>Use the checkboxes to track progress.</li>
+        <li>Print or save as PDF for offline practice.</li>
+      </ul>
+    </div>
+  </div>
+</header>
+
+<nav>
+  <div class="nav-inner">
+    <a href="#u1">1 Integers</a>
+    <a href="#u2">2 Primes</a>
+    <a href="#u3">3 GCD/LCM</a>
+    <a href="#u4">4 Factorization</a>
+    <a href="#u5">5 Divisors</a>
+    <a href="#u6">6 Special Numbers</a>
+    <a href="#u7">7 Integer Algebra</a>
+    <a href="#u8">8 Bases</a>
+    <a href="#u9">9 Base Arithmetic</a>
+    <a href="#u10">10 Units Digits</a>
+    <a href="#u11">11 Decimals</a>
+    <a href="#u12">12 Modular Arithmetic</a>
+    <a href="#u13">13 Divisibility</a>
+    <a href="#u14">14 Congruences</a>
+    <a href="#u15">15 Number Sense</a>
+  </div>
+</nav>
+
+<main>
+  <div class="toc-card">
+    <h2>Course Map</h2>
+    <p>This page follows the same broad path as a classic number theory introduction: integers and divisibility → primes and factorization → GCD/LCM and divisor problems → bases and units digits → modular arithmetic and linear congruences → number sense.</p>
+    <div class="toc-grid">
+      <a href="#u1">Integers, multiples, divisors</a>
+      <a href="#u2">Primes and composites</a>
+      <a href="#u3">Common divisors and multiples</a>
+      <a href="#u4">Prime factorization</a>
+      <a href="#u5">Divisor counting and products</a>
+      <a href="#u6">Special numbers</a>
+      <a href="#u7">Algebra with integers</a>
+      <a href="#u8">Base numbers</a>
+      <a href="#u9">Base arithmetic</a>
+      <a href="#u10">Units digits</a>
+      <a href="#u11">Decimals and fractions</a>
+      <a href="#u12">Modular arithmetic</a>
+      <a href="#u13">Divisibility rules</a>
+      <a href="#u14">Linear congruences</a>
+      <a href="#u15">Number sense</a>
+    </div>
+  </div>
+
+  <section id="u1">
+    <div class="unit-head"><div class="badge">1</div><div><h2>Integers: The Basics</h2><p class="unit-goal">Goal: understand integers, multiples, divisibility, and how word problems become number theory problems.</p></div></div>
+    <div class="content">
+      <a class="toplink" href="#top">Back to top</a>
+      <div class="grid">
+        <div class="box idea">
+          <div class="label">Core idea</div>
+          <p>Integers are whole numbers, including negative numbers, zero, and positive numbers:</p>
+          <p class="formula-center">\[\ldots,-3,-2,-1,0,1,2,3,\ldots\]</p>
+          <p>A number \(a\) is divisible by \(b\) when \(\frac{a}{b}\) is an integer. We write \(b\mid a\).</p>
+        </div>
+        <div class="box proof">
+          <div class="label">Proof / Why</div>
+          <p>The statements below mean the same thing for integers \(a,b\) with \(b\ne0\):</p>
+          <p class="formula-center">\[b\mid a \Longleftrightarrow a=bk \text{ for some integer } k.\]</p>
+          <p>If \(\frac ab=k\), then \(a=bk\). If \(a=bk\), then \(\frac ab=k\), an integer.</p>
+        </div>
+      </div>
+
+      <h3>Example 1: Divisibility</h3>
+      <p>Is \(84\) divisible by \(7\)?</p>
+      <details><summary>Show solution</summary>
+        <p>Yes. Since \(84=7\cdot12\), we have \(7\mid84\).</p>
+      </details>
+
+      <h3>Example 2: Translating a word problem</h3>
+      <p>There are 21 students and 63 cupcakes. Can every student receive the same number of cupcakes?</p>
+      <details><summary>Show solution</summary>
+        <p>We ask whether \(21\mid63\). Since \(63=21\cdot3\), yes. Each student receives 3 cupcakes.</p>
+      </details>
+
+      <div class="box warning">
+        <div class="label">Common mistake</div>
+        <p>Do not say “\(a\) divides \(b\)” unless the quotient is an integer. For example, \(5\nmid22\), because \(22/5=4.4\), not an integer.</p>
+      </div>
+
+      <div class="box practice">
+        <div class="label">Practice</div>
+        <ol>
+          <li>Decide whether \(6\mid 72\).</li>
+          <li>Decide whether \(8\mid 98\).</li>
+          <li>Find all positive divisors of \(24\).</li>
+        </ol>
+        <details><summary>Answers</summary>
+          <p>1. Yes. \(72=6\cdot12\). 2. No. 3. \(1,2,3,4,6,8,12,24\).</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section id="u2">
+    <div class="unit-head"><div class="badge">2</div><div><h2>Primes and Composites</h2><p class="unit-goal">Goal: identify prime numbers efficiently and understand why primality testing stops at the square root.</p></div></div>
+    <div class="content">
+      <a class="toplink" href="#top">Back to top</a>
+      <div class="grid">
+        <div class="box idea">
+          <div class="label">Definitions</div>
+          <p>A <strong>prime</strong> is a natural number greater than 1 whose only positive divisors are \(1\) and itself.</p>
+          <p>A <strong>composite</strong> number is a natural number with a positive divisor other than \(1\) and itself.</p>
+          <p>The number \(1\) is neither prime nor composite.</p>
+        </div>
+        <div class="box proof">
+          <div class="label">Key proof</div>
+          <p>To test whether \(n\) is prime, it is enough to check prime divisors up to \(\sqrt n\).</p>
+          <p>If \(n=ab\) with \(1<a\le b<n\), then \(a^2\le ab=n\), so \(a\le\sqrt n\). Therefore any composite \(n\) has a factor at most \(\sqrt n\).</p>
+        </div>
+      </div>
+
+      <h3>Example: Is 97 prime?</h3>
+      <p>Since \(\sqrt{97}<10\), test primes \(2,3,5,7\).</p>
+      <details><summary>Show solution</summary>
+        <p>97 is not divisible by \(2\), \(3\), \(5\), or \(7\). Therefore 97 is prime.</p>
+      </details>
+
+      <h3>Sieve of Eratosthenes</h3>
+      <p>List numbers, circle the smallest uncrossed number as prime, then cross out its multiples. Repeat. This builds primes by removing composites.</p>
+
+      <div class="box practice">
+        <div class="label">Practice</div>
+        <ol>
+          <li>Is \(91\) prime?</li>
+          <li>Is \(113\) prime?</li>
+          <li>List the primes less than \(30\).</li>
+        </ol>
+        <details><summary>Answers</summary>
+          <p>1. No, \(91=7\cdot13\). 2. Yes; test \(2,3,5,7\). 3. \(2,3,5,7,11,13,17,19,23,29\).</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section id="u3">
+    <div class="unit-head"><div class="badge">3</div><div><h2>Multiples, Divisors, GCD, and LCM</h2><p class="unit-goal">Goal: use common divisors, common multiples, and the Euclidean Algorithm.</p></div></div>
+    <div class="content">
+      <a class="toplink" href="#top">Back to top</a>
+      <div class="grid">
+        <div class="box idea">
+          <div class="label">Definitions</div>
+          <p>The greatest common divisor of \(a\) and \(b\) is \(\gcd(a,b)\).</p>
+          <p>The least common multiple of \(a\) and \(b\) is \(\operatorname{lcm}(a,b)\).</p>
+        </div>
+        <div class="box proof">
+          <div class="label">Euclidean Algorithm proof idea</div>
+          <p>If \(a=bq+r\), then</p>
+          <p class="formula-center">\[\gcd(a,b)=\gcd(b,r).\]</p>
+          <p>Why? Any common divisor of \(a\) and \(b\) also divides \(a-bq=r\). Any common divisor of \(b\) and \(r\) also divides \(bq+r=a\). So the common divisors are the same.</p>
+        </div>
+      </div>
+
+      <h3>Example: Find \(\gcd(252,198)\)</h3>
+      <details><summary>Show solution</summary>
+        <p>\[
+        252=198\cdot1+54,\quad
+        198=54\cdot3+36,\quad
+        54=36\cdot1+18,\quad
+        36=18\cdot2+0.
+        \]</p>
+        <p>So \(\gcd(252,198)=18\).</p>
+      </details>
+
+      <h3>Example: Find \(\operatorname{lcm}(12,18)\)</h3>
+      <details><summary>Show solution</summary>
+        <p>\(12=2^2\cdot3\), \(18=2\cdot3^2\). Take the largest exponent of each prime:</p>
+        <p>\[
+        \operatorname{lcm}(12,18)=2^2\cdot3^2=36.
+        \]</p>
+      </details>
+
+      <div class="box practice">
+        <div class="label">Practice</div>
+        <ol>
+          <li>Find \(\gcd(84,60)\).</li>
+          <li>Find \(\operatorname{lcm}(8,12,15)\).</li>
+          <li>Explain why every common divisor of \(a\) and \(b\) also divides \(a+b\).</li>
+        </ol>
+        <details><summary>Answers</summary>
+          <p>1. \(12\). 2. \(120\). 3. If \(d\mid a\) and \(d\mid b\), then \(a=dm\), \(b=dn\), so \(a+b=d(m+n)\).</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section id="u4">
+    <div class="unit-head"><div class="badge">4</div><div><h2>Prime Factorization</h2><p class="unit-goal">Goal: factor integers and use factorization to solve GCD, LCM, and divisibility problems.</p></div></div>
+    <div class="content">
+      <a class="toplink" href="#top">Back to top</a>
+      <div class="grid">
+        <div class="box idea">
+          <div class="label">Fundamental theorem</div>
+          <p>Every integer greater than \(1\) can be written as a product of primes, and this prime factorization is unique up to the order of the factors.</p>
+        </div>
+        <div class="box proof">
+          <div class="label">Proof idea</div>
+          <p>Existence: If \(n\) is prime, done. If composite, write \(n=ab\) with smaller positive integers and keep factoring until primes appear.</p>
+          <p>Uniqueness relies on Euclid’s Lemma: if a prime \(p\mid ab\), then \(p\mid a\) or \(p\mid b\).</p>
+        </div>
+      </div>
+
+      <h3>Example: Factor 840</h3>
+      <details><summary>Show solution</summary>
+        <p>\[
+        840=84\cdot10=(2^2\cdot3\cdot7)(2\cdot5)=2^3\cdot3\cdot5\cdot7.
+        \]</p>
+      </details>
+
+      <h3>Using factorization for divisibility</h3>
+      <p>If \(a=2^3\cdot3^2\cdot5\), then \(2^2\cdot3\mid a\), but \(2^4\nmid a\).</p>
+
+      <div class="box practice">
+        <div class="label">Practice</div>
+        <ol>
+          <li>Prime factorize \(360\).</li>
+          <li>Find \(\gcd(2^4\cdot3^2\cdot5,\;2^2\cdot3^5)\).</li>
+          <li>Find \(\operatorname{lcm}(2^4\cdot3^2\cdot5,\;2^2\cdot3^5)\).</li>
+        </ol>
+        <details><summary>Answers</summary>
+          <p>1. \(360=2^3\cdot3^2\cdot5\). 2. \(2^2\cdot3^2=36\). 3. \(2^4\cdot3^5\cdot5=19440\).</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section id="u5">
+    <div class="unit-head"><div class="badge">5</div><div><h2>Divisor Problems</h2><p class="unit-goal">Goal: count divisors, add divisors, and solve problems involving divisor products.</p></div></div>
+    <div class="content">
+      <a class="toplink" href="#top">Back to top</a>
+      <div class="grid">
+        <div class="box idea">
+          <div class="label">Divisor counting formula</div>
+          <p>If</p>
+          <p class="formula-center">\[n=p_1^{a_1}p_2^{a_2}\cdots p_k^{a_k},\]</p>
+          <p>then the number of positive divisors of \(n\) is</p>
+          <p class="formula-center">\[(a_1+1)(a_2+1)\cdots(a_k+1).\]</p>
+        </div>
+        <div class="box proof">
+          <div class="label">Proof</div>
+          <p>A divisor of \(n\) has the form</p>
+          <p class="formula-center">\[p_1^{b_1}p_2^{b_2}\cdots p_k^{b_k},\]</p>
+          <p>where \(0\le b_i\le a_i\). There are \(a_i+1\) choices for each exponent \(b_i\). Multiply the choices.</p>
+        </div>
+      </div>
+
+      <h3>Example: Count divisors of 360</h3>
+      <details><summary>Show solution</summary>
+        <p>\[
+        360=2^3\cdot3^2\cdot5^1.
+        \]</p>
+        <p>Number of divisors:</p>
+        <p>\[
+        (3+1)(2+1)(1+1)=4\cdot3\cdot2=24.
+        \]</p>
+      </details>
+
+      <h3>Example: Sum of divisors</h3>
+      <p>For \(n=2^3\cdot3^2\), every divisor is a choice from \((1+2+2^2+2^3)(1+3+3^2)\).</p>
+      <details><summary>Show solution</summary>
+        <p>\[
+        \sigma(72)=(1+2+4+8)(1+3+9)=15\cdot13=195.
+        \]</p>
+      </details>
+
+      <div class="box practice">
+        <div class="label">Practice</div>
+        <ol>
+          <li>How many positive divisors does \(144\) have?</li>
+          <li>Find the sum of positive divisors of \(28\).</li>
+          <li>How many divisors of \(2^5\cdot3^4\cdot7\) are perfect squares?</li>
+        </ol>
+        <details><summary>Answers</summary>
+          <p>1. \(144=2^4\cdot3^2\), so \(5\cdot3=15\). 2. \(1+2+4+7+14+28=56\). 3. Square divisors need even exponents: \(2^0,2^2,2^4\) gives 3 choices; \(3^0,3^2,3^4\) gives 3; \(7^0\) gives 1. Total 9.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section id="u6">
+    <div class="unit-head"><div class="badge">6</div><div><h2>Special Numbers</h2><p class="unit-goal">Goal: recognize special primes, factorials, perfect numbers, and palindromes.</p></div></div>
+    <div class="content">
+      <a class="toplink" href="#top">Back to top</a>
+      <div class="grid">
+        <div class="box idea">
+          <div class="label">Useful families</div>
+          <p><span class="pill">Factorial</span> \(n!=1\cdot2\cdot3\cdots n\)</p>
+          <p><span class="pill">Perfect number</span> equals the sum of its proper positive divisors, such as \(6=1+2+3\).</p>
+          <p><span class="pill">Palindrome</span> reads the same forward and backward, such as 12321.</p>
+        </div>
+        <div class="box proof">
+          <div class="label">Proof example</div>
+          <p>For \(n>1\), the number \(n!+2\) is divisible by \(2\), \(n!+3\) is divisible by \(3\), ..., \(n!+n\) is divisible by \(n\).</p>
+          <p>This is because \(k\mid n!\) for \(2\le k\le n\), so \(n!+k\equiv0\pmod{k}\).</p>
+        </div>
+      </div>
+
+      <h3>Example: Consecutive composite numbers</h3>
+      <p>Show that there can be 5 consecutive composite numbers.</p>
+      <details><summary>Show solution</summary>
+        <p>Use \(6!=720\). Then</p>
+        <p>\[
+        720+2,\ 720+3,\ 720+4,\ 720+5,\ 720+6
+        \]</p>
+        <p>are divisible by \(2,3,4,5,6\), respectively, so they are all composite.</p>
+      </details>
+
+      <div class="box practice">
+        <div class="label">Practice</div>
+        <ol>
+          <li>Show that \(28\) is perfect.</li>
+          <li>Find the smallest palindrome greater than 500.</li>
+          <li>Show that \(7!+5\) is composite.</li>
+        </ol>
+        <details><summary>Answers</summary>
+          <p>1. Proper divisors: \(1,2,4,7,14\); sum \(=28\). 2. \(505\). 3. \(5\mid7!\) and \(5\mid5\), so \(5\mid(7!+5)\).</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section id="u7">
+    <div class="unit-head"><div class="badge">7</div><div><h2>Algebra With Integers</h2><p class="unit-goal">Goal: use algebra to prove integer properties and solve Diophantine-style problems.</p></div></div>
+    <div class="content">
+      <a class="toplink" href="#top">Back to top</a>
+      <div class="grid">
+        <div class="box idea">
+          <div class="label">Core idea</div>
+          <p>Many integer problems become easier after writing numbers in a useful form:</p>
+          <p>\[
+          \text{even}=2k,\quad \text{odd}=2k+1,\quad \text{multiple of }m=mk.
+          \]</p>
+        </div>
+        <div class="box proof">
+          <div class="label">Proof example</div>
+          <p>The product of two odd integers is odd.</p>
+          <p>Let the integers be \(2a+1\) and \(2b+1\). Then</p>
+          <p>\[
+          (2a+1)(2b+1)=4ab+2a+2b+1=2(2ab+a+b)+1.
+          \]</p>
+          <p>This is of the form \(2k+1\), so it is odd.</p>
+        </div>
+      </div>
+
+      <h3>Example: Solve in integers</h3>
+      <p>Find all positive integer solutions to \(xy=24\).</p>
+      <details><summary>Show solution</summary>
+        <p>Use factor pairs:</p>
+        <p>\[
+        (1,24),(2,12),(3,8),(4,6),(6,4),(8,3),(12,2),(24,1).
+        \]</p>
+      </details>
+
+      <div class="box practice">
+        <div class="label">Practice</div>
+        <ol>
+          <li>Prove that the sum of two odd integers is even.</li>
+          <li>Find positive integer solutions to \(3x+2y=12\).</li>
+          <li>Prove that if \(a\mid b\) and \(a\mid c\), then \(a\mid(5b-2c)\).</li>
+        </ol>
+        <details><summary>Answers</summary>
+          <p>1. \((2m+1)+(2n+1)=2(m+n+1)\). 2. \((x,y)=(2,3)\) and \((x,y)=(4,0)\) if zero allowed; positive only: \((2,3)\). 3. Write \(b=ar\), \(c=as\); then \(5b-2c=a(5r-2s)\).</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section id="u8">
+    <div class="unit-head"><div class="badge">8</div><div><h2>Base Numbers</h2><p class="unit-goal">Goal: understand place value in bases other than 10 and convert between bases.</p></div></div>
+    <div class="content">
+      <a class="toplink" href="#top">Back to top</a>
+      <div class="grid">
+        <div class="box idea">
+          <div class="label">Place value</div>
+          <p>In base \(b\), the number \((a_ka_{k-1}\ldots a_0)_b\) means</p>
+          <p class="formula-center">\[a_kb^k+a_{k-1}b^{k-1}+\cdots+a_1b+a_0.\]</p>
+          <p>Digits must be from \(0\) to \(b-1\).</p>
+        </div>
+        <div class="box proof">
+          <div class="label">Why place value works</div>
+          <p>Each position groups objects into bundles of size \(b\): ones, \(b\)'s, \(b^2\)'s, and so on. This is repeated bundling.</p>
+        </div>
+      </div>
+
+      <h3>Example: Convert \((101101)_2\) to base 10</h3>
+      <details><summary>Show solution</summary>
+        <p>\[
+        (101101)_2=1\cdot2^5+0\cdot2^4+1\cdot2^3+1\cdot2^2+0\cdot2+1=32+8+4+1=45.
+        \]</p>
+      </details>
+
+      <h3>Example: Convert \(83\) to base 5</h3>
+      <details><summary>Show solution</summary>
+        <p>Powers of 5: \(25,5,1\). Since \(83=3\cdot25+1\cdot5+3\), we get \((313)_5\).</p>
+      </details>
+
+      <div class="box practice">
+        <div class="label">Practice</div>
+        <ol>
+          <li>Convert \((234)_5\) to base 10.</li>
+          <li>Convert \(100\) to base 2.</li>
+          <li>Is \((79)_8\) a valid base-8 number?</li>
+        </ol>
+        <details><summary>Answers</summary>
+          <p>1. \(2\cdot25+3\cdot5+4=69\). 2. \((1100100)_2\). 3. No; base 8 digits are \(0\) through \(7\), so 9 is not allowed.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section id="u9">
+    <div class="unit-head"><div class="badge">9</div><div><h2>Base Number Arithmetic</h2><p class="unit-goal">Goal: add, subtract, multiply, and divide in non-decimal bases.</p></div></div>
+    <div class="content">
+      <a class="toplink" href="#top">Back to top</a>
+      <div class="grid">
+        <div class="box idea">
+          <div class="label">Carrying rule</div>
+          <p>In base \(b\), carry whenever a column total reaches \(b\).</p>
+          <p>For example, in base 5, \(4+3=7_{10}=12_5\), so write 2 and carry 1.</p>
+        </div>
+        <div class="box proof">
+          <div class="label">Why carrying works</div>
+          <p>Because \(b\) ones equal \(1\) bundle of \(b\). Carrying is just regrouping \(b\) lower-place units into one higher-place unit.</p>
+        </div>
+      </div>
+
+      <h3>Example: Add in base 5</h3>
+      <p>\((234)_5+(143)_5\)</p>
+      <details><summary>Show solution</summary>
+        <p>Ones: \(4+3=7=12_5\), write 2 carry 1.</p>
+        <p>Fives: \(3+4+1=8=13_5\), write 3 carry 1.</p>
+        <p>Twenty-fives: \(2+1+1=4\).</p>
+        <p>Answer: \((432)_5\).</p>
+      </details>
+
+      <div class="box practice">
+        <div class="label">Practice</div>
+        <ol>
+          <li>Compute \((1011)_2+(1101)_2\).</li>
+          <li>Compute \((34)_5\cdot(2)_5\).</li>
+          <li>Explain why \((999)_{10}+1=(1000)_{10}\) is the same carrying idea.</li>
+        </ol>
+        <details><summary>Answers</summary>
+          <p>1. \((11000)_2\). 2. \(34_5=19_{10}\); twice is 38; \(38=(123)_5\). 3. Ten ones carry to one ten, ten tens carry to one hundred, etc.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section id="u10">
+    <div class="unit-head"><div class="badge">10</div><div><h2>Units Digits</h2><p class="unit-goal">Goal: find last digits using cycles and modular arithmetic.</p></div></div>
+    <div class="content">
+      <a class="toplink" href="#top">Back to top</a>
+      <div class="grid">
+        <div class="box idea">
+          <div class="label">Core idea</div>
+          <p>The units digit of a number is its remainder modulo 10. Powers often repeat in cycles.</p>
+        </div>
+        <div class="box proof">
+          <div class="label">Cycle proof</div>
+          <p>For powers of 7, the units digits are:</p>
+          <p>\[
+          7^1:7,\quad 7^2:9,\quad 7^3:3,\quad 7^4:1,\quad 7^5:7,\ldots
+          \]</p>
+          <p>Once a remainder repeats, all later remainders repeat because multiplying by 7 again follows the same rule.</p>
+        </div>
+      </div>
+
+      <h3>Example: Units digit of \(7^{2026}\)</h3>
+      <details><summary>Show solution</summary>
+        <p>The cycle length is 4: \(7,9,3,1\). Since \(2026\equiv2\pmod4\), use the second digit in the cycle: \(9\).</p>
+      </details>
+
+      <h3>Example: Units digit of \(3^{100}+4^{100}\)</h3>
+      <details><summary>Show solution</summary>
+        <p>\(3^n\) cycle: \(3,9,7,1\). Since \(100\equiv0\pmod4\), units digit is 1.</p>
+        <p>\(4^n\) cycle: \(4,6\). Since \(100\) is even, units digit is 6.</p>
+        <p>Total units digit: \(1+6=7\).</p>
+      </details>
+
+      <div class="box practice">
+        <div class="label">Practice</div>
+        <ol>
+          <li>Find the units digit of \(2^{50}\).</li>
+          <li>Find the units digit of \(9^{77}\).</li>
+          <li>Find the units digit of \(6^{1000}\).</li>
+        </ol>
+        <details><summary>Answers</summary>
+          <p>1. \(2,4,8,6\) cycle; \(50\equiv2\pmod4\), answer 4. 2. Odd powers of 9 end in 9. 3. Always 6.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section id="u11">
+    <div class="unit-head"><div class="badge">11</div><div><h2>Decimals and Fractions</h2><p class="unit-goal">Goal: understand terminating and repeating decimals using prime factors.</p></div></div>
+    <div class="content">
+      <a class="toplink" href="#top">Back to top</a>
+      <div class="grid">
+        <div class="box idea">
+          <div class="label">Terminating decimal test</div>
+          <p>A reduced fraction \(\frac ab\) has a terminating decimal in base 10 exactly when \(b\) has no prime factors other than \(2\) and \(5\).</p>
+        </div>
+        <div class="box proof">
+          <div class="label">Proof</div>
+          <p>A terminating decimal means \(\frac ab=\frac{N}{10^k}\) for some integer \(N\). Since \(10^k=2^k5^k\), the denominator after reducing can only have factors 2 and 5.</p>
+          <p>Conversely, if \(b=2^m5^n\), multiply numerator and denominator by enough 2s or 5s to make the denominator \(10^k\).</p>
+        </div>
+      </div>
+
+      <h3>Example: Does \(\frac{7}{40}\) terminate?</h3>
+      <details><summary>Show solution</summary>
+        <p>\[
+        40=2^3\cdot5.
+        \]</p>
+        <p>Only factors 2 and 5 appear, so the decimal terminates. In fact, \(\frac{7}{40}=0.175\).</p>
+      </details>
+
+      <h3>Example: Why does \(\frac17\) repeat?</h3>
+      <details><summary>Show solution</summary>
+        <p>The denominator 7 has a prime factor other than 2 and 5, so it cannot terminate in base 10. Long division must eventually repeat a remainder, producing a repeating decimal.</p>
+      </details>
+
+      <div class="box practice">
+        <div class="label">Practice</div>
+        <ol>
+          <li>Does \(\frac{3}{28}\) terminate?</li>
+          <li>Does \(\frac{9}{125}\) terminate?</li>
+          <li>Convert \(0.\overline{27}\) to a fraction.</li>
+        </ol>
+        <details><summary>Answers</summary>
+          <p>1. No, \(28=2^2\cdot7\). 2. Yes. 3. Let \(x=0.2727\ldots\). Then \(100x=27.2727\ldots\), so \(99x=27\), \(x=3/11\).</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section id="u12">
+    <div class="unit-head"><div class="badge">12</div><div><h2>Introduction to Modular Arithmetic</h2><p class="unit-goal">Goal: use congruences to handle remainders cleanly.</p></div></div>
+    <div class="content">
+      <a class="toplink" href="#top">Back to top</a>
+      <div class="grid">
+        <div class="box idea">
+          <div class="label">Definition</div>
+          <p>\[
+          a\equiv b\pmod m
+          \]</p>
+          <p>means \(m\mid(a-b)\). In words, \(a\) and \(b\) have the same remainder when divided by \(m\).</p>
+        </div>
+        <div class="box proof">
+          <div class="label">Addition and multiplication</div>
+          <p>If \(a\equiv b\pmod m\) and \(c\equiv d\pmod m\), then</p>
+          <p>\[
+          a+c\equiv b+d\pmod m,\quad ac\equiv bd\pmod m.
+          \]</p>
+          <p>This works because differences stay divisible by \(m\).</p>
+        </div>
+      </div>
+
+      <h3>Example: Find the remainder of \(2026^2\) when divided by 7</h3>
+      <details><summary>Show solution</summary>
+        <p>\(2026\equiv3\pmod7\), so</p>
+        <p>\[
+        2026^2\equiv3^2=9\equiv2\pmod7.
+        \]</p>
+        <p>The remainder is 2.</p>
+      </details>
+
+      <h3>Example: Simplify \(5^{100}\pmod 8\)</h3>
+      <details><summary>Show solution</summary>
+        <p>\(5^2=25\equiv1\pmod8\). Therefore</p>
+        <p>\[
+        5^{100}=(5^2)^{50}\equiv1^{50}=1\pmod8.
+        \]</p>
+      </details>
+
+      <div class="box practice">
+        <div class="label">Practice</div>
+        <ol>
+          <li>Find \(12345\bmod 9\).</li>
+          <li>Find \(2^{20}\bmod 5\).</li>
+          <li>Find the remainder when \(17\cdot29\) is divided by 6.</li>
+        </ol>
+        <details><summary>Answers</summary>
+          <p>1. Sum of digits \(=15\), so remainder \(6\). 2. \(2^4\equiv1\pmod5\), so \(2^{20}\equiv1\). 3. \(17\equiv5\), \(29\equiv5\); product \(25\equiv1\pmod6\).</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section id="u13">
+    <div class="unit-head"><div class="badge">13</div><div><h2>Divisibility Rules</h2><p class="unit-goal">Goal: prove common divisibility rules using place value and congruences.</p></div></div>
+    <div class="content">
+      <a class="toplink" href="#top">Back to top</a>
+      <div class="grid">
+        <div class="box idea">
+          <div class="label">Rules</div>
+          <table class="mini-table">
+            <tr><th>Divisor</th><th>Rule</th></tr>
+            <tr><td>2</td><td>last digit is even</td></tr>
+            <tr><td>3 or 9</td><td>digit sum is divisible by 3 or 9</td></tr>
+            <tr><td>5</td><td>last digit is 0 or 5</td></tr>
+            <tr><td>11</td><td>alternating digit sum is divisible by 11</td></tr>
+          </table>
+        </div>
+        <div class="box proof">
+          <div class="label">Proof for rule of 9</div>
+          <p>Since \(10\equiv1\pmod9\), we also have \(10^2\equiv1\), \(10^3\equiv1\), and so on.</p>
+          <p>So a number like \(abcd\) satisfies</p>
+          <p>\[
+          1000a+100b+10c+d\equiv a+b+c+d\pmod9.
+          \]</p>
+        </div>
+      </div>
+
+      <h3>Example: Is 73845 divisible by 9?</h3>
+      <details><summary>Show solution</summary>
+        <p>Digit sum: \(7+3+8+4+5=27\). Since \(27\) is divisible by 9, the number is divisible by 9.</p>
+      </details>
+
+      <h3>Proof for rule of 11</h3>
+      <p>Since \(10\equiv-1\pmod{11}\), powers of 10 alternate between \(1\) and \(-1\). Therefore the alternating digit sum determines divisibility by 11.</p>
+
+      <div class="box practice">
+        <div class="label">Practice</div>
+        <ol>
+          <li>Is \(123456\) divisible by 3?</li>
+          <li>Is \(918273645\) divisible by 9?</li>
+          <li>Is \(1234321\) divisible by 11?</li>
+        </ol>
+        <details><summary>Answers</summary>
+          <p>1. Yes; digit sum \(21\). 2. Yes; digit sum \(45\). 3. Alternating sum \(1-2+3-4+3-2+1=0\), so yes.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section id="u14">
+    <div class="unit-head"><div class="badge">14</div><div><h2>Linear Congruences</h2><p class="unit-goal">Goal: solve equations like \(ax\equiv b\pmod m\).</p></div></div>
+    <div class="content">
+      <a class="toplink" href="#top">Back to top</a>
+      <div class="grid">
+        <div class="box idea">
+          <div class="label">Main theorem</div>
+          <p>The congruence</p>
+          <p class="formula-center">\[ax\equiv b\pmod m\]</p>
+          <p>has a solution exactly when \(\gcd(a,m)\mid b\).</p>
+        </div>
+        <div class="box proof">
+          <div class="label">Proof idea</div>
+          <p>\(ax\equiv b\pmod m\) means \(ax-b=my\), or</p>
+          <p>\[
+          ax-my=b.
+          \]</p>
+          <p>The left side is a linear combination of \(a\) and \(m\), so it must be a multiple of \(\gcd(a,m)\). Conversely, Bezout's identity shows every multiple of \(\gcd(a,m)\) can be made.</p>
+        </div>
+      </div>
+
+      <h3>Example: Solve \(3x\equiv 1\pmod7\)</h3>
+      <details><summary>Show solution</summary>
+        <p>Try small values or use inverses. Since \(3\cdot5=15\equiv1\pmod7\), the inverse of 3 is 5. Thus</p>
+        <p>\[
+        x\equiv5\pmod7.
+        \]</p>
+      </details>
+
+      <h3>Example: Solve \(6x\equiv 9\pmod{15}\)</h3>
+      <details><summary>Show solution</summary>
+        <p>\(\gcd(6,15)=3\), and \(3\mid9\), so solutions exist. Divide by 3:</p>
+        <p>\[
+        2x\equiv3\pmod5.
+        \]</p>
+        <p>The inverse of 2 mod 5 is 3, so \(x\equiv9\equiv4\pmod5\). Modulo 15, the solutions are \(x\equiv4,9,14\pmod{15}\).</p>
+      </details>
+
+      <div class="box practice">
+        <div class="label">Practice</div>
+        <ol>
+          <li>Solve \(4x\equiv1\pmod9\).</li>
+          <li>Does \(6x\equiv5\pmod{14}\) have a solution?</li>
+          <li>Solve \(10x\equiv15\pmod{25}\).</li>
+        </ol>
+        <details><summary>Answers</summary>
+          <p>1. \(x\equiv7\pmod9\). 2. No, because \(\gcd(6,14)=2\nmid5\). 3. Divide by 5: \(2x\equiv3\pmod5\), so \(x\equiv4\pmod5\). Mod 25: \(x\equiv4,9,14,19,24\).</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section id="u15">
+    <div class="unit-head"><div class="badge">15</div><div><h2>Number Sense</h2><p class="unit-goal">Goal: choose efficient representations, estimate, and simplify before calculating.</p></div></div>
+    <div class="content">
+      <a class="toplink" href="#top">Back to top</a>
+      <div class="grid">
+        <div class="box idea">
+          <div class="label">Strategies</div>
+          <ul>
+            <li>Factor before multiplying.</li>
+            <li>Use divisibility before long division.</li>
+            <li>Look for remainders, symmetry, and parity.</li>
+            <li>Try small examples before solving the general problem.</li>
+          </ul>
+        </div>
+        <div class="box proof">
+          <div class="label">Useful identity</div>
+          <p>Difference of squares:</p>
+          <p>\[
+          a^2-b^2=(a-b)(a+b).
+          \]</p>
+          <p>Proof:</p>
+          <p>\[
+          (a-b)(a+b)=a^2+ab-ab-b^2=a^2-b^2.
+          \]</p>
+        </div>
+      </div>
+
+      <h3>Example: Compute quickly</h3>
+      <p>\[
+      1003^2-997^2
+      \]</p>
+      <details><summary>Show solution</summary>
+        <p>Use difference of squares:</p>
+        <p>\[
+        1003^2-997^2=(1003-997)(1003+997)=6\cdot2000=12000.
+        \]</p>
+      </details>
+
+      <h3>Example: Remainder sense</h3>
+      <p>What is the remainder when \(49\cdot51\) is divided by 50?</p>
+      <details><summary>Show solution</summary>
+        <p>\[
+        49\equiv-1\pmod{50},\quad 51\equiv1\pmod{50}.
+        \]</p>
+        <p>So \(49\cdot51\equiv-1\equiv49\pmod{50}\). The remainder is 49.</p>
+      </details>
+
+      <div class="box practice">
+        <div class="label">Practice</div>
+        <ol>
+          <li>Compute \(1001^2-999^2\).</li>
+          <li>Find the remainder of \(98\cdot102\) when divided by 100.</li>
+          <li>Explain why \(15\cdot16\cdot17\) is divisible by 6 without multiplying.</li>
+        </ol>
+        <details><summary>Answers</summary>
+          <p>1. \((2)(2000)=4000\). 2. \((-2)(2)=-4\equiv96\pmod{100}\). 3. Among consecutive integers there is an even number and a multiple of 3, so the product is divisible by \(2\cdot3=6\).</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="unit-head"><div class="badge">✓</div><div><h2>Study Checklist</h2><p class="unit-goal">Use this as a progress tracker for a 4–6 week study plan.</p></div></div>
+    <div class="content">
+      <div class="grid">
+        <div class="box">
+          <div class="label">Week 1–2</div>
+          <label class="checkline"><input type="checkbox"> <span>I can explain divisibility using \(a=bk\).</span></label>
+          <label class="checkline"><input type="checkbox"> <span>I can test primes using only primes up to \(\sqrt n\).</span></label>
+          <label class="checkline"><input type="checkbox"> <span>I can find GCD and LCM using factorization.</span></label>
+        </div>
+        <div class="box">
+          <div class="label">Week 3–4</div>
+          <label class="checkline"><input type="checkbox"> <span>I can use the Euclidean Algorithm.</span></label>
+          <label class="checkline"><input type="checkbox"> <span>I can count divisors from prime factorization.</span></label>
+          <label class="checkline"><input type="checkbox"> <span>I can convert between number bases.</span></label>
+        </div>
+        <div class="box">
+          <div class="label">Week 5–6</div>
+          <label class="checkline"><input type="checkbox"> <span>I can find units digits using cycles.</span></label>
+          <label class="checkline"><input type="checkbox"> <span>I can prove divisibility rules.</span></label>
+          <label class="checkline"><input type="checkbox"> <span>I can solve simple linear congruences.</span></label>
+        </div>
+        <div class="box">
+          <div class="label">Final challenge</div>
+          <p>Write a one-page solution to this problem:</p>
+          <p><strong>Find the remainder when \(7^{2026}+11^{2026}\) is divided by 13.</strong></p>
+          <details><summary>Hint</summary>
+            <p>Use modular arithmetic and look for power cycles modulo 13.</p>
+          </details>
+          <details><summary>Answer</summary>
+            <p>\(7^2=49\equiv10\), \(7^3\equiv5\), \(7^4\equiv9\), \(7^6\equiv-1\), so \(7^{12}\equiv1\). \(2026\equiv10\pmod{12}\), so compute \(7^{10}\pmod{13}\).</p>
+            <p>\(11\equiv-2\pmod{13}\), so \(11^{2026}\equiv2^{2026}\). Since \(2^{12}\equiv1\), reduce \(2026\equiv10\pmod{12}\). Then combine \(7^{10}+2^{10}\pmod{13}\). \(7^{10}\equiv4\), \(2^{10}=1024\equiv10\). Total \(14\equiv1\pmod{13}\).</p>
+          </details>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <p>Created as a standalone study page based on the structure and problem-solving style of an introductory number theory book.</p>
+</footer>
+
+</body>
+</html>
