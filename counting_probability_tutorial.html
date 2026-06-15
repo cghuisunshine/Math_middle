@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Counting & Probability Tutorial</title>
+  <script src="audio/counting-probability-narration.words.js"></script>
   <script>
     window.MathJax = {
       tex: { inlineMath: [['\\(', '\\)'], ['$', '$']], displayMath: [['\\[', '\\]']] },
@@ -225,6 +226,62 @@
       border: 1px solid rgba(255,255,255,.22);
       color: rgba(255,255,255,.92);
       font-size: .92rem;
+    }
+
+    .tts-panel {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      align-items: center;
+      gap: 16px;
+      margin: 24px 0 38px;
+      padding: 18px;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      box-shadow: 0 8px 20px rgba(23, 32, 51, .05);
+    }
+
+    .tts-panel h2 {
+      margin: 0 0 4px;
+      font-size: 1.1rem;
+      letter-spacing: 0;
+    }
+
+    .tts-panel p {
+      margin: 0;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .tts-controls {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .tts-floating-controls {
+      position: fixed;
+      left: 50%;
+      bottom: 16px;
+      z-index: 30;
+      padding: 10px;
+      background: rgba(255,255,255,.96);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(23, 32, 51, .12);
+      transform: translateX(-50%);
+    }
+
+    #ttsAudio { display: none; }
+
+    .tts-word {
+      border-radius: 3px;
+      transition: background-color 120ms ease, color 120ms ease;
+    }
+
+    .tts-word.is-speaking {
+      background: #ffe08a;
+      color: #111827;
     }
 
     .overview-grid {
@@ -467,6 +524,14 @@
       }
       main { padding-top: 18px; }
       .overview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .tts-panel { grid-template-columns: 1fr; }
+      .tts-floating-controls {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+        justify-content: center;
+        transform: none;
+      }
       .lesson-grid { grid-template-columns: 1fr; }
       .full { grid-column: auto; }
       .lesson-header { flex-direction: column; }
@@ -481,7 +546,7 @@
     }
 
     @media print {
-      aside, .mobile-top, .mobile-nav, .side-actions, .done-label, button { display: none !important; }
+      aside, .mobile-top, .mobile-nav, .side-actions, .done-label, .tts-panel, button { display: none !important; }
       .layout { display: block; }
       main { padding: 0; max-width: none; }
       body { background: white; }
@@ -538,6 +603,18 @@
         <div class="mini-card"><strong>2. Fix overcounting</strong><p>Count too much only when you know exactly how to correct it.</p></div>
         <div class="mini-card"><strong>3. Choose vs arrange</strong><p>Permutations care about order; combinations do not.</p></div>
         <div class="mini-card"><strong>4. Turn counts into probability</strong><p>Probability is favorable outcomes over total outcomes when outcomes are equally likely.</p></div>
+      </section>
+
+      <section id="ttsPanel" class="tts-panel" aria-label="Read aloud narration">
+        <div>
+          <h2>Read Aloud</h2>
+          <p id="ttsStatus">Ready</p>
+        </div>
+        <div class="tts-controls tts-floating-controls">
+          <button id="ttsPlay" type="button">Play</button>
+          <button id="ttsStop" type="button" class="secondary">Stop</button>
+        </div>
+        <audio id="ttsAudio" preload="metadata" src="audio/counting-probability-narration.mp3"></audio>
       </section>
 
       <section class="section-title" id="lessons">
@@ -902,6 +979,10 @@
     const lessons = [...document.querySelectorAll('article.lesson')];
     const sideNav = document.getElementById('sideNav');
     const mobileNav = document.getElementById('mobileNav');
+    const narrationAssets = {
+      data: 'audio/counting-probability-narration.words.js',
+      timings: 'audio/counting-probability-narration.words.json'
+    };
 
     function buildNav(target) {
       const top = document.createElement('a');
@@ -952,6 +1033,212 @@
     function expandAllAnswers() {
       document.querySelectorAll('details').forEach(d => d.open = true);
     }
+
+    const ttsAudio = document.getElementById('ttsAudio');
+    const ttsPlay = document.getElementById('ttsPlay');
+    const ttsStop = document.getElementById('ttsStop');
+    const ttsStatus = document.getElementById('ttsStatus');
+    let narrationWords = [];
+    let narrationSpans = [];
+    let activeNarrationIndex = -1;
+    let narrationReady = false;
+    let narrationStopRequested = false;
+
+    function cleanNarrationText(text) {
+      return text.replace(/\s+/g, ' ').trim();
+    }
+
+    function shouldNarrateElement(element) {
+      if (element.closest('#ttsPanel, details, .formula, .svg-card, .pascal, svg, .done-label')) return false;
+      if (element.children.length > 0) return false;
+      const text = cleanNarrationText(element.textContent);
+      if (!text) return false;
+      return !/[\\$]/.test(text);
+    }
+
+    function collectNarrationTargets() {
+      const selector = [
+        'main h2',
+        'main h3',
+        'main h4',
+        'main p',
+        'main li',
+        'main .chip',
+        'main .mini-card strong',
+        'main .lesson-number'
+      ].join(',');
+      const targets = [...document.querySelectorAll(selector)]
+        .filter(shouldNarrateElement)
+        .map(element => ({ element, text: cleanNarrationText(element.textContent) }));
+
+      let cursor = 0;
+      targets.forEach((target, index) => {
+        if (index > 0) cursor += 2;
+        target.start = cursor;
+        cursor += target.text.length;
+        target.end = cursor;
+      });
+
+      return {
+        targets,
+        text: targets.map(target => target.text).join('\n\n')
+      };
+    }
+
+    function renderTimedNarration(text, words) {
+      const narration = collectNarrationTargets();
+      if (narration.text !== text) {
+        ttsStatus.textContent = 'Narration text changed. Regenerate audio timing.';
+        ttsPlay.disabled = true;
+        return false;
+      }
+
+      narrationSpans = [];
+      narration.targets.forEach(target => {
+        const elementWords = words
+          .map((word, index) => ({ ...word, index }))
+          .filter(word => word.start_char >= target.start && word.end_char <= target.end);
+        let cursor = 0;
+        target.element.textContent = '';
+
+        elementWords.forEach(word => {
+          const localStart = word.start_char - target.start;
+          const localEnd = word.end_char - target.start;
+          if (localStart > cursor) {
+            target.element.append(document.createTextNode(target.text.slice(cursor, localStart)));
+          }
+          const span = document.createElement('span');
+          span.className = 'tts-word';
+          span.dataset.index = String(word.index);
+          span.textContent = target.text.slice(localStart, localEnd);
+          target.element.append(span);
+          narrationSpans[word.index] = span;
+          cursor = localEnd;
+        });
+
+        if (cursor < target.text.length) {
+          target.element.append(document.createTextNode(target.text.slice(cursor)));
+        }
+      });
+
+      return true;
+    }
+
+    function clearNarrationHighlight() {
+      if (activeNarrationIndex >= 0) {
+        narrationSpans[activeNarrationIndex]?.classList.remove('is-speaking');
+      }
+      activeNarrationIndex = -1;
+    }
+
+    function setActiveNarrationWord(index) {
+      clearNarrationHighlight();
+      if (index >= 0) {
+        narrationSpans[index]?.classList.add('is-speaking');
+        activeNarrationIndex = index;
+      }
+    }
+
+    function bindNarrationHighlighting(audio, words) {
+      function paint() {
+        const time = audio.currentTime;
+        const next = words.findIndex(word => time >= word.start && time < word.end);
+        if (next !== activeNarrationIndex) {
+          setActiveNarrationWord(next);
+        }
+        if (!audio.paused && !audio.ended) requestAnimationFrame(paint);
+      }
+
+      audio.addEventListener('play', paint);
+      audio.addEventListener('pause', clearNarrationHighlight);
+      audio.addEventListener('ended', clearNarrationHighlight);
+    }
+
+    function bindNarrationSeeking() {
+      document.querySelector('main').addEventListener('dblclick', async (event) => {
+        const target = event.target.closest('.tts-word');
+        if (!target) return;
+        const index = Number(target.dataset.index);
+        const word = narrationWords[index];
+        if (!word) return;
+
+        const wasPlaying = !ttsAudio.paused && !ttsAudio.ended;
+        ttsAudio.currentTime = word.start;
+        setActiveNarrationWord(index);
+        if (wasPlaying) {
+          try {
+            await ttsAudio.play();
+          } catch (error) {
+            ttsStatus.textContent = 'Audio unavailable';
+            console.error(error);
+          }
+        }
+      });
+    }
+
+    async function prepareNarration() {
+      if (narrationReady) return true;
+      ttsStatus.textContent = 'Loading';
+      let payload = window.countingProbabilityNarration;
+      if (!payload) {
+        const response = await fetch(narrationAssets.timings);
+        if (!response.ok) throw new Error(`Could not load ${narrationAssets.timings}`);
+        payload = await response.json();
+      }
+      narrationWords = payload.words || [];
+      if (!renderTimedNarration(payload.text, narrationWords)) return false;
+      bindNarrationHighlighting(ttsAudio, narrationWords);
+      bindNarrationSeeking();
+      narrationReady = true;
+      ttsStatus.textContent = 'Ready';
+      return true;
+    }
+
+    ttsPlay.addEventListener('click', async () => {
+      try {
+        if (!(await prepareNarration())) return;
+        if (ttsAudio.paused) {
+          await ttsAudio.play();
+        } else {
+          ttsAudio.pause();
+        }
+      } catch (error) {
+        ttsStatus.textContent = 'Audio unavailable';
+        console.error(error);
+      }
+    });
+
+    ttsStop.addEventListener('click', () => {
+      const wasPaused = ttsAudio.paused;
+      narrationStopRequested = !wasPaused;
+      if (!wasPaused) ttsAudio.pause();
+      ttsAudio.currentTime = 0;
+      clearNarrationHighlight();
+      if (wasPaused) {
+        ttsPlay.textContent = 'Play';
+        ttsStatus.textContent = 'Ready';
+      }
+    });
+
+    ttsAudio.addEventListener('play', () => {
+      ttsPlay.textContent = 'Pause';
+      ttsStatus.textContent = 'Playing';
+    });
+
+    ttsAudio.addEventListener('pause', () => {
+      ttsPlay.textContent = 'Play';
+      if (narrationStopRequested) {
+        ttsStatus.textContent = 'Ready';
+        narrationStopRequested = false;
+      } else if (!ttsAudio.ended) {
+        ttsStatus.textContent = 'Paused';
+      }
+    });
+
+    ttsAudio.addEventListener('ended', () => {
+      ttsPlay.textContent = 'Play';
+      ttsStatus.textContent = 'Ready';
+    });
 
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => {

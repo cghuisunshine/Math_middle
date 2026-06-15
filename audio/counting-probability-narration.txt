@@ -1,0 +1,423 @@
+Counting & Probability Tutorial
+
+Addition vs multiplication
+
+Permutations & combinations
+
+Overcounting
+
+Probability
+
+Pascal & binomial theorem
+
+1. Count carefully
+
+Use lists, Venn diagrams, trees, grids, and organized cases.
+
+2. Fix overcounting
+
+Count too much only when you know exactly how to correct it.
+
+3. Choose vs arrange
+
+Permutations care about order; combinations do not.
+
+4. Turn counts into probability
+
+Probability is favorable outcomes over total outcomes when outcomes are equally likely.
+
+Lessons
+
+The lessons move from basic counting to probability and combinatorial identities.
+
+Lesson 1
+
+Counting Lists of Numbers
+
+Learn the inclusive counting formula and why the extra “+1” appears.
+
+Key idea
+
+Proof
+
+Worked example
+
+How many integers are from 7 to 29 inclusive?
+
+Common mistake
+
+Practice
+
+How many integers are from 36 to 93 inclusive?
+
+Lesson 2
+
+Addition, Subtraction, and Venn Diagrams
+
+Use addition for non-overlapping cases and subtraction to correct double counting.
+
+Key idea
+
+For two sets:
+
+Proof
+
+Worked example
+
+A class has 30 students. 18 take French, 14 take Spanish, and 7 take both. How many take French or Spanish?
+
+Visual
+
+Practice
+
+There are 40 students. 22 play soccer, 18 play basketball, and 9 play both. How many play at least one of the two sports?
+
+Lesson 3
+
+Multiplication Principle
+
+Count a sequence of choices by multiplying the number of options at each step.
+
+Key idea
+
+Proof
+
+Worked example
+
+You have 3 shirts and 4 pants. How many outfits?
+
+Common mistake
+
+Do not multiply if you are choosing between separate cases. If the word “or” separates exclusive cases, you probably add.
+
+Practice
+
+A lunch special offers 5 sandwiches, 3 drinks, and 2 desserts. How many complete lunches are possible?
+
+Lesson 4
+
+Factorials and Arrangements
+
+Arrange all objects when order matters.
+
+Key idea
+
+Proof
+
+Worked example
+
+How many ways can 5 different books be arranged?
+
+Common mistake
+
+Practice
+
+How many ways can 7 different colored hats be arranged in a row?
+
+Lesson 5
+
+Partial Permutations
+
+Choose and arrange only part of a group.
+
+Key idea
+
+Proof
+
+Worked example
+
+A club has 10 members. How many ways can it choose a president, vice-president, and treasurer?
+
+Order matters because the jobs are different.
+
+Common mistake
+
+Do not use combinations here. Choosing Alice as president and Ben as treasurer is different from choosing Ben as president and Alice as treasurer.
+
+Practice
+
+How many 3-person officer teams can be formed from 12 people if the offices are president, secretary, and treasurer?
+
+Lesson 6
+
+Casework
+
+Split a problem into non-overlapping cases, count each case, then add.
+
+Key idea
+
+Casework works when every valid object belongs to exactly one case. Then:
+
+Why it works
+
+If cases are exclusive, no object is counted twice. If cases are complete, no object is missed. Therefore adding all case counts gives the total.
+
+Worked example
+
+How many 3-digit numbers have exactly one zero?
+
+Common mistake
+
+Do not allow zero in the hundreds place. A 3-digit number cannot begin with 0.
+
+Practice
+
+How many 3-digit numbers have exactly two even digits?
+
+Lesson 7
+
+Complementary Counting
+
+Count what you do not want, then subtract from the total.
+
+Key idea
+
+This is often useful for “not,” “at least one,” or “no restrictions except...” problems.
+
+Why it works
+
+Worked example
+
+How many 3-digit numbers are not multiples of 7?
+
+Common mistake
+
+Make sure the total universe is clear. Here the universe is all 3-digit numbers, not all positive integers.
+
+Practice
+
+How many 4-digit PINs contain at least one 7? Digits may repeat, and a PIN may begin with 0.
+
+Lesson 8
+
+Correcting for Overcounting
+
+When identical objects create repeated counts, divide by the number of repetitions.
+
+Key idea
+
+Proof
+
+Worked example
+
+Another example
+
+Practice
+
+Lesson 9
+
+Counting Pairs and Sums
+
+Key idea
+
+Proof
+
+Worked example
+
+In an 8-person round-robin tournament, every player plays every other player once. How many matches?
+
+Common mistake
+
+Practice
+
+How many handshakes occur if 12 people each shake hands with every other person once?
+
+Lesson 10
+
+Combinations
+
+Choose groups when order does not matter.
+
+Key idea
+
+Proof
+
+Worked example
+
+How many ways can we choose 3 students from 10?
+
+Decision test
+
+Ask: “Would the same people in a different order count as a new answer?” If yes, use permutations. If no, use combinations.
+
+Practice
+
+How many 5-person committees can be chosen from 14 people?
+
+Lesson 11
+
+Grid Paths
+
+Turn shortest paths into arrangements of moves.
+
+Key idea
+
+A shortest path on a rectangular grid is a sequence of right moves and up moves. Counting paths becomes counting arrangements of repeated letters.
+
+Why combinations appear
+
+Worked example
+
+Visual
+
+Practice
+
+Lesson 12
+
+Basic Probability
+
+Convert counting into probability when outcomes are equally likely.
+
+Key idea
+
+This formula requires equally likely outcomes.
+
+Why it works
+
+Worked example
+
+A fair die is rolled. What is the probability of rolling an even number?
+
+Common mistake
+
+Do not use this simple fraction if the outcomes are not equally likely. For example, “rain” and “no rain” are not automatically 50-50.
+
+Practice
+
+A card is drawn from a standard 52-card deck. What is the probability it is a heart?
+
+Lesson 13
+
+Complementary Probability
+
+“At least one” is often easier by counting “none.”
+
+Key idea
+
+Proof
+
+Worked example
+
+Two dice are rolled. What is the probability of getting at least one 6?
+
+Complement: no 6 on either die.
+
+Signal words
+
+Practice
+
+Three fair coins are flipped. What is the probability of getting at least one head?
+
+Lesson 14
+
+Dependent Probability
+
+When choices change the situation, update the sample space.
+
+Key idea
+
+Why it works
+
+Worked example
+
+A bag has 5 red balls and 3 blue balls. Two balls are drawn without replacement. What is the probability both are red?
+
+Common mistake
+
+Practice
+
+A box has 4 white marbles and 6 black marbles. Two marbles are drawn without replacement. What is the probability both are black?
+
+Lesson 15
+
+Expected Value
+
+Find the long-run average value of a random process.
+
+Key idea
+
+Why it works
+
+Worked example
+
+You roll a fair die and win the number of dollars shown. What is the expected value?
+
+Common mistake
+
+Expected value does not mean the result must be possible. You can never roll 3.5, but the long-run average is 3.5.
+
+Practice
+
+Lesson 16
+
+Pascal’s Triangle
+
+See combinations in a triangle of numbers.
+
+Key idea
+
+Pascal’s identity proof
+
+Visual
+
+Worked example
+
+Practice
+
+Lesson 17
+
+Hockey-Stick Identity
+
+Add a diagonal line of combinations in Pascal’s Triangle.
+
+Identity
+
+Combinatorial proof
+
+Worked example
+
+Common mistake
+
+Practice
+
+Lesson 18
+
+Binomial Theorem
+
+Use combinations as coefficients in polynomial expansions.
+
+Theorem
+
+Proof idea
+
+Worked example
+
+Common mistake
+
+Practice
+
+Method Selection Map
+
+Use this checklist when you are stuck on a counting problem.
+
+Ask these questions
+
+Formula quick reference
+
+Mixed Practice
+
+Try these after completing the lessons. Identify the method before solving.
+
+Problems
+
+How many integers from 100 to 500 are multiples of 6?
+
+How many ways can 6 different books be arranged if two specific books must be next to each other?
+
+How many 5-card hands can be chosen from a standard 52-card deck?
+
+What is the probability of drawing two aces from a deck without replacement?
+
+Final Advice
+
+Counting is not about memorizing many formulas. It is about building a clean counting process, checking whether choices are independent, separating cases carefully, and correcting overcounts honestly.
