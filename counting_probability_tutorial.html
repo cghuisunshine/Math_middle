@@ -524,18 +524,12 @@
     <main>
       <section class="hero" id="top">
         <h2>Counting & Probability Tutorial</h2>
-        <p>
-          A student-friendly tutorial based on the problem-solving path of <em>Introduction to Counting & Probability</em>. Each lesson includes a key idea, a proof or justification, a worked example, a common mistake, and practice.
-        </p>
         <div class="chips">
           <span class="chip">Addition vs multiplication</span>
           <span class="chip">Permutations & combinations</span>
           <span class="chip">Overcounting</span>
           <span class="chip">Probability</span>
           <span class="chip">Pascal & binomial theorem</span>
-        </div>
-        <div class="source-note">
-          Source note: This is an original tutorial organized from the uploaded book’s chapter flow and “learn by solving problems” approach. It is not a reproduction of the book text.
         </div>
       </section>
 
@@ -544,31 +538,6 @@
         <div class="mini-card"><strong>2. Fix overcounting</strong><p>Count too much only when you know exactly how to correct it.</p></div>
         <div class="mini-card"><strong>3. Choose vs arrange</strong><p>Permutations care about order; combinations do not.</p></div>
         <div class="mini-card"><strong>4. Turn counts into probability</strong><p>Probability is favorable outcomes over total outcomes when outcomes are equally likely.</p></div>
-      </section>
-
-      <section class="section-title" id="how-to-use">
-        <div>
-          <h2>How to Use This Tutorial</h2>
-          <p>Do not begin by memorizing formulas. Begin by asking: What am I counting? Are there cases? Does order matter? Did I count anything twice?</p>
-        </div>
-      </section>
-
-      <section class="lesson">
-        <div class="lesson-grid">
-          <div class="box idea">
-            <h4>Study routine</h4>
-            <ol>
-              <li>Try the warm-up before reading the solution.</li>
-              <li>Name the method: add, multiply, subtract, divide, casework, or complement.</li>
-              <li>Read the proof and explain it in your own words.</li>
-              <li>Do the practice problem and check the answer only after trying.</li>
-            </ol>
-          </div>
-          <div class="box warning">
-            <h4>Most common mistake</h4>
-            <p>Students often ask, “Which formula should I use?” too early. A better first question is, “What process creates the objects I am counting?”</p>
-          </div>
-        </div>
       </section>
 
       <section class="section-title" id="lessons">
@@ -939,10 +908,6 @@
       top.href = '#top';
       top.textContent = 'Top';
       target.appendChild(top);
-      const how = document.createElement('a');
-      how.href = '#how-to-use';
-      how.textContent = 'How to use';
-      target.appendChild(how);
       lessons.forEach((lesson, index) => {
         const a = document.createElement('a');
         a.href = `#lesson-${index + 1}`;
