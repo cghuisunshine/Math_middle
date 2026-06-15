@@ -1,0 +1,1005 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Counting & Probability Tutorial</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\(', '\\)'], ['$', '$']], displayMath: [['\\[', '\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+  <style>
+    :root {
+      --bg: #f7f8fc;
+      --paper: #ffffff;
+      --ink: #172033;
+      --muted: #657083;
+      --line: #dfe5f0;
+      --blue: #2d65f3;
+      --blue-soft: #eaf0ff;
+      --green: #1b8a5a;
+      --green-soft: #e8f7f0;
+      --orange: #d46a1f;
+      --orange-soft: #fff0e6;
+      --purple: #6b4cc2;
+      --purple-soft: #f0ebff;
+      --red: #ca3c3c;
+      --red-soft: #ffecec;
+      --shadow: 0 16px 40px rgba(23, 32, 51, 0.10);
+      --radius: 18px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      background: radial-gradient(circle at top left, #eef3ff 0, transparent 35%), var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 270px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    aside {
+      position: sticky;
+      top: 0;
+      align-self: start;
+      height: 100vh;
+      padding: 22px 18px;
+      border-right: 1px solid var(--line);
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(10px);
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      box-shadow: 0 10px 20px rgba(45, 101, 243, 0.25);
+    }
+
+    .brand h1 {
+      font-size: 1rem;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .brand p {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .progress-wrap {
+      background: var(--blue-soft);
+      border: 1px solid #d8e2ff;
+      border-radius: 999px;
+      height: 12px;
+      overflow: hidden;
+      margin: 16px 0 8px;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--green));
+      transition: width .25s ease;
+    }
+
+    .progress-text {
+      color: var(--muted);
+      font-size: .8rem;
+      margin-bottom: 14px;
+    }
+
+    nav a {
+      display: block;
+      padding: 7px 10px;
+      border-radius: 10px;
+      color: #33405b;
+      font-size: 0.9rem;
+    }
+
+    nav a:hover, nav a.active {
+      background: var(--blue-soft);
+      text-decoration: none;
+      color: var(--blue);
+    }
+
+    .side-actions {
+      display: grid;
+      gap: 8px;
+      margin: 18px 0;
+    }
+
+    button, .button {
+      border: 0;
+      border-radius: 12px;
+      padding: 10px 13px;
+      cursor: pointer;
+      font-weight: 700;
+      font-family: inherit;
+      background: var(--blue);
+      color: white;
+      box-shadow: 0 10px 18px rgba(45, 101, 243, .22);
+      text-align: center;
+    }
+
+    button.secondary {
+      color: var(--ink);
+      background: #eef2f8;
+      box-shadow: none;
+    }
+
+    main {
+      padding: 34px clamp(18px, 4vw, 60px) 80px;
+      max-width: 1160px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border-radius: 28px;
+      background: linear-gradient(135deg, #102448 0%, #2d65f3 58%, #7c60d8 100%);
+      color: white;
+      padding: clamp(28px, 5vw, 56px);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      top: -100px;
+      width: 330px;
+      height: 330px;
+      background: radial-gradient(circle, rgba(255,255,255,.26), transparent 62%);
+      border-radius: 50%;
+    }
+
+    .hero h2 {
+      font-size: clamp(2rem, 6vw, 4.2rem);
+      line-height: 1.03;
+      margin: 0 0 18px;
+      max-width: 840px;
+      letter-spacing: -0.05em;
+    }
+
+    .hero p {
+      font-size: 1.08rem;
+      max-width: 780px;
+      color: rgba(255,255,255,.88);
+      margin: 0 0 22px;
+    }
+
+    .hero .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.26);
+      color: white;
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+    }
+
+    .source-note {
+      margin: 18px 0 0;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.13);
+      border: 1px solid rgba(255,255,255,.22);
+      color: rgba(255,255,255,.92);
+      font-size: .92rem;
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin: 24px 0 38px;
+    }
+
+    .mini-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: 0 8px 20px rgba(23, 32, 51, .05);
+    }
+
+    .mini-card strong { display: block; margin-bottom: 5px; }
+    .mini-card p { margin: 0; color: var(--muted); font-size: .92rem; }
+
+    .section-title {
+      margin: 46px 0 18px;
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: clamp(1.55rem, 3vw, 2.2rem);
+      letter-spacing: -0.03em;
+    }
+
+    .section-title p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      max-width: 740px;
+    }
+
+    .lesson {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: clamp(18px, 3vw, 30px);
+      margin: 18px 0;
+      box-shadow: 0 10px 26px rgba(23, 32, 51, .06);
+      scroll-margin-top: 20px;
+    }
+
+    .lesson-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      margin-bottom: 18px;
+    }
+
+    .lesson-number {
+      color: white;
+      background: var(--ink);
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-weight: 800;
+      font-size: .82rem;
+      letter-spacing: .02em;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+
+    .lesson h3 {
+      font-size: clamp(1.35rem, 3vw, 1.9rem);
+      margin: 0;
+      letter-spacing: -0.03em;
+    }
+
+    .lesson-intro {
+      color: var(--muted);
+      margin: 6px 0 0;
+    }
+
+    .done-label {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      white-space: nowrap;
+      background: #f2f5fa;
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .done-label input { accent-color: var(--green); }
+
+    .lesson-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .box {
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      background: #fbfcff;
+    }
+
+    .box h4 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+
+    .box p:first-of-type { margin-top: 0; }
+    .box p:last-child, .box ul:last-child, .box ol:last-child { margin-bottom: 0; }
+
+    .idea { background: var(--blue-soft); border-color: #d8e2ff; }
+    .proof { background: var(--green-soft); border-color: #c9eadb; }
+    .example { background: var(--purple-soft); border-color: #ded3ff; }
+    .warning { background: var(--orange-soft); border-color: #ffd3b6; }
+    .practice { background: #fff; }
+
+    .full { grid-column: 1 / -1; }
+
+    details {
+      margin-top: 10px;
+      border: 1px dashed #c5cedd;
+      border-radius: 14px;
+      padding: 10px 12px;
+      background: rgba(255,255,255,.66);
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 800;
+      color: var(--blue);
+    }
+
+    .formula {
+      padding: 10px 12px;
+      background: rgba(255,255,255,.66);
+      border: 1px solid rgba(0,0,0,.06);
+      border-radius: 12px;
+      overflow-x: auto;
+      margin: 10px 0;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 4px 9px;
+      background: #eef2f8;
+      color: #536176;
+      font-size: .78rem;
+      font-weight: 800;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+
+    .svg-card {
+      display: grid;
+      place-items: center;
+      padding: 12px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow-x: auto;
+    }
+
+    .venn text, .grid-svg text, .tree-svg text { font-family: var(--sans); fill: #23304a; font-size: 13px; }
+    .pascal {
+      display: grid;
+      gap: 8px;
+      justify-items: center;
+      font-family: var(--mono);
+      margin: 12px 0;
+    }
+    .pascal-row { display: flex; gap: 8px; justify-content: center; }
+    .pascal-row span {
+      min-width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-weight: 800;
+      border: 1px solid #d8e2ff;
+    }
+
+    .two-col-list {
+      columns: 2;
+      column-gap: 30px;
+    }
+
+    .footer {
+      margin-top: 44px;
+      padding: 24px;
+      border-radius: 22px;
+      background: #111827;
+      color: white;
+    }
+
+    .footer p { color: rgba(255,255,255,.75); }
+
+    .mobile-top {
+      display: none;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255,255,255,.95);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+      padding: 10px 14px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mobile-top strong { font-size: .96rem; }
+    .mobile-nav { display: none; }
+
+    @media (max-width: 980px) {
+      .layout { display: block; }
+      aside { display: none; }
+      .mobile-top { display: flex; }
+      .mobile-nav.open {
+        display: block;
+        position: sticky;
+        top: 55px;
+        z-index: 9;
+        max-height: 60vh;
+        overflow-y: auto;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--line);
+        background: white;
+      }
+      main { padding-top: 18px; }
+      .overview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .lesson-grid { grid-template-columns: 1fr; }
+      .full { grid-column: auto; }
+      .lesson-header { flex-direction: column; }
+      .two-col-list { columns: 1; }
+    }
+
+    @media (max-width: 620px) {
+      .overview-grid { grid-template-columns: 1fr; }
+      .hero { border-radius: 20px; }
+      .lesson { border-radius: 18px; }
+      .side-actions { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media print {
+      aside, .mobile-top, .mobile-nav, .side-actions, .done-label, button { display: none !important; }
+      .layout { display: block; }
+      main { padding: 0; max-width: none; }
+      body { background: white; }
+      .hero { color: var(--ink); background: white; border: 1px solid var(--line); box-shadow: none; }
+      .hero p, .source-note { color: var(--ink); }
+      .lesson, .mini-card { break-inside: avoid; box-shadow: none; }
+      details { break-inside: avoid; }
+      details > * { display: block; }
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-top">
+    <strong>Counting & Probability</strong>
+    <button class="secondary" onclick="toggleMobileNav()">Menu</button>
+  </div>
+  <div id="mobileNav" class="mobile-nav"></div>
+
+  <div class="layout">
+    <aside>
+      <div class="brand">
+        <div class="logo">C&P</div>
+        <div>
+          <h1>Counting & Probability</h1>
+          <p>Examples · Proofs · Practice</p>
+        </div>
+      </div>
+
+      <div class="progress-wrap"><div id="progressBar" class="progress-bar"></div></div>
+      <div id="progressText" class="progress-text">0 of 18 lessons marked complete</div>
+
+      <div class="side-actions">
+        <button onclick="expandAllAnswers()">Show answers</button>
+        <button class="secondary" onclick="window.print()">Print</button>
+      </div>
+
+      <nav id="sideNav"></nav>
+    </aside>
+
+    <main>
+      <section class="hero" id="top">
+        <h2>Counting & Probability Tutorial</h2>
+        <p>
+          A student-friendly tutorial based on the problem-solving path of <em>Introduction to Counting & Probability</em>. Each lesson includes a key idea, a proof or justification, a worked example, a common mistake, and practice.
+        </p>
+        <div class="chips">
+          <span class="chip">Addition vs multiplication</span>
+          <span class="chip">Permutations & combinations</span>
+          <span class="chip">Overcounting</span>
+          <span class="chip">Probability</span>
+          <span class="chip">Pascal & binomial theorem</span>
+        </div>
+        <div class="source-note">
+          Source note: This is an original tutorial organized from the uploaded book’s chapter flow and “learn by solving problems” approach. It is not a reproduction of the book text.
+        </div>
+      </section>
+
+      <section class="overview-grid" aria-label="Course overview">
+        <div class="mini-card"><strong>1. Count carefully</strong><p>Use lists, Venn diagrams, trees, grids, and organized cases.</p></div>
+        <div class="mini-card"><strong>2. Fix overcounting</strong><p>Count too much only when you know exactly how to correct it.</p></div>
+        <div class="mini-card"><strong>3. Choose vs arrange</strong><p>Permutations care about order; combinations do not.</p></div>
+        <div class="mini-card"><strong>4. Turn counts into probability</strong><p>Probability is favorable outcomes over total outcomes when outcomes are equally likely.</p></div>
+      </section>
+
+      <section class="section-title" id="how-to-use">
+        <div>
+          <h2>How to Use This Tutorial</h2>
+          <p>Do not begin by memorizing formulas. Begin by asking: What am I counting? Are there cases? Does order matter? Did I count anything twice?</p>
+        </div>
+      </section>
+
+      <section class="lesson">
+        <div class="lesson-grid">
+          <div class="box idea">
+            <h4>Study routine</h4>
+            <ol>
+              <li>Try the warm-up before reading the solution.</li>
+              <li>Name the method: add, multiply, subtract, divide, casework, or complement.</li>
+              <li>Read the proof and explain it in your own words.</li>
+              <li>Do the practice problem and check the answer only after trying.</li>
+            </ol>
+          </div>
+          <div class="box warning">
+            <h4>Most common mistake</h4>
+            <p>Students often ask, “Which formula should I use?” too early. A better first question is, “What process creates the objects I am counting?”</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-title" id="lessons">
+        <div>
+          <h2>Lessons</h2>
+          <p>The lessons move from basic counting to probability and combinatorial identities.</p>
+        </div>
+      </section>
+
+      <article class="lesson" id="lesson-1" data-title="Counting Lists of Numbers">
+        <div class="lesson-header">
+          <div><span class="lesson-number">Lesson 1</span><h3>Counting Lists of Numbers</h3><p class="lesson-intro">Learn the inclusive counting formula and why the extra “+1” appears.</p></div>
+          <label class="done-label"><input type="checkbox" data-lesson="1"> Done</label>
+        </div>
+        <div class="lesson-grid">
+          <div class="box idea"><h4>Key idea</h4><p>To count all integers from \(a\) to \(b\), inclusive:</p><div class="formula">\[b-a+1\]</div></div>
+          <div class="box proof"><h4>Proof</h4><p>Shift the list \(a,a+1,a+2,\ldots,b\) by subtracting \(a-1\) from every term. It becomes \(1,2,3,\ldots,b-a+1\). Therefore the number of terms is \(b-a+1\).</p></div>
+          <div class="box example"><h4>Worked example</h4><p>How many integers are from 7 to 29 inclusive?</p><div class="formula">\[29-7+1=23\]</div><p>There are <strong>23</strong> integers.</p></div>
+          <div class="box warning"><h4>Common mistake</h4><p>Using \(b-a\) gives the number of gaps, not the number of integers. From 7 to 29, there are 22 gaps but 23 numbers.</p></div>
+          <div class="box practice full"><h4>Practice</h4><p>How many integers are from 36 to 93 inclusive?</p><details><summary>Show answer</summary><div class="formula">\[93-36+1=58\]</div></details></div>
+        </div>
+      </article>
+
+      <article class="lesson" id="lesson-2" data-title="Addition, Subtraction, and Venn Diagrams">
+        <div class="lesson-header">
+          <div><span class="lesson-number">Lesson 2</span><h3>Addition, Subtraction, and Venn Diagrams</h3><p class="lesson-intro">Use addition for non-overlapping cases and subtraction to correct double counting.</p></div>
+          <label class="done-label"><input type="checkbox" data-lesson="2"> Done</label>
+        </div>
+        <div class="lesson-grid">
+          <div class="box idea"><h4>Key idea</h4><p>For two sets:</p><div class="formula">\[|A\cup B|=|A|+|B|-|A\cap B|\]</div></div>
+          <div class="box proof"><h4>Proof</h4><p>When we add \(|A|+|B|\), every item in the overlap \(A\cap B\) is counted twice. It should be counted once, so subtract the overlap once.</p></div>
+          <div class="box example"><h4>Worked example</h4><p>A class has 30 students. 18 take French, 14 take Spanish, and 7 take both. How many take French or Spanish?</p><div class="formula">\[18+14-7=25\]</div></div>
+          <div class="box example"><h4>Visual</h4><div class="svg-card">
+            <svg class="venn" width="330" height="160" viewBox="0 0 330 160" role="img" aria-label="Venn diagram for French and Spanish">
+              <rect x="20" y="20" width="290" height="120" rx="12" fill="#fff" stroke="#cfd7e6"/>
+              <circle cx="135" cy="80" r="55" fill="#eaf0ff" stroke="#2d65f3" stroke-width="2" opacity="0.9"/>
+              <circle cx="195" cy="80" r="55" fill="#f0ebff" stroke="#6b4cc2" stroke-width="2" opacity="0.9"/>
+              <text x="92" y="32">French</text><text x="206" y="32">Spanish</text>
+              <text x="105" y="85" font-weight="700">11</text><text x="160" y="85" font-weight="700">7</text><text x="220" y="85" font-weight="700">7</text><text x="278" y="130" font-weight="700">5</text>
+            </svg>
+          </div><p>The union is \(11+7+7=25\).</p></div>
+          <div class="box practice full"><h4>Practice</h4><p>There are 40 students. 22 play soccer, 18 play basketball, and 9 play both. How many play at least one of the two sports?</p><details><summary>Show answer</summary><div class="formula">\[22+18-9=31\]</div></details></div>
+        </div>
+      </article>
+
+      <article class="lesson" id="lesson-3" data-title="Multiplication Principle">
+        <div class="lesson-header">
+          <div><span class="lesson-number">Lesson 3</span><h3>Multiplication Principle</h3><p class="lesson-intro">Count a sequence of choices by multiplying the number of options at each step.</p></div>
+          <label class="done-label"><input type="checkbox" data-lesson="3"> Done</label>
+        </div>
+        <div class="lesson-grid">
+          <div class="box idea"><h4>Key idea</h4><p>If choice A can be made in \(m\) ways and, after that, choice B can be made in \(n\) ways, then the two choices together can be made in \(mn\) ways.</p></div>
+          <div class="box proof"><h4>Proof</h4><p>For each of the \(m\) choices of A, there are \(n\) choices of B. So the total is \(n+n+\cdots+n\), with \(m\) copies of \(n\), which equals \(mn\).</p></div>
+          <div class="box example"><h4>Worked example</h4><p>You have 3 shirts and 4 pants. How many outfits?</p><div class="formula">\[3\times 4=12\]</div></div>
+          <div class="box warning"><h4>Common mistake</h4><p>Do not multiply if you are choosing between separate cases. If the word “or” separates exclusive cases, you probably add.</p></div>
+          <div class="box practice full"><h4>Practice</h4><p>A lunch special offers 5 sandwiches, 3 drinks, and 2 desserts. How many complete lunches are possible?</p><details><summary>Show answer</summary><div class="formula">\[5\times 3\times 2=30\]</div></details></div>
+        </div>
+      </article>
+
+      <article class="lesson" id="lesson-4" data-title="Factorials and Arrangements">
+        <div class="lesson-header">
+          <div><span class="lesson-number">Lesson 4</span><h3>Factorials and Arrangements</h3><p class="lesson-intro">Arrange all objects when order matters.</p></div>
+          <label class="done-label"><input type="checkbox" data-lesson="4"> Done</label>
+        </div>
+        <div class="lesson-grid">
+          <div class="box idea"><h4>Key idea</h4><p>The number of ways to arrange \(n\) different objects is:</p><div class="formula">\[n!=n(n-1)(n-2)\cdots 3\cdot 2\cdot 1\]</div></div>
+          <div class="box proof"><h4>Proof</h4><p>There are \(n\) choices for the first position, \(n-1\) for the second, and so on until 1 choice remains. By the multiplication principle, multiply them all.</p></div>
+          <div class="box example"><h4>Worked example</h4><p>How many ways can 5 different books be arranged?</p><div class="formula">\[5!=5\times4\times3\times2\times1=120\]</div></div>
+          <div class="box warning"><h4>Common mistake</h4><p>Use \(n!\) only when all \(n\) objects are different and all are arranged.</p></div>
+          <div class="box practice full"><h4>Practice</h4><p>How many ways can 7 different colored hats be arranged in a row?</p><details><summary>Show answer</summary><div class="formula">\[7!=5040\]</div></details></div>
+        </div>
+      </article>
+
+      <article class="lesson" id="lesson-5" data-title="Partial Permutations">
+        <div class="lesson-header">
+          <div><span class="lesson-number">Lesson 5</span><h3>Partial Permutations</h3><p class="lesson-intro">Choose and arrange only part of a group.</p></div>
+          <label class="done-label"><input type="checkbox" data-lesson="5"> Done</label>
+        </div>
+        <div class="lesson-grid">
+          <div class="box idea"><h4>Key idea</h4><p>The number of ways to choose and arrange \(r\) objects from \(n\) different objects is:</p><div class="formula">\[P(n,r)=\frac{n!}{(n-r)!}\]</div></div>
+          <div class="box proof"><h4>Proof</h4><p>The choices are \(n,n-1,n-2,\ldots,n-r+1\). This product is the beginning of \(n!\). Dividing by \((n-r)!\) removes the unused tail.</p></div>
+          <div class="box example"><h4>Worked example</h4><p>A club has 10 members. How many ways can it choose a president, vice-president, and treasurer?</p><div class="formula">\[10\times 9\times 8=720\]</div><p>Order matters because the jobs are different.</p></div>
+          <div class="box warning"><h4>Common mistake</h4><p>Do not use combinations here. Choosing Alice as president and Ben as treasurer is different from choosing Ben as president and Alice as treasurer.</p></div>
+          <div class="box practice full"><h4>Practice</h4><p>How many 3-person officer teams can be formed from 12 people if the offices are president, secretary, and treasurer?</p><details><summary>Show answer</summary><div class="formula">\[12\times11\times10=1320\]</div></details></div>
+        </div>
+      </article>
+
+      <article class="lesson" id="lesson-6" data-title="Casework">
+        <div class="lesson-header">
+          <div><span class="lesson-number">Lesson 6</span><h3>Casework</h3><p class="lesson-intro">Split a problem into non-overlapping cases, count each case, then add.</p></div>
+          <label class="done-label"><input type="checkbox" data-lesson="6"> Done</label>
+        </div>
+        <div class="lesson-grid">
+          <div class="box idea"><h4>Key idea</h4><p>Casework works when every valid object belongs to exactly one case. Then:</p><div class="formula">\[\text{total}=\text{case 1}+\text{case 2}+\cdots\]</div></div>
+          <div class="box proof"><h4>Why it works</h4><p>If cases are exclusive, no object is counted twice. If cases are complete, no object is missed. Therefore adding all case counts gives the total.</p></div>
+          <div class="box example"><h4>Worked example</h4><p>How many 3-digit numbers have exactly one zero?</p><p><strong>Case 1:</strong> zero in the tens place: \(9\times1\times9=81\).</p><p><strong>Case 2:</strong> zero in the ones place: \(9\times9\times1=81\).</p><div class="formula">\[81+81=162\]</div></div>
+          <div class="box warning"><h4>Common mistake</h4><p>Do not allow zero in the hundreds place. A 3-digit number cannot begin with 0.</p></div>
+          <div class="box practice full"><h4>Practice</h4><p>How many 3-digit numbers have exactly two even digits?</p><details><summary>Show answer</summary><p>Use cases for where the odd digit is. Even digits: \(0,2,4,6,8\). Odd digits: \(1,3,5,7,9\).</p><p>If the hundreds digit is odd: \(5\times5\times5=125\).</p><p>If the tens digit is odd: hundreds even but not 0 gives 4 choices, tens odd 5 choices, ones even 5 choices: \(4\times5\times5=100\).</p><p>If the ones digit is odd: similarly \(4\times5\times5=100\).</p><div class="formula">\[125+100+100=325\]</div></details></div>
+        </div>
+      </article>
+
+      <article class="lesson" id="lesson-7" data-title="Complementary Counting">
+        <div class="lesson-header">
+          <div><span class="lesson-number">Lesson 7</span><h3>Complementary Counting</h3><p class="lesson-intro">Count what you do not want, then subtract from the total.</p></div>
+          <label class="done-label"><input type="checkbox" data-lesson="7"> Done</label>
+        </div>
+        <div class="lesson-grid">
+          <div class="box idea"><h4>Key idea</h4><div class="formula">\[\text{wanted}=\text{total}-\text{unwanted}\]</div><p>This is often useful for “not,” “at least one,” or “no restrictions except...” problems.</p></div>
+          <div class="box proof"><h4>Why it works</h4><p>Every object is either wanted or unwanted, and not both. So \(\text{total}=\text{wanted}+\text{unwanted}\). Rearranging gives the formula.</p></div>
+          <div class="box example"><h4>Worked example</h4><p>How many 3-digit numbers are not multiples of 7?</p><p>There are \(900\) three-digit numbers. The multiples are \(105=15\cdot7\) through \(994=142\cdot7\), so there are \(142-15+1=128\) multiples.</p><div class="formula">\[900-128=772\]</div></div>
+          <div class="box warning"><h4>Common mistake</h4><p>Make sure the total universe is clear. Here the universe is all 3-digit numbers, not all positive integers.</p></div>
+          <div class="box practice full"><h4>Practice</h4><p>How many 4-digit PINs contain at least one 7? Digits may repeat, and a PIN may begin with 0.</p><details><summary>Show answer</summary><p>Total PINs: \(10^4\). PINs with no 7: \(9^4\).</p><div class="formula">\[10^4-9^4=10000-6561=3439\]</div></details></div>
+        </div>
+      </article>
+
+      <article class="lesson" id="lesson-8" data-title="Correcting for Overcounting">
+        <div class="lesson-header">
+          <div><span class="lesson-number">Lesson 8</span><h3>Correcting for Overcounting</h3><p class="lesson-intro">When identical objects create repeated counts, divide by the number of repetitions.</p></div>
+          <label class="done-label"><input type="checkbox" data-lesson="8"> Done</label>
+        </div>
+        <div class="lesson-grid">
+          <div class="box idea"><h4>Key idea</h4><p>If \(n\) objects include repeated groups of sizes \(a,b,c,\ldots\), then the number of distinct arrangements is:</p><div class="formula">\[\frac{n!}{a!b!c!\cdots}\]</div></div>
+          <div class="box proof"><h4>Proof</h4><p>Pretend all repeated objects are different. This gives \(n!\). But each final arrangement can be internally rearranged among the identical objects in \(a!b!c!\cdots\) ways without changing what we see. Divide by that overcount.</p></div>
+          <div class="box example"><h4>Worked example</h4><p>How many distinct arrangements are there of <strong>BALL</strong>?</p><div class="formula">\[\frac{4!}{2!}=12\]</div></div>
+          <div class="box example"><h4>Another example</h4><p>For <strong>MISSISSIPPI</strong>, the repeated counts are \(I=4\), \(S=4\), \(P=2\), \(M=1\):</p><div class="formula">\[\frac{11!}{4!4!2!}\]</div></div>
+          <div class="box practice full"><h4>Practice</h4><p>How many arrangements are there of the letters in <strong>BANANA</strong>?</p><details><summary>Show answer</summary><p>BANANA has 6 letters: A appears 3 times, N appears 2 times, B appears once.</p><div class="formula">\[\frac{6!}{3!2!}=60\]</div></details></div>
+        </div>
+      </article>
+
+      <article class="lesson" id="lesson-9" data-title="Counting Pairs and Sums">
+        <div class="lesson-header">
+          <div><span class="lesson-number">Lesson 9</span><h3>Counting Pairs and Sums</h3><p class="lesson-intro">Pair-counting often leads to triangular numbers and the formula for \(1+2+\cdots+n\).</p></div>
+          <label class="done-label"><input type="checkbox" data-lesson="9"> Done</label>
+        </div>
+        <div class="lesson-grid">
+          <div class="box idea"><h4>Key idea</h4><div class="formula">\[1+2+3+\cdots+n=\frac{n(n+1)}{2}\]</div></div>
+          <div class="box proof"><h4>Proof</h4><p>Let \(S=1+2+\cdots+n\). Write it forward and backward:</p><div class="formula">\[S=1+2+\cdots+n\]<br>\[S=n+(n-1)+\cdots+1\]</div><p>Adding gives \(2S=n(n+1)\), so \(S=\frac{n(n+1)}2\).</p></div>
+          <div class="box example"><h4>Worked example</h4><p>In an 8-person round-robin tournament, every player plays every other player once. How many matches?</p><div class="formula">\[\binom{8}{2}=\frac{8\cdot7}{2}=28\]</div></div>
+          <div class="box warning"><h4>Common mistake</h4><p>If each of 8 players has 7 opponents, \(8\times7=56\) counts every match twice. Divide by 2.</p></div>
+          <div class="box practice full"><h4>Practice</h4><p>How many handshakes occur if 12 people each shake hands with every other person once?</p><details><summary>Show answer</summary><div class="formula">\[\binom{12}{2}=\frac{12\cdot11}{2}=66\]</div></details></div>
+        </div>
+      </article>
+
+      <article class="lesson" id="lesson-10" data-title="Combinations">
+        <div class="lesson-header">
+          <div><span class="lesson-number">Lesson 10</span><h3>Combinations</h3><p class="lesson-intro">Choose groups when order does not matter.</p></div>
+          <label class="done-label"><input type="checkbox" data-lesson="10"> Done</label>
+        </div>
+        <div class="lesson-grid">
+          <div class="box idea"><h4>Key idea</h4><div class="formula">\[\binom{n}{r}=\frac{n!}{r!(n-r)!}\]</div></div>
+          <div class="box proof"><h4>Proof</h4><p>First choose and arrange \(r\) objects from \(n\), giving \(P(n,r)=\frac{n!}{(n-r)!}\). But each chosen group of \(r\) objects can be arranged in \(r!\) orders. Divide by \(r!\).</p></div>
+          <div class="box example"><h4>Worked example</h4><p>How many ways can we choose 3 students from 10?</p><div class="formula">\[\binom{10}{3}=\frac{10\cdot9\cdot8}{3\cdot2\cdot1}=120\]</div></div>
+          <div class="box warning"><h4>Decision test</h4><p>Ask: “Would the same people in a different order count as a new answer?” If yes, use permutations. If no, use combinations.</p></div>
+          <div class="box practice full"><h4>Practice</h4><p>How many 5-person committees can be chosen from 14 people?</p><details><summary>Show answer</summary><div class="formula">\[\binom{14}{5}=2002\]</div></details></div>
+        </div>
+      </article>
+
+      <article class="lesson" id="lesson-11" data-title="Grid Paths">
+        <div class="lesson-header">
+          <div><span class="lesson-number">Lesson 11</span><h3>Grid Paths</h3><p class="lesson-intro">Turn shortest paths into arrangements of moves.</p></div>
+          <label class="done-label"><input type="checkbox" data-lesson="11"> Done</label>
+        </div>
+        <div class="lesson-grid">
+          <div class="box idea"><h4>Key idea</h4><p>A shortest path on a rectangular grid is a sequence of right moves and up moves. Counting paths becomes counting arrangements of repeated letters.</p></div>
+          <div class="box proof"><h4>Why combinations appear</h4><p>If a path needs \(r\) right moves and \(u\) up moves, then it has \(r+u\) total moves. Choosing the positions of the \(u\) up moves determines the path, so the count is \(\binom{r+u}{u}\).</p></div>
+          <div class="box example"><h4>Worked example</h4><p>How many shortest paths are there across a \(4\times3\) grid?</p><div class="formula">\[\binom{7}{3}=35\]</div></div>
+          <div class="box example"><h4>Visual</h4><div class="svg-card">
+            <svg class="grid-svg" width="360" height="230" viewBox="0 0 360 230" role="img" aria-label="Four by three grid path">
+              <g transform="translate(48,35)">
+                <g stroke="#cfd7e6" stroke-width="2">
+                  <line x1="0" y1="0" x2="240" y2="0"/><line x1="0" y1="50" x2="240" y2="50"/><line x1="0" y1="100" x2="240" y2="100"/><line x1="0" y1="150" x2="240" y2="150"/>
+                  <line x1="0" y1="0" x2="0" y2="150"/><line x1="60" y1="0" x2="60" y2="150"/><line x1="120" y1="0" x2="120" y2="150"/><line x1="180" y1="0" x2="180" y2="150"/><line x1="240" y1="0" x2="240" y2="150"/>
+                </g>
+                <path d="M0 150 L60 150 L120 150 L120 100 L180 100 L180 50 L240 50 L240 0" fill="none" stroke="#2d65f3" stroke-width="5" stroke-linejoin="round"/>
+                <circle cx="0" cy="150" r="7" fill="#1b8a5a"/><circle cx="240" cy="0" r="7" fill="#ca3c3c"/>
+                <text x="-25" y="178">Start</text><text x="222" y="-12">End</text>
+              </g>
+            </svg>
+          </div></div>
+          <div class="box practice full"><h4>Practice</h4><p>How many shortest paths are there on a \(5\times5\) grid?</p><details><summary>Show answer</summary><p>There are 5 right moves and 5 up moves.</p><div class="formula">\[\binom{10}{5}=252\]</div></details></div>
+        </div>
+      </article>
+
+      <article class="lesson" id="lesson-12" data-title="Basic Probability">
+        <div class="lesson-header">
+          <div><span class="lesson-number">Lesson 12</span><h3>Basic Probability</h3><p class="lesson-intro">Convert counting into probability when outcomes are equally likely.</p></div>
+          <label class="done-label"><input type="checkbox" data-lesson="12"> Done</label>
+        </div>
+        <div class="lesson-grid">
+          <div class="box idea"><h4>Key idea</h4><div class="formula">\[P(E)=\frac{\text{favorable outcomes}}{\text{total outcomes}}\]</div><p>This formula requires equally likely outcomes.</p></div>
+          <div class="box proof"><h4>Why it works</h4><p>If there are \(N\) equally likely outcomes, each has probability \(1/N\). If event \(E\) contains \(k\) of them, then \(P(E)=k\cdot\frac1N=\frac{k}{N}\).</p></div>
+          <div class="box example"><h4>Worked example</h4><p>A fair die is rolled. What is the probability of rolling an even number?</p><p>Even outcomes are \(2,4,6\), so:</p><div class="formula">\[P(\text{even})=\frac{3}{6}=\frac12\]</div></div>
+          <div class="box warning"><h4>Common mistake</h4><p>Do not use this simple fraction if the outcomes are not equally likely. For example, “rain” and “no rain” are not automatically 50-50.</p></div>
+          <div class="box practice full"><h4>Practice</h4><p>A card is drawn from a standard 52-card deck. What is the probability it is a heart?</p><details><summary>Show answer</summary><div class="formula">\[\frac{13}{52}=\frac14\]</div></details></div>
+        </div>
+      </article>
+
+      <article class="lesson" id="lesson-13" data-title="Complementary Probability">
+        <div class="lesson-header">
+          <div><span class="lesson-number">Lesson 13</span><h3>Complementary Probability</h3><p class="lesson-intro">“At least one” is often easier by counting “none.”</p></div>
+          <label class="done-label"><input type="checkbox" data-lesson="13"> Done</label>
+        </div>
+        <div class="lesson-grid">
+          <div class="box idea"><h4>Key idea</h4><div class="formula">\[P(A)=1-P(A^c)\]</div></div>
+          <div class="box proof"><h4>Proof</h4><p>Exactly one of \(A\) and \(A^c\) must happen. Therefore \(P(A)+P(A^c)=1\), so \(P(A)=1-P(A^c)\).</p></div>
+          <div class="box example"><h4>Worked example</h4><p>Two dice are rolled. What is the probability of getting at least one 6?</p><p>Complement: no 6 on either die.</p><div class="formula">\[1-\left(\frac56\right)^2=1-\frac{25}{36}=\frac{11}{36}\]</div></div>
+          <div class="box warning"><h4>Signal words</h4><p>Consider complements when you see: <strong>at least one</strong>, <strong>not</strong>, <strong>none</strong>, or <strong>no more than</strong>.</p></div>
+          <div class="box practice full"><h4>Practice</h4><p>Three fair coins are flipped. What is the probability of getting at least one head?</p><details><summary>Show answer</summary><p>Complement: no heads, meaning all tails.</p><div class="formula">\[1-\left(\frac12\right)^3=\frac78\]</div></details></div>
+        </div>
+      </article>
+
+      <article class="lesson" id="lesson-14" data-title="Dependent Probability">
+        <div class="lesson-header">
+          <div><span class="lesson-number">Lesson 14</span><h3>Dependent Probability</h3><p class="lesson-intro">When choices change the situation, update the sample space.</p></div>
+          <label class="done-label"><input type="checkbox" data-lesson="14"> Done</label>
+        </div>
+        <div class="lesson-grid">
+          <div class="box idea"><h4>Key idea</h4><div class="formula">\[P(A\text{ and }B)=P(A)P(B\mid A)\]</div></div>
+          <div class="box proof"><h4>Why it works</h4><p>Among all outcomes, first restrict to the fraction where \(A\) happens. Inside that smaller world, multiply by the fraction where \(B\) also happens.</p></div>
+          <div class="box example"><h4>Worked example</h4><p>A bag has 5 red balls and 3 blue balls. Two balls are drawn without replacement. What is the probability both are red?</p><div class="formula">\[\frac58\cdot\frac47=\frac{20}{56}=\frac5{14}\]</div></div>
+          <div class="box warning"><h4>Common mistake</h4><p>Without replacement means the denominator changes. With replacement, it would be \(\frac58\cdot\frac58\).</p></div>
+          <div class="box practice full"><h4>Practice</h4><p>A box has 4 white marbles and 6 black marbles. Two marbles are drawn without replacement. What is the probability both are black?</p><details><summary>Show answer</summary><div class="formula">\[\frac6{10}\cdot\frac59=\frac13\]</div></details></div>
+        </div>
+      </article>
+
+      <article class="lesson" id="lesson-15" data-title="Expected Value">
+        <div class="lesson-header">
+          <div><span class="lesson-number">Lesson 15</span><h3>Expected Value</h3><p class="lesson-intro">Find the long-run average value of a random process.</p></div>
+          <label class="done-label"><input type="checkbox" data-lesson="15"> Done</label>
+        </div>
+        <div class="lesson-grid">
+          <div class="box idea"><h4>Key idea</h4><div class="formula">\[E=x_1p_1+x_2p_2+\cdots+x_np_n\]</div></div>
+          <div class="box proof"><h4>Why it works</h4><p>Over many repetitions, outcome \(x_i\) occurs about a \(p_i\) fraction of the time. Its contribution to the average is therefore about \(x_ip_i\). Add all contributions.</p></div>
+          <div class="box example"><h4>Worked example</h4><p>You roll a fair die and win the number of dollars shown. What is the expected value?</p><div class="formula">\[E=\frac{1+2+3+4+5+6}{6}=\frac{21}{6}=3.5\]</div></div>
+          <div class="box warning"><h4>Common mistake</h4><p>Expected value does not mean the result must be possible. You can never roll 3.5, but the long-run average is 3.5.</p></div>
+          <div class="box practice full"><h4>Practice</h4><p>A game pays $10 with probability \(\frac14\) and $0 otherwise. What is the expected payout?</p><details><summary>Show answer</summary><div class="formula">\[10\cdot\frac14+0\cdot\frac34=2.50\]</div><p>The expected payout is $2.50.</p></details></div>
+        </div>
+      </article>
+
+      <article class="lesson" id="lesson-16" data-title="Pascal's Triangle">
+        <div class="lesson-header">
+          <div><span class="lesson-number">Lesson 16</span><h3>Pascal’s Triangle</h3><p class="lesson-intro">See combinations in a triangle of numbers.</p></div>
+          <label class="done-label"><input type="checkbox" data-lesson="16"> Done</label>
+        </div>
+        <div class="lesson-grid">
+          <div class="box idea"><h4>Key idea</h4><p>Row \(n\) of Pascal’s Triangle contains:</p><div class="formula">\[\binom n0,\binom n1,\binom n2,\ldots,\binom nn\]</div></div>
+          <div class="box proof"><h4>Pascal’s identity proof</h4><p>To choose \(r\) people from \(n\), choose a special person Alex. Either Alex is included, so choose \(r-1\) from the remaining \(n-1\), or Alex is not included, so choose \(r\) from the remaining \(n-1\).</p><div class="formula">\[\binom nr=\binom{n-1}{r-1}+\binom{n-1}{r}\]</div></div>
+          <div class="box example"><h4>Visual</h4><div class="pascal" aria-label="Pascal triangle rows 0 to 5">
+            <div class="pascal-row"><span>1</span></div>
+            <div class="pascal-row"><span>1</span><span>1</span></div>
+            <div class="pascal-row"><span>1</span><span>2</span><span>1</span></div>
+            <div class="pascal-row"><span>1</span><span>3</span><span>3</span><span>1</span></div>
+            <div class="pascal-row"><span>1</span><span>4</span><span>6</span><span>4</span><span>1</span></div>
+            <div class="pascal-row"><span>1</span><span>5</span><span>10</span><span>10</span><span>5</span><span>1</span></div>
+          </div></div>
+          <div class="box example"><h4>Worked example</h4><p>Row 4 is \(1,4,6,4,1\), so \(\binom42=6\).</p></div>
+          <div class="box practice full"><h4>Practice</h4><p>Use Pascal’s identity to compute \(\binom{7}{3}\) from row 6.</p><details><summary>Show answer</summary><div class="formula">\[\binom73=\binom62+\binom63=15+20=35\]</div></details></div>
+        </div>
+      </article>
+
+      <article class="lesson" id="lesson-17" data-title="Hockey-Stick Identity">
+        <div class="lesson-header">
+          <div><span class="lesson-number">Lesson 17</span><h3>Hockey-Stick Identity</h3><p class="lesson-intro">Add a diagonal line of combinations in Pascal’s Triangle.</p></div>
+          <label class="done-label"><input type="checkbox" data-lesson="17"> Done</label>
+        </div>
+        <div class="lesson-grid">
+          <div class="box idea"><h4>Identity</h4><div class="formula">\[\binom rr+\binom{r+1}r+\cdots+\binom nr=\binom{n+1}{r+1}\]</div></div>
+          <div class="box proof"><h4>Combinatorial proof</h4><p>Count ways to choose \(r+1\) numbers from \(1,2,\ldots,n+1\). If the largest chosen number is \(k+1\), then the other \(r\) numbers must be chosen from \(1,2,\ldots,k\), giving \(\binom kr\) choices. Summing over possible largest numbers gives the left side. Direct counting gives the right side.</p></div>
+          <div class="box example"><h4>Worked example</h4><div class="formula">\[\binom22+\binom32+\binom42+\binom52=1+3+6+10=20\]</div><div class="formula">\[\binom63=20\]</div></div>
+          <div class="box warning"><h4>Common mistake</h4><p>The lower number \(r\) stays fixed on the left. The upper number increases.</p></div>
+          <div class="box practice full"><h4>Practice</h4><p>Compute \(\binom33+\binom43+\binom53+\binom63\) using hockey-stick identity.</p><details><summary>Show answer</summary><div class="formula">\[\binom74=35\]</div></details></div>
+        </div>
+      </article>
+
+      <article class="lesson" id="lesson-18" data-title="Binomial Theorem">
+        <div class="lesson-header">
+          <div><span class="lesson-number">Lesson 18</span><h3>Binomial Theorem</h3><p class="lesson-intro">Use combinations as coefficients in polynomial expansions.</p></div>
+          <label class="done-label"><input type="checkbox" data-lesson="18"> Done</label>
+        </div>
+        <div class="lesson-grid">
+          <div class="box idea"><h4>Theorem</h4><div class="formula">\[(a+b)^n=\sum_{k=0}^{n}\binom nk a^{n-k}b^k\]</div></div>
+          <div class="box proof"><h4>Proof idea</h4><p>In \((a+b)^n\), we multiply \(n\) factors of \((a+b)\). To get \(a^{n-k}b^k\), choose exactly \(k\) of the \(n\) factors to contribute \(b\); the rest contribute \(a\). This can be done in \(\binom nk\) ways.</p></div>
+          <div class="box example"><h4>Worked example</h4><p>Expand \((x+y)^4\).</p><div class="formula">\[(x+y)^4=x^4+4x^3y+6x^2y^2+4xy^3+y^4\]</div></div>
+          <div class="box warning"><h4>Common mistake</h4><p>Keep the exponents adding to \(n\). In every term of \((a+b)^n\), the exponents of \(a\) and \(b\) add to \(n\).</p></div>
+          <div class="box practice full"><h4>Practice</h4><p>Find the coefficient of \(x^3y^2\) in \((x+y)^5\).</p><details><summary>Show answer</summary><p>We need 3 factors to contribute \(x\) and 2 factors to contribute \(y\).</p><div class="formula">\[\binom52=10\]</div></details></div>
+        </div>
+      </article>
+
+      <section class="section-title" id="method-map">
+        <div>
+          <h2>Method Selection Map</h2>
+          <p>Use this checklist when you are stuck on a counting problem.</p>
+        </div>
+      </section>
+
+      <section class="lesson">
+        <div class="lesson-grid">
+          <div class="box idea">
+            <h4>Ask these questions</h4>
+            <ol>
+              <li><strong>What is one object I am counting?</strong> A number, path, arrangement, group, or probability outcome?</li>
+              <li><strong>Does order matter?</strong> If yes, think permutations. If no, think combinations.</li>
+              <li><strong>Are there separate cases?</strong> If yes, make them complete and non-overlapping.</li>
+              <li><strong>Is “at least one” involved?</strong> Try the complement.</li>
+              <li><strong>Did I count the same object more than once?</strong> Correct by subtracting or dividing.</li>
+            </ol>
+          </div>
+          <div class="box practice">
+            <h4>Formula quick reference</h4>
+            <p><span class="tag">List</span> \(b-a+1\)</p>
+            <p><span class="tag">Arrange all</span> \(n!\)</p>
+            <p><span class="tag">Arrange some</span> \(P(n,r)=\frac{n!}{(n-r)!}\)</p>
+            <p><span class="tag">Choose</span> \(\binom nr=\frac{n!}{r!(n-r)!}\)</p>
+            <p><span class="tag">Repeated letters</span> \(\frac{n!}{a!b!c!\cdots}\)</p>
+            <p><span class="tag">Probability</span> \(P(E)=\frac{\text{favorable}}{\text{total}}\)</p>
+            <p><span class="tag">Expected value</span> \(E=\sum x_ip_i\)</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-title" id="mixed-practice">
+        <div>
+          <h2>Mixed Practice</h2>
+          <p>Try these after completing the lessons. Identify the method before solving.</p>
+        </div>
+      </section>
+
+      <section class="lesson">
+        <div class="lesson-grid">
+          <div class="box practice full">
+            <h4>Problems</h4>
+            <ol class="two-col-list">
+              <li>How many integers from 100 to 500 are multiples of 6?</li>
+              <li>How many ways can 6 different books be arranged if two specific books must be next to each other?</li>
+              <li>How many 5-card hands can be chosen from a standard 52-card deck?</li>
+              <li>How many arrangements are there of the word <strong>LEVEL</strong>?</li>
+              <li>What is the probability of drawing two aces from a deck without replacement?</li>
+              <li>How many shortest paths are there on a \(3\times7\) grid?</li>
+            </ol>
+            <details><summary>Show all answers</summary>
+              <ol>
+                <li>Multiples are \(102=17\cdot6\) through \(498=83\cdot6\): \(83-17+1=67\).</li>
+                <li>Treat the two specific books as one block: \(5!\cdot2!=240\).</li>
+                <li>\(\binom{52}{5}=2,598,960\).</li>
+                <li>LEVEL has 5 letters with E twice and L twice: \(\frac{5!}{2!2!}=30\).</li>
+                <li>\(\frac4{52}\cdot\frac3{51}=\frac1{221}\).</li>
+                <li>\(\binom{10}{3}=120\), or \(\binom{10}{7}=120\).</li>
+              </ol>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <h2>Final Advice</h2>
+        <p>Counting is not about memorizing many formulas. It is about building a clean counting process, checking whether choices are independent, separating cases carefully, and correcting overcounts honestly.</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    const lessons = [...document.querySelectorAll('article.lesson')];
+    const sideNav = document.getElementById('sideNav');
+    const mobileNav = document.getElementById('mobileNav');
+
+    function buildNav(target) {
+      const top = document.createElement('a');
+      top.href = '#top';
+      top.textContent = 'Top';
+      target.appendChild(top);
+      const how = document.createElement('a');
+      how.href = '#how-to-use';
+      how.textContent = 'How to use';
+      target.appendChild(how);
+      lessons.forEach((lesson, index) => {
+        const a = document.createElement('a');
+        a.href = `#lesson-${index + 1}`;
+        a.textContent = `${index + 1}. ${lesson.dataset.title}`;
+        target.appendChild(a);
+      });
+      const map = document.createElement('a');
+      map.href = '#method-map';
+      map.textContent = 'Method selection map';
+      target.appendChild(map);
+      const practice = document.createElement('a');
+      practice.href = '#mixed-practice';
+      practice.textContent = 'Mixed practice';
+      target.appendChild(practice);
+    }
+
+    buildNav(sideNav);
+    buildNav(mobileNav);
+
+    function toggleMobileNav() {
+      mobileNav.classList.toggle('open');
+    }
+
+    mobileNav.addEventListener('click', (e) => {
+      if (e.target.tagName === 'A') mobileNav.classList.remove('open');
+    });
+
+    function updateProgress() {
+      const boxes = [...document.querySelectorAll('input[data-lesson]')];
+      const done = boxes.filter(b => b.checked).length;
+      document.getElementById('progressBar').style.width = `${(done / boxes.length) * 100}%`;
+      document.getElementById('progressText').textContent = `${done} of ${boxes.length} lessons marked complete`;
+      boxes.forEach(b => localStorage.setItem(`cp-lesson-${b.dataset.lesson}`, b.checked ? '1' : '0'));
+    }
+
+    document.querySelectorAll('input[data-lesson]').forEach(box => {
+      box.checked = localStorage.getItem(`cp-lesson-${box.dataset.lesson}`) === '1';
+      box.addEventListener('change', updateProgress);
+    });
+    updateProgress();
+
+    function expandAllAnswers() {
+      document.querySelectorAll('details').forEach(d => d.open = true);
+    }
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          document.querySelectorAll('nav a, .mobile-nav a').forEach(a => {
+            a.classList.toggle('active', a.getAttribute('href') === `#${id}`);
+          });
+        }
+      });
+    }, { rootMargin: '-35% 0px -55% 0px', threshold: 0 });
+
+    document.querySelectorAll('section[id], article[id]').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>
