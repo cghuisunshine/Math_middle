@@ -1131,11 +1131,25 @@
       activeNarrationIndex = -1;
     }
 
+    function keepActiveNarrationWordInView(span) {
+      if (!span) return;
+      const rect = span.getBoundingClientRect();
+      const bottomLimit = window.innerHeight - 96;
+      if (rect.top < 16 || rect.bottom > bottomLimit) {
+        const absoluteTop = rect.top + window.scrollY;
+        const visibleCenter = (bottomLimit + 16) / 2;
+        const scrollTop = Math.max(0, absoluteTop - visibleCenter);
+        window.scrollTo({ top: scrollTop, behavior: 'instant' });
+      }
+    }
+
     function setActiveNarrationWord(index) {
       clearNarrationHighlight();
       if (index >= 0) {
-        narrationSpans[index]?.classList.add('is-speaking');
+        const span = narrationSpans[index];
+        span?.classList.add('is-speaking');
         activeNarrationIndex = index;
+        keepActiveNarrationWordInView(span);
       }
     }
 
