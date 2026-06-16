@@ -1023,6 +1023,7 @@
     let narrationSpans = [];
     let activeNarrationIndex = -1;
     let narrationReady = false;
+    let narrationPreparing = null;
 
     function cleanNarrationText(text) {
       return text.replace(/\s+/g, ' ').trim();
@@ -1172,20 +1173,24 @@
 
     async function prepareNarration() {
       if (narrationReady) return true;
-      ttsStatus.textContent = 'Loading';
-      let payload = window.countingProbabilityNarration;
-      if (!payload) {
-        const response = await fetch(narrationAssets.timings);
-        if (!response.ok) throw new Error(`Could not load ${narrationAssets.timings}`);
-        payload = await response.json();
-      }
-      narrationWords = payload.words || [];
-      if (!renderTimedNarration(payload.text, narrationWords)) return false;
-      bindNarrationHighlighting(ttsAudio, narrationWords);
-      bindNarrationSeeking();
-      narrationReady = true;
-      ttsStatus.textContent = 'Ready';
-      return true;
+      if (narrationPreparing) return narrationPreparing;
+      narrationPreparing = (async () => {
+        ttsStatus.textContent = 'Loading';
+        let payload = window.countingProbabilityNarration;
+        if (!payload) {
+          const response = await fetch(narrationAssets.timings);
+          if (!response.ok) throw new Error(`Could not load ${narrationAssets.timings}`);
+          payload = await response.json();
+        }
+        narrationWords = payload.words || [];
+        if (!renderTimedNarration(payload.text, narrationWords)) return false;
+        bindNarrationHighlighting(ttsAudio, narrationWords);
+        bindNarrationSeeking();
+        narrationReady = true;
+        ttsStatus.textContent = 'Ready';
+        return true;
+      })();
+      return narrationPreparing;
     }
 
     ttsPlay.addEventListener('click', async () => {
@@ -1235,6 +1240,11 @@
     }, { rootMargin: '-35% 0px -55% 0px', threshold: 0 });
 
     document.querySelectorAll('section[id], article[id]').forEach(el => observer.observe(el));
+
+    prepareNarration().catch(error => {
+      ttsStatus.textContent = 'Audio unavailable';
+      console.error(error);
+    });
   </script>
 </body>
 </html>
