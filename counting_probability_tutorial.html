@@ -1157,16 +1157,13 @@
         const word = narrationWords[index];
         if (!word) return;
 
-        const wasPlaying = !ttsAudio.paused && !ttsAudio.ended;
         ttsAudio.currentTime = word.start;
         setActiveNarrationWord(index);
-        if (wasPlaying) {
-          try {
-            await ttsAudio.play();
-          } catch (error) {
-            ttsStatus.textContent = 'Audio unavailable';
-            console.error(error);
-          }
+        try {
+          await ttsAudio.play();
+        } catch (error) {
+          ttsStatus.textContent = 'Audio unavailable';
+          console.error(error);
         }
       });
     }
