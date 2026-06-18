@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Challenge Problems 1.29–1.38: Paired Questions and Answers</title>
+<style>
+  :root{
+    --bg:#f5f7fb;
+    --panel:#ffffff;
+    --ink:#111827;
+    --muted:#6b7280;
+    --blue:#2563eb;
+    --blue2:#dbeafe;
+    --green:#16a34a;
+    --green2:#dcfce7;
+    --line:#e5e7eb;
+    --shadow:0 8px 28px rgba(15,23,42,.08);
+    --radius:18px;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;}
+  body{overflow:hidden}
+  header{
+    height:72px; display:flex; align-items:center; justify-content:space-between; gap:18px;
+    padding:14px 24px; background:rgba(255,255,255,.92); border-bottom:1px solid var(--line);
+    backdrop-filter: blur(8px);
+  }
+  h1{font-size:20px;line-height:1.2;margin:0;font-weight:800;letter-spacing:.01em}
+  .subtitle{font-size:13px;color:var(--muted);margin-top:4px}
+  .nav{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;max-width:55vw}
+  .nav button{
+    border:1px solid #bfdbfe;background:#eff6ff;color:#1d4ed8;border-radius:999px;padding:6px 10px;
+    font-weight:700;font-size:12px;cursor:pointer;
+  }
+  .nav button:hover{background:#dbeafe}
+  .wrap{height:calc(100vh - 72px);display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:14px;}
+  .pane{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow-y:auto;scroll-behavior:smooth;position:relative;}
+  .paneHeader{position:sticky;top:0;z-index:3;background:rgba(255,255,255,.94);backdrop-filter:blur(8px);padding:14px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+  .paneHeader strong{font-size:18px}
+  .badge{font-size:12px;border-radius:999px;padding:5px 10px;font-weight:800}
+  .badge.q{background:var(--blue2);color:#1d4ed8}.badge.a{background:var(--green2);color:#15803d}
+  .content{padding:14px 18px 42px}
+  .card{border:1px solid var(--line);border-radius:16px;margin:0 0 16px;background:#fff;overflow:hidden;transition:border-color .16s, box-shadow .16s, transform .16s;}
+  .card.active{box-shadow:0 0 0 3px rgba(37,99,235,.16), 0 12px 28px rgba(15,23,42,.08);border-color:#93c5fd}
+  .aCard.active{box-shadow:0 0 0 3px rgba(22,163,74,.16), 0 12px 28px rgba(15,23,42,.08);border-color:#86efac}
+  .cardTitle{display:flex;align-items:center;gap:10px;padding:12px 14px;background:#f8fafc;border-bottom:1px solid var(--line)}
+  .label{font-weight:900;border-radius:9px;padding:4px 8px;line-height:1;border:1px solid;white-space:nowrap}
+  .qCard .label{background:#eff6ff;color:#2563eb;border-color:#93c5fd}.aCard .label{background:#f0fdf4;color:#16a34a;border-color:#86efac}
+  .kind{font-size:12px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.06em}
+  .cardBody{padding:15px 16px 18px;font-size:16px;line-height:1.58}
+  .cardBody p{margin:.4em 0 .8em}
+  .parts{margin:.5em 0 0 0;padding-left:1.35em}
+  .parts li{margin:.35em 0}
+  .answerBox{display:inline-block;border:2px solid #111827;border-radius:3px;padding:0 6px;margin:0 2px;background:#fff;font-weight:800;line-height:1.25}
+  .hint{color:#374151;font-weight:700}
+  .math{font-family:"Times New Roman",Cambria,Georgia,serif;font-size:1.08em}
+  .formula{display:block;text-align:center;margin:12px 0;font-family:"Times New Roman",Cambria,Georgia,serif;font-size:1.18em}
+  .miniNote{font-size:14px;color:var(--muted)}
+  .sumTable{border-collapse:collapse;margin:14px auto;font-family:"Times New Roman",serif;font-size:16px}
+  .sumTable th,.sumTable td{padding:5px 10px;text-align:right;border:0}
+  .sumTable thead th{border-bottom:2px solid #111827;text-align:center}
+  .sumTable tbody th{border-right:2px solid #111827;text-align:right;font-weight:700}
+  .cross{text-decoration:line-through;text-decoration-thickness:2px;color:#555}
+  .vennWrap{display:flex;gap:18px;align-items:center;flex-wrap:wrap;margin:12px 0}
+  svg{max-width:100%;height:auto}
+  .diagram{background:#fff;border:1px solid #d1d5db;border-radius:10px;padding:8px}
+  .twocol{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:start}
+  @media (max-width: 900px){
+    body{overflow:auto}.wrap{height:auto;grid-template-columns:1fr}.pane{max-height:75vh}.nav{max-width:none}.twocol{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Challenge Problems 1.29–1.38</h1>
+    <div class="subtitle">Questions paired with answers. Scroll either column; the matching item syncs automatically.</div>
+  </div>
+  <div class="nav" id="nav"></div>
+</header>
+
+<main class="wrap">
+  <section class="pane" id="questionsPane" aria-label="Questions">
+    <div class="paneHeader"><strong>Questions / Problems</strong><span class="badge q">Challenge Problems</span></div>
+    <div class="content">
+      <article class="card qCard" data-id="1.29"><div class="cardTitle"><span class="label">1.29</span><span class="kind">Question</span></div><div class="cardBody">How many positive integers less than 500 can be written as the sum of two positive perfect cubes? <span class="hint">Hints: 35, 65</span></div></article>
+
+      <article class="card qCard" data-id="1.30"><div class="cardTitle"><span class="label">1.30</span><span class="kind">Question</span></div><div class="cardBody">There are 190 people on the beach. 110 are wearing sunglasses, 70 are wearing bathing suits, and 95 are wearing a hat. Everyone is wearing at least one of these items. 30 are wearing both bathing suits and sunglasses. 25 are wearing both bathing suits and a hat. 40 are wearing both sunglasses and a hat. How many people are wearing all three items?</div></article>
+
+      <article class="card qCard" data-id="1.31"><div class="cardTitle"><span class="label">1.31</span><span class="kind">Question</span></div><div class="cardBody">There are 360 people in my school. 15 take calculus, physics, and chemistry, and 15 don’t take any of them. 180 take calculus. Twice as many students take chemistry as take physics. 75 take both calculus and chemistry, and 75 take both physics and chemistry. Only 30 take both physics and calculus. How many students take physics? <span class="hint">Hints: 138</span></div></article>
+
+      <article class="card qCard" data-id="1.32"><div class="cardTitle"><span class="label">1.32★</span><span class="kind">Question</span></div><div class="cardBody">In my fencing club there are twice as many boys who are in high school as there are boys who are in middle school. Of the students in the club who are in middle school, there are three times as many girls as there are boys. Half of the girls who are in the club are in high school. If there are 72 people in my fencing club, how many are middle school boys? <span class="hint">Hints: 49, 4</span></div></article>
+
+      <article class="card qCard" data-id="1.33"><div class="cardTitle"><span class="label">1.33</span><span class="kind">Question</span></div><div class="cardBody">What is the greatest common factor of <span class="math">5!</span>, <span class="math">10!</span>, and <span class="math">15!</span>? <span class="hint">Hints: 24</span></div></article>
+
+      <article class="card qCard" data-id="1.34"><div class="cardTitle"><span class="label">1.34★</span><span class="kind">Question</span></div><div class="cardBody">What is the units digit of the sum <span class="math">1! + 2! + 3! + 4! + 5! + ··· + 1000!</span>? <span class="hint">Hints: 185, 212</span></div></article>
+
+      <article class="card qCard" data-id="1.35"><div class="cardTitle"><span class="label">1.35</span><span class="kind">Question</span></div><div class="cardBody">How many of the factorials from <span class="math">1!</span> to <span class="math">100!</span> are divisible by 9? <span class="hint">Hints: 32</span></div></article>
+
+      <article class="card qCard" data-id="1.36"><div class="cardTitle"><span class="label">1.36</span><span class="kind">Question</span></div><div class="cardBody">Which integers <span class="math">n</span> satisfy <span class="math">1/2 &gt; 1/n &gt; 3/100</span>, and how many such integers are there?</div></article>
+
+      <article class="card qCard" data-id="1.37"><div class="cardTitle"><span class="label">1.37</span><span class="kind">Question</span></div><div class="cardBody">My classroom has 11 rows of chairs, with 11 chairs in each row. The chairs in each row are numbered from 1 to 11.
+        <ol class="parts" type="a"><li>How many chairs have odd numbers?</li><li>Suppose we replaced 11 with <span class="math">n</span>. Can you find a formula in terms of <span class="math">n</span> for the number of chairs with odd numbers? <span class="hint">Hints: 219</span></li></ol>
+      </div></article>
+
+      <article class="card qCard" data-id="1.38"><div class="cardTitle"><span class="label">1.38</span><span class="kind">Question</span></div><div class="cardBody">We connect dots with toothpicks in a grid as shown in Figure 1.14. If there are 10 horizontal toothpicks in each row and 20 vertical ones in each column, how many total toothpicks are there? <span class="hint">Hints: 150</span> <span class="miniNote">(Source: AHSME)</span>
+        <div class="diagram" style="max-width:360px;margin:14px auto 4px;">
+          <svg viewBox="0 0 310 210" role="img" aria-label="toothpick grid sketch">
+            <g stroke="#111827" stroke-width="2" fill="none">
+              <line x1="45" y1="35" x2="95" y2="35"/><line x1="120" y1="35" x2="170" y2="35"/><line x1="220" y1="35" x2="265" y2="35"/>
+              <line x1="45" y1="95" x2="95" y2="95"/><line x1="120" y1="95" x2="170" y2="95"/><line x1="220" y1="95" x2="265" y2="95"/>
+              <line x1="45" y1="170" x2="95" y2="170"/><line x1="120" y1="170" x2="170" y2="170"/><line x1="220" y1="170" x2="265" y2="170"/>
+              <line x1="45" y1="35" x2="45" y2="95"/><line x1="120" y1="35" x2="120" y2="95"/><line x1="265" y1="35" x2="265" y2="95"/>
+              <line x1="45" y1="120" x2="45" y2="170"/><line x1="120" y1="120" x2="120" y2="170"/><line x1="265" y1="120" x2="265" y2="170"/>
+            </g>
+            <g fill="#111827"><circle cx="45" cy="35" r="5"/><circle cx="120" cy="35" r="5"/><circle cx="265" cy="35" r="5"/><circle cx="45" cy="95" r="5"/><circle cx="120" cy="95" r="5"/><circle cx="265" cy="95" r="5"/><circle cx="45" cy="170" r="5"/><circle cx="120" cy="170" r="5"/><circle cx="265" cy="170" r="5"/></g>
+            <text x="190" y="40" font-size="20">···</text><text x="190" y="100" font-size="20">···</text><text x="190" y="175" font-size="20">···</text><text x="39" y="132" font-size="20">⋮</text><text x="114" y="132" font-size="20">⋮</text><text x="259" y="132" font-size="20">⋮</text>
+          </svg>
+          <div class="miniNote" style="text-align:center">Figure 1.14: Figure for Problem 1.38</div>
+        </div>
+      </div></article>
+    </div>
+  </section>
+
+  <section class="pane" id="answersPane" aria-label="Answers">
+    <div class="paneHeader"><strong>Answers / Solutions</strong><span class="badge a">Answer key</span></div>
+    <div class="content">
+      <article class="card aCard" data-id="1.29"><div class="cardTitle"><span class="label">1.29</span><span class="kind">Answer</span></div><div class="cardBody">Note that <span class="math">7<sup>3</sup> &lt; 500 &lt; 8<sup>3</sup></span>, so any positive integer that can be written as the sum of two positive perfect cubes must be written as <span class="math">a<sup>3</sup> + b<sup>3</sup></span>, where <span class="math">1 ≤ a ≤ 7</span> and <span class="math">1 ≤ b ≤ 7</span>. Make a chart of the possible sums; the sums over 500 are crossed out.
+        <table class="sumTable"><thead><tr><th></th><th>1<sup>3</sup></th><th>2<sup>3</sup></th><th>3<sup>3</sup></th><th>4<sup>3</sup></th><th>5<sup>3</sup></th><th>6<sup>3</sup></th><th>7<sup>3</sup></th></tr></thead><tbody>
+          <tr><th>1<sup>3</sup></th><td>2</td><td>9</td><td>28</td><td>65</td><td>126</td><td>217</td><td>344</td></tr>
+          <tr><th>2<sup>3</sup></th><td></td><td>16</td><td>35</td><td>72</td><td>133</td><td>224</td><td>351</td></tr>
+          <tr><th>3<sup>3</sup></th><td></td><td></td><td>54</td><td>91</td><td>152</td><td>243</td><td>370</td></tr>
+          <tr><th>4<sup>3</sup></th><td></td><td></td><td></td><td>128</td><td>189</td><td>280</td><td>407</td></tr>
+          <tr><th>5<sup>3</sup></th><td></td><td></td><td></td><td></td><td>250</td><td>341</td><td>468</td></tr>
+          <tr><th>6<sup>3</sup></th><td></td><td></td><td></td><td></td><td></td><td>432</td><td class="cross">559</td></tr>
+          <tr><th>7<sup>3</sup></th><td></td><td></td><td></td><td></td><td></td><td></td><td class="cross">686</td></tr>
+        </tbody></table>
+        From the chart, there are <span class="answerBox">26</span> such numbers.
+      </div></article>
+
+      <article class="card aCard" data-id="1.30"><div class="cardTitle"><span class="label">1.30</span><span class="kind">Answer</span></div><div class="cardBody"><div class="twocol"><div>Let <span class="math">x</span> be the number of people wearing all three items. Then:
+        <p><span class="math">30 − x</span> wear just bathing suits and sunglasses, <span class="math">25 − x</span> wear just bathing suits and hats, and <span class="math">40 − x</span> wear just sunglasses and hats.</p>
+        <p>Just sunglasses: <span class="math">110 − (30 − x) − (40 − x) − x = 40 + x</span>.</p>
+        <p>Similarly, just hats is <span class="math">30 + x</span>, and just bathing suits is <span class="math">15 + x</span>.</p>
+        <p>Since all 190 people wear at least one item,</p>
+        <span class="formula">190 = (15 + x) + (40 + x) + (30 + x) + (25 − x) + (30 − x) + (40 − x) + x = 180 + x.</span>
+        So <span class="math">x =</span> <span class="answerBox">10</span>. Therefore, 10 people are wearing all three items.</div>
+        <div class="diagram"><svg width="270" height="220" viewBox="0 0 270 220" role="img" aria-label="Venn diagram for hats, sunglasses, and bathing suits"><rect x="5" y="5" width="260" height="205" fill="white" stroke="#111827" stroke-width="2"/><circle cx="95" cy="90" r="65" fill="none" stroke="#111827" stroke-width="2"/><circle cx="175" cy="90" r="65" fill="none" stroke="#111827" stroke-width="2"/><circle cx="135" cy="145" r="65" fill="none" stroke="#111827" stroke-width="2"/><text x="68" y="32" font-size="16">Hat</text><text x="158" y="32" font-size="16">Sunglasses</text><text x="92" y="204" font-size="16">Bathing Suit</text><text x="63" y="96" font-size="20">40</text><text x="200" y="96" font-size="20">50</text><text x="124" y="177" font-size="20">25</text><text x="124" y="73" font-size="20">30</text><text x="89" y="130" font-size="20">15</text><text x="173" y="130" font-size="20">20</text><text x="128" y="120" font-size="20">10</text><text x="245" y="195" font-size="20">0</text></svg></div></div></div></article>
+
+      <article class="card aCard" data-id="1.31"><div class="cardTitle"><span class="label">1.31</span><span class="kind">Answer</span></div><div class="cardBody"><div class="twocol"><div>Let <span class="math">x</span> be the number of students taking physics, so the number taking chemistry is <span class="math">2x</span>. There are 15 students taking all three.
+        <p>Because 30 take both physics and calculus, the “physics and calculus only” region is <span class="math">30 − 15 = 15</span>. Similarly, the “calculus and chemistry only” region is <span class="math">75 − 15 = 60</span>, and the “physics and chemistry only” region is also <span class="math">75 − 15 = 60</span>.</p>
+        <p>Calculus only is <span class="math">180 − 60 − 15 − 15 = 90</span>. Physics only is <span class="math">x − 90</span>. Chemistry only is <span class="math">2x − 135</span>.</p>
+        <span class="formula">(x − 90) + (2x − 135) + 90 + 60 + 15 + 60 + 15 + 15 = 360.</span>
+        Solving gives <span class="math">x =</span> <span class="answerBox">110</span>. So 110 students take physics.</div>
+        <div class="diagram"><svg width="290" height="230" viewBox="0 0 290 230" role="img" aria-label="Venn diagram for calculus, physics, chemistry"><rect x="5" y="5" width="280" height="215" fill="white" stroke="#111827" stroke-width="2"/><circle cx="110" cy="90" r="67" fill="none" stroke="#111827" stroke-width="2"/><circle cx="185" cy="90" r="67" fill="none" stroke="#111827" stroke-width="2"/><circle cx="148" cy="150" r="67" fill="none" stroke="#111827" stroke-width="2"/><text x="62" y="30" font-size="16">Calculus</text><text x="175" y="30" font-size="16">Physics</text><text x="111" y="214" font-size="16">Chemistry</text><text x="82" y="92" font-size="20">90</text><text x="206" y="92" font-size="18">x − 90</text><text x="103" y="176" font-size="18">2x − 135</text><text x="142" y="67" font-size="20">15</text><text x="103" y="127" font-size="20">60</text><text x="181" y="127" font-size="20">60</text><text x="143" y="119" font-size="20">15</text><text x="260" y="202" font-size="18">15</text></svg></div></div></div></article>
+
+      <article class="card aCard" data-id="1.32"><div class="cardTitle"><span class="label">1.32★</span><span class="kind">Answer</span></div><div class="cardBody">Let the number of middle school boys be <span class="math">x</span>. Then high school boys are <span class="math">2x</span>. Since there are three times as many middle school girls as middle school boys, middle school girls are <span class="math">3x</span>. Since this represents half the girls in the club, high school girls are also <span class="math">3x</span>.
+        <span class="formula">72 = x + 2x + 3x + 3x = 9x.</span>
+        Thus <span class="math">x =</span> <span class="answerBox">8</span>. There are 8 middle school boys.</div></article>
+
+      <article class="card aCard" data-id="1.33"><div class="cardTitle"><span class="label">1.33</span><span class="kind">Answer</span></div><div class="cardBody">Since <span class="math">5!</span> divides both <span class="math">10!</span> and <span class="math">15!</span>, and <span class="math">5!</span> has no factor larger than itself that can also divide <span class="math">5!</span>, the greatest common factor is <span class="answerBox">5!</span>, which equals <span class="answerBox">120</span>.</div></article>
+
+      <article class="card aCard" data-id="1.34"><div class="cardTitle"><span class="label">1.34★</span><span class="kind">Answer</span></div><div class="cardBody">The units digit of <span class="math">1!</span> is 1, of <span class="math">2!</span> is 2, of <span class="math">3!</span> is 6, and of <span class="math">4! = 24</span> is 4. For all <span class="math">n ≥ 5</span>, <span class="math">n!</span> is a multiple of 10, so its units digit is 0. Therefore the units digit of the whole sum is the units digit of <span class="math">1 + 2 + 6 + 4 = 13</span>, so the answer is <span class="answerBox">3</span>.</div></article>
+
+      <article class="card aCard" data-id="1.35"><div class="cardTitle"><span class="label">1.35</span><span class="kind">Answer</span></div><div class="cardBody">For <span class="math">n!</span> to be divisible by 9, it must contain two factors of 3. The first factorial with two factors of 3 is <span class="math">6!</span>, since <span class="math">6! = 6 · 5 · 4 · 3 · 2 · 1</span>. Since <span class="math">9</span> divides <span class="math">6!</span>, every factorial from <span class="math">6!</span> through <span class="math">100!</span> is divisible by 9.
+        <span class="formula">100 − 6 + 1 = <span class="answerBox">95</span>.</span>
+      </div></article>
+
+      <article class="card aCard" data-id="1.36"><div class="cardTitle"><span class="label">1.36</span><span class="kind">Answer</span></div><div class="cardBody">Since <span class="math">1/n &gt; 3/100</span>, <span class="math">n</span> must be positive. Multiplying the inequality by <span class="math">100n</span> gives:
+        <span class="formula">50n &gt; 100 &gt; 3n.</span>
+        From <span class="math">50n &gt; 100</span>, we get <span class="math">n &gt; 2</span>. From <span class="math">100 &gt; 3n</span>, we get <span class="math">n &lt; 100/3</span>. Therefore the integers are
+        <span class="formula">3, 4, 5, …, 32, 33.</span>
+        There are <span class="math">33 − 3 + 1 =</span> <span class="answerBox">31</span> such integers.</div></article>
+
+      <article class="card aCard" data-id="1.37"><div class="cardTitle"><span class="label">1.37</span><span class="kind">Answer</span></div><div class="cardBody"><ol class="parts" type="a"><li>Each row has odd-numbered chairs <span class="math">1, 3, 5, 7, 9, 11</span>, for 6 odd-numbered chairs in each row. Since there are 11 rows, there are <span class="math">11 × 6 =</span> <span class="answerBox">66</span> chairs with odd numbers.</li><li>Separate into two cases. If <span class="math">n</span> is odd, each row has <span class="math">(n + 1)/2</span> odd-numbered chairs and there are <span class="math">n</span> rows, for a total of <span class="answerBox math">n(n + 1)/2</span>. If <span class="math">n</span> is even, each row has <span class="math">n/2</span> odd-numbered chairs and there are <span class="math">n</span> rows, for a total of <span class="answerBox math">n<sup>2</sup>/2</span>. Equivalently, the total is <span class="math">n⌈n/2⌉</span>.</li></ol></div></article>
+
+      <article class="card aCard" data-id="1.38"><div class="cardTitle"><span class="label">1.38</span><span class="kind">Answer</span></div><div class="cardBody">There are 21 rows of dots and 11 columns of dots. Since there are 20 vertical toothpicks in each column and 11 columns, there are
+        <span class="formula">20 × 11 = 220</span>
+        vertical toothpicks. Since there are 10 horizontal toothpicks in each row and 21 rows, there are
+        <span class="formula">21 × 10 = 210</span>
+        horizontal toothpicks. Therefore the total is
+        <span class="formula">220 + 210 = <span class="answerBox">430</span></span>
+        toothpicks.</div></article>
+    </div>
+  </section>
+</main>
+
+<script>
+const ids = ["1.29","1.30","1.31","1.32","1.33","1.34","1.35","1.36","1.37","1.38"];
+const qPane = document.getElementById('questionsPane');
+const aPane = document.getElementById('answersPane');
+const nav = document.getElementById('nav');
+ids.forEach(id => {
+  const b = document.createElement('button');
+  b.textContent = id;
+  b.addEventListener('click', () => scrollBoth(id));
+  nav.appendChild(b);
+});
+let syncing = false;
+function cardsIn(pane){ return [...pane.querySelectorAll('.card[data-id]')]; }
+function activeId(pane){
+  const cards = cardsIn(pane);
+  let best = cards[0]?.dataset.id;
+  let bestDist = Infinity;
+  for(const card of cards){
+    const dist = Math.abs(card.offsetTop - pane.scrollTop - 72);
+    if(dist < bestDist){ bestDist = dist; best = card.dataset.id; }
+  }
+  return best;
+}
+function setActive(id){
+  document.querySelectorAll('.card').forEach(c => c.classList.toggle('active', c.dataset.id === id));
+}
+function scrollPaneTo(pane, id){
+  const card = pane.querySelector(`.card[data-id="${id}"]`);
+  if(!card) return;
+  pane.scrollTo({top: Math.max(0, card.offsetTop - 18), behavior:'smooth'});
+}
+function syncFrom(source, target){
+  if(syncing) return;
+  const id = activeId(source);
+  setActive(id);
+  syncing = true;
+  scrollPaneTo(target, id);
+  window.setTimeout(() => { syncing = false; }, 360);
+}
+function scrollBoth(id){
+  syncing = true;
+  setActive(id);
+  scrollPaneTo(qPane, id);
+  scrollPaneTo(aPane, id);
+  window.setTimeout(() => { syncing = false; }, 420);
+}
+let tq, ta;
+qPane.addEventListener('scroll', () => { clearTimeout(tq); tq = setTimeout(() => syncFrom(qPane, aPane), 60); });
+aPane.addEventListener('scroll', () => { clearTimeout(ta); ta = setTimeout(() => syncFrom(aPane, qPane), 60); });
+scrollBoth('1.29');
+</script>
+</body>
+</html>

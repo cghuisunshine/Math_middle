@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Section 1.4 Paired Questions and Answers</title>
+<style>
+  :root {
+    --bg: #f5f7fb;
+    --panel: #ffffff;
+    --ink: #111827;
+    --muted: #6b7280;
+    --blue: #2563eb;
+    --blue-soft: #dbeafe;
+    --green: #16a34a;
+    --green-soft: #dcfce7;
+    --border: #e5e7eb;
+    --shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(245, 247, 251, 0.94);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+    padding: 14px 18px;
+  }
+
+  .topbar {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    gap: 14px;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 21px;
+    letter-spacing: -0.02em;
+  }
+
+  .subtitle {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .controls {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  button, .jump a {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--ink);
+    border-radius: 999px;
+    padding: 8px 11px;
+    cursor: pointer;
+    font-size: 13px;
+    text-decoration: none;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  }
+
+  button:hover, .jump a:hover { border-color: #93c5fd; background: #eff6ff; }
+
+  .jump {
+    max-width: 1440px;
+    margin: 10px auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+
+  main {
+    max-width: 1440px;
+    margin: 16px auto;
+    padding: 0 14px 18px;
+  }
+
+  .columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    min-height: calc(100vh - 130px);
+  }
+
+  .column {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .column-title {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 800;
+    background: #fbfdff;
+  }
+
+  .column-title span:last-child {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    background: #f3f4f6;
+    padding: 5px 9px;
+    border-radius: 999px;
+  }
+
+  .scrollpane {
+    overflow-y: auto;
+    padding: 14px;
+    height: calc(100vh - 165px);
+    scroll-behavior: smooth;
+  }
+
+  .card {
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: #fff;
+    margin-bottom: 14px;
+    padding: 16px 16px 15px;
+    scroll-margin-top: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  }
+
+  .question.card { border-left: 5px solid var(--blue); }
+  .answer.card { border-left: 5px solid var(--green); }
+
+  .card.active {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10), 0 12px 28px rgba(15, 23, 42, 0.09);
+  }
+
+  .answer.card.active {
+    border-color: #86efac;
+    box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.12), 0 12px 28px rgba(15, 23, 42, 0.09);
+  }
+
+  .label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 900;
+    font-size: 13px;
+    border-radius: 999px;
+    padding: 5px 9px;
+    margin-bottom: 10px;
+  }
+
+  .question .label { color: #1d4ed8; background: var(--blue-soft); }
+  .answer .label { color: #15803d; background: var(--green-soft); }
+
+  .question-text, .answer-text {
+    font-size: 16px;
+    line-height: 1.58;
+  }
+
+  .answer-text {
+    color: #111827;
+  }
+
+  .formula {
+    font-weight: 800;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    padding: 2px 6px;
+    border-radius: 7px;
+    white-space: nowrap;
+  }
+
+  .final {
+    display: inline-block;
+    margin-left: 3px;
+    padding: 1px 7px;
+    border: 2px solid #111827;
+    border-radius: 3px;
+    font-weight: 900;
+    background: #fff;
+  }
+
+  ol.parts {
+    margin: 10px 0 0 22px;
+    padding: 0;
+  }
+
+  ol.parts li {
+    margin: 7px 0;
+  }
+
+  .hint {
+    font-weight: 800;
+  }
+
+  .paired-note {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  @media (max-width: 850px) {
+    .topbar { align-items: flex-start; flex-direction: column; }
+    .controls { justify-content: flex-start; }
+    .columns { grid-template-columns: 1fr; }
+    .scrollpane { height: auto; max-height: none; overflow: visible; }
+    .column { overflow: visible; }
+    header { position: static; }
+  }
+
+  @media print {
+    body { background: white; }
+    header, .controls, .jump { display: none; }
+    main { margin: 0; padding: 0; max-width: none; }
+    .columns { display: block; }
+    .column { box-shadow: none; border: none; margin-bottom: 20px; }
+    .scrollpane { height: auto; overflow: visible; }
+    .card { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="topbar">
+    <div>
+      <h1>Section 1.4: Paired Questions and Answers</h1>
+      <div class="subtitle">Questions 1.4.1–1.4.9 paired with their matching solutions. The two columns synchronize while scrolling.</div>
+    </div>
+    <div class="controls">
+      <button id="toggleSync" type="button">Sync: On</button>
+      <button id="showAll" type="button">Show answers</button>
+      <button id="hideAll" type="button">Hide answers</button>
+    </div>
+  </div>
+  <nav class="jump" aria-label="Question jumps">
+    <a href="#q-1.4.1">1.4.1</a>
+    <a href="#q-1.4.2">1.4.2</a>
+    <a href="#q-1.4.3">1.4.3</a>
+    <a href="#q-1.4.4">1.4.4</a>
+    <a href="#q-1.4.5">1.4.5</a>
+    <a href="#q-1.4.6">1.4.6</a>
+    <a href="#q-1.4.7">1.4.7</a>
+    <a href="#q-1.4.8">1.4.8</a>
+    <a href="#q-1.4.9">1.4.9</a>
+  </nav>
+</header>
+
+<main>
+  <section class="columns">
+    <section class="column" aria-label="Questions">
+      <div class="column-title"><span>Questions / Problems</span><span>Book p. 18–19</span></div>
+      <div id="questionsPane" class="scrollpane">
+
+        <article id="q-1.4.1" class="card question" data-id="1.4.1">
+          <div class="label">1.4.1</div>
+          <div class="question-text">Suppose I have 6 shirts and 5 ties. How many shirt-and-tie outfits can I make?</div>
+        </article>
+
+        <article id="q-1.4.2" class="card question" data-id="1.4.2">
+          <div class="label">1.4.2</div>
+          <div class="question-text">For each of 8 colors, I have one shirt and one tie of that color. How many shirt-and-tie outfits can I make if I refuse to wear a shirt and a tie of the same color?</div>
+        </article>
+
+        <article id="q-1.4.3" class="card question" data-id="1.4.3">
+          <div class="label">1.4.3</div>
+          <div class="question-text">How many license plates consist of 2 letters followed by 3 numbers?</div>
+        </article>
+
+        <article id="q-1.4.4" class="card question" data-id="1.4.4">
+          <div class="label">1.4.4</div>
+          <div class="question-text">How many license plates consist of 3 letters, followed by 2 even digits, followed by 2 odd digits?</div>
+        </article>
+
+        <article id="q-1.4.5" class="card question" data-id="1.4.5">
+          <div class="label">1.4.5</div>
+          <div class="question-text">In how many ways can I stack 5 books on a shelf?</div>
+        </article>
+
+        <article id="q-1.4.6" class="card question" data-id="1.4.6">
+          <div class="label">1.4.6</div>
+          <div class="question-text">Suppose that I have 6 different books, 2 of which are math books. In how many ways can I stack my 6 books on a shelf if I want a math book on both ends of the stack? <span class="hint">Hints: 1</span></div>
+        </article>
+
+        <article id="q-1.4.7" class="card question" data-id="1.4.7">
+          <div class="label">1.4.7</div>
+          <div class="question-text">There are 8 sprinters in the Olympic 100-meter finals. The gold medal goes to first place, silver to second, and bronze to third. In how many ways can the medals be awarded?</div>
+        </article>
+
+        <article id="q-1.4.8" class="card question" data-id="1.4.8">
+          <div class="label">1.4.8</div>
+          <div class="question-text">My club has 15 members. In how many ways can we choose a president, vice-president, secretary, and treasurer, if no member can hold more than one office?</div>
+        </article>
+
+        <article id="q-1.4.9" class="card question" data-id="1.4.9">
+          <div class="label">1.4.9</div>
+          <div class="question-text">Compute each of the following without using a calculator:
+            <ol class="parts" type="a">
+              <li>9! / 8!</li>
+              <li>42! / 40!</li>
+              <li>8! − 7! <span class="hint">Hints: 201</span></li>
+            </ol>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <section class="column" aria-label="Answers">
+      <div class="column-title"><span>Answers / Solutions</span><span>Answer p. 2–3</span></div>
+      <div id="answersPane" class="scrollpane">
+
+        <article id="a-1.4.1" class="card answer" data-id="1.4.1">
+          <div class="label">1.4.1</div>
+          <div class="answer-text">There are 6 choices of shirt and 5 choices of tie, so the total number of outfits is <span class="formula">6 × 5</span> = <span class="final">30</span>.</div>
+        </article>
+
+        <article id="a-1.4.2" class="card answer" data-id="1.4.2">
+          <div class="label">1.4.2</div>
+          <div class="answer-text">There are 8 options for the shirt, and only 7 options for the tie because one of the ties has the same color as the shirt, so the number of outfits is <span class="formula">8 × 7</span> = <span class="final">56</span>.</div>
+        </article>
+
+        <article id="a-1.4.3" class="card answer" data-id="1.4.3">
+          <div class="label">1.4.3</div>
+          <div class="answer-text">There are 26 choices of letters for each of the first two spots, and 10 choices of digits for each of the next 3 spots, for a total of <span class="formula">26<sup>2</sup> × 10<sup>3</sup></span> = <span class="final">676,000</span> different plates.</div>
+        </article>
+
+        <article id="a-1.4.4" class="card answer" data-id="1.4.4">
+          <div class="label">1.4.4</div>
+          <div class="answer-text">There are 26 choices of letters for each of the first three spots, and 5 choices of digits for each of the last four spots: 5 even digit choices and 5 odd digit choices. This gives a total of <span class="formula">26<sup>3</sup> × 5<sup>4</sup></span> = <span class="final">10,985,000</span>.</div>
+        </article>
+
+        <article id="a-1.4.5" class="card answer" data-id="1.4.5">
+          <div class="label">1.4.5</div>
+          <div class="answer-text">There are 5 options for the bottom book, 4 remaining options for the next book, 3 remaining options for the next book, 2 remaining options for the fourth book, and finally only 1 option for the top book. This gives a total of <span class="formula">5 × 4 × 3 × 2 × 1</span> = <span class="final">120</span> ways to stack 5 books.</div>
+        </article>
+
+        <article id="a-1.4.6" class="card answer" data-id="1.4.6">
+          <div class="label">1.4.6</div>
+          <div class="answer-text">We first place the math books. We have two choices for the bottom book, and then the only one remaining choice for the top book is the other math book. Then we place the four other books in the middle. There are 4 choices for the first book, 3 choices for the second, 2 choices for the third, and only 1 choice for the fourth. So the total number of ways the books can be placed is <span class="formula">2 × 1 × 4 × 3 × 2 × 1</span> = <span class="final">48</span>.</div>
+        </article>
+
+        <article id="a-1.4.7" class="card answer" data-id="1.4.7">
+          <div class="label">1.4.7</div>
+          <div class="answer-text">There are 8 possible sprinters to award the gold to, then 7 remaining sprinters for the silver, and then 6 left for the bronze, for a total of <span class="formula">8 × 7 × 6</span> = <span class="final">336</span> ways to award the medals.</div>
+        </article>
+
+        <article id="a-1.4.8" class="card answer" data-id="1.4.8">
+          <div class="label">1.4.8</div>
+          <div class="answer-text">There are 15 choices for president, 14 choices for vice-president, 13 choices for secretary, and 12 choices for treasurer, for a total of <span class="formula">15 × 14 × 13 × 12</span> = <span class="final">32,760</span> different choices.</div>
+        </article>
+
+        <article id="a-1.4.9" class="card answer" data-id="1.4.9">
+          <div class="label">1.4.9</div>
+          <div class="answer-text">
+            <ol class="parts" type="a">
+              <li><span class="formula">9! / 8!</span> = <span class="formula">(9 × 8 × 7 × 6 × ··· × 1) / (8 × 7 × 6 × ··· × 1)</span> = <span class="final">9</span>.</li>
+              <li><span class="formula">42! / 40!</span> = <span class="formula">(42 × 41 × 40 × 39 × ··· × 1) / (40 × 39 × ··· × 1)</span> = <span class="formula">42 × 41</span> = <span class="final">1,722</span>.</li>
+              <li><span class="formula">8! − 7!</span> = <span class="formula">8 × 7! − 7!</span> = <span class="formula">7!(8 − 1)</span> = <span class="formula">7! × 7</span> = <span class="formula">5040 × 7</span> = <span class="final">35,280</span>.</li>
+            </ol>
+          </div>
+        </article>
+
+      </div>
+    </section>
+  </section>
+</main>
+
+<script>
+  const qPane = document.getElementById('questionsPane');
+  const aPane = document.getElementById('answersPane');
+  const syncBtn = document.getElementById('toggleSync');
+  const showAllBtn = document.getElementById('showAll');
+  const hideAllBtn = document.getElementById('hideAll');
+  let syncOn = true;
+  let lock = false;
+
+  const qCards = [...document.querySelectorAll('.question.card')];
+  const aCards = [...document.querySelectorAll('.answer.card')];
+  const allCards = [...qCards, ...aCards];
+
+  function cardMap(cards) {
+    const map = new Map();
+    cards.forEach(card => map.set(card.dataset.id, card));
+    return map;
+  }
+
+  const qMap = cardMap(qCards);
+  const aMap = cardMap(aCards);
+
+  function nearestCard(pane, cards) {
+    const paneTop = pane.getBoundingClientRect().top;
+    let best = cards[0];
+    let bestDist = Infinity;
+    for (const card of cards) {
+      const dist = Math.abs(card.getBoundingClientRect().top - paneTop - 8);
+      if (dist < bestDist) {
+        best = card;
+        bestDist = dist;
+      }
+    }
+    return best;
+  }
+
+  function setActive(id) {
+    allCards.forEach(card => card.classList.toggle('active', card.dataset.id === id));
+  }
+
+  function scrollToMatch(sourcePane, sourceCards, targetPane, targetMap) {
+    if (!syncOn || lock || window.matchMedia('(max-width: 850px)').matches) return;
+    const current = nearestCard(sourcePane, sourceCards);
+    if (!current) return;
+    const id = current.dataset.id;
+    const target = targetMap.get(id);
+    if (!target) return;
+    setActive(id);
+    lock = true;
+    targetPane.scrollTo({ top: target.offsetTop - 14, behavior: 'smooth' });
+    window.setTimeout(() => { lock = false; }, 360);
+  }
+
+  qPane.addEventListener('scroll', () => scrollToMatch(qPane, qCards, aPane, aMap));
+  aPane.addEventListener('scroll', () => scrollToMatch(aPane, aCards, qPane, qMap));
+
+  syncBtn.addEventListener('click', () => {
+    syncOn = !syncOn;
+    syncBtn.textContent = syncOn ? 'Sync: On' : 'Sync: Off';
+  });
+
+  hideAllBtn.addEventListener('click', () => {
+    aCards.forEach(card => {
+      const body = card.querySelector('.answer-text');
+      body.dataset.oldDisplay = body.style.display || '';
+      body.style.display = 'none';
+    });
+  });
+
+  showAllBtn.addEventListener('click', () => {
+    aCards.forEach(card => {
+      const body = card.querySelector('.answer-text');
+      body.style.display = body.dataset.oldDisplay || '';
+    });
+  });
+
+  document.querySelectorAll('.jump a').forEach(link => {
+    link.addEventListener('click', event => {
+      event.preventDefault();
+      const id = link.getAttribute('href').replace('#q-', '');
+      const q = qMap.get(id);
+      const a = aMap.get(id);
+      if (window.matchMedia('(max-width: 850px)').matches) {
+        q?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        qPane.scrollTo({ top: q.offsetTop - 14, behavior: 'smooth' });
+        aPane.scrollTo({ top: a.offsetTop - 14, behavior: 'smooth' });
+      }
+      setActive(id);
+    });
+  });
+
+  setActive('1.4.1');
+</script>
+</body>
+</html>

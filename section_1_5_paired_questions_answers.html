@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Section 1.5 Paired Questions and Answers</title>
+<style>
+  :root {
+    --bg: #f5f7fb;
+    --panel: #ffffff;
+    --ink: #111827;
+    --muted: #6b7280;
+    --blue: #2563eb;
+    --blue-soft: #dbeafe;
+    --green: #16a34a;
+    --green-soft: #dcfce7;
+    --border: #e5e7eb;
+    --shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(245, 247, 251, 0.94);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+    padding: 14px 18px;
+  }
+
+  .topbar {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: flex;
+    gap: 14px;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: 21px;
+    letter-spacing: -0.02em;
+  }
+
+  .subtitle {
+    margin-top: 4px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  .controls {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+
+  button, .jump a {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--ink);
+    border-radius: 999px;
+    padding: 8px 11px;
+    cursor: pointer;
+    font-size: 13px;
+    text-decoration: none;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  }
+
+  button:hover, .jump a:hover { border-color: #93c5fd; background: #eff6ff; }
+
+  .jump {
+    max-width: 1440px;
+    margin: 10px auto 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+
+  main {
+    max-width: 1440px;
+    margin: 16px auto;
+    padding: 0 14px 18px;
+  }
+
+  .columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    min-height: calc(100vh - 130px);
+  }
+
+  .column {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .column-title {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 800;
+    background: #fbfdff;
+  }
+
+  .column-title span:last-child {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--muted);
+    background: #f3f4f6;
+    padding: 5px 9px;
+    border-radius: 999px;
+  }
+
+  .scrollpane {
+    overflow-y: auto;
+    padding: 14px;
+    height: calc(100vh - 165px);
+    scroll-behavior: smooth;
+  }
+
+  .card {
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    background: #fff;
+    margin-bottom: 14px;
+    padding: 16px 16px 15px;
+    scroll-margin-top: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  }
+
+  .question.card { border-left: 5px solid var(--blue); }
+  .answer.card { border-left: 5px solid var(--green); }
+
+  .card.active {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.10), 0 12px 28px rgba(15, 23, 42, 0.09);
+  }
+
+  .answer.card.active {
+    border-color: #86efac;
+    box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.12), 0 12px 28px rgba(15, 23, 42, 0.09);
+  }
+
+  .label {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 900;
+    font-size: 13px;
+    border-radius: 999px;
+    padding: 5px 9px;
+    margin-bottom: 10px;
+  }
+
+  .question .label { color: #1d4ed8; background: var(--blue-soft); }
+  .answer .label { color: #15803d; background: var(--green-soft); }
+
+  .question-text, .answer-text {
+    font-size: 16px;
+    line-height: 1.58;
+  }
+
+  .formula {
+    font-weight: 800;
+    background: #f9fafb;
+    border: 1px solid #e5e7eb;
+    padding: 2px 6px;
+    border-radius: 7px;
+    white-space: nowrap;
+  }
+
+  .final {
+    display: inline-block;
+    margin-left: 3px;
+    padding: 1px 7px;
+    border: 2px solid #111827;
+    border-radius: 3px;
+    font-weight: 900;
+    background: #fff;
+  }
+
+  .mathline {
+    margin: 8px 0;
+  }
+
+  ol.parts {
+    margin: 10px 0 0 22px;
+    padding: 0;
+  }
+
+  ol.parts li {
+    margin: 7px 0;
+  }
+
+  .hint { font-weight: 800; }
+  .star { font-weight: 900; }
+
+  .paired-note {
+    margin-top: 10px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  @media (max-width: 850px) {
+    .topbar { align-items: flex-start; flex-direction: column; }
+    .controls { justify-content: flex-start; }
+    .columns { grid-template-columns: 1fr; }
+    .scrollpane { height: auto; max-height: none; overflow: visible; }
+    .column { overflow: visible; }
+    header { position: static; }
+  }
+
+  @media print {
+    body { background: white; }
+    header, .controls, .jump { display: none; }
+    main { margin: 0; padding: 0; max-width: none; }
+    .columns { display: block; }
+    .column { box-shadow: none; border: none; margin-bottom: 20px; }
+    .scrollpane { height: auto; overflow: visible; }
+    .card { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="topbar">
+    <div>
+      <h1>Section 1.5: Paired Questions and Answers</h1>
+      <div class="subtitle">Questions 1.5.1–1.5.4 paired with their matching solutions. The two columns synchronize while scrolling.</div>
+    </div>
+    <div class="controls">
+      <button id="toggleSync" type="button">Sync: On</button>
+      <button id="showAll" type="button">Show answers</button>
+      <button id="hideAll" type="button">Hide answers</button>
+    </div>
+  </div>
+  <nav class="jump" aria-label="Question jumps">
+    <a href="#q-1.5.1">1.5.1</a>
+    <a href="#q-1.5.2">1.5.2</a>
+    <a href="#q-1.5.3">1.5.3</a>
+    <a href="#q-1.5.4">1.5.4</a>
+  </nav>
+</header>
+
+<main>
+  <section class="columns">
+    <section class="column" aria-label="Questions">
+      <div class="column-title"><span>Questions / Problems</span><span>Book p. 20</span></div>
+      <div id="questionsPane" class="scrollpane">
+
+        <article id="q-1.5.1" class="card question" data-id="1.5.1">
+          <div class="label">1.5.1</div>
+          <div class="question-text">Compute the following:
+            <ol class="parts" type="a">
+              <li>P(8, 3)</li>
+              <li>P(20, 4)</li>
+              <li>P(30, 1)</li>
+              <li>P(6, 5)</li>
+              <li>P(50, 3)</li>
+            </ol>
+          </div>
+        </article>
+
+        <article id="q-1.5.2" class="card question" data-id="1.5.2">
+          <div class="label">1.5.2</div>
+          <div class="question-text">What is P(n, n) for any positive integer n? <span class="hint">Hints: 191</span></div>
+        </article>
+
+        <article id="q-1.5.3" class="card question" data-id="1.5.3">
+          <div class="label">1.5.3</div>
+          <div class="question-text">12 balls numbered 1 through 12 are placed in a bin. In how many ways can 3 balls be drawn, in order, from the bin, if:
+            <ol class="parts" type="a">
+              <li>each ball remains outside the bin after it is drawn?</li>
+              <li>each ball is placed back into the bin immediately after it is drawn?</li>
+              <li>the first ball is replaced after it is drawn but the second ball remains outside the bin?</li>
+            </ol>
+          </div>
+        </article>
+
+        <article id="q-1.5.4" class="card question" data-id="1.5.4">
+          <div class="label">1.5.4<span class="star">★</span></div>
+          <div class="question-text">Can you simplify P(n, k)P(n − k, j) where n, k and j are integers such that k ≤ n and j ≤ n − k? <span class="hint">Hints: 94</span></div>
+        </article>
+
+      </div>
+    </section>
+
+    <section class="column" aria-label="Answers">
+      <div class="column-title"><span>Answers / Solutions</span><span>Answer p. 3–4</span></div>
+      <div id="answersPane" class="scrollpane">
+
+        <article id="a-1.5.1" class="card answer" data-id="1.5.1">
+          <div class="label">1.5.1</div>
+          <div class="answer-text">
+            <ol class="parts" type="a">
+              <li><span class="formula">P(8, 3) = 8! / (8 − 3)!</span> = <span class="formula">8! / 5!</span> = <span class="formula">8 × 7 × 6</span> = <span class="final">336</span>.</li>
+              <li><span class="formula">P(20, 4) = 20! / (20 − 4)!</span> = <span class="formula">20! / 16!</span> = <span class="formula">20 × 19 × 18 × 17</span> = <span class="final">116,280</span>.</li>
+              <li><span class="formula">P(30, 1) = 30! / (30 − 1)!</span> = <span class="formula">30! / 29!</span> = <span class="final">30</span>.</li>
+              <li><span class="formula">P(6, 5) = 6! / (6 − 5)!</span> = <span class="formula">6! / 1!</span> = <span class="formula">6 × 5 × 4 × 3 × 2 × 1</span> = <span class="final">720</span>.</li>
+              <li><span class="formula">P(50, 3) = 50! / (50 − 3)!</span> = <span class="formula">50! / 47!</span> = <span class="formula">50 × 49 × 48</span> = <span class="final">117,600</span>.</li>
+            </ol>
+          </div>
+        </article>
+
+        <article id="a-1.5.2" class="card answer" data-id="1.5.2">
+          <div class="label">1.5.2</div>
+          <div class="answer-text">
+            <div class="mathline"><span class="formula">P(n, n) = n! / (n − n)!</span> = <span class="formula">n! / 0!</span> = <span class="final">n!</span>.</div>
+            This is the number of permutations of size n from a group of n objects, or just the number of ways to order n objects.
+          </div>
+        </article>
+
+        <article id="a-1.5.3" class="card answer" data-id="1.5.3">
+          <div class="label">1.5.3</div>
+          <div class="answer-text">
+            <ol class="parts" type="a">
+              <li>There are 12 choices for the first ball, 11 remaining choices for the second ball, and 10 remaining choices for the third ball, for a total of <span class="formula">12 × 11 × 10</span> = <span class="final">1320</span> possible drawings. Note that this is also just P(12, 3).</li>
+              <li>There are 12 options for each ball to be drawn, so there are a total of <span class="formula">12<sup>3</sup></span> = <span class="final">1728</span> possible drawings.</li>
+              <li>There are 12 options for the first ball, 12 options for the second ball since it is replaced, and 11 options for the third ball since the second ball is not replaced, for a total of <span class="formula">12 × 12 × 11</span> = <span class="final">1584</span> possible drawings.</li>
+            </ol>
+          </div>
+        </article>
+
+        <article id="a-1.5.4" class="card answer" data-id="1.5.4">
+          <div class="label">1.5.4</div>
+          <div class="answer-text">
+            <p>Using algebra, we see that</p>
+            <div class="mathline"><span class="formula">P(n, k)P(n − k, j) = n! / (n − k)! × (n − k)! / (n − k − j)!</span></div>
+            <div class="mathline">= <span class="formula">n! / (n − k − j)!</span> = <span class="final">P(n, k + j)</span>.</div>
+            <p>We are counting the number of permutations of size k from a group of n objects and then multiplying by the number of permutations of size j from the remaining n − k objects. If we combine these two steps, it is the same as the number of permutations of size k + j from the original n objects.</p>
+          </div>
+        </article>
+
+      </div>
+    </section>
+  </section>
+</main>
+
+<script>
+  const qPane = document.getElementById('questionsPane');
+  const aPane = document.getElementById('answersPane');
+  const syncBtn = document.getElementById('toggleSync');
+  const showAllBtn = document.getElementById('showAll');
+  const hideAllBtn = document.getElementById('hideAll');
+  let syncOn = true;
+  let lock = false;
+
+  const qCards = [...document.querySelectorAll('.question.card')];
+  const aCards = [...document.querySelectorAll('.answer.card')];
+  const allCards = [...qCards, ...aCards];
+
+  function cardMap(cards) {
+    const map = new Map();
+    cards.forEach(card => map.set(card.dataset.id, card));
+    return map;
+  }
+
+  const qMap = cardMap(qCards);
+  const aMap = cardMap(aCards);
+
+  function nearestCard(pane, cards) {
+    const paneTop = pane.getBoundingClientRect().top;
+    let best = cards[0];
+    let bestDist = Infinity;
+    for (const card of cards) {
+      const dist = Math.abs(card.getBoundingClientRect().top - paneTop - 8);
+      if (dist < bestDist) {
+        best = card;
+        bestDist = dist;
+      }
+    }
+    return best;
+  }
+
+  function setActive(id) {
+    allCards.forEach(card => card.classList.toggle('active', card.dataset.id === id));
+  }
+
+  function scrollToMatch(sourcePane, sourceCards, targetPane, targetMap) {
+    if (!syncOn || lock || window.matchMedia('(max-width: 850px)').matches) return;
+    const current = nearestCard(sourcePane, sourceCards);
+    if (!current) return;
+    const id = current.dataset.id;
+    const target = targetMap.get(id);
+    if (!target) return;
+    setActive(id);
+    lock = true;
+    targetPane.scrollTo({ top: target.offsetTop - 14, behavior: 'smooth' });
+    window.setTimeout(() => { lock = false; }, 360);
+  }
+
+  qPane.addEventListener('scroll', () => scrollToMatch(qPane, qCards, aPane, aMap));
+  aPane.addEventListener('scroll', () => scrollToMatch(aPane, aCards, qPane, qMap));
+
+  syncBtn.addEventListener('click', () => {
+    syncOn = !syncOn;
+    syncBtn.textContent = syncOn ? 'Sync: On' : 'Sync: Off';
+  });
+
+  hideAllBtn.addEventListener('click', () => {
+    aCards.forEach(card => {
+      const body = card.querySelector('.answer-text');
+      body.dataset.oldDisplay = body.style.display || '';
+      body.style.display = 'none';
+    });
+  });
+
+  showAllBtn.addEventListener('click', () => {
+    aCards.forEach(card => {
+      const body = card.querySelector('.answer-text');
+      body.style.display = body.dataset.oldDisplay || '';
+    });
+  });
+
+  document.querySelectorAll('.jump a').forEach(link => {
+    link.addEventListener('click', event => {
+      event.preventDefault();
+      const id = link.getAttribute('href').replace('#q-', '');
+      const q = qMap.get(id);
+      const a = aMap.get(id);
+      if (window.matchMedia('(max-width: 850px)').matches) {
+        q?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        qPane.scrollTo({ top: q.offsetTop - 14, behavior: 'smooth' });
+        aPane.scrollTo({ top: a.offsetTop - 14, behavior: 'smooth' });
+      }
+      setActive(id);
+    });
+  });
+
+  setActive('1.5.1');
+</script>
+</body>
+</html>

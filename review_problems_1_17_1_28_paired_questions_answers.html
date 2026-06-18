@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Review Problems 1.17–1.28 Paired Questions and Answers</title>
+<style>
+  :root {
+    --bg: #f5f7fb;
+    --panel: #ffffff;
+    --ink: #111827;
+    --muted: #6b7280;
+    --blue: #2563eb;
+    --blue-soft: #dbeafe;
+    --green: #16a34a;
+    --green-soft: #dcfce7;
+    --border: #e5e7eb;
+    --shadow: 0 10px 24px rgba(15, 23, 42, 0.08);
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0;
+    height: 100%;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+  }
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    background: rgba(245, 247, 251, 0.94);
+    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(10px);
+    padding: 14px 18px 10px;
+  }
+  .topbar {
+    max-width: 1500px;
+    margin: 0 auto;
+    display: flex;
+    gap: 14px;
+    justify-content: space-between;
+    align-items: center;
+  }
+  h1 { margin: 0; font-size: 21px; letter-spacing: -0.02em; }
+  .subtitle { margin-top: 4px; color: var(--muted); font-size: 13px; }
+  .controls { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+  button, .jump a {
+    border: 1px solid var(--border);
+    background: var(--panel);
+    color: var(--ink);
+    border-radius: 999px;
+    padding: 8px 11px;
+    cursor: pointer;
+    font-size: 13px;
+    text-decoration: none;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  }
+  button:hover, .jump a:hover { border-color: #bfdbfe; color: var(--blue); }
+  .jump {
+    max-width: 1500px;
+    margin: 10px auto 0;
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 3px;
+  }
+  main { max-width: 1500px; margin: 0 auto; padding: 16px 18px 22px; }
+  .columns { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  .column { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow); overflow: hidden; }
+  .column-title {
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 16px;
+    font-weight: 900;
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+  }
+  .column-title span:last-child { color: var(--muted); font-size: 13px; font-weight: 800; }
+  .scrollpane { height: calc(100vh - 156px); overflow: auto; padding: 14px; scroll-behavior: smooth; }
+  .card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 15px 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.025);
+    transition: border-color 0.18s, box-shadow 0.18s, transform 0.18s;
+  }
+  .question.card { border-left: 5px solid #93c5fd; }
+  .answer.card { border-left: 5px solid #86efac; }
+  .question.card.active { border-color: #93c5fd; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12), 0 12px 28px rgba(15, 23, 42, 0.09); }
+  .answer.card.active { border-color: #86efac; box-shadow: 0 0 0 4px rgba(22, 163, 74, 0.12), 0 12px 28px rgba(15, 23, 42, 0.09); }
+  .label { display: inline-flex; align-items: center; gap: 6px; font-weight: 900; font-size: 13px; border-radius: 999px; padding: 5px 9px; margin-bottom: 10px; }
+  .question .label { color: #1d4ed8; background: var(--blue-soft); }
+  .answer .label { color: #15803d; background: var(--green-soft); }
+  .question-text, .answer-text { font-size: 16px; line-height: 1.58; }
+  .formula { font-weight: 800; background: #f9fafb; border: 1px solid #e5e7eb; padding: 2px 6px; border-radius: 7px; white-space: nowrap; }
+  .final { display: inline-block; margin-left: 3px; padding: 1px 7px; border: 2px solid #111827; border-radius: 3px; font-weight: 900; background: #fff; }
+  .mathline { margin: 8px 0; }
+  ol.parts { margin: 10px 0 0 22px; padding: 0; }
+  ol.parts li { margin: 7px 0; }
+  ul.compact { margin: 8px 0 8px 22px; padding: 0; }
+  ul.compact li { margin: 5px 0; }
+  .center-list { text-align: center; font-weight: 700; letter-spacing: 0.01em; margin: 8px 0; }
+  .small { font-size: 13px; color: var(--muted); }
+  .answer-grid { display: grid; grid-template-columns: 1fr; gap: 8px; }
+  .venn-wrap { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 10px; }
+  svg.venn { width: 240px; max-width: 100%; height: auto; border: 1px solid #d1d5db; border-radius: 10px; background: #fff; }
+  svg.tree { width: 100%; max-width: 760px; height: auto; display: block; margin: 10px auto 6px; border: 1px solid #e5e7eb; border-radius: 12px; background: #fff; }
+  .leaf-list { font-size: 14px; background: #f9fafb; border: 1px solid var(--border); border-radius: 10px; padding: 10px; overflow-x: auto; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; }
+  @media (max-width: 850px) {
+    .topbar { align-items: flex-start; flex-direction: column; }
+    .controls { justify-content: flex-start; }
+    .columns { grid-template-columns: 1fr; }
+    .scrollpane { height: auto; max-height: none; overflow: visible; }
+    .column { overflow: visible; }
+    header { position: static; }
+  }
+  @media print {
+    body { background: white; }
+    header, .controls, .jump { display: none; }
+    main { margin: 0; padding: 0; max-width: none; }
+    .columns { display: block; }
+    .column { box-shadow: none; border: none; margin-bottom: 20px; }
+    .scrollpane { height: auto; overflow: visible; }
+    .card { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="topbar">
+    <div>
+      <h1>Review Problems: Paired Questions and Answers</h1>
+      <div class="subtitle">Review Problems 1.17–1.28 paired with matching solutions. The two columns synchronize while scrolling.</div>
+    </div>
+    <div class="controls">
+      <button id="toggleSync" type="button">Sync: On</button>
+      <button id="showAll" type="button">Show answers</button>
+      <button id="hideAll" type="button">Hide answers</button>
+    </div>
+  </div>
+  <nav class="jump" aria-label="Question jumps">
+    <a href="#q-1.17">1.17</a>
+    <a href="#q-1.18">1.18</a>
+    <a href="#q-1.19">1.19</a>
+    <a href="#q-1.20">1.20</a>
+    <a href="#q-1.21">1.21</a>
+    <a href="#q-1.22">1.22</a>
+    <a href="#q-1.23">1.23</a>
+    <a href="#q-1.24">1.24</a>
+    <a href="#q-1.25">1.25</a>
+    <a href="#q-1.26">1.26</a>
+    <a href="#q-1.27">1.27</a>
+    <a href="#q-1.28">1.28</a>
+  </nav>
+</header>
+
+<main>
+  <section class="columns">
+    <section class="column" aria-label="Questions">
+      <div class="column-title"><span>Questions / Problems</span><span>Review Problems</span></div>
+      <div id="questionsPane" class="scrollpane">
+
+        <article id="q-1.17" class="card question" data-id="1.17">
+          <div class="label">1.17</div>
+          <div class="question-text">How many numbers are in the list
+            <div class="center-list">2.5, 5.5, 8.5, 11.5, . . . , 80.5, 83.5?</div>
+          </div>
+        </article>
+
+        <article id="q-1.18" class="card question" data-id="1.18">
+          <div class="label">1.18</div>
+          <div class="question-text">How many numbers are in the list
+            <div class="center-list">6, 10, 14, . . . , 82, 86?</div>
+          </div>
+        </article>
+
+        <article id="q-1.19" class="card question" data-id="1.19">
+          <div class="label">1.19</div>
+          <div class="question-text">How many 3-digit numbers are divisible by 7?</div>
+        </article>
+
+        <article id="q-1.20" class="card question" data-id="1.20">
+          <div class="label">1.20</div>
+          <div class="question-text">There are 20 people in my club. 8 of them are left-handed. 15 of them like jazz music. 2 of them are right-handed and dislike jazz music. How many club members are left-handed and like jazz music?</div>
+        </article>
+
+        <article id="q-1.21" class="card question" data-id="1.21">
+          <div class="label">1.21</div>
+          <div class="question-text">Mr. Stewart’s math class has 16 boys, and 22 of his students bring their calculators to class. If 13 of the students with calculators are girls, then how many boys didn’t bring their calculators to class?</div>
+        </article>
+
+        <article id="q-1.22" class="card question" data-id="1.22">
+          <div class="label">1.22</div>
+          <div class="question-text">You have 5 shirts, 6 pairs of pants, and 8 hats. How many outfits can you make consisting of one shirt, one pair of pants, and one hat?</div>
+        </article>
+
+        <article id="q-1.23" class="card question" data-id="1.23">
+          <div class="label">1.23</div>
+          <div class="question-text">How many 3-letter combinations can be formed if the second letter must be a vowel (A, E, I, O, or U), and the third letter must be different from the first letter?</div>
+        </article>
+
+        <article id="q-1.24" class="card question" data-id="1.24">
+          <div class="label">1.24</div>
+          <div class="question-text">The local theater has one ticket window. In how many ways can six people line up to buy a ticket? <span class="small">(Source: MATHCOUNTS)</span></div>
+        </article>
+
+        <article id="q-1.25" class="card question" data-id="1.25">
+          <div class="label">1.25</div>
+          <div class="question-text">In how many ways can you order 7 different colored hats in a row?</div>
+        </article>
+
+        <article id="q-1.26" class="card question" data-id="1.26">
+          <div class="label">1.26</div>
+          <div class="question-text">Our basketball team has 12 members, each of whom can play any position. In how many ways can we choose a starting lineup consisting of a center, a power forward, a shooting forward, a point guard, and a shooting guard?</div>
+        </article>
+
+        <article id="q-1.27" class="card question" data-id="1.27">
+          <div class="label">1.27</div>
+          <div class="question-text">
+            <ol class="parts" type="a">
+              <li>List all the arrangements of the letters in the word ‘T’. How many are there?</li>
+              <li>List all the arrangements of the letters in the word ‘TI’. How many start with ‘T’? How many with ‘I’? How many are there?</li>
+              <li>List all the arrangements of the letters in the word ‘ETI’. Circle the ones that start with ‘E’ and compare that group to the list in part (b). How many arrangements of ‘ETI’ start with ‘E’? With ‘T’? With ‘I’? How many arrangements are there total?</li>
+              <li>List all the arrangements of the letters in the word ‘SETI’. Circle the ones that start with ‘S’ and compare that group to the list in part (c). How many arrangements of ‘SETI’ start with ‘S’? How many arrangements are there total?</li>
+              <li>How many arrangements are there of the letters in the word ‘ASETI’?</li>
+            </ol>
+          </div>
+        </article>
+
+        <article id="q-1.28" class="card question" data-id="1.28">
+          <div class="label">1.28</div>
+          <div class="question-text">In the upcoming election, voters can choose:
+            <ul class="compact">
+              <li>Abe or Barb for President;</li>
+              <li>Carlos, Darla, or Eve for Vice-President;</li>
+              <li>Fred, Gina, or Hal for Secretary.</li>
+            </ul>
+            <ol class="parts" type="a">
+              <li>Draw a tree demonstrating the possible ways a voter might complete his or her ballot.</li>
+              <li>How many different ways can the ballot be completed if each voter must cast a vote for each office?</li>
+              <li>How many ways can the ballot be completed if the voter may choose not to vote in some or all of the elections?</li>
+            </ol>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <section class="column" aria-label="Answers">
+      <div class="column-title"><span>Answers / Solutions</span><span>Review Problems</span></div>
+      <div id="answersPane" class="scrollpane">
+
+        <article id="a-1.17" class="card answer" data-id="1.17">
+          <div class="label">1.17</div>
+          <div class="answer-text">We can add 0.5 to each member of the list, to make it easier to deal with:
+            <div class="center-list">3, 6, 9, 12, . . . , 81, 84.</div>
+            Now if we divide by 3, we get
+            <div class="center-list">1, 2, 3, 4, . . . , 27, 28,</div>
+            so there are <span class="final">28</span> numbers in the list.
+          </div>
+        </article>
+
+        <article id="a-1.18" class="card answer" data-id="1.18">
+          <div class="label">1.18</div>
+          <div class="answer-text">Subtract 2 from the list to get <span class="formula">4, 8, 12, . . . , 80, 84</span>, and then divide by 4 to get <span class="formula">1, 2, 3, . . . , 20, 21</span>. So the list has <span class="final">21</span> numbers.</div>
+        </article>
+
+        <article id="a-1.19" class="card answer" data-id="1.19">
+          <div class="label">1.19</div>
+          <div class="answer-text">Note that <span class="formula">7 × 14 = 98 &lt; 100 &lt; 105 = 7 × 15</span> and <span class="formula">7 × 142 = 994 &lt; 1000 &lt; 1001 = 7 × 143</span>. So the list of 3-digit numbers divisible by 7 is <span class="formula">105, 112, . . . , 994</span>, and when we divide this list by 7, we get <span class="formula">15, 16, 17, . . . , 141, 142</span>, which has <span class="formula">142 − 15 + 1</span> = <span class="final">128</span> numbers.</div>
+        </article>
+
+        <article id="a-1.20" class="card answer" data-id="1.20">
+          <div class="label">1.20</div>
+          <div class="answer-text">
+            Let the number of lefty jazz lovers be <span class="formula">x</span>. Then <span class="formula">8 − x</span> lefties dislike jazz and <span class="formula">15 − x</span> jazz lovers are righties. Since the number of righty jazz dislikers is 2 and the total number of club members is 20, we can add these four exclusive categories:
+            <div class="mathline"><span class="formula">x + (8 − x) + (15 − x) + 2 = 20</span>, so <span class="formula">x = 5</span>.</div>
+            Therefore, <span class="final">5</span> club members are left-handed and like jazz music.
+            <div class="venn-wrap">
+              <svg class="venn" viewBox="0 0 240 150" role="img" aria-label="Venn diagram for left-handed and like jazz">
+                <text x="53" y="23" text-anchor="middle" font-size="14" font-weight="700">Left-handed</text>
+                <text x="164" y="23" text-anchor="middle" font-size="14" font-weight="700">Like jazz</text>
+                <circle cx="83" cy="82" r="48" fill="none" stroke="#111827" stroke-width="2"/>
+                <circle cx="143" cy="82" r="48" fill="none" stroke="#111827" stroke-width="2"/>
+                <text x="62" y="88" text-anchor="middle" font-size="18">8 − x</text>
+                <text x="113" y="88" text-anchor="middle" font-size="18" font-weight="700">x</text>
+                <text x="166" y="88" text-anchor="middle" font-size="18">15 − x</text>
+                <text x="218" y="127" text-anchor="middle" font-size="18">2</text>
+              </svg>
+            </div>
+          </div>
+        </article>
+
+        <article id="a-1.21" class="card answer" data-id="1.21">
+          <div class="label">1.21</div>
+          <div class="answer-text">
+            We can solve this using basic arithmetic: If 13 of the students with calculators are girls, and 22 students total have calculators, then <span class="formula">22 − 13 = 9</span> of the students with calculators are boys. So if 9 boys have calculators, and there are 16 boys total, then <span class="formula">16 − 9 = 7</span> boys don’t have calculators.
+            <div class="mathline">Answer: <span class="final">7</span>.</div>
+            <p>Alternatively, we could solve this using a Venn diagram. Note that we do not have enough information to determine how many girls didn’t bring their calculators.</p>
+            <div class="venn-wrap">
+              <svg class="venn" viewBox="0 0 240 150" role="img" aria-label="Venn diagram for girls and calculators">
+                <text x="74" y="23" text-anchor="middle" font-size="14" font-weight="700">Girls</text>
+                <text x="153" y="23" text-anchor="middle" font-size="14" font-weight="700">Calculators</text>
+                <circle cx="88" cy="82" r="48" fill="none" stroke="#111827" stroke-width="2"/>
+                <circle cx="143" cy="82" r="48" fill="none" stroke="#111827" stroke-width="2"/>
+                <text x="65" y="88" text-anchor="middle" font-size="19">?</text>
+                <text x="116" y="88" text-anchor="middle" font-size="18" font-weight="700">13</text>
+                <text x="166" y="88" text-anchor="middle" font-size="18">9</text>
+                <rect x="202" y="103" width="24" height="24" fill="none" stroke="#111827" stroke-width="2"/>
+                <text x="214" y="122" text-anchor="middle" font-size="18" font-weight="700">7</text>
+              </svg>
+            </div>
+          </div>
+        </article>
+
+        <article id="a-1.22" class="card answer" data-id="1.22">
+          <div class="label">1.22</div>
+          <div class="answer-text">There are 5 options for shirts, 6 options for pants, and 8 options for hats, for a total of <span class="formula">5 × 6 × 8</span> = <span class="final">240</span> outfits.</div>
+        </article>
+
+        <article id="a-1.23" class="card answer" data-id="1.23">
+          <div class="label">1.23</div>
+          <div class="answer-text">There are 26 options for the first letter, only 5 options for the second letter because it must be a vowel, and 25 options for the third letter because it can be any letter except the first. This gives <span class="formula">26 × 5 × 25</span> = <span class="final">3,250</span> combinations.</div>
+        </article>
+
+        <article id="a-1.24" class="card answer" data-id="1.24">
+          <div class="label">1.24</div>
+          <div class="answer-text">We must count the number of permutations of 6 people. There are 6 choices for the first person in line, 5 choices for the second person in line, and so on. So the answer is <span class="formula">6!</span> = <span class="final">720</span>.</div>
+        </article>
+
+        <article id="a-1.25" class="card answer" data-id="1.25">
+          <div class="label">1.25</div>
+          <div class="answer-text">There are 7 options for the first hat, 6 options for the second hat, and so on. So the answer is <span class="formula">7!</span> = <span class="final">5,040</span>.</div>
+        </article>
+
+        <article id="a-1.26" class="card answer" data-id="1.26">
+          <div class="label">1.26</div>
+          <div class="answer-text">5 players are being chosen in order out of 12, so the answer is <span class="formula">P(12, 5) = 12! / 7!</span> = <span class="formula">12 × 11 × 10 × 9 × 8</span> = <span class="final">95,040</span>.</div>
+        </article>
+
+        <article id="a-1.27" class="card answer" data-id="1.27">
+          <div class="label">1.27</div>
+          <div class="answer-text">
+            <ol class="parts" type="a">
+              <li>Obviously the only arrangement is <span class="formula">T</span>. There is <span class="final">1</span> arrangement.</li>
+              <li>There are two arrangements: <span class="formula">IT</span> and <span class="formula">TI</span>. One starts with I and one starts with T, for a total of <span class="final">2</span>.</li>
+              <li>There are <span class="final">6</span> arrangements of ETI: <span class="formula">EIT, ETI, IET, ITE, TEI, TIE</span>. Two of them start with E; similarly, two start with T and two start with I.</li>
+              <li>There are <span class="formula">4!</span> = <span class="final">24</span> arrangements of SETI:<br>
+                <span class="leaf-list mono">EIST, EITS, ESIT, ESTI, ETIS, ETSI, IEST, IETS, ISET, ISTE, ITES, ITSE, SEIT, SETI, SIET, SITE, STEI, STIE, TEIS, TESI, TIES, TISE, TSEI, TSIE</span><br>
+                The 6 arrangements that start with S are <span class="formula">SEIT, SETI, SIET, SITE, STEI, STIE</span>. The last 3 letters of each of these are exactly the 6 arrangements of ETI from part (c).</li>
+              <li>We can think of this as 5 choices for the first letter, then <span class="formula">4! = 24</span> arrangements for the other four letters, for a total of <span class="formula">5 × 4! = 5!</span> = <span class="final">120</span> arrangements.</li>
+            </ol>
+          </div>
+        </article>
+
+        <article id="a-1.28" class="card answer" data-id="1.28">
+          <div class="label">1.28</div>
+          <div class="answer-text">
+            <ol class="parts" type="a">
+              <li>The voting options are given by the following tree:
+                <svg class="tree" viewBox="0 0 900 430" role="img" aria-label="Tree diagram of ballot choices">
+                  <defs>
+                    <marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto" markerUnits="strokeWidth">
+                      <path d="M0,0 L0,6 L7,3 z" fill="#111827" />
+                    </marker>
+                  </defs>
+                  <style>
+                    .edge { stroke:#111827; stroke-width:2; fill:none; marker-end:url(#arrow); }
+                    .node { font:700 21px system-ui, Arial; fill:#111827; }
+                    .leaf { font:700 15px system-ui, Arial; fill:#111827; }
+                    .face { font:700 28px system-ui, Arial; fill:#111827; }
+                  </style>
+                  <text x="450" y="45" class="face" text-anchor="middle">☺</text>
+                  <path class="edge" d="M440,55 L210,105"/><path class="edge" d="M460,55 L690,105"/>
+                  <text x="205" y="128" class="node" text-anchor="middle">A</text>
+                  <text x="695" y="128" class="node" text-anchor="middle">B</text>
+                  <path class="edge" d="M200,135 L90,205"/><path class="edge" d="M205,135 L205,205"/><path class="edge" d="M210,135 L320,205"/>
+                  <path class="edge" d="M690,135 L580,205"/><path class="edge" d="M695,135 L695,205"/><path class="edge" d="M700,135 L810,205"/>
+                  <text x="90" y="228" class="node" text-anchor="middle">C</text>
+                  <text x="205" y="228" class="node" text-anchor="middle">D</text>
+                  <text x="320" y="228" class="node" text-anchor="middle">E</text>
+                  <text x="580" y="228" class="node" text-anchor="middle">C</text>
+                  <text x="695" y="228" class="node" text-anchor="middle">D</text>
+                  <text x="810" y="228" class="node" text-anchor="middle">E</text>
+                  <g>
+                    <path class="edge" d="M82,237 L45,300"/><path class="edge" d="M90,237 L90,300"/><path class="edge" d="M98,237 L135,300"/>
+                    <path class="edge" d="M197,237 L160,300"/><path class="edge" d="M205,237 L205,300"/><path class="edge" d="M213,237 L250,300"/>
+                    <path class="edge" d="M312,237 L275,300"/><path class="edge" d="M320,237 L320,300"/><path class="edge" d="M328,237 L365,300"/>
+                    <path class="edge" d="M572,237 L535,300"/><path class="edge" d="M580,237 L580,300"/><path class="edge" d="M588,237 L625,300"/>
+                    <path class="edge" d="M687,237 L650,300"/><path class="edge" d="M695,237 L695,300"/><path class="edge" d="M703,237 L740,300"/>
+                    <path class="edge" d="M802,237 L765,300"/><path class="edge" d="M810,237 L810,300"/><path class="edge" d="M818,237 L855,300"/>
+                  </g>
+                  <g class="node" text-anchor="middle">
+                    <text x="45" y="323">F</text><text x="90" y="323">G</text><text x="135" y="323">H</text>
+                    <text x="160" y="323">F</text><text x="205" y="323">G</text><text x="250" y="323">H</text>
+                    <text x="275" y="323">F</text><text x="320" y="323">G</text><text x="365" y="323">H</text>
+                    <text x="535" y="323">F</text><text x="580" y="323">G</text><text x="625" y="323">H</text>
+                    <text x="650" y="323">F</text><text x="695" y="323">G</text><text x="740" y="323">H</text>
+                    <text x="765" y="323">F</text><text x="810" y="323">G</text><text x="855" y="323">H</text>
+                  </g>
+                  <g>
+                    <path class="edge" d="M45,330 L45,362"/><path class="edge" d="M90,330 L90,362"/><path class="edge" d="M135,330 L135,362"/>
+                    <path class="edge" d="M160,330 L160,362"/><path class="edge" d="M205,330 L205,362"/><path class="edge" d="M250,330 L250,362"/>
+                    <path class="edge" d="M275,330 L275,362"/><path class="edge" d="M320,330 L320,362"/><path class="edge" d="M365,330 L365,362"/>
+                    <path class="edge" d="M535,330 L535,362"/><path class="edge" d="M580,330 L580,362"/><path class="edge" d="M625,330 L625,362"/>
+                    <path class="edge" d="M650,330 L650,362"/><path class="edge" d="M695,330 L695,362"/><path class="edge" d="M740,330 L740,362"/>
+                    <path class="edge" d="M765,330 L765,362"/><path class="edge" d="M810,330 L810,362"/><path class="edge" d="M855,330 L855,362"/>
+                  </g>
+                  <g class="leaf" text-anchor="middle">
+                    <text x="45" y="388">ACF</text><text x="90" y="388">ACG</text><text x="135" y="388">ACH</text>
+                    <text x="160" y="388">ADF</text><text x="205" y="388">ADG</text><text x="250" y="388">ADH</text>
+                    <text x="275" y="388">AEF</text><text x="320" y="388">AEG</text><text x="365" y="388">AEH</text>
+                    <text x="535" y="388">BCF</text><text x="580" y="388">BCG</text><text x="625" y="388">BCH</text>
+                    <text x="650" y="388">BDF</text><text x="695" y="388">BDG</text><text x="740" y="388">BDH</text>
+                    <text x="765" y="388">BEF</text><text x="810" y="388">BEG</text><text x="855" y="388">BEH</text>
+                  </g>
+                </svg>
+                <div class="small">Here A/B stand for Abe/Barb; C/D/E stand for Carlos/Darla/Eve; F/G/H stand for Fred/Gina/Hal.</div>
+              </li>
+              <li>There are 2 choices for President, 3 choices for Vice-President, and 3 choices for Secretary, so there are <span class="formula">2 × 3 × 3</span> = <span class="final">18</span> ways to fill out a ballot. This corresponds to the 18 options at the bottom of the tree.</li>
+              <li>Now there are 3 choices for President (Abe, Barb, or no one), 4 choices for Vice-President, and 4 choices for Secretary, so there are <span class="formula">3 × 4 × 4</span> = <span class="final">48</span> ways to fill out a ballot.</li>
+            </ol>
+          </div>
+        </article>
+
+      </div>
+    </section>
+  </section>
+</main>
+
+<script>
+  const qPane = document.getElementById('questionsPane');
+  const aPane = document.getElementById('answersPane');
+  const syncBtn = document.getElementById('toggleSync');
+  const showAllBtn = document.getElementById('showAll');
+  const hideAllBtn = document.getElementById('hideAll');
+  let syncOn = true;
+  let lock = false;
+
+  const qCards = [...document.querySelectorAll('.question.card')];
+  const aCards = [...document.querySelectorAll('.answer.card')];
+  const allCards = [...qCards, ...aCards];
+
+  function cardMap(cards) {
+    const map = new Map();
+    cards.forEach(card => map.set(card.dataset.id, card));
+    return map;
+  }
+
+  const qMap = cardMap(qCards);
+  const aMap = cardMap(aCards);
+
+  function nearestCard(pane, cards) {
+    const paneTop = pane.getBoundingClientRect().top;
+    let best = cards[0];
+    let bestDist = Infinity;
+    for (const card of cards) {
+      const dist = Math.abs(card.getBoundingClientRect().top - paneTop - 8);
+      if (dist < bestDist) { best = card; bestDist = dist; }
+    }
+    return best;
+  }
+
+  function setActive(id) {
+    allCards.forEach(card => card.classList.toggle('active', card.dataset.id === id));
+  }
+
+  function scrollToMatch(sourcePane, sourceCards, targetPane, targetMap) {
+    if (!syncOn || lock || window.matchMedia('(max-width: 850px)').matches) return;
+    const current = nearestCard(sourcePane, sourceCards);
+    if (!current) return;
+    const id = current.dataset.id;
+    const target = targetMap.get(id);
+    if (!target) return;
+    setActive(id);
+    lock = true;
+    targetPane.scrollTo({ top: target.offsetTop - 14, behavior: 'smooth' });
+    window.setTimeout(() => { lock = false; }, 360);
+  }
+
+  qPane.addEventListener('scroll', () => scrollToMatch(qPane, qCards, aPane, aMap));
+  aPane.addEventListener('scroll', () => scrollToMatch(aPane, aCards, qPane, qMap));
+
+  syncBtn.addEventListener('click', () => {
+    syncOn = !syncOn;
+    syncBtn.textContent = syncOn ? 'Sync: On' : 'Sync: Off';
+  });
+
+  hideAllBtn.addEventListener('click', () => {
+    aCards.forEach(card => {
+      const body = card.querySelector('.answer-text');
+      body.dataset.oldDisplay = body.style.display || '';
+      body.style.display = 'none';
+    });
+  });
+
+  showAllBtn.addEventListener('click', () => {
+    aCards.forEach(card => {
+      const body = card.querySelector('.answer-text');
+      body.style.display = body.dataset.oldDisplay || '';
+    });
+  });
+
+  document.querySelectorAll('.jump a').forEach(link => {
+    link.addEventListener('click', event => {
+      event.preventDefault();
+      const id = link.getAttribute('href').replace('#q-', '');
+      const q = qMap.get(id);
+      const a = aMap.get(id);
+      if (window.matchMedia('(max-width: 850px)').matches) {
+        q?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      } else {
+        if (q) qPane.scrollTo({ top: q.offsetTop - 14, behavior: 'smooth' });
+        if (a) aPane.scrollTo({ top: a.offsetTop - 14, behavior: 'smooth' });
+      }
+      setActive(id);
+    });
+  });
+
+  setActive('1.17');
+</script>
+</body>
+</html>

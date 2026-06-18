@@ -1,0 +1,411 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chapter 1: Counting Is Arithmetic — Section 1.2</title>
+  <style>
+    :root {
+      --bg: #f7f8fb;
+      --card: #ffffff;
+      --text: #121827;
+      --muted: #667085;
+      --border: #d8dee9;
+      --blue: #2563eb;
+      --blue-soft: #eaf1ff;
+      --green: #0f9f5f;
+      --green-soft: #e8f8ef;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      line-height: 1.55;
+      color: var(--text);
+      background: linear-gradient(180deg, #ffffff 0%, var(--bg) 140px);
+    }
+
+    header {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 28px 20px 18px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.7rem, 3vw, 2.5rem);
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(10px);
+    }
+
+    .toolbar-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 12px 20px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    select, button {
+      height: 38px;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      border-radius: 10px;
+      padding: 0 12px;
+      font: inherit;
+    }
+
+    select { min-width: 260px; }
+
+    button {
+      cursor: pointer;
+      transition: transform .12s ease, border-color .12s ease;
+    }
+
+    button:hover { border-color: #aab3c2; }
+    button:active { transform: translateY(1px); }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .panel h2 {
+      margin: 0;
+      padding: 16px 18px;
+      font-size: 1.2rem;
+      border-bottom: 1px solid var(--border);
+      background: #fbfcff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      white-space: nowrap;
+      border-radius: 999px;
+      padding: 3px 10px;
+      font-size: .82rem;
+      font-weight: 700;
+      border: 1px solid var(--border);
+    }
+
+    .pill.blue { background: var(--blue-soft); color: var(--blue); border-color: #bfdbfe; }
+    .pill.green { background: var(--green-soft); color: var(--green); border-color: #bbf7d0; }
+
+    .stack { padding: 16px; display: grid; gap: 14px; }
+
+    .pair {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 16px;
+      background: #fff;
+      transition: background .18s ease, border-color .18s ease, box-shadow .18s ease;
+      scroll-margin-top: 78px;
+    }
+
+    .pair.active {
+      border-color: #93c5fd;
+      background: #f8fbff;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+    }
+
+    .answer.pair.active {
+      border-color: #86efac;
+      background: #f7fff9;
+      box-shadow: 0 0 0 3px rgba(15, 159, 95, 0.10);
+    }
+
+    .label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: .86rem;
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    .label span {
+      border-radius: 999px;
+      padding: 2px 8px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      border: 1px solid #bfdbfe;
+    }
+
+    .answer .label span {
+      background: var(--green-soft);
+      color: var(--green);
+      border-color: #bbf7d0;
+    }
+
+    .question-text {
+      font-size: 1.02rem;
+      margin: 0 0 10px;
+    }
+
+    .list-line {
+      margin: 8px 0 0;
+      text-align: center;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.08rem;
+    }
+
+    .hint {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: .92rem;
+    }
+
+    .formula {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      background: #f3f4f6;
+      border-radius: 6px;
+      padding: 1px 5px;
+      white-space: nowrap;
+    }
+
+    .final {
+      font-weight: 800;
+      border: 1px solid currentColor;
+      border-radius: 5px;
+      padding: 0 5px;
+      white-space: nowrap;
+    }
+
+    footer {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 10px 20px 32px;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    @media (max-width: 850px) {
+      .grid { grid-template-columns: 1fr; }
+      .toolbar-inner { align-items: stretch; }
+      select { min-width: 100%; flex: 1; }
+      button { flex: 1; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Chapter 1: Counting Is Arithmetic</h1>
+    <div class="subtitle">Extracted from the screenshot: Section 1.2 questions and matching answers, labels 1.2.1–1.2.9.</div>
+  </header>
+
+  <nav class="toolbar" aria-label="Label navigation">
+    <div class="toolbar-inner">
+      <select id="jump" aria-label="Jump to question label">
+        <option value="1.2.1">1.2.1: Answer p. 1 ↔ Question p. 5</option>
+        <option value="1.2.2">1.2.2: Answer p. 1 ↔ Question p. 5</option>
+        <option value="1.2.3">1.2.3: Answer p. 1 ↔ Question p. 5</option>
+        <option value="1.2.4">1.2.4: Answer p. 1 ↔ Question p. 5</option>
+        <option value="1.2.5">1.2.5: Answer p. 1 ↔ Question p. 6</option>
+        <option value="1.2.6">1.2.6: Answer p. 1 ↔ Question p. 6</option>
+        <option value="1.2.7">1.2.7: Answer p. 1 ↔ Question p. 6</option>
+        <option value="1.2.8">1.2.8: Answer p. 1 ↔ Question p. 6</option>
+        <option value="1.2.9">1.2.9*: Answer p. 1 ↔ Question p. 6</option>
+      </select>
+      <button id="prev" type="button">Previous label</button>
+      <button id="next" type="button">Next label</button>
+    </div>
+  </nav>
+
+  <main>
+    <section class="grid">
+      <article class="panel" aria-labelledby="q-title">
+        <h2 id="q-title">Questions / Problems <span class="pill blue">Book p. 5–6</span></h2>
+        <div class="stack" id="questions">
+          <section class="pair question" data-label="1.2.1">
+            <div class="label"><span>1.2.1</span></div>
+            <p class="question-text">How many numbers are in the list</p>
+            <div class="list-line">36, 37, 38, . . . , 92, 93?</div>
+          </section>
+
+          <section class="pair question" data-label="1.2.2">
+            <div class="label"><span>1.2.2</span></div>
+            <p class="question-text">How many numbers are in the list</p>
+            <div class="list-line">4, 6, 8, . . . , 128, 130?</div>
+          </section>
+
+          <section class="pair question" data-label="1.2.3">
+            <div class="label"><span>1.2.3</span></div>
+            <p class="question-text">How many numbers are in the list</p>
+            <div class="list-line">−33, −28, −23, . . . , 52, 57?</div>
+            <div class="hint">Hint: 181</div>
+          </section>
+
+          <section class="pair question" data-label="1.2.4">
+            <div class="label"><span>1.2.4</span></div>
+            <p class="question-text">How many numbers are in the list</p>
+            <div class="list-line">147, 144, 141, . . . , 42, 39?</div>
+            <div class="hint">Hint: 118</div>
+          </section>
+
+          <section class="pair question" data-label="1.2.5">
+            <div class="label"><span>1.2.5</span></div>
+            <p class="question-text">How many numbers are in the list</p>
+            <div class="list-line">3⅔, 4⅓, 5, 5⅔, . . . , 26⅓, 27?</div>
+            <div class="hint">Hint: 162</div>
+          </section>
+
+          <section class="pair question" data-label="1.2.6">
+            <div class="label"><span>1.2.6</span></div>
+            <p class="question-text">How many positive multiples of 7 are less than 150?</p>
+          </section>
+
+          <section class="pair question" data-label="1.2.7">
+            <div class="label"><span>1.2.7</span></div>
+            <p class="question-text">How many perfect squares are between 50 and 250?</p>
+          </section>
+
+          <section class="pair question" data-label="1.2.8">
+            <div class="label"><span>1.2.8</span></div>
+            <p class="question-text">How many odd perfect squares are between 5 and 211?</p>
+          </section>
+
+          <section class="pair question" data-label="1.2.9">
+            <div class="label"><span>1.2.9*</span></div>
+            <p class="question-text">How many sets of four consecutive positive integers are there such that the product of the four integers is less than 100,000?</p>
+            <div class="hint">Hints: 123, 104</div>
+          </section>
+        </div>
+      </article>
+
+      <article class="panel" aria-labelledby="a-title">
+        <h2 id="a-title">Answers / Solutions <span class="pill green">Answer p. 1</span></h2>
+        <div class="stack" id="answers">
+          <section class="pair answer" data-label="1.2.1">
+            <div class="label"><span>1.2.1</span></div>
+            <p>We subtract 35 from each member of the list to get 1, 2, 3, . . . , 57, 58, so there are <span class="final">58</span> numbers. Note that this follows the <span class="formula">b − a + 1</span> formula for how many numbers there are between <em>a</em> and <em>b</em> inclusive, as <span class="formula">93 − 36 + 1 = 58</span>.</p>
+          </section>
+
+          <section class="pair answer" data-label="1.2.2">
+            <div class="label"><span>1.2.2</span></div>
+            <p>Dividing each member of the list by 2, we get 2, 3, 4, . . . , 64, 65, and then subtracting 1, we get 1, 2, 3, . . . , 63, 64, so there are <span class="final">64</span> numbers.</p>
+          </section>
+
+          <section class="pair answer" data-label="1.2.3">
+            <div class="label"><span>1.2.3</span></div>
+            <p>Add 3 to each member of the list to get −30, −25, −20, . . . , 55, 60, and divide by 5 to get −6, −5, −4, . . . , 11, 12. Using the inclusive integer formula, we get <span class="formula">12 − (−6) + 1 = 19</span>, so there are <span class="final">19</span> numbers. We could also add 7 to each number in the list to get 1, 2, 3, . . . , 18, 19, and see that there are 19 numbers.</p>
+          </section>
+
+          <section class="pair answer" data-label="1.2.4">
+            <div class="label"><span>1.2.4</span></div>
+            <p>First, we reverse the list to become 39, 42, . . . , 144, 147. Then we divide each number by 3 to get 13, 14, . . . , 48, 49, so there are <span class="formula">49 − 13 + 1 = 37</span> numbers.</p>
+          </section>
+
+          <section class="pair answer" data-label="1.2.5">
+            <div class="label"><span>1.2.5</span></div>
+            <p>Multiplying each number by 3, we get 11, 13, 15, . . . , 79, 81. Then we can subtract 1 and divide by 2 to get 5, 6, 7, . . . , 39, 40. So there are <span class="formula">40 − 5 + 1 = 36</span> numbers.</p>
+          </section>
+
+          <section class="pair answer" data-label="1.2.6">
+            <div class="label"><span>1.2.6</span></div>
+            <p><span class="formula">7 × 21 = 147 &lt; 150 &lt; 154 = 7 × 22</span>, so <span class="final">21</span> positive multiples of 7 are less than 150.</p>
+          </section>
+
+          <section class="pair answer" data-label="1.2.7">
+            <div class="label"><span>1.2.7</span></div>
+            <p>Since <span class="formula">7² &lt; 50 &lt; 8²</span> and <span class="formula">15² &lt; 250 &lt; 16²</span>, the squares between 50 and 250 are 8², 9², 10², . . . , 15². So there are <span class="formula">15 − 8 + 1 = 8</span> such squares.</p>
+          </section>
+
+          <section class="pair answer" data-label="1.2.8">
+            <div class="label"><span>1.2.8</span></div>
+            <p>Since <span class="formula">1² &lt; 5 &lt; 3²</span> and <span class="formula">13² &lt; 211 &lt; 15²</span>, we have the list 3², 5², 7², . . . , 13², which has the same number of elements as 3, 5, 7, . . . , 13, which has <span class="final">6</span> elements.</p>
+          </section>
+
+          <section class="pair answer" data-label="1.2.9">
+            <div class="label"><span>1.2.9*</span></div>
+            <p>Note that <span class="formula">17⁴ = 83,521 &lt; 100,000 &lt; 104,976 = 18⁴</span>. Since <span class="formula">17.5⁴ ≈ 16 × 17 × 18 × 19</span>, we check the value of <span class="formula">16 × 17 × 18 × 19 = 93,024</span>. Also <span class="formula">17 × 18 × 19 × 20 = 116,280</span>, so 16 × 17 × 18 × 19 is the largest product of four consecutive positive integers which is less than 100,000. So there are <span class="final">16</span> sets.</p>
+          </section>
+        </div>
+      </article>
+    </section>
+  </main>
+
+  <footer>
+    Note: This page contains the visible labels and text from the provided screenshot only.
+  </footer>
+
+  <script>
+    const labels = Array.from(document.querySelectorAll('#jump option')).map(o => o.value);
+    const jump = document.getElementById('jump');
+    const prev = document.getElementById('prev');
+    const next = document.getElementById('next');
+
+    function setActive(label, scroll = true) {
+      document.querySelectorAll('.pair').forEach(el => el.classList.toggle('active', el.dataset.label === label));
+      jump.value = label;
+      if (scroll) {
+        const q = document.querySelector(`.question[data-label="${label}"]`);
+        const a = document.querySelector(`.answer[data-label="${label}"]`);
+        if (window.innerWidth > 850 && q && a) {
+          q.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else if (q) {
+          q.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    }
+
+    jump.addEventListener('change', () => setActive(jump.value));
+    prev.addEventListener('click', () => {
+      const i = labels.indexOf(jump.value);
+      setActive(labels[Math.max(0, i - 1)]);
+    });
+    next.addEventListener('click', () => {
+      const i = labels.indexOf(jump.value);
+      setActive(labels[Math.min(labels.length - 1, i + 1)]);
+    });
+
+    document.querySelectorAll('.pair').forEach(el => {
+      el.addEventListener('click', () => setActive(el.dataset.label, false));
+    });
+
+    setActive('1.2.1', false);
+  </script>
+</body>
+</html>

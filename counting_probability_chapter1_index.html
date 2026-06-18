@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chapter 1: Counting and Probability</title>
+  <style>
+    :root {
+      --bg: #f7f8fb;
+      --surface: #ffffff;
+      --text: #121827;
+      --muted: #5f6b7a;
+      --border: #d9e0ea;
+      --accent: #2563eb;
+      --accent-soft: #eaf1ff;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background: var(--bg);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.5;
+    }
+
+    .page {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 32px 20px 48px;
+    }
+
+    header {
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 2rem;
+      line-height: 1.15;
+      font-weight: 720;
+    }
+
+    .summary {
+      max-width: 760px;
+      margin: 10px 0 0;
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .toc {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 12px;
+    }
+
+    .entry {
+      display: block;
+      min-height: 154px;
+      padding: 18px;
+      color: inherit;
+      text-decoration: none;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+    }
+
+    .entry:hover,
+    .entry:focus-visible {
+      border-color: #b8c4d6;
+      outline: none;
+    }
+
+    .entry:focus-visible {
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.18);
+    }
+
+    .row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .section {
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .count {
+      color: var(--muted);
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 1.08rem;
+      line-height: 1.3;
+      font-weight: 700;
+    }
+
+    .details {
+      margin: 8px 0 0;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .footer {
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    code {
+      padding: 2px 5px;
+      border-radius: 5px;
+      background: var(--accent-soft);
+      color: #1d4ed8;
+      font-size: 0.9em;
+    }
+
+    @media (max-width: 640px) {
+      .page {
+        padding: 24px 14px 36px;
+      }
+
+      h1 {
+        font-size: 1.65rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1>Chapter 1: Counting and Probability</h1>
+      <p class="summary">Open the paired question and answer pages for the imported Chapter 1 counting material. Sections 1.2-1.5 are listed first, followed by the review and challenge problem sets.</p>
+    </header>
+
+    <section class="toc" aria-label="Chapter 1 Counting and Probability pages">
+      <a class="entry" href="counting_is_arithmetic_section_1_2.html">
+        <div class="row">
+          <span class="section">Section 1.2</span>
+          <span class="count">9 problems</span>
+        </div>
+        <h2>Counting Is Arithmetic</h2>
+        <p class="details">Arithmetic lists, term counts, ranges, and simple counting transformations.</p>
+      </a>
+
+      <a class="entry" href="section_1_3_paired_questions_answers.html">
+        <div class="row">
+          <span class="section">Section 1.3</span>
+          <span class="count">5 problems</span>
+        </div>
+        <h2>Two-Way Counting</h2>
+        <p class="details">Sets, overlap counts, and algebraic expressions for counted regions.</p>
+      </a>
+
+      <a class="entry" href="section_1_4_paired_questions_answers.html">
+        <div class="row">
+          <span class="section">Section 1.4</span>
+          <span class="count">9 problems</span>
+        </div>
+        <h2>The Multiplication Principle</h2>
+        <p class="details">Product rule problems with outfits, routes, strings, and ordered choices.</p>
+      </a>
+
+      <a class="entry" href="section_1_5_paired_questions_answers.html">
+        <div class="row">
+          <span class="section">Section 1.5</span>
+          <span class="count">4 problems</span>
+        </div>
+        <h2>Permutations</h2>
+        <p class="details">Ordered selections, replacement cases, and permutation formulas.</p>
+      </a>
+
+      <a class="entry" href="review_problems_1_17_1_28_paired_questions_answers.html">
+        <div class="row">
+          <span class="section">Review</span>
+          <span class="count">12 problems</span>
+        </div>
+        <h2>Review Problems 1.17-1.28</h2>
+        <p class="details">Mixed review across lists, Venn-style counts, outfits, permutations, and tree diagrams.</p>
+      </a>
+
+      <a class="entry" href="challenge_problems_1_29_1_38_paired_questions_answers.html">
+        <div class="row">
+          <span class="section">Challenge</span>
+          <span class="count">10 problems</span>
+        </div>
+        <h2>Challenge Problems 1.29-1.38</h2>
+        <p class="details">Harder counting, Venn diagrams, factorials, integer counts, and grid-counting problems.</p>
+      </a>
+    </section>
+
+    <p class="footer">This index links local standalone HTML pages in <code>math_tutor_agent</code>.</p>
+  </main>
+</body>
+</html>
