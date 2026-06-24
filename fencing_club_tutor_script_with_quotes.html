@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Fencing Club Problem - Tutor Teaching Script</title>
+<style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+      background: #f4f7fb;
+      color: #102033;
+      line-height: 1.65;
+    }
+    .hero {
+      background: linear-gradient(135deg, #eff6ff 0%, #f0fdfa 55%, #fff7ed 100%);
+      padding: 40px 18px 30px;
+      border-bottom: 1px solid #dbe4f0;
+    }
+    .wrap {
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+    h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      letter-spacing: -0.02em;
+      color: #0f172a;
+    }
+    .hero p {
+      margin: 8px 0;
+      max-width: 920px;
+      color: #475569;
+      font-size: 1.05rem;
+    }
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .pill {
+      background: #ffffff;
+      border: 1px solid #dbe4f0;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-weight: 750;
+      color: #0f172a;
+      box-shadow: 0 6px 16px rgba(15,23,42,.06);
+    }
+    main {
+      padding: 24px 18px 90px;
+    }
+    .toc, .summary {
+      background: #fff;
+      border: 1px solid #dbe4f0;
+      border-radius: 18px;
+      padding: 18px;
+      box-shadow: 0 8px 24px rgba(15,23,42,.06);
+      margin-bottom: 22px;
+    }
+    .toc h2, .summary h2 {
+      margin: 0 0 10px;
+      font-size: 1.15rem;
+    }
+    .toc a {
+      display: inline-block;
+      margin: 6px 8px 6px 0;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      text-decoration: none;
+      color: #2563eb;
+      font-weight: 720;
+    }
+    .step-card {
+      background: #fff;
+      border: 1px solid #dbe4f0;
+      border-radius: 22px;
+      padding: 22px;
+      margin: 22px 0;
+      box-shadow: 0 10px 28px rgba(15,23,42,.08);
+    }
+    .step-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+    .kicker {
+      font-size: .92rem;
+      color: #2563eb;
+      font-weight: 850;
+    }
+    .step-card h2 {
+      margin: 2px 0 0;
+      font-size: 1.5rem;
+      color: #0f172a;
+    }
+    .anchor {
+      text-decoration: none;
+      color: #94a3b8;
+      font-weight: 900;
+    }
+    .visual {
+      margin: 14px 0;
+    }
+    .visual svg {
+      width: 100%;
+      display: block;
+      border-radius: 18px;
+      border: 1px solid #dbe4f0;
+      background: #fcfdff;
+    }
+    .script-block, .board-block, .tip-block {
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-top: 13px;
+    }
+    .script-block {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
+    .board-block {
+      background: #fff7ed;
+      border: 1px solid #fed7aa;
+    }
+    .tip-block {
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      color: #3730a3;
+    }
+    .script-block h3, .board-block h3, .tip-block h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+      color: #0f172a;
+    }
+    .script-block p, .board-block p, .tip-block p {
+      margin: 0;
+    }
+    .formula {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 1.08em;
+      font-weight: 700;
+    }
+    .answer-box {
+      background: #dcfce7;
+      border: 1px solid #86efac;
+      border-radius: 16px;
+      padding: 16px;
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: #166534;
+    }
+    @media (max-width: 700px) {
+      .step-card { padding: 16px; border-radius: 18px; }
+      .step-card h2 { font-size: 1.25rem; }
+      .hero { padding-top: 26px; }
+    }
+  
+
+    .question-box {
+      background: #ffffff;
+      border: 1px solid #dbe4f0;
+      border-radius: 20px;
+      padding: 20px;
+      box-shadow: 0 8px 24px rgba(15,23,42,.06);
+      margin-bottom: 22px;
+    }
+    .question-box h2 {
+      margin: 0 0 10px;
+      font-size: 1.25rem;
+      color: #0f172a;
+    }
+    .question-text {
+      margin: 0;
+      font-size: 1.05rem;
+      color: #1e293b;
+    }
+    .quote-block {
+      background: #f0f9ff;
+      border: 1px solid #bae6fd;
+      border-left: 6px solid #0284c7;
+      border-radius: 16px;
+      padding: 13px 16px;
+      margin: 13px 0;
+    }
+    .quote-block h3 {
+      margin: 0 0 8px;
+      font-size: 1rem;
+      color: #0f172a;
+    }
+    .quote-block blockquote {
+      margin: 0 0 6px;
+      color: #0c4a6e;
+      font-weight: 750;
+    }
+</style>
+</head>
+<body>
+<header class="hero">
+<div class="wrap">
+<h1>Teaching Script: Fencing Club Problem</h1>
+<p><strong>Problem:</strong> In a fencing club, every student is either in middle school or high school, and each student competes in either épée or sabre. There are 72 students in total. How many are <strong>middle school épée competitors</strong>?</p>
+<p>This page includes the original question, then gives a step-by-step tutor script. Each step quotes the exact sentence from the problem that justifies the calculation.</p>
+<div class="pill-row">
+<span class="pill">Core strategy: define a variable</span>
+<span class="pill">Use relationship clues</span>
+<span class="pill">Build a table</span>
+<span class="pill">Solve 9x = 72</span>
+<span class="pill">Final answer: 8</span>
+</div>
+</div>
+</header>
+<main>
+<div class="wrap">
+<nav class="toc">
+<h2>Step list</h2><a href="#original-question">Original Question</a>
+<a href="#step01">1. Read and organize the categories</a>
+<a href="#step02">2. Choose the unknown</a>
+<a href="#step03">3. Use the épée clue</a>
+<a href="#step04">4. Use the middle-school sabre clue</a>
+<a href="#step05">5. Use the sabre half-in-high-school clue</a>
+<a href="#step06">6. Fill in the table</a>
+<a href="#step07">7. Use the total of 72</a>
+<a href="#step08">8. Solve for x</a>
+<a href="#step09">9. State the final answer</a>
+</nav>
+<section class="question-box" id="original-question">
+<h2>Original Question</h2>
+<p class="question-text">1.32* In my fencing club, all the participants are in middle school or high school, and each participant competes in épée or sabre. There are twice as many épée competitors who are in high school as there are épée competitors in middle school. Of the students in the club who are in middle school, there are three times as many sabre competitors as there are épée competitors. Half of the sabre competitors who are in the club are in high school. If there are 72 students in my fencing club, how many are middle school épée competitors?</p>
+</section>
+
+<section class="summary">
+<h2>Quick structure</h2>
+<p>We let <span class="formula">x</span> be the number of middle school épée competitors. Then the other groups can all be written in terms of <span class="formula">x</span>. After that, the total number of students gives an equation.</p>
+</section>
+<section class="step-card" id="step01">
+<div class="step-head">
+<div>
+<div class="kicker">Understand the setup</div>
+<h2>Read the problem and sort the categories</h2>
+</div>
+<a class="anchor" href="#step01">#01</a>
+</div>
+<div class="visual">
+<svg aria-label="Two-way classification diagram" role="img" viewbox="0 0 900 360" xmlns="http://www.w3.org/2000/svg">
+<style>
+              .box{fill:#ffffff;stroke:#cbd5e1;stroke-width:2}.title{fill:#0f172a;font:800 28px sans-serif}.label{fill:#1e293b;font:700 22px sans-serif}.small{fill:#475569;font:600 18px sans-serif}.soft1{fill:#eff6ff}.soft2{fill:#f0fdf4}.soft3{fill:#fff7ed}.soft4{fill:#f5f3ff}
+            </style>
+<rect fill="#f8fbff" height="360" rx="24" width="900"></rect>
+<text class="title" x="40" y="48">Two ways to classify each student</text>
+<rect class="box soft1" height="210" rx="22" width="320" x="80" y="90"></rect>
+<text class="label" text-anchor="middle" x="240" y="132">School level</text>
+<text class="small" text-anchor="middle" x="240" y="190">Middle School</text>
+<text class="small" text-anchor="middle" x="240" y="240">High School</text>
+<rect class="box soft2" height="210" rx="22" width="320" x="500" y="90"></rect>
+<text class="label" text-anchor="middle" x="660" y="132">Weapon</text>
+<text class="small" text-anchor="middle" x="660" y="190">Épée</text>
+<text class="small" text-anchor="middle" x="660" y="240">Sabre</text>
+<text class="label" text-anchor="middle" x="450" y="325">Every student belongs to one row and one column.</text>
+</svg>
+</div>
+<div class="quote-block">
+<h3>Related sentence from the problem</h3>
+<blockquote>“all the participants are in middle school or high school, and each participant competes in épée or sabre.”</blockquote>
+</div>
+
+<div class="script-block">
+<h3>Tutor says</h3>
+<p>Before calculating, let’s sort the information. Every participant is classified in two ways: by school level, which is middle school or high school, and by weapon, which is épée or sabre. That means we are working with a two-by-two table.</p>
+</div>
+<div class="board-block">
+<h3>Board / Image cue</h3>
+<p>Draw a 2×2 table: rows for middle school and high school, columns for épée and sabre.</p>
+</div>
+</section>
+<section class="step-card" id="step02">
+<div class="step-head">
+<div>
+<div class="kicker">Choose a variable</div>
+<h2>Let the target group be x</h2>
+</div>
+<a class="anchor" href="#step02">#02</a>
+</div>
+<div class="visual">
+<svg aria-label="Table with x in middle school epee" role="img" viewbox="0 0 900 350" xmlns="http://www.w3.org/2000/svg">
+<style>
+              .grid{fill:#fff;stroke:#334155;stroke-width:2}.head{fill:#dbeafe}.side{fill:#ecfccb}.hl{fill:#fde68a}.txt{fill:#0f172a;font:700 20px sans-serif}.title{fill:#0f172a;font:800 28px sans-serif}.big{fill:#b45309;font:900 34px sans-serif}
+            </style>
+<rect fill="#f8fbff" height="350" rx="24" width="900"></rect>
+<text class="title" x="40" y="46">Let x = middle school épée competitors</text>
+<rect class="grid head" height="60" width="160" x="180" y="90"></rect>
+<rect class="grid head" height="60" width="180" x="340" y="90"></rect>
+<rect class="grid head" height="60" width="180" x="520" y="90"></rect>
+<rect class="grid side" height="70" width="160" x="180" y="150"></rect>
+<rect class="grid side" height="70" width="160" x="180" y="220"></rect>
+<rect class="grid hl" height="70" width="180" x="340" y="150"></rect>
+<rect class="grid" height="70" width="180" x="520" y="150"></rect>
+<rect class="grid" height="70" width="180" x="340" y="220"></rect>
+<rect class="grid" height="70" width="180" x="520" y="220"></rect>
+<text class="txt" text-anchor="middle" x="430" y="128">Épée</text>
+<text class="txt" text-anchor="middle" x="610" y="128">Sabre</text>
+<text class="txt" text-anchor="middle" x="260" y="192">Middle School</text>
+<text class="txt" text-anchor="middle" x="260" y="262">High School</text>
+<text class="big" text-anchor="middle" x="430" y="194">x</text>
+</svg>
+</div>
+<div class="quote-block">
+<h3>Related sentence from the problem</h3>
+<blockquote>“how many are middle school épée competitors?”</blockquote>
+</div>
+
+<div class="script-block">
+<h3>Tutor says</h3>
+<p>The problem asks for the number of middle school épée competitors, so that is the smartest group to call <span class="formula">x</span>. Once we choose that, we can express all the other groups using the clues in the problem.</p>
+</div>
+<div class="board-block">
+<h3>Board / Image cue</h3>
+<p>Write: <span class="formula">x =	ext{ middle school épée competitors}</span>.</p>
+</div>
+</section>
+<section class="step-card" id="step03">
+<div class="step-head">
+<div>
+<div class="kicker">First relationship</div>
+<h2>Use the high school épée clue</h2>
+</div>
+<a class="anchor" href="#step03">#03</a>
+</div>
+<div class="visual">
+<svg aria-label="High school epee equals 2x" role="img" viewbox="0 0 900 320" xmlns="http://www.w3.org/2000/svg">
+<style>
+              .title{fill:#0f172a;font:800 28px sans-serif}.txt{fill:#0f172a;font:800 30px sans-serif}.small{fill:#475569;font:700 18px sans-serif}.box1{fill:#fde68a;stroke:#f59e0b;stroke-width:2}.box2{fill:#bfdbfe;stroke:#2563eb;stroke-width:2}
+            </style>
+<rect fill="#f8fbff" height="320" rx="24" width="900"></rect>
+<text class="title" x="40" y="46">There are twice as many high school épée competitors</text>
+<rect class="box1" height="90" rx="18" width="170" x="150" y="110"></rect>
+<text class="small" text-anchor="middle" x="235" y="150">Middle School Épée</text>
+<text class="txt" text-anchor="middle" x="235" y="182">x</text>
+<text class="txt" text-anchor="middle" x="445" y="168">→</text>
+<rect class="box2" height="90" rx="18" width="170" x="560" y="85"></rect>
+<rect class="box2" height="90" rx="18" width="170" x="560" y="185"></rect>
+<text class="small" text-anchor="middle" x="645" y="122">High School Épée</text>
+<text class="txt" text-anchor="middle" x="645" y="152">x</text>
+<text class="small" text-anchor="middle" x="645" y="222">High School Épée</text>
+<text class="txt" text-anchor="middle" x="645" y="252">x</text>
+<text class="txt" text-anchor="middle" x="450" y="285">High school épée = 2x</text>
+</svg>
+</div>
+<div class="quote-block">
+<h3>Related sentence from the problem</h3>
+<blockquote>“There are twice as many épée competitors who are in high school as there are épée competitors in middle school.”</blockquote>
+</div>
+
+<div class="script-block">
+<h3>Tutor says</h3>
+<p>The problem says there are twice as many high school épée competitors as middle school épée competitors. Since middle school épée is <span class="formula">x</span>, high school épée must be <span class="formula">2x</span>.</p>
+</div>
+<div class="board-block">
+<h3>Board / Image cue</h3>
+<p>Write: <span class="formula">HS épée = 2x</span>.</p>
+</div>
+</section>
+<section class="step-card" id="step04">
+<div class="step-head">
+<div>
+<div class="kicker">Second relationship</div>
+<h2>Use the middle school sabre clue</h2>
+</div>
+<a class="anchor" href="#step04">#04</a>
+</div>
+<div class="visual">
+<svg aria-label="Middle school sabre equals 3x" role="img" viewbox="0 0 900 320" xmlns="http://www.w3.org/2000/svg">
+<style>
+              .title{fill:#0f172a;font:800 28px sans-serif}.txt{fill:#0f172a;font:800 28px sans-serif}.small{fill:#475569;font:700 18px sans-serif}.box1{fill:#fde68a;stroke:#f59e0b;stroke-width:2}.box3{fill:#fecaca;stroke:#ef4444;stroke-width:2}
+            </style>
+<rect fill="#f8fbff" height="320" rx="24" width="900"></rect>
+<text class="title" x="40" y="46">In middle school, sabre is three times épée</text>
+<rect class="box1" height="90" rx="18" width="150" x="110" y="110"></rect>
+<text class="small" text-anchor="middle" x="185" y="150">MS Épée</text>
+<text class="txt" text-anchor="middle" x="185" y="182">x</text>
+<text class="txt" text-anchor="middle" x="340" y="170">→</text>
+<rect class="box3" height="70" rx="18" width="150" x="470" y="80"></rect>
+<rect class="box3" height="70" rx="18" width="150" x="470" y="160"></rect>
+<rect class="box3" height="50" rx="18" width="150" x="470" y="240"></rect>
+<text class="txt" text-anchor="middle" x="545" y="123">x</text>
+<text class="txt" text-anchor="middle" x="545" y="203">x</text>
+<text class="txt" text-anchor="middle" x="545" y="272">x</text>
+<text class="small" text-anchor="middle" x="725" y="175">Middle School Sabre = 3x</text>
+</svg>
+</div>
+<div class="quote-block">
+<h3>Related sentence from the problem</h3>
+<blockquote>“Of the students in the club who are in middle school, there are three times as many sabre competitors as there are épée competitors.”</blockquote>
+</div>
+
+<div class="script-block">
+<h3>Tutor says</h3>
+<p>Next, the problem says that among the middle school students, there are three times as many sabre competitors as épée competitors. Since middle school épée is <span class="formula">x</span>, middle school sabre is <span class="formula">3x</span>.</p>
+</div>
+<div class="board-block">
+<h3>Board / Image cue</h3>
+<p>Write: <span class="formula">MS sabre = 3x</span>.</p>
+</div>
+</section>
+<section class="step-card" id="step05">
+<div class="step-head">
+<div>
+<div class="kicker">Third relationship</div>
+<h2>Use the clue about all sabre competitors</h2>
+</div>
+<a class="anchor" href="#step05">#05</a>
+</div>
+<div class="visual">
+<svg aria-label="Half of sabre competitors are in high school" role="img" viewbox="0 0 900 340" xmlns="http://www.w3.org/2000/svg">
+<style>
+              .title{fill:#0f172a;font:800 28px sans-serif}.txt{fill:#0f172a;font:800 26px sans-serif}.small{fill:#475569;font:700 18px sans-serif}.left{fill:#fee2e2;stroke:#ef4444;stroke-width:2}.right{fill:#dbeafe;stroke:#2563eb;stroke-width:2}
+            </style>
+<rect fill="#f8fbff" height="340" rx="24" width="900"></rect>
+<text class="title" x="40" y="46">Half of all sabre competitors are in high school</text>
+<rect class="left" height="110" rx="18" width="240" x="140" y="120"></rect>
+<rect class="right" height="110" rx="18" width="240" x="520" y="120"></rect>
+<text class="small" text-anchor="middle" x="260" y="162">Middle School Sabre</text>
+<text class="txt" text-anchor="middle" x="260" y="198">3x</text>
+<text class="txt" text-anchor="middle" x="450" y="185">=</text>
+<text class="small" text-anchor="middle" x="640" y="162">High School Sabre</text>
+<text class="txt" text-anchor="middle" x="640" y="198">3x</text>
+<text class="txt" text-anchor="middle" x="450" y="288">If one half is middle school, the other half is high school.</text>
+</svg>
+</div>
+<div class="quote-block">
+<h3>Related sentence from the problem</h3>
+<blockquote>“Half of the sabre competitors who are in the club are in high school.”</blockquote>
+</div>
+
+<div class="script-block">
+<h3>Tutor says</h3>
+<p>The problem also says that half of the sabre competitors are in high school. That means the other half of the sabre competitors are in middle school. We already know middle school sabre is <span class="formula">3x</span>, so high school sabre must also be <span class="formula">3x</span>.</p>
+</div>
+<div class="board-block">
+<h3>Board / Image cue</h3>
+<p>Write: <span class="formula">HS sabre = 3x</span>.</p>
+</div>
+<div class="tip-block">
+<h3>Tutor tip</h3>
+<p>This is a good place to pause and ask the student: “If half are in high school, what fraction are in middle school?”</p>
+</div>
+</section>
+<section class="step-card" id="step06">
+<div class="step-head">
+<div>
+<div class="kicker">Organize everything</div>
+<h2>Fill in the full table</h2>
+</div>
+<a class="anchor" href="#step06">#06</a>
+</div>
+<div class="visual">
+<svg aria-label="Completed table in terms of x" role="img" viewbox="0 0 900 420" xmlns="http://www.w3.org/2000/svg">
+<style>
+              .grid{fill:#fff;stroke:#334155;stroke-width:2}.head{fill:#dbeafe}.side{fill:#ecfccb}.tot{fill:#fef3c7}.txt{fill:#0f172a;font:700 20px sans-serif}.title{fill:#0f172a;font:800 28px sans-serif}.big{fill:#1d4ed8;font:800 24px sans-serif}
+            </style>
+<rect fill="#f8fbff" height="420" rx="24" width="900"></rect>
+<text class="title" x="40" y="46">The table now becomes</text>
+<rect class="grid head" height="60" width="170" x="110" y="90"></rect>
+<rect class="grid head" height="60" width="160" x="280" y="90"></rect>
+<rect class="grid head" height="60" width="160" x="440" y="90"></rect>
+<rect class="grid head tot" height="60" width="160" x="600" y="90"></rect>
+<rect class="grid side" height="70" width="170" x="110" y="150"></rect>
+<rect class="grid side" height="70" width="170" x="110" y="220"></rect>
+<rect class="grid tot" height="70" width="170" x="110" y="290"></rect>
+<rect class="grid" height="70" width="160" x="280" y="150"></rect>
+<rect class="grid" height="70" width="160" x="440" y="150"></rect>
+<rect class="grid tot" height="70" width="160" x="600" y="150"></rect>
+<rect class="grid" height="70" width="160" x="280" y="220"></rect>
+<rect class="grid" height="70" width="160" x="440" y="220"></rect>
+<rect class="grid tot" height="70" width="160" x="600" y="220"></rect>
+<rect class="grid tot" height="70" width="160" x="280" y="290"></rect>
+<rect class="grid tot" height="70" width="160" x="440" y="290"></rect>
+<rect class="grid tot" height="70" width="160" x="600" y="290"></rect>
+<text class="txt" text-anchor="middle" x="360" y="128">Épée</text>
+<text class="txt" text-anchor="middle" x="520" y="128">Sabre</text>
+<text class="txt" text-anchor="middle" x="680" y="128">Total</text>
+<text class="txt" text-anchor="middle" x="195" y="193">Middle School</text>
+<text class="txt" text-anchor="middle" x="195" y="263">High School</text>
+<text class="txt" text-anchor="middle" x="195" y="333">Total</text>
+<text class="big" text-anchor="middle" x="360" y="193">x</text>
+<text class="big" text-anchor="middle" x="520" y="193">3x</text>
+<text class="big" text-anchor="middle" x="680" y="193">4x</text>
+<text class="big" text-anchor="middle" x="360" y="263">2x</text>
+<text class="big" text-anchor="middle" x="520" y="263">3x</text>
+<text class="big" text-anchor="middle" x="680" y="263">5x</text>
+<text class="big" text-anchor="middle" x="360" y="333">3x</text>
+<text class="big" text-anchor="middle" x="520" y="333">6x</text>
+<text class="big" text-anchor="middle" x="680" y="333">9x</text>
+</svg>
+</div>
+<div class="quote-block">
+<h3>Related sentence from the problem</h3>
+<blockquote>“all the participants are in middle school or high school, and each participant competes in épée or sabre.”</blockquote><blockquote>“There are twice as many épée competitors who are in high school as there are épée competitors in middle school.”</blockquote><blockquote>“Of the students in the club who are in middle school, there are three times as many sabre competitors as there are épée competitors.”</blockquote><blockquote>“Half of the sabre competitors who are in the club are in high school.”</blockquote>
+</div>
+
+<div class="script-block">
+<h3>Tutor says</h3>
+<p>Now we fill in the table. Middle school has <span class="formula">x</span> épée and <span class="formula">3x</span> sabre, so its row total is <span class="formula">4x</span>. High school has <span class="formula">2x</span> épée and <span class="formula">3x</span> sabre, so its row total is <span class="formula">5x</span>. Then the grand total is <span class="formula">4x + 5x = 9x</span>.</p>
+</div>
+<div class="board-block">
+<h3>Board / Image cue</h3>
+<p>Complete the table and show the row totals and grand total.</p>
+</div>
+</section>
+<section class="step-card" id="step07">
+<div class="step-head">
+<div>
+<div class="kicker">Use the total</div>
+<h2>Set up the equation</h2>
+</div>
+<a class="anchor" href="#step07">#07</a>
+</div>
+<div class="visual">
+<svg aria-label="Equation 9x equals 72" role="img" viewbox="0 0 900 280" xmlns="http://www.w3.org/2000/svg">
+<style>
+              .title{fill:#0f172a;font:800 28px sans-serif}.eq{fill:#1d4ed8;font:900 54px sans-serif}.small{fill:#475569;font:700 20px sans-serif}.box{fill:#eef2ff;stroke:#c7d2fe;stroke-width:2}
+            </style>
+<rect fill="#f8fbff" height="280" rx="24" width="900"></rect>
+<text class="title" x="40" y="46">There are 72 students in total</text>
+<rect class="box" height="110" rx="24" width="560" x="170" y="95"></rect>
+<text class="small" text-anchor="middle" x="450" y="145">Grand total from the table</text>
+<text class="eq" text-anchor="middle" x="450" y="185">9x = 72</text>
+</svg>
+</div>
+<div class="quote-block">
+<h3>Related sentence from the problem</h3>
+<blockquote>“If there are 72 students in my fencing club...”</blockquote>
+</div>
+
+<div class="script-block">
+<h3>Tutor says</h3>
+<p>The problem says there are 72 students altogether. Our table says the total number of students is <span class="formula">9x</span>. So we can now write the equation <span class="formula">9x = 72</span>.</p>
+</div>
+<div class="board-block">
+<h3>Board / Image cue</h3>
+<p>Write: <span class="formula">9x = 72</span>.</p>
+</div>
+</section>
+<section class="step-card" id="step08">
+<div class="step-head">
+<div>
+<div class="kicker">Solve</div>
+<h2>Find x</h2>
+</div>
+<a class="anchor" href="#step08">#08</a>
+</div>
+<div class="visual">
+<svg aria-label="Solve x equals 8" role="img" viewbox="0 0 900 300" xmlns="http://www.w3.org/2000/svg">
+<style>
+              .title{fill:#0f172a;font:800 28px sans-serif}.eq{fill:#1d4ed8;font:900 42px sans-serif}.ans{fill:#15803d;font:900 60px sans-serif}.small{fill:#475569;font:700 18px sans-serif}
+            </style>
+<rect fill="#f8fbff" height="300" rx="24" width="900"></rect>
+<text class="title" x="40" y="46">Solve the equation</text>
+<text class="eq" text-anchor="middle" x="450" y="120">9x = 72</text>
+<text class="eq" text-anchor="middle" x="450" y="180">x = 72 ÷ 9</text>
+<text class="ans" text-anchor="middle" x="450" y="248">x = 8</text>
+</svg>
+</div>
+<div class="quote-block">
+<h3>Related sentence from the problem</h3>
+<blockquote>“If there are 72 students in my fencing club...”</blockquote>
+</div>
+
+<div class="script-block">
+<h3>Tutor says</h3>
+<p>Now solve the equation. Divide both sides by 9. That gives <span class="formula">x = 72 ÷ 9 = 8</span>.</p>
+</div>
+<div class="board-block">
+<h3>Board / Image cue</h3>
+<p>Show: <span class="formula">x = 8</span>.</p>
+</div>
+</section>
+<section class="step-card" id="step09">
+<div class="step-head">
+<div>
+<div class="kicker">Answer the question</div>
+<h2>State the final answer clearly</h2>
+</div>
+<a class="anchor" href="#step09">#09</a>
+</div>
+<div class="visual">
+<svg aria-label="Final answer middle school epee equals 8" role="img" viewbox="0 0 900 280" xmlns="http://www.w3.org/2000/svg">
+<style>
+              .title{fill:#0f172a;font:800 28px sans-serif}.ans{fill:#166534;font:900 44px sans-serif}.box{fill:#dcfce7;stroke:#86efac;stroke-width:2}.small{fill:#14532d;font:700 22px sans-serif}
+            </style>
+<rect fill="#f8fbff" height="280" rx="24" width="900"></rect>
+<text class="title" x="40" y="46">Remember what x means</text>
+<rect class="box" height="120" rx="24" width="660" x="120" y="90"></rect>
+<text class="small" text-anchor="middle" x="450" y="145">x = number of middle school épée competitors</text>
+<text class="ans" text-anchor="middle" x="450" y="185">So the answer is 8.</text>
+</svg>
+</div>
+<div class="quote-block">
+<h3>Related sentence from the problem</h3>
+<blockquote>“how many are middle school épée competitors?”</blockquote>
+</div>
+
+<div class="script-block">
+<h3>Tutor says</h3>
+<p>Finally, always return to the meaning of the variable. We defined <span class="formula">x</span> to be the number of middle school épée competitors. Since <span class="formula">x = 8</span>, the answer is <strong>8 middle school épée competitors</strong>.</p>
+</div>
+<div class="board-block">
+<h3>Board / Image cue</h3>
+<p>Final answer: <span class="formula">8</span>.</p>
+</div>
+<div class="answer-box">Final Answer: 8 middle school épée competitors.</div>
+</section>
+</div>
+</main>
+</body>
+</html>
