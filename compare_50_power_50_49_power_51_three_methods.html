@@ -4,6 +4,17 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>比较 50^50 和 49^51 / Compare Powers</title>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [['\\(', '\\)']],
+    displayMath: [['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'global' }
+};
+</script>
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.75;color:#1f2937;background:#f4f7fb}
@@ -164,8 +175,80 @@ ln 49 ≈ 3.8918</div>
   <div class="answer"><span class="zh">所以 50⁵⁰ &lt; 49⁵¹，49⁵¹ 更大。</span><span class="en">So 50⁵⁰ &lt; 49⁵¹, and 49⁵¹ is greater.</span></div>
 </section>
 
+
+
 <section class="card answer-section">
-  <h2><span class="zh">五、最终答案</span><span class="en">5. Final Answer</span></h2>
+  <h2><span class="zh">五、解法四：连乘积比较</span><span class="en">5. Solution 4: Product comparison</span></h2>
+<p><span class="zh">先作商：</span><span class="en">First compare the ratio:</span></p>
+  <div class="formula">\[
+R=\frac{50^{50}}{49^{51}}
+=\frac{1}{49}\left(\frac{50}{49}\right)^{50}
+\]</div>
+
+  <p><span class="zh">把 50 个因子分成：外面留下 2 个，里面比较 48 个。</span><span class="en">Split the 50 factors into 2 factors outside and 48 factors for comparison.</span></p>
+  <div class="formula">\[
+R=
+\frac{1}{49}
+\left(\frac{50}{49}\right)^2
+\left(\frac{50}{49}\right)^{48}
+\]</div>
+
+  <p><span class="zh">因为：</span><span class="en">Because:</span></p>
+  <div class="formula">\[
+\frac{50}{49}<\frac{49}{48}<\frac{48}{47}<\cdots<\frac32
+\]</div>
+
+  <p><span class="zh">所以 48 个相同的 \(\frac{50}{49}\) 小于下面这个连乘积：</span><span class="en">So 48 identical factors of \(\frac{50}{49}\) are less than this telescoping product:</span></p>
+  <div class="formula">\[
+\left(\frac{50}{49}\right)^{48}
+<
+\frac{50}{49}\cdot\frac{49}{48}\cdot\frac{48}{47}
+\cdots
+\frac32
+\]</div>
+
+  <p><span class="zh">右边连乘约分：</span><span class="en">The product on the right telescopes:</span></p>
+  <div class="formula">\[
+\frac{50}{49}\cdot\frac{49}{48}\cdot\frac{48}{47}
+\cdots
+\frac32
+=
+\frac{50}{2}=25
+\]</div>
+
+  <p><span class="zh">因此：</span><span class="en">Therefore:</span></p>
+  <div class="formula">\[
+\left(\frac{50}{49}\right)^{48}<25
+\]</div>
+
+  <p><span class="zh">代回原来的商：</span><span class="en">Substitute back into the original ratio:</span></p>
+  <div class="formula">\[
+R
+<
+\frac{1}{49}
+\left(\frac{50}{49}\right)^2
+\cdot 25
+=
+\frac{62500}{117649}
+<1
+\]</div>
+
+  <div class="formula">\[
+\frac{50^{50}}{49^{51}}<1
+\quad\Longrightarrow\quad
+50^{50}<49^{51}
+\]</div>
+
+  <div class="answer"><span class="zh">所以 \(49^{51}\) 更大。</span><span class="en">So \(49^{51}\) is greater.</span></div>
+
+  <div class="tip">
+    <span class="zh">关键点：连乘比较做到 \(\frac32\) 就停，外面保留两个 \(\frac{50}{49}\)。如果继续乘到 \(\frac21\)，上界会变弱，不能直接证明小于 1。</span>
+    <span class="en">Key point: stop the telescoping product at \(\frac32\), leaving two factors of \(\frac{50}{49}\) outside. If we continue to \(\frac21\), the bound becomes weaker and cannot directly prove the ratio is less than 1.</span>
+  </div>
+</section>
+
+<section class="card answer-section">
+  <h2><span class="zh">六、最终答案</span><span class="en">6. Final Answer</span></h2>
   <div class="formula">50⁵⁰ &lt; 49⁵¹</div>
   <div class="answer"><span class="zh">最终答案：49⁵¹ 更大，应填 ＜。</span><span class="en">Final answer: 49⁵¹ is greater, so fill in ＜.</span></div>
 </section>
@@ -179,6 +262,7 @@ function updateButtons(){
   document.getElementById('langBtn').textContent=e?'中文':'English';
   document.getElementById('answerBtn').textContent=e?(a?'Hide Answer':'Show Answer'):(a?'隐藏答案':'显示答案');
   document.documentElement.lang=e?'en':'zh-CN';
+  if (window.MathJax) { MathJax.typesetPromise(); }
 }
 function toggleLanguage(){document.body.classList.toggle('show-en');updateButtons()}
 function toggleAnswers(){document.body.classList.toggle('show-answers');updateButtons()}
