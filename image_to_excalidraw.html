@@ -600,7 +600,11 @@
     });
 
     dropZone.addEventListener("click", event => {
-      if (event.target.tagName.toLowerCase() !== "button") fileInput.click();
+      // Important: clicking the <label for="fileInput"> already opens the
+      // file picker. Without this guard, the click bubbles to dropZone and
+      // calls fileInput.click() a second time, so the browser prompts twice.
+      if (event.target.closest("label, button, input, select, textarea, a")) return;
+      fileInput.click();
     });
 
     dropZone.addEventListener("keydown", event => {
