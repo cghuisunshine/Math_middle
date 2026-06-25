@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Image to Excalidraw Converter - Stable</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f8fafc;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #cbd5e1;
+      --accent: #4f46e5;
+      --accent-2: #4338ca;
+      --ok: #15803d;
+      --danger: #b91c1c;
+      --drop: #eef2ff;
+      --shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+      --code: rgba(148, 163, 184, 0.16);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #020617;
+        --card: #0f172a;
+        --text: #e5e7eb;
+        --muted: #94a3b8;
+        --border: #334155;
+        --accent: #818cf8;
+        --accent-2: #6366f1;
+        --drop: #111827;
+        --shadow: 0 18px 45px rgba(0, 0, 0, 0.35);
+        --code: rgba(148, 163, 184, 0.16);
+      }
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 28px;
+      background: radial-gradient(circle at top left, rgba(79, 70, 229, 0.18), transparent 35%), var(--bg);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    main {
+      width: min(1040px, 100%);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    header {
+      padding: 28px 28px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.55rem, 3vw, 2.35rem);
+      letter-spacing: -0.04em;
+    }
+
+    p { margin: 0; color: var(--muted); line-height: 1.55; }
+
+    .content {
+      display: grid;
+      grid-template-columns: 1fr 350px;
+      gap: 22px;
+      padding: 24px;
+    }
+
+    @media (max-width: 880px) {
+      .content { grid-template-columns: 1fr; }
+    }
+
+    .drop-zone {
+      border: 2px dashed var(--border);
+      background: var(--drop);
+      min-height: 430px;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      text-align: center;
+      transition: border-color 0.15s, transform 0.15s, background 0.15s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .drop-zone.dragover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+      background: rgba(129, 140, 248, 0.18);
+    }
+
+    .drop-inner { display: grid; gap: 14px; justify-items: center; max-width: 560px; z-index: 1; }
+
+    .icon {
+      width: 74px;
+      height: 74px;
+      border-radius: 20px;
+      display: grid;
+      place-items: center;
+      background: rgba(79, 70, 229, 0.13);
+      color: var(--accent-2);
+      font-size: 36px;
+      font-weight: 700;
+      user-select: none;
+    }
+
+    input[type="file"] { display: none; }
+
+    .btn-row { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+
+    button, .file-label {
+      appearance: none;
+      border: 0;
+      border-radius: 12px;
+      background: var(--accent);
+      color: white;
+      padding: 11px 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.12s, background 0.12s, opacity 0.12s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    button:hover, .file-label:hover { transform: translateY(-1px); background: var(--accent-2); }
+    button:disabled { opacity: 0.45; cursor: not-allowed; transform: none; }
+
+    .secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
+    .secondary:hover { background: rgba(148, 163, 184, 0.16); }
+
+    .preview-wrap { width: 100%; max-height: 460px; display: none; place-items: center; }
+    .preview-wrap img {
+      max-width: 100%;
+      max-height: 410px;
+      object-fit: contain;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: white;
+    }
+
+    aside {
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 18px;
+      align-self: stretch;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .field { display: grid; gap: 7px; }
+    label { font-size: 0.9rem; font-weight: 700; }
+
+    input[type="text"], input[type="number"], select {
+      width: 100%;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: transparent;
+      color: var(--text);
+      padding: 10px 12px;
+      font: inherit;
+    }
+
+    input[type="checkbox"] { transform: translateY(1px); }
+    .check-row { display: grid; grid-template-columns: auto 1fr; gap: 9px; align-items: start; }
+
+    .hint { color: var(--muted); font-size: 0.86rem; line-height: 1.45; }
+
+    .meta {
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+      display: grid;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      overflow-wrap: anywhere;
+    }
+
+    .status { min-height: 24px; font-weight: 650; }
+    .status.ok { color: var(--ok); }
+    .status.error { color: var(--danger); }
+
+    code { background: var(--code); padding: 2px 5px; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Image → Excalidraw</h1>
+      <p>Import or drag an image, then export a <code>.excalidraw</code> file with stable embedded image data.</p>
+    </header>
+
+    <section class="content">
+      <div id="dropZone" class="drop-zone" role="button" tabindex="0" aria-label="Drop image here or choose image file">
+        <div class="drop-inner" id="emptyState">
+          <div class="icon">↥</div>
+          <div>
+            <h2 style="margin: 0 0 8px;">Drop an image here</h2>
+            <p>PNG, JPG, WEBP, GIF, SVG, BMP, ICO, AVIF, or JFIF. For best Excalidraw editing stability, keep optimization enabled.</p>
+          </div>
+          <div class="btn-row">
+            <label class="file-label" for="fileInput">Choose image</label>
+          </div>
+        </div>
+
+        <div class="preview-wrap" id="previewWrap">
+          <img id="preview" alt="Selected image preview" />
+        </div>
+      </div>
+
+      <aside>
+        <input id="fileInput" type="file" accept="image/*" />
+
+        <div class="field">
+          <label for="outputName">Output file name</label>
+          <input id="outputName" type="text" value="image-embedded.excalidraw" />
+          <div class="hint">The page will add <code>.excalidraw</code> if you omit it.</div>
+        </div>
+
+        <div class="field">
+          <label for="canvasWidth">Canvas display width</label>
+          <input id="canvasWidth" type="number" min="50" step="10" value="1000" />
+          <div class="hint">How wide the image appears on the Excalidraw canvas.</div>
+        </div>
+
+        <div class="field">
+          <label for="padding">Canvas padding</label>
+          <input id="padding" type="number" min="0" step="10" value="80" />
+        </div>
+
+        <div class="field">
+          <div class="check-row">
+            <input id="optimize" type="checkbox" checked />
+            <label for="optimize">Optimize image for editing stability</label>
+          </div>
+          <div class="hint">Recommended. This rasterizes and resizes the embedded image so Excalidraw is less likely to lose image data after edits.</div>
+        </div>
+
+        <div class="field" id="optimizationFields">
+          <label for="embedMaxWidth">Max embedded pixel width</label>
+          <input id="embedMaxWidth" type="number" min="200" step="100" value="1800" />
+          <div class="hint">The saved image data is resized only if it is wider than this.</div>
+        </div>
+
+        <div class="field" id="formatField">
+          <label for="format">Embedded image format</label>
+          <select id="format">
+            <option value="image/webp">WEBP, smaller file</option>
+            <option value="image/jpeg">JPEG, compatible</option>
+            <option value="image/png">PNG, lossless</option>
+          </select>
+        </div>
+
+        <div class="field" id="qualityField">
+          <label for="quality">Quality</label>
+          <input id="quality" type="number" min="0.1" max="1" step="0.05" value="0.92" />
+          <div class="hint">Used for WEBP/JPEG. PNG ignores quality.</div>
+        </div>
+
+        <div class="btn-row">
+          <button id="exportBtn" disabled>Export .excalidraw</button>
+          <button id="resetBtn" class="secondary" disabled>Reset</button>
+        </div>
+
+        <div id="status" class="status" aria-live="polite"></div>
+
+        <div class="meta" id="meta">
+          <div>No image selected.</div>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const dropZone = document.getElementById("dropZone");
+    const fileInput = document.getElementById("fileInput");
+    const preview = document.getElementById("preview");
+    const previewWrap = document.getElementById("previewWrap");
+    const emptyState = document.getElementById("emptyState");
+    const exportBtn = document.getElementById("exportBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const outputName = document.getElementById("outputName");
+    const canvasWidthInput = document.getElementById("canvasWidth");
+    const paddingInput = document.getElementById("padding");
+    const optimizeInput = document.getElementById("optimize");
+    const embedMaxWidthInput = document.getElementById("embedMaxWidth");
+    const formatInput = document.getElementById("format");
+    const qualityInput = document.getElementById("quality");
+    const optimizationFields = document.getElementById("optimizationFields");
+    const formatField = document.getElementById("formatField");
+    const qualityField = document.getElementById("qualityField");
+    const statusEl = document.getElementById("status");
+    const metaEl = document.getElementById("meta");
+
+    let selected = null;
+
+    function setStatus(message, type = "") {
+      statusEl.textContent = message;
+      statusEl.className = `status ${type}`.trim();
+    }
+
+    function randomId(length = 20) {
+      const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-";
+      const bytes = new Uint8Array(length);
+      crypto.getRandomValues(bytes);
+      return Array.from(bytes, b => alphabet[b % alphabet.length]).join("");
+    }
+
+    async function sha1Hex(arrayBuffer) {
+      if (!crypto.subtle) return randomId(40);
+      const hash = await crypto.subtle.digest("SHA-1", arrayBuffer);
+      return Array.from(new Uint8Array(hash), b => b.toString(16).padStart(2, "0")).join("");
+    }
+
+    function fileToDataURL(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = () => reject(reader.error || new Error("Could not read file."));
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function loadImage(dataURL) {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => reject(new Error("Could not load image preview."));
+        img.src = dataURL;
+      });
+    }
+
+    function canvasToDataURL(canvas, mimeType, quality) {
+      return new Promise((resolve) => {
+        if (!canvas.toBlob) {
+          resolve(canvas.toDataURL(mimeType, quality));
+          return;
+        }
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            resolve(canvas.toDataURL(mimeType, quality));
+            return;
+          }
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result);
+          reader.readAsDataURL(blob);
+        }, mimeType, quality);
+      });
+    }
+
+    async function makeOptimizedDataURL(originalDataURL, naturalWidth, naturalHeight) {
+      const maxW = Math.max(200, Number(embedMaxWidthInput.value) || 1800);
+      const scale = Math.min(1, maxW / naturalWidth);
+      const targetW = Math.max(1, Math.round(naturalWidth * scale));
+      const targetH = Math.max(1, Math.round(naturalHeight * scale));
+      const mimeType = formatInput.value || "image/webp";
+      const quality = Math.min(1, Math.max(0.1, Number(qualityInput.value) || 0.92));
+
+      const img = await loadImage(originalDataURL);
+      const canvas = document.createElement("canvas");
+      canvas.width = targetW;
+      canvas.height = targetH;
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#ffffff";
+      if (mimeType === "image/jpeg") ctx.fillRect(0, 0, targetW, targetH);
+      ctx.drawImage(img, 0, 0, targetW, targetH);
+      const dataURL = await canvasToDataURL(canvas, mimeType, quality);
+
+      return {
+        dataURL,
+        mimeType: dataURL.slice(5, dataURL.indexOf(";")) || mimeType,
+        width: targetW,
+        height: targetH
+      };
+    }
+
+    function formatBytes(bytes) {
+      if (!Number.isFinite(bytes)) return "Unknown size";
+      const units = ["B", "KB", "MB", "GB"];
+      let value = bytes;
+      let unit = 0;
+      while (value >= 1024 && unit < units.length - 1) {
+        value /= 1024;
+        unit++;
+      }
+      return `${value.toFixed(value >= 10 || unit === 0 ? 0 : 1)} ${units[unit]}`;
+    }
+
+    function approxDataURLBytes(dataURL) {
+      const comma = dataURL.indexOf(",");
+      const data = comma >= 0 ? dataURL.slice(comma + 1) : dataURL;
+      return Math.round(data.length * 0.75);
+    }
+
+    async function handleFile(file) {
+      try {
+        setStatus("Reading image…");
+        if (!file || !file.type.startsWith("image/")) throw new Error("Please choose an image file.");
+
+        const arrayBuffer = await file.arrayBuffer();
+        const [dataURL, hash] = await Promise.all([fileToDataURL(file), sha1Hex(arrayBuffer)]);
+        const img = await loadImage(dataURL);
+        const width = img.naturalWidth || img.width || 1000;
+        const height = img.naturalHeight || img.height || 1000;
+
+        selected = {
+          file,
+          originalDataURL: dataURL,
+          fileId: `file_${hash.slice(0, 40)}`,
+          dimensions: { width, height }
+        };
+
+        preview.src = dataURL;
+        previewWrap.style.display = "grid";
+        emptyState.style.display = "none";
+        exportBtn.disabled = false;
+        resetBtn.disabled = false;
+
+        const baseName = file.name.replace(/\.[^.]+$/, "") || "image";
+        outputName.value = `${baseName}.excalidraw`;
+
+        metaEl.innerHTML = `
+          <div><strong>File:</strong> ${escapeHtml(file.name)}</div>
+          <div><strong>Type:</strong> ${escapeHtml(file.type || "image/*")}</div>
+          <div><strong>Original size:</strong> ${formatBytes(file.size)}</div>
+          <div><strong>Image:</strong> ${width} × ${height}px</div>
+          <div><strong>File ID:</strong> <code>${selected.fileId}</code></div>
+        `;
+        setStatus("Ready to export.", "ok");
+      } catch (error) {
+        console.error(error);
+        setStatus(error.message || "Something went wrong.", "error");
+      }
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    async function buildExcalidrawScene() {
+      if (!selected) throw new Error("No image selected.");
+
+      const now = Date.now();
+      const useOptimized = optimizeInput.checked;
+      const imageData = useOptimized
+        ? await makeOptimizedDataURL(selected.originalDataURL, selected.dimensions.width, selected.dimensions.height)
+        : {
+            dataURL: selected.originalDataURL,
+            mimeType: selected.file.type || "image/png",
+            width: selected.dimensions.width,
+            height: selected.dimensions.height
+          };
+
+      const canvasWidth = Math.max(50, Number(canvasWidthInput.value) || 1000);
+      const padding = Math.max(0, Number(paddingInput.value) || 0);
+      const scale = Math.min(1, canvasWidth / imageData.width);
+      const width = Math.max(1, Math.round(imageData.width * scale));
+      const height = Math.max(1, Math.round(imageData.height * scale));
+      const elementId = randomId();
+
+      const imageElement = {
+        id: elementId,
+        type: "image",
+        x: padding,
+        y: padding,
+        width,
+        height,
+        angle: 0,
+        strokeColor: "transparent",
+        backgroundColor: "transparent",
+        fillStyle: "solid",
+        strokeWidth: 1,
+        strokeStyle: "solid",
+        roughness: 0,
+        opacity: 100,
+        groupIds: [],
+        frameId: null,
+        roundness: null,
+        seed: Math.floor(Math.random() * 2147483647),
+        version: 1,
+        versionNonce: Math.floor(Math.random() * 2147483647),
+        isDeleted: false,
+        boundElements: null,
+        updated: now,
+        link: null,
+        locked: false,
+        index: "a1",
+        fileId: selected.fileId,
+        status: "saved",
+        scale: [1, 1],
+        crop: null
+      };
+
+      const scene = {
+        type: "excalidraw",
+        version: 2,
+        source: "https://excalidraw.com",
+        elements: [imageElement],
+        appState: {
+          viewBackgroundColor: "#ffffff",
+          gridSize: null
+        },
+        files: {
+          [selected.fileId]: {
+            id: selected.fileId,
+            mimeType: imageData.mimeType,
+            dataURL: imageData.dataURL,
+            created: now,
+            lastRetrieved: now,
+            version: 1
+          }
+        },
+        sceneVersion: String(now)
+      };
+
+      return { scene, imageData };
+    }
+
+    function normalizeFileName(name) {
+      const clean = (name || "image-embedded.excalidraw").trim();
+      return clean.toLowerCase().endsWith(".excalidraw") ? clean : `${clean}.excalidraw`;
+    }
+
+    function downloadTextFile(filename, content) {
+      const blob = new Blob([content], { type: "application/json;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    exportBtn.addEventListener("click", async () => {
+      try {
+        exportBtn.disabled = true;
+        setStatus("Building Excalidraw file…");
+        const { scene, imageData } = await buildExcalidrawScene();
+        const json = JSON.stringify(scene, null, 2);
+        downloadTextFile(normalizeFileName(outputName.value), json);
+        const embeddedBytes = approxDataURLBytes(imageData.dataURL);
+        setStatus(`Exported .excalidraw file. Embedded image: ${imageData.width} × ${imageData.height}px, about ${formatBytes(embeddedBytes)}.`, "ok");
+      } catch (error) {
+        console.error(error);
+        setStatus(error.message || "Export failed.", "error");
+      } finally {
+        exportBtn.disabled = !selected;
+      }
+    });
+
+    resetBtn.addEventListener("click", () => {
+      selected = null;
+      fileInput.value = "";
+      preview.removeAttribute("src");
+      previewWrap.style.display = "none";
+      emptyState.style.display = "grid";
+      exportBtn.disabled = true;
+      resetBtn.disabled = true;
+      outputName.value = "image-embedded.excalidraw";
+      metaEl.innerHTML = "<div>No image selected.</div>";
+      setStatus("");
+    });
+
+    function updateOptimizationVisibility() {
+      const display = optimizeInput.checked ? "grid" : "none";
+      optimizationFields.style.display = display;
+      formatField.style.display = display;
+      qualityField.style.display = display;
+    }
+
+    optimizeInput.addEventListener("change", updateOptimizationVisibility);
+    updateOptimizationVisibility();
+
+    fileInput.addEventListener("change", event => {
+      const file = event.target.files && event.target.files[0];
+      if (file) handleFile(file);
+    });
+
+    dropZone.addEventListener("click", event => {
+      if (event.target.tagName.toLowerCase() !== "button") fileInput.click();
+    });
+
+    dropZone.addEventListener("keydown", event => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        fileInput.click();
+      }
+    });
+
+    for (const eventName of ["dragenter", "dragover"]) {
+      dropZone.addEventListener(eventName, event => {
+        event.preventDefault();
+        dropZone.classList.add("dragover");
+      });
+    }
+
+    for (const eventName of ["dragleave", "drop"]) {
+      dropZone.addEventListener(eventName, event => {
+        event.preventDefault();
+        dropZone.classList.remove("dragover");
+      });
+    }
+
+    dropZone.addEventListener("drop", event => {
+      const file = event.dataTransfer.files && event.dataTransfer.files[0];
+      if (file) handleFile(file);
+    });
+  </script>
+</body>
+</html>
