@@ -203,7 +203,7 @@
   <main>
     <header>
       <h1>Image → Excalidraw</h1>
-      <p>Import or drag an image, then export a <code>.excalidraw</code> file with stable embedded image data.</p>
+      <p>Import, drag, or paste an image, then export a <code>.excalidraw</code> file with stable embedded image data.</p>
     </header>
 
     <section class="content">
@@ -211,8 +211,8 @@
         <div class="drop-inner" id="emptyState">
           <div class="icon">↥</div>
           <div>
-            <h2 style="margin: 0 0 8px;">Drop an image here</h2>
-            <p>PNG, JPG, WEBP, GIF, SVG, BMP, ICO, AVIF, or JFIF. For best Excalidraw editing stability, keep optimization enabled.</p>
+            <h2 style="margin: 0 0 8px;">Drop or paste an image here</h2>
+            <p>PNG, JPG, WEBP, GIF, SVG, BMP, ICO, AVIF, or JFIF. You can also paste an image from the clipboard with <code>Ctrl+V</code> or <code>⌘V</code>. For best Excalidraw editing stability, keep optimization enabled.</p>
           </div>
           <div class="btn-row">
             <label class="file-label" for="fileInput">Choose image</label>
@@ -406,6 +406,29 @@
       const comma = dataURL.indexOf(",");
       const data = comma >= 0 ? dataURL.slice(comma + 1) : dataURL;
       return Math.round(data.length * 0.75);
+    }
+
+    function getImageFileFromClipboardEvent(event) {
+      const clipboard = event.clipboardData;
+      if (!clipboard) return null;
+
+      const files = clipboard.files ? Array.from(clipboard.files) : [];
+      const imageFile = files.find(file => file && file.type && file.type.startsWith("image/"));
+      if (imageFile) return imageFile;
+
+      const items = clipboard.items ? Array.from(clipboard.items) : [];
+      for (const item of items) {
+        if (item.kind === "file" && item.type && item.type.startsWith("image/")) {
+          const file = item.getAsFile();
+          if (file) return file;
+        }
+      }
+
+      return null;
+    }
+
+    function isEditableTarget(target) {
+      return !!(target && (target.closest("input, textarea, select") || target.isContentEditable));
     }
 
     async function handleFile(file) {
@@ -631,6 +654,21 @@
     dropZone.addEventListener("drop", event => {
       const file = event.dataTransfer.files && event.dataTransfer.files[0];
       if (file) handleFile(file);
+    });
+
+    document.addEventListener("paste", event => {
+      const imageFile = getImageFileFromClipboardEvent(event);
+      if (!imageFile) return;
+
+      // If the clipboard contains an image, treat paste as import.
+      // This works whether the page itself or the drop zone is focused.
+      event.preventDefault();
+      if (isEditableTarget(event.target)) {
+        setStatus("Pasted image imported from clipboard.", "ok");
+      } else {
+        setStatus("Importing pasted image…");
+      }
+      handleFile(imageFile);
     });
   </script>
 </body>
