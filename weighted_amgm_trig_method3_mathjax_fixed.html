@@ -74,7 +74,7 @@ body.show-answers .hidden-note{display:none}
   </div>
   <div class="question-box">
     <div class="formula">\[
-    x>0,\quad y>0,\quad x^2+y^2=1
+    x\gt0,\quad y\gt0,\quad x^2+y^2=1
     \]</div>
     <div class="formula">\[
     \text{求 }(x+1)(5y+2)\text{ 的最大值}
@@ -241,7 +241,7 @@ body.show-answers .hidden-note{display:none}
   <p class="zh">设最优点满足：</p>
   <p class="en">Assume the optimal point satisfies:</p>
   <div class="formula">\[
-  y=sx,\qquad s>0
+  y=sx,\qquad s\gt0
   \]</div>
 
   <p class="zh">由 \(x^2+y^2=1\)：</p>
@@ -385,13 +385,13 @@ body.show-answers .hidden-note{display:none}
     </div>
   </div>
 
-  <p class="zh">由 \(x^2+y^2=1,\ x>0,\ y>0\)，设：</p>
-  <p class="en">Since \(x^2+y^2=1,\ x>0,\ y>0\), let:</p>
+  <p class="zh">由 \(x^2+y^2=1,\ x\gt0,\ y\gt0\)，设：</p>
+  <p class="en">Since \(x^2+y^2=1,\ x\gt0,\ y\gt0\), let:</p>
 
   <div class="formula">$$
   x=\cos\theta,\qquad
   y=\sin\theta,\qquad
-  0<\theta<\frac{\pi}{2}
+  0\lt\theta\lt\frac{\pi}{2}
   $$</div>
 
   <p class="zh">再令：</p>
@@ -399,7 +399,7 @@ body.show-answers .hidden-note{display:none}
 
   <div class="formula">$$
   t=\tan\frac{\theta}{2},
-  \qquad 0<t<1
+  \qquad 0\lt t\lt 1
   $$</div>
 
   <p class="zh">利用万能代换公式：</p>
@@ -443,11 +443,11 @@ body.show-answers .hidden-note{display:none}
   -\frac{4(2t-1)(t^2+8t+5)}{(1+t^2)^3}
   $$</div>
 
-  <p class="zh">在 \(0<t<1\) 内，\(t^2+8t+5>0\)，且 \((1+t^2)^3>0\)，所以 \(f'(t)\) 的符号只由 \(2t-1\) 决定。</p>
-  <p class="en">For \(0<t<1\), both \(t^2+8t+5\) and \((1+t^2)^3\) are positive, so the sign of \(f'(t)\) is determined by \(2t-1\).</p>
+  <p class="zh">在 \(0\lt t\lt1\) 内，\(t^2+8t+5\gt0\)，且 \((1+t^2)^3\gt0\)，所以 \(f'(t)\) 的符号只由 \(2t-1\) 决定。</p>
+  <p class="en">For \(0\lt t\lt1\), both \(t^2+8t+5\gt0\) and \((1+t^2)^3\gt0\), so the sign of \(f'(t)\) is determined by \(2t-1\).</p>
 
   <div class="formula">$$
-  f'(t)>0\quad\left(0<t<\frac12\right)
+  f'(t)\gt0\quad\left(0\lt t\lt\frac12\right)
   $$</div>
 
   <div class="formula">$$
@@ -455,7 +455,7 @@ body.show-answers .hidden-note{display:none}
   $$</div>
 
   <div class="formula">$$
-  f'(t)<0\quad\left(\frac12<t<1\right)
+  f'(t)\lt0\quad\left(\frac12\lt t\lt1\right)
   $$</div>
 
   <p class="zh">所以 \(f(t)\) 先增后减，在 \(t=\frac12\) 时取得最大值。</p>
@@ -498,7 +498,7 @@ body.show-answers .hidden-note{display:none}
 <section class="card answer-section">
   <h2><span class="zh">八、最终答案</span><span class="en">8. Final Answer</span></h2>
   <div class="formula">\[
-  \boxed{\max (x+1)(5y+2)=\frac{48}{5}}
+  \boxed{\displaystyle \max_{x^2+y^2=1}(x+1)(5y+2)=\frac{48}{5}}
   \]</div>
 </section>
 </main>
