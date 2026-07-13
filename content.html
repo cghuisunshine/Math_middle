@@ -1,4 +1,133 @@
-<section aria-labelledby="root-pages">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HTML Content Index</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f8f9fa;
+      --surface: #ffffff;
+      --text: #212529;
+      --muted: #667085;
+      --border: #d9dee7;
+      --link: #0066cc;
+      --link-hover: #004f9e;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: ui-sans-serif, system-ui, sans-serif;
+      line-height: 1.5;
+    }
+
+    main {
+      width: min(1040px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 32px 0 48px;
+    }
+
+    header {
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 16px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 28px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+
+    .summary {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    section {
+      margin-top: 24px;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+      line-height: 1.3;
+      letter-spacing: 0;
+    }
+
+    .link-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .link-list a {
+      display: block;
+      min-height: 72px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      background: var(--surface);
+      padding: 12px 14px;
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .link-list a:hover,
+    .link-list a:focus-visible {
+      border-color: var(--link);
+      outline: none;
+    }
+
+    .title {
+      display: block;
+      color: var(--link);
+      font-weight: 650;
+    }
+
+    .path {
+      display: block;
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 13px;
+      overflow-wrap: anywhere;
+    }
+
+    @media (max-width: 640px) {
+      main {
+        width: min(100% - 24px, 1040px);
+        padding-top: 24px;
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      .link-list {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <h1>HTML Content Index</h1>
+      <p class="summary">Links to the HTML files currently in this repository.</p>
+    </header>
+
+    <section aria-labelledby="root-pages">
       <h2 id="root-pages">Root Pages</h2>
       <ul class="link-list">
         <li>
@@ -152,6 +281,12 @@
           </a>
         </li>
         <li>
+          <a href="basic_counting_questions_answers_with_figures.html">
+            <span class="title">Basic Counting Techniques — Questions and Answers</span>
+            <span class="path">basic_counting_questions_answers_with_figures.html</span>
+          </a>
+        </li>
+        <li>
           <a href="counting_probability_chapter1_index.html">
             <span class="title">Chapter 1: Counting and Probability</span>
             <span class="path">counting_probability_chapter1_index.html</span>
@@ -277,13 +412,158 @@
             <span class="path">weighted_amgm_trig_method3_mathjax_fixed.html</span>
           </a>
         </li>
-          <li><a href="https://cghuisunshine.github.io/Math_middle/radical_sum_max_three_methods_bilingual.html">radical_sum_max_three_methods_bilingual.html</a></li>
+      </ul>
+    </section>
+
+    <section aria-labelledby="aiops-pages">
+      <h2 id="aiops-pages">AIOPS Grade 5-9 Pages</h2>
+      <ul class="link-list">
         <li>
-          <a href="basic_counting_circled_questions_answers.html">
-            <span class="title">Basic Counting Techniques — Questions and Answers</span>
-            <span class="path">basic_counting_circled_questions_answers.html</span>
+          <a href="AIOPS/grade-5-9/algebra_practice_index.html">
+            <span class="title">Algebra Practice Chapters</span>
+            <span class="path">AIOPS/grade-5-9/algebra_practice_index.html</span>
           </a>
         </li>
-
-  </ul>
+        <li>
+          <a href="Prime_Factorization_and_the_Least_Common_Multiple.html">
+            <span class="title">Prime Factorization and the Least Common Multiple</span>
+            <span class="path">Prime_Factorization_and_the_Least_Common_Multiple.html</span>
+          </a>
+        </li>
+        <li>
+          <a href="AIOPS/grade-5-9/chapter1_algebra_practice.html">
+            <span class="title">Chapter 1 Full Q&amp;A</span>
+            <span class="path">AIOPS/grade-5-9/chapter1_algebra_practice.html</span>
+          </a>
+        </li>
+        <li>
+          <a href="AIOPS/grade-5-9/chapter2_algebra_practice.html">
+            <span class="title">Chapter 2: x Marks the Spot</span>
+            <span class="path">AIOPS/grade-5-9/chapter2_algebra_practice.html</span>
+          </a>
+        </li>
+        <li>
+          <a href="AIOPS/grade-5-9/chapter3_algebra_practice.html">
+            <span class="title">Chapter 3: One-Variable Linear Equations</span>
+            <span class="path">AIOPS/grade-5-9/chapter3_algebra_practice.html</span>
+          </a>
+        </li>
+        <li>
+          <a href="AIOPS/grade-5-9/chapter4_algebra_practice.html">
+            <span class="title">Chapter 4: More Variables</span>
+            <span class="path">AIOPS/grade-5-9/chapter4_algebra_practice.html</span>
+          </a>
+        </li>
+        <li>
+          <a href="AIOPS/grade-5-9/chapter5_algebra_practice.html">
+            <span class="title">Chapter 5: Multi-Variable Linear Equations</span>
+            <span class="path">AIOPS/grade-5-9/chapter5_algebra_practice.html</span>
+          </a>
+        </li>
+        <li>
+          <a href="AIOPS/grade-5-9/chapter6_algebra_practice.html">
+            <span class="title">Chapter 6: Ratios and Percents</span>
+            <span class="path">AIOPS/grade-5-9/chapter6_algebra_practice.html</span>
+          </a>
+        </li>
+        <li>
+          <a href="AIOPS/grade-5-9/chapter7_algebra_practice.html">
+            <span class="title">Chapter 7: Proportion</span>
+            <span class="path">AIOPS/grade-5-9/chapter7_algebra_practice.html</span>
+          </a>
+        </li>
+        <li>
+          <a href="AIOPS/grade-5-9/chapter8_algebra_practice.html">
+            <span class="title">Chapter 8: Graphing Lines</span>
+            <span class="path">AIOPS/grade-5-9/chapter8_algebra_practice.html</span>
+          </a>
+        </li>
+        <li>
+          <a href="AIOPS/grade-5-9/chapter9_algebra_practice.html">
+            <span class="title">Chapter 9: Introduction to Inequalities</span>
+            <span class="path">AIOPS/grade-5-9/chapter9_algebra_practice.html</span>
+          </a>
+        </li>
+        <li>
+          <a href="AIOPS/grade-5-9/chapter10_algebra_practice.html">
+            <span class="title">Chapter 10: Quadratic Equations - Part 1</span>
+            <span class="path">AIOPS/grade-5-9/chapter10_algebra_practice.html</span>
+          </a>
+        </li>
+        <li>
+          <a href="AIOPS/grade-5-9/chapter11_algebra_practice.html">
+            <span class="title">Chapter 11: Special Factorizations</span>
+            <span class="path">AIOPS/grade-5-9/chapter11_algebra_practice.html</span>
+          </a>
+        </li>
+        <li>
+          <a href="AIOPS/grade-5-9/chapter12_algebra_practice.html">
+            <span class="title">Chapter 12: Complex Numbers</span>
+            <span class="path">AIOPS/grade-5-9/chapter12_algebra_practice.html</span>
+          </a>
+        </li>
+        <li>
+          <a href="AIOPS/grade-5-9/chapter13_algebra_practice.html">
+            <span class="title">Chapter 13: Quadratic Equations - Part 2</span>
+            <span class="path">AIOPS/grade-5-9/chapter13_algebra_practice.html</span>
+          </a>
+        </li>
+        <li>
+          <a href="AIOPS/grade-5-9/chapter14_algebra_practice.html">
+            <span class="title">Chapter 14: Graphing Quadratics</span>
+            <span class="path">AIOPS/grade-5-9/chapter14_algebra_practice.html</span>
+          </a>
+        </li>
+        <li>
+          <a href="AIOPS/grade-5-9/chapter15_algebra_practice.html">
+            <span class="title">Chapter 15: More Inequalities</span>
+            <span class="path">AIOPS/grade-5-9/chapter15_algebra_practice.html</span>
+          </a>
+        </li>
+        <li>
+          <a href="AIOPS/grade-5-9/chapter16_algebra_practice.html">
+            <span class="title">Chapter 16: Functions</span>
+            <span class="path">AIOPS/grade-5-9/chapter16_algebra_practice.html</span>
+          </a>
+        </li>
+        <li>
+          <a href="AIOPS/grade-5-9/chapter17_algebra_practice.html">
+            <span class="title">Chapter 17: Graphing Functions</span>
+            <span class="path">AIOPS/grade-5-9/chapter17_algebra_practice.html</span>
+          </a>
+        </li>
+        <li>
+          <a href="AIOPS/grade-5-9/chapter18_algebra_practice.html">
+            <span class="title">Chapter 18: Polynomials</span>
+            <span class="path">AIOPS/grade-5-9/chapter18_algebra_practice.html</span>
+          </a>
+        </li>
+        <li>
+          <a href="AIOPS/grade-5-9/chapter19_algebra_practice.html">
+            <span class="title">Chapter 19: Exponents and Logarithms</span>
+            <span class="path">AIOPS/grade-5-9/chapter19_algebra_practice.html</span>
+          </a>
+        </li>
+        <li>
+          <a href="AIOPS/grade-5-9/chapter20_algebra_practice.html">
+            <span class="title">Chapter 20: Special Functions</span>
+            <span class="path">AIOPS/grade-5-9/chapter20_algebra_practice.html</span>
+          </a>
+        </li>
+        <li>
+          <a href="AIOPS/grade-5-9/chapter21_algebra_practice.html">
+            <span class="title">Chapter 21: Sequences &amp; Series</span>
+            <span class="path">AIOPS/grade-5-9/chapter21_algebra_practice.html</span>
+          </a>
+        </li>
+        <li>
+          <a href="AIOPS/grade-5-9/chapter22_algebra_practice.html">
+            <span class="title">Chapter 22: Special Manipulations</span>
+            <span class="path">AIOPS/grade-5-9/chapter22_algebra_practice.html</span>
+          </a>
+        </li>
+      </ul>
     </section>
+  </main>
+</body>
+</html>
