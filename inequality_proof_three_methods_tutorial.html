@@ -1,12 +1,16 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="高一数学不等式证明专题：反证法、放缩法与构造法，含典型例题、方法辨析、互动检测及分层练习。">
   <title>不等式的证明：反证法、放缩法、构造法</title>
   <script>
     window.MathJax = {
-      tex: { inlineMath: [['\\(','\\)']], displayMath: [['\\[','\\]']] },
+      tex: {
+        inlineMath: [['\\(','\\)']],
+        displayMath: [['\\[','\\]'], ['$$','$$']]
+      },
       svg: { fontCache: 'global' }
     };
   </script>
@@ -23,8 +27,9 @@
       --paper:#ffffff;
       --bg:#f5f8f8;
       --blue:#3e7bd6;
+      --purple:#7557c7;
       --red:#d84d4d;
-      --gold:#b77600;
+      --gold:#9d6500;
       --shadow:0 10px 28px rgba(32,48,56,.10);
     }
     *{box-sizing:border-box}
@@ -32,7 +37,7 @@
     body{
       margin:0;
       background:
-        linear-gradient(135deg, rgba(255,159,50,.16), transparent 28%),
+        linear-gradient(135deg,rgba(255,159,50,.16),transparent 28%),
         var(--bg);
       color:var(--ink);
       font-family:"Noto Sans SC","Microsoft YaHei",system-ui,-apple-system,sans-serif;
@@ -43,21 +48,21 @@
       padding:34px 18px 48px;
     }
     .hero-inner{
-      max-width:1100px;
+      max-width:1120px;
       margin:auto;
-      background:rgba(255,255,255,.96);
-      border-radius:28px;
       padding:30px;
+      background:rgba(255,255,255,.97);
+      border-radius:28px;
       box-shadow:var(--shadow);
     }
     .eyebrow{
       display:inline-block;
-      background:var(--green);
-      color:white;
       padding:5px 13px;
       border-radius:999px;
-      font-weight:700;
+      background:var(--green);
+      color:#fff;
       font-size:.92rem;
+      font-weight:800;
     }
     h1{
       margin:.55rem 0 .3rem;
@@ -67,67 +72,88 @@
     .subtitle{color:var(--muted);font-size:1.06rem}
     .time-strip{
       display:grid;
-      grid-template-columns:repeat(4,1fr);
+      grid-template-columns:repeat(5,1fr);
       gap:10px;
       margin-top:22px;
     }
     .time-card{
-      border:1px solid var(--line);
-      border-radius:15px;
       padding:12px;
       text-align:center;
       background:#fff;
+      border:1px solid var(--line);
+      border-radius:15px;
     }
     .time-card strong{display:block;color:var(--green-dark)}
+    .timer,.toolbar{
+      display:flex;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:14px;
+    }
+    .timer{
+      padding:12px;
+      background:#f8fafb;
+      border:1px solid var(--line);
+      border-radius:12px;
+    }
+    #clock{
+      min-width:78px;
+      color:var(--green-dark);
+      font-size:1.4rem;
+      font-weight:800;
+      font-variant-numeric:tabular-nums;
+    }
     .layout{
-      max-width:1100px;
+      display:grid;
+      grid-template-columns:250px minmax(0,1fr);
+      align-items:start;
+      gap:22px;
+      max-width:1120px;
       margin:24px auto 60px;
       padding:0 18px;
-      display:grid;
-      grid-template-columns:250px 1fr;
-      gap:22px;
-      align-items:start;
     }
     nav{
       position:sticky;
       top:14px;
+      padding:16px;
       background:var(--paper);
       border:1px solid var(--line);
       border-radius:18px;
-      padding:16px;
       box-shadow:var(--shadow);
     }
     nav h3{margin:0 0 10px}
     nav a{
       display:block;
+      padding:8px 10px;
       color:var(--ink);
       text-decoration:none;
-      padding:8px 10px;
       border-radius:9px;
       font-size:.95rem;
     }
     nav a:hover{background:var(--green-soft);color:var(--green-dark)}
     main{min-width:0}
     section{
+      margin-bottom:20px;
+      padding:26px;
       background:var(--paper);
       border:1px solid var(--line);
       border-radius:20px;
-      padding:26px;
-      margin-bottom:20px;
       box-shadow:0 6px 20px rgba(32,48,56,.06);
+      scroll-margin-top:18px;
     }
     h2{
       margin-top:0;
+      padding-left:12px;
       font-size:1.75rem;
       border-left:6px solid var(--green);
-      padding-left:12px;
     }
-    h3{margin-top:1.5rem;color:var(--green-dark)}
+    h3{margin-top:1.55rem;color:var(--green-dark)}
     .lead{
-      font-size:1.08rem;
+      padding:16px 18px;
       background:var(--green-soft);
       border-radius:14px;
-      padding:16px 18px;
+      font-size:1.08rem;
     }
     .goal-grid,.method-grid,.practice-grid{
       display:grid;
@@ -135,32 +161,44 @@
       gap:14px;
     }
     .card{
-      border:1px solid var(--line);
-      border-radius:14px;
       padding:16px;
       background:#fff;
+      border:1px solid var(--line);
+      border-radius:14px;
     }
+    section > .card + .card{margin-top:12px}
     .card .tag{
       display:inline-block;
-      font-size:.82rem;
-      padding:2px 8px;
-      border-radius:999px;
-      background:#eef2f4;
-      color:var(--muted);
       margin-bottom:6px;
+      padding:2px 8px;
+      color:var(--muted);
+      background:#eef2f4;
+      border-radius:999px;
+      font-size:.82rem;
     }
-    .method{
-      border-top:5px solid var(--green);
-    }
+    .method{border-top:5px solid var(--green)}
     .method:nth-child(2){border-top-color:var(--orange)}
     .method:nth-child(3){border-top-color:var(--blue)}
+    .badge{
+      display:inline-block;
+      margin-left:6px;
+      padding:2px 9px;
+      color:#165847;
+      background:#dff5ee;
+      border-radius:999px;
+      font-size:.78rem;
+      font-weight:800;
+      letter-spacing:.02em;
+      vertical-align:middle;
+    }
+    .badge.optional{color:#553c99;background:#eee9ff}
     .formula{
+      margin:12px 0;
+      padding:12px 16px;
+      overflow-x:auto;
       background:#fbfcfd;
       border:1px dashed #bac8ce;
       border-radius:12px;
-      padding:12px 16px;
-      overflow-x:auto;
-      margin:12px 0;
     }
     .steps{
       counter-reset:step;
@@ -169,8 +207,8 @@
     }
     .steps li{
       position:relative;
-      padding:10px 12px 10px 48px;
       margin:8px 0;
+      padding:10px 12px 10px 48px;
       background:#f8fafb;
       border-radius:10px;
     }
@@ -178,36 +216,77 @@
       counter-increment:step;
       content:counter(step);
       position:absolute;
-      left:12px; top:10px;
-      width:25px;height:25px;
-      border-radius:50%;
-      display:grid;place-items:center;
+      top:10px;
+      left:12px;
+      display:grid;
+      place-items:center;
+      width:25px;
+      height:25px;
+      color:#fff;
       background:var(--green);
-      color:white;
-      font-weight:700;
+      border-radius:50%;
+      font-weight:800;
     }
-    .note,.warning,.teacher{
-      border-left:5px solid var(--gold);
-      background:#fff8e8;
-      padding:12px 15px;
-      border-radius:9px;
+    .note,.warning,.teacher,.insight{
       margin:14px 0;
+      padding:12px 15px;
+      border-left:5px solid var(--gold);
+      border-radius:9px;
+      background:#fff8e8;
     }
     .warning{border-color:var(--red);background:#fff0f0}
     .teacher{border-color:var(--blue);background:#eef5ff}
-    button{
-      border:0;
-      background:var(--green);
-      color:white;
-      padding:9px 14px;
-      border-radius:10px;
+    .insight{border-color:var(--purple);background:#f3efff}
+    .method-flow{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:8px;
+      align-items:stretch;
+      margin:14px 0;
+      padding:0;
+      list-style:none;
+    }
+    .flow-step{
+      position:relative;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      min-height:76px;
+      padding:10px 22px 10px 12px;
+      text-align:center;
+      background:#faf8ff;
+      border:1px solid #cec4f1;
+      border-radius:12px;
       font-weight:700;
-      cursor:pointer;
+    }
+    .flow-step:not(:last-child)::after{
+      content:"→";
+      position:absolute;
+      right:-16px;
+      z-index:1;
+      color:var(--purple);
+      font-size:1.35rem;
+      font-weight:900;
+    }
+    button{
+      min-height:42px;
       margin:4px 4px 4px 0;
+      padding:9px 14px;
+      color:#fff;
+      background:var(--green);
+      border:0;
+      border-radius:10px;
+      font-weight:800;
+      cursor:pointer;
     }
     button.secondary{background:#647781}
-    button.orange{background:var(--orange);color:#442900}
+    button.orange{color:#442900;background:var(--orange)}
     button:hover{filter:brightness(.95)}
+    button:disabled{cursor:not-allowed;filter:none;opacity:.9}
+    button:focus-visible,a:focus-visible{
+      outline:3px solid rgba(62,123,214,.42);
+      outline-offset:2px;
+    }
     .answer{
       display:none;
       margin-top:12px;
@@ -217,66 +296,84 @@
       border-radius:12px;
     }
     .answer.show{display:block}
+    .answer > :first-child{margin-top:0}
+    .answer > :last-child{margin-bottom:0}
+    .quiz{
+      margin:12px 0;
+      padding:14px;
+      background:#fbfcfd;
+      border:1px solid var(--line);
+      border-radius:14px;
+    }
+    .quiz > p:first-child{margin-top:0}
     .quiz-option{
       display:block;
       width:100%;
-      text-align:left;
-      background:#eef2f4;
-      color:var(--ink);
       margin:7px 0;
-      font-weight:600;
+      text-align:left;
+      color:var(--ink);
+      background:#eef2f4;
+      font-weight:650;
     }
-    .quiz-option.correct{background:#dff6e9;color:#14663b}
-    .quiz-option.wrong{background:#ffe4e4;color:#8f2424}
+    .quiz-option.correct{color:#14663b;background:#dff6e9}
+    .quiz-option.wrong{color:#8f2424;background:#ffe4e4}
+    .quiz-option.missed{outline:2px solid #4b9b6d}
+    .quiz-feedback{
+      min-height:1.75em;
+      margin:8px 0 0;
+      font-weight:800;
+    }
+    .quiz-feedback.ok{color:#14663b}
+    .quiz-feedback.no{color:#8f2424}
     .compare{
       width:100%;
-      border-collapse:collapse;
       margin-top:12px;
+      border-collapse:collapse;
     }
     .compare th,.compare td{
-      border:1px solid var(--line);
       padding:11px;
       vertical-align:top;
-    }
-    .compare th{background:var(--green-soft)}
-    .timer{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      flex-wrap:wrap;
-      margin-top:14px;
-      padding:12px;
-      border-radius:12px;
-      background:#f8fafb;
       border:1px solid var(--line);
     }
-    #clock{
-      font-size:1.4rem;
-      font-weight:800;
-      min-width:78px;
-      color:var(--green-dark);
-    }
+    .compare th{background:var(--green-soft)}
+    .table-wrap{margin-top:12px;overflow-x:auto}
+    .table-wrap .compare{min-width:660px;margin-top:0}
     .footer{
+      padding:15px 20px 35px;
       text-align:center;
       color:var(--muted);
-      padding:15px 20px 35px;
     }
     @media(max-width:850px){
       .layout{grid-template-columns:1fr}
       nav{position:static}
+      .nav-links{
+        display:grid;
+        grid-template-columns:repeat(4,1fr);
+        gap:4px;
+      }
       .time-strip,.goal-grid,.method-grid,.practice-grid{grid-template-columns:1fr 1fr}
     }
     @media(max-width:560px){
       .hero-inner,section{padding:20px}
-      .time-strip,.goal-grid,.method-grid,.practice-grid{grid-template-columns:1fr}
       h1{font-size:2rem}
+      .time-strip,.goal-grid,.method-grid,.practice-grid{grid-template-columns:1fr}
+      .nav-links{grid-template-columns:1fr 1fr}
+      .method-flow{grid-template-columns:1fr}
+      .flow-step{min-height:0;padding:12px}
+      .flow-step:not(:last-child)::after{
+        content:"↓";
+        right:auto;
+        bottom:-20px;
+      }
     }
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
     @media print{
-      nav,.timer,button{display:none!important}
+      nav,.timer,.toolbar,button{display:none!important}
       .layout{display:block}
-      section{box-shadow:none;break-inside:avoid}
-      .answer{display:block}
-      body{background:white}
+      section{box-shadow:none;break-inside:auto}
+      .card,.formula,.note,.warning,.teacher,.insight,.answer{break-inside:avoid}
+      .answer{display:block!important}
+      body{background:#fff}
     }
   </style>
 </head>
@@ -285,302 +382,562 @@
     <div class="hero-inner">
       <span class="eyebrow">高一数学 · 必修第一册 · 专题课</span>
       <h1>不等式的证明：反证法、放缩法、构造法</h1>
-      <p class="subtitle">适合 60—90 分钟课堂教学，包含概念讲解、典型例题、互动判断、分层练习与课堂总结。</p>
+      <p class="subtitle">建议完整课用时 75—85 分钟，也可按课堂路线压缩至 60 分钟或拓展至 90 分钟。重点是能解释“为什么选择这种方法”。</p>
       <div class="time-strip">
-        <div class="time-card"><strong>8–10 分钟</strong>导入与回顾</div>
-        <div class="time-card"><strong>15–20 分钟</strong>反证法</div>
-        <div class="time-card"><strong>20–25 分钟</strong>放缩法</div>
-        <div class="time-card"><strong>20–25 分钟</strong>构造法</div>
+        <div class="time-card"><strong>8 分钟</strong>目标与导入</div>
+        <div class="time-card"><strong>14 分钟</strong>反证法</div>
+        <div class="time-card"><strong>18 分钟</strong>放缩法</div>
+        <div class="time-card"><strong>20 分钟</strong>构造法</div>
+        <div class="time-card"><strong>15–25 分钟</strong>辨析、练习与总结</div>
       </div>
       <div class="timer">
-        <span>课堂计时：</span><span id="clock">00:00</span>
-        <button onclick="startTimer()">开始</button>
-        <button class="secondary" onclick="pauseTimer()">暂停</button>
-        <button class="orange" onclick="resetTimer()">重置</button>
+        <span>课堂计时：</span>
+        <span id="clock" aria-live="off">00:00</span>
+        <button type="button" onclick="startTimer()">开始</button>
+        <button type="button" class="secondary" onclick="pauseTimer()">暂停</button>
+        <button type="button" class="orange" onclick="resetTimer()">重置</button>
+      </div>
+      <div class="toolbar" role="group" aria-label="解答显示控制">
+        <button type="button" class="secondary" onclick="toggleAllAnswers(true)">展开全部解答</button>
+        <button type="button" class="secondary" onclick="toggleAllAnswers(false)">收起全部解答</button>
       </div>
     </div>
   </header>
 
   <div class="layout">
-    <nav>
+    <nav aria-label="课程导航">
       <h3>课程导航</h3>
-      <a href="#goals">1. 学习目标</a>
-      <a href="#warmup">2. 课堂导入</a>
-      <a href="#contradiction">3. 反证法</a>
-      <a href="#scaling">4. 放缩法</a>
-      <a href="#construction">5. 构造法</a>
-      <a href="#compare">6. 三法辨析</a>
-      <a href="#practice">7. 分层练习</a>
-      <a href="#summary">8. 课堂总结</a>
+      <div class="nav-links">
+        <a href="#goals">1. 学习目标</a>
+        <a href="#warmup">2. 课堂导入</a>
+        <a href="#contradiction">3. 反证法</a>
+        <a href="#scaling">4. 放缩法</a>
+        <a href="#construction">5. 构造法</a>
+        <a href="#compare">6. 三法辨析</a>
+        <a href="#practice">7. 分层练习</a>
+        <a href="#summary">8. 课堂总结</a>
+      </div>
     </nav>
 
     <main>
       <section id="goals">
         <h2>一、学习目标</h2>
         <div class="goal-grid">
-          <div class="card"><span class="tag">知识</span><br>理解反证法、放缩法、构造法的基本思想。</div>
-          <div class="card"><span class="tag">能力</span><br>能根据题目结构选择合适方法，并写出规范证明。</div>
-          <div class="card"><span class="tag">思维</span><br>形成“转化、比较、构造”的不等式思维。</div>
+          <div class="card"><span class="tag">知识</span><br>说清三种方法的起点、适用信号与逻辑边界。</div>
+          <div class="card"><span class="tag">能力</span><br>能写出方向正确、依据完整并包含取等条件的证明。</div>
+          <div class="card"><span class="tag">思维</span><br>能解释中间量或辅助式“为什么这样选”。</div>
         </div>
-        <div class="teacher"><b>教师提示：</b>本课不追求技巧堆积，重点是让学生说清楚“为什么想到这种方法”。</div>
+
+        <h3>前置知识</h3>
+        <div class="practice-grid">
+          <div class="card"><b>非负性</b><br>平方与平方和不小于 \(0\)。</div>
+          <div class="card"><b>不等式性质</b><br>特别注意乘除与取倒数时的符号。</div>
+          <div class="card"><b>代数工具</b><br>因式分解；含参数二次式为 90 分钟拓展。</div>
+        </div>
+
+        <div class="teacher">
+          <b>课堂路线：</b>60 分钟完成三个核心例题（例1、例2、例4）和 A、B 组重点题；
+          75 分钟加入例3、例5及方法辨析；90 分钟再讲例6与 C 组。带“选讲”标记的内容可跳过。
+        </div>
       </section>
 
       <section id="warmup">
         <h2>二、课堂导入：从一个基本事实开始</h2>
-        <p class="lead">所有常见的不等式证明，往往都在设法利用一个“显然非负”或“已知成立”的量。</p>
+        <p class="lead">许多不等式的直接证明，都在寻找一个“显然非负”或“已经知道界”的量；反证法则从结论的反面出发。三种方法的起点并不相同。</p>
         <div class="formula">
           \[
-          (a-b)^2\ge 0
+          (a-b)^2\ge0
           \quad\Longrightarrow\quad
-          a^2+b^2\ge 2ab.
+          a^2+b^2\ge2ab.
           \]
         </div>
         <p><b>思考：</b>要证明一个不等式，我们可以从哪些方向入手？</p>
         <div class="method-grid">
-          <div class="card method"><b>反证</b><br>假设结论不成立，寻找矛盾。</div>
-          <div class="card method"><b>放缩</b><br>把复杂式子换成容易比较的上界或下界。</div>
-          <div class="card method"><b>构造</b><br>构造平方、差、积或辅助量，使结论显现。</div>
+          <div class="card method"><b>反证：先否定</b><br>结论带“至少、至多、不存在”等语言时，写出它的准确否定。</div>
+          <div class="card method"><b>放缩：找中间界</b><br>目标是估计和式、分式或复杂表达式时，建立同方向比较链。</div>
+          <div class="card method"><b>构造：造非负量</b><br>目标作差后有平方、因式或平方和结构时，主动设计辅助式。</div>
         </div>
+        <div class="insight"><b>方法并不互斥：</b>反证法是一种证明逻辑；放缩法与构造法更侧重代数转化。同一个证明中可以先构造，再放缩。</div>
       </section>
 
       <section id="contradiction">
         <h2>三、反证法</h2>
-        <p class="lead"><b>核心：</b>假设结论不成立，经过正确推理得到矛盾，从而说明原结论成立。</p>
+        <p class="lead"><b>核心：</b>准确否定结论，并由反设推出与已知、定义或基本事实相矛盾的结果。</p>
 
         <h3>1. 标准步骤</h3>
         <ol class="steps">
-          <li>明确要证明的结论。</li>
-          <li>假设该结论不成立。</li>
-          <li>结合已知条件进行推理。</li>
-          <li>推出与已知、定义或基本事实矛盾的结果。</li>
-          <li>否定假设，得到原结论成立。</li>
+          <li>准确写出结论的否定，不能只写“假设结论不成立”。</li>
+          <li>把反设与题目条件结合，进行等价、保向的推理。</li>
+          <li>指出矛盾对象：与已知条件、定义或基本事实中的哪一条矛盾。</li>
+          <li>否定反设，明确写回原结论。</li>
         </ol>
 
-        <h3>2. 典型例题</h3>
-        <p><b>例1：</b>已知 \(a,b>0\)，且 \(a+b=1\)。证明：\(a,b\) 中至少有一个不小于 \(\frac12\)。</p>
-        <button onclick="toggleAnswer('a1',this)">显示解答</button>
-        <div class="answer" id="a1">
-          <p><b>证明：</b>假设 \(a,b\) 都小于 \(\frac12\)，即</p>
-          <div class="formula">\[
-            a<\frac12,\qquad b<\frac12.
-          \]</div>
-          <p>两式相加得 \(a+b<1\)，这与已知 \(a+b=1\) 矛盾。因此，\(a,b\) 中至少有一个不小于 \(\frac12\)。</p>
+        <h3>2. 先学会“正确否定”</h3>
+        <div class="table-wrap">
+          <table class="compare">
+            <thead>
+              <tr><th>原结论</th><th>它的否定</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>至少有一个数 \(\ge m\)</td><td>所有数都 \(\lt m\)</td></tr>
+              <tr><td>\(P\) 或 \(Q\) 成立</td><td>\(P\) 不成立且 \(Q\) 不成立</td></tr>
+              <tr><td>不存在满足条件的对象</td><td>假设存在一个满足条件的对象</td></tr>
+            </tbody>
+          </table>
         </div>
 
-        <h3>3. 何时适合反证法？</h3>
-        <div class="card">
-          常见语言：<b>“至少有一个”“不可能”“不存在”“唯一”“不能同时……”</b>
+        <h3>3. 典型例题 <span class="badge">核心</span></h3>
+        <p><b>例1：</b>已知实数 \(a,b\) 满足 \(a+b=1\)。证明：\(a,b\) 中至少有一个不小于 \(\frac12\)。</p>
+        <button type="button" data-answer-target="a1" aria-controls="a1" aria-expanded="false" onclick="toggleAnswer('a1',this)">显示解答</button>
+        <div class="answer" id="a1" aria-hidden="true">
+          <p><b>反设：</b>“至少有一个不小于 \(\frac12\)”的否定是两个数都小于 \(\frac12\)，即</p>
+          <div class="formula">
+            \[
+            a\lt\frac12,\qquad b\lt\frac12.
+            \]
+          </div>
+          <p><b>推出矛盾：</b>两式相加得 \(a+b\lt1\)，这与已知 \(a+b=1\) 矛盾。</p>
+          <p><b>结论：</b>反设不成立，因此 \(a,b\) 中至少有一个不小于 \(\frac12\)。</p>
+        </div>
+        <div class="teacher"><b>为什么选这道题？</b>它也能直接用平均数解释；这里特意使用反证法，是为了训练“至少有一个”的否定写法，而不是声称反证法唯一或最短。</div>
+
+        <h3>4. 何时适合反证法？</h3>
+        <div class="card">常见语言：<b>“至少有一个”“不可能”“不存在”“唯一”“不能同时……”</b></div>
+
+        <h3>5. 快速判断</h3>
+        <div class="quiz" data-explanation="否定“x&gt;1 或 y&gt;1”应写成“x≤1 且 y≤1”，相加便与 x+y&gt;2 矛盾。">
+          <p>证明“若 \(x+y>2\)，则 \(x>1\) 或 \(y>1\)”最自然的方法是什么？</p>
+          <button type="button" class="quiz-option" data-correct="false" onclick="checkQuiz(this)">直接展开</button>
+          <button type="button" class="quiz-option" data-correct="true" onclick="checkQuiz(this)">反证法：假设 \(x\le1\) 且 \(y\le1\)</button>
+          <button type="button" class="quiz-option" data-correct="false" onclick="checkQuiz(this)">配方</button>
+          <div class="quiz-feedback" aria-live="polite"></div>
+          <button type="button" class="secondary" onclick="resetQuiz(this)">重新作答</button>
         </div>
 
-        <h3>4. 快速判断</h3>
-        <p>证明“若 \(x+y>2\)，则 \(x>1\) 或 \(y>1\)”最自然的方法是什么？</p>
-        <button class="quiz-option" onclick="checkQuiz(this,false)">直接展开</button>
-        <button class="quiz-option" onclick="checkQuiz(this,true)">反证法：假设 \(x\le1\) 且 \(y\le1\)</button>
-        <button class="quiz-option" onclick="checkQuiz(this,false)">配方</button>
-
-        <div class="warning"><b>常见错误：</b>只写“假设不成立”，却没有明确写出“不成立”具体意味着什么。</div>
+        <div class="warning"><b>常见错误：</b>把“\(P\) 或 \(Q\)”的否定误写成“非 \(P\) 或非 \(Q\)”。正确否定是“非 \(P\) 且非 \(Q\)”。</div>
       </section>
 
       <section id="scaling">
         <h2>四、放缩法</h2>
-        <p class="lead"><b>核心：</b>通过适当地放大或缩小式子，建立一条容易证明的比较链。</p>
+        <p class="lead"><b>核心：</b>寻找合适的中间界，建立方向一致而且能够到达目标的比较链。</p>
 
-        <h3>1. 放缩方向</h3>
-        <table class="compare">
-          <tr><th>目标</th><th>常用思路</th></tr>
-          <tr><td>证明 \(A\le B\)</td><td>把 \(A\) 放大到 \(C\)，再证 \(C\le B\)；或把 \(B\) 缩小到 \(C\)，再证 \(A\le C\)。</td></tr>
-          <tr><td>证明 \(A\ge B\)</td><td>把 \(A\) 缩小到 \(C\)，再证 \(C\ge B\)；或把 \(B\) 放大到 \(C\)，再证 \(A\ge C\)。</td></tr>
-        </table>
+        <h3>1. 先确定方向</h3>
+        <div class="table-wrap">
+          <table class="compare">
+            <thead>
+              <tr><th>目标</th><th>需要建立的链</th><th>操作含义</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>证明 \(A\le B\)</td>
+                <td>\(A\le C_1\le\cdots\le B\)</td>
+                <td>给 \(A\) 找一个仍不超过 \(B\) 的上界。</td>
+              </tr>
+              <tr>
+                <td>证明 \(A\ge B\)</td>
+                <td>\(A\ge C_1\ge\cdots\ge B\)</td>
+                <td>给 \(A\) 找一个仍不低于 \(B\) 的下界。</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="note"><b>检查口诀：</b>每写一个“\(\le\)”或“\(\ge\)”，都问两件事：方向为什么正确？分母或乘数的符号是否已经确定？</div>
 
-        <h3>2. 典型例题一：逐项放缩</h3>
+        <h3>2. 典型例题一：逐项放缩 <span class="badge">核心</span></h3>
         <p><b>例2：</b>证明：</p>
-        <div class="formula">\[
-          \frac1{2^2}+\frac1{3^2}+\cdots+\frac1{n^2}<1
+        <div class="formula">
+          \[
+          \frac1{2^2}+\frac1{3^2}+\cdots+\frac1{n^2}\lt1
           \qquad(n\ge2).
-        \]</div>
-        <button onclick="toggleAnswer('a2',this)">显示解答</button>
-        <div class="answer" id="a2">
-          <p>对于 \(k\ge2\)，有</p>
-          <div class="formula">\[
-          k^2>k(k-1),
-          \quad\text{所以}\quad
-          \frac1{k^2}<\frac1{k(k-1)}
-          =\frac1{k-1}-\frac1k.
-          \]</div>
-          <p>于是</p>
-          <div class="formula">\[
-          \sum_{k=2}^{n}\frac1{k^2}
-          <
-          \sum_{k=2}^{n}\left(\frac1{k-1}-\frac1k\right)
-          =1-\frac1n<1.
-          \]</div>
-          <p>这里先把每一项放大为可裂项的分式，再利用“首尾相消”。</p>
+          \]
+        </div>
+        <button type="button" data-answer-target="a2" aria-controls="a2" aria-expanded="false" onclick="toggleAnswer('a2',this)">显示解答</button>
+        <div class="answer" id="a2" aria-hidden="true">
+          <p><b>第一步：从“求和”反向设计。</b>希望放大后的分式能够裂项相消。因为</p>
+          <div class="formula">
+            \[
+            \frac1{k(k-1)}
+            =\frac1{k-1}-\frac1k,
+            \]
+          </div>
+          <p>所以尝试用 \(\frac1{k(k-1)}\) 作为 \(\frac1{k^2}\) 的上界。</p>
+
+          <p><b>第二步：检查方向。</b>当 \(k\ge2\) 时，各分母均为正，且</p>
+          <div class="formula">
+            \[
+            k^2-k(k-1)=k>0.
+            \]
+          </div>
+          <p>因此 \(k^2>k(k-1)>0\)，取倒数后方向改变：</p>
+          <div class="formula">
+            \[
+            \frac1{k^2}
+            \lt\frac1{k(k-1)}
+            =\frac1{k-1}-\frac1k.
+            \]
+          </div>
+
+          <p><b>第三步：逐项相加。</b></p>
+          <div class="formula">
+            \[
+            \sum_{k=2}^{n}\frac1{k^2}
+            \lt
+            \sum_{k=2}^{n}\left(\frac1{k-1}-\frac1k\right)
+            =1-\frac1n\lt1.
+            \]
+          </div>
+          <p>所以原不等式成立。这里的关键不是“把它变大”，而是把它变成一个<b>可裂项、能求和、又不会越过目标</b>的上界。</p>
         </div>
 
-        <h3>3. 典型例题二：用基本不等式放缩</h3>
+        <h3>3. 典型例题二：利用已知下界整体放缩</h3>
         <p><b>例3：</b>已知 \(a,b>0\)，证明：</p>
-        <div class="formula">\[
-          \frac{a}{b}+\frac{b}{a}\ge2.
-        \]</div>
-        <button onclick="toggleAnswer('a3',this)">显示解答</button>
-        <div class="answer" id="a3">
-          <p>因为 \((a-b)^2\ge0\)，所以 \(a^2+b^2\ge2ab\)。两边同除以 \(ab>0\)，得</p>
-          <div class="formula">\[
-            \frac{a}{b}+\frac{b}{a}\ge2.
-          \]</div>
+        <div class="formula">
+          \[
+          (a+b)\left(\frac1a+\frac1b\right)\ge4.
+          \]
         </div>
+        <button type="button" data-answer-target="a3" aria-controls="a3" aria-expanded="false" onclick="toggleAnswer('a3',this)">显示解答</button>
+        <div class="answer" id="a3" aria-hidden="true">
+          <p>先展开，找出可以估计的局部：</p>
+          <div class="formula">
+            \[
+            (a+b)\left(\frac1a+\frac1b\right)
+            =2+\frac ab+\frac ba.
+            \]
+          </div>
+          <p>由 \((a-b)^2\ge0\) 且 \(ab>0\)，可得</p>
+          <div class="formula">
+            \[
+            \frac ab+\frac ba\ge2.
+            \]
+          </div>
+          <p>把这个局部下界代回原式：</p>
+          <div class="formula">
+            \[
+            (a+b)\left(\frac1a+\frac1b\right)
+            =2+\frac ab+\frac ba
+            \ge2+2=4.
+            \]
+          </div>
+          <p>当且仅当 \(a=b\) 时取等号。</p>
+        </div>
+        <div class="insight"><b>为什么这次称为放缩？</b>\(\frac ab+\frac ba\ge2\) 本身可以由构造平方得到；在本题中，它被当作原表达式一部分的下界，所以整体证明的主线是“放缩”。方法要根据它在证明中的作用判断。</div>
 
         <h3>4. 放缩的关键</h3>
-        <div class="note">
-          放缩不是“随便变大或变小”，而是要同时满足：<br>
-          ① 方向正确；② 新式子更容易处理；③ 最终能接近目标。
-        </div>
+        <div class="note">① 方向正确；② 条件足够；③ 新式子更容易处理；④ 中间界能够到达目标；⑤ 若题目要求最佳常数，还要检查取等是否可能。</div>
+        <div class="warning"><b>常见错误：</b>没有说明分母为正就取倒数；或者只写出 \(A\le C\)，却没有继续证明 \(C\le B\)。这样的比较链没有到达目标。</div>
       </section>
 
       <section id="construction">
         <h2>五、构造法</h2>
-        <p class="lead"><b>核心：</b>根据目标式的结构，主动构造一个恒非负的平方、差、乘积或辅助表达式。</p>
+        <p class="lead"><b>核心：</b>根据目标的项、系数和预期取等情形，主动设计一个恒非负的平方、乘积、平方和或含参数辅助式。</p>
 
-        <h3>1. 构造平方</h3>
-        <p><b>例4：</b>证明：</p>
-        <div class="formula">\[
+        <ol class="method-flow" aria-label="构造法思考流程">
+          <li class="flow-step">目标移到一边</li>
+          <li class="flow-step">观察项与取等情形</li>
+          <li class="flow-step">设计非负表达式</li>
+          <li class="flow-step">展开核对并判断取等</li>
+        </ol>
+        <div class="insight"><b>概念边界：</b>“作差”只是常见入口；真正的构造发生在你主动选择平方、因式或辅助参数，使这个差的非负性变得清楚。</div>
+
+        <h3>1. 作差后构造平方和 <span class="badge">核心</span></h3>
+        <p><b>例4：</b>对任意实数 \(a,b,c\)，证明：</p>
+        <div class="formula">
+          \[
           a^2+b^2+c^2\ge ab+bc+ca.
-        \]</div>
-        <button onclick="toggleAnswer('a4',this)">显示解答</button>
-        <div class="answer" id="a4">
-          <p>观察目标两边作差：</p>
-          <div class="formula">\[
-          a^2+b^2+c^2-ab-bc-ca
-          =\frac12\big[(a-b)^2+(b-c)^2+(c-a)^2\big]\ge0.
-          \]</div>
-          <p>所以原不等式成立。当且仅当 \(a=b=c\) 时取等号。</p>
+          \]
+        </div>
+        <button type="button" data-answer-target="a4" aria-controls="a4" aria-expanded="false" onclick="toggleAnswer('a4',this)">显示解答</button>
+        <div class="answer" id="a4" aria-hidden="true">
+          <p><b>第一步：作差。</b>令</p>
+          <div class="formula">
+            \[
+            D=a^2+b^2+c^2-ab-bc-ca.
+            \]
+          </div>
+          <p><b>第二步：反向构造。</b>式子关于 \(a,b,c\) 对称，而且预期 \(a=b=c\) 时取等，因此尝试使用两两之差的平方：</p>
+          <div class="formula">
+            \[
+            (a-b)^2+(b-c)^2+(c-a)^2.
+            \]
+          </div>
+          <p><b>第三步：展开核对系数。</b></p>
+          <div class="formula">
+            \[
+            (a-b)^2+(b-c)^2+(c-a)^2
+            =2(a^2+b^2+c^2-ab-bc-ca)=2D.
+            \]
+          </div>
+          <p>所以</p>
+          <div class="formula">
+            \[
+            D=\frac12\big[(a-b)^2+(b-c)^2+(c-a)^2\big]\ge0.
+            \]
+          </div>
+          <p>原不等式成立。当且仅当 \(a=b=c\) 时，三个平方同时为 \(0\)，因此取等。</p>
         </div>
 
-        <h3>2. 构造乘积</h3>
-        <p><b>例5：</b>若 \(a\ge b\ge0\)，证明：</p>
-        <div class="formula">\[
+        <h3>2. 作差后构造非负乘积（因式分解）</h3>
+        <p><b>例5：</b>若实数 \(a\ge b\)，证明：</p>
+        <div class="formula">
+          \[
           a^3-b^3\ge ab(a-b).
-        \]</div>
-        <button onclick="toggleAnswer('a5',this)">显示解答</button>
-        <div class="answer" id="a5">
-          <p>两边作差并因式分解：</p>
-          <div class="formula">\[
-          a^3-b^3-ab(a-b)
-          =(a-b)(a^2+b^2)\ge0.
-          \]</div>
-          <p>因为 \(a-b\ge0\)，且 \(a^2+b^2\ge0\)，所以原不等式成立。</p>
+          \]
+        </div>
+        <button type="button" data-answer-target="a5" aria-controls="a5" aria-expanded="false" onclick="toggleAnswer('a5',this)">显示解答</button>
+        <div class="answer" id="a5" aria-hidden="true">
+          <p>作差，并利用高次差中常见的因式 \(a-b\)：</p>
+          <div class="formula">
+            \[
+            \begin{aligned}
+            D
+            &amp;=a^3-b^3-ab(a-b)\\
+            &amp;=(a-b)(a^2+ab+b^2)-ab(a-b)\\
+            &amp;=(a-b)(a^2+b^2).
+            \end{aligned}
+            \]
+          </div>
+          <p>由 \(a\ge b\)，有 \(a-b\ge0\)；又 \(a^2+b^2\ge0\)。因此 \(D\ge0\)，原不等式成立。</p>
+          <p>当且仅当 \(a=b\) 时取等。注意：原版本中的条件 \(b\ge0\) 实际上没有用到，所以这里已经删去。</p>
         </div>
 
-        <h3>3. 构造辅助量</h3>
-        <p><b>例6：</b>已知 \(x>0\)，证明：</p>
-        <div class="formula">\[
-          x+\frac1x\ge2.
-        \]</div>
-        <button onclick="toggleAnswer('a6',this)">显示解答</button>
-        <div class="answer" id="a6">
-          <p>可以构造平方：</p>
-          <div class="formula">\[
-          \left(\sqrt{x}-\frac1{\sqrt{x}}\right)^2\ge0.
-          \]</div>
-          <p>展开即得 \(x+\frac1x-2\ge0\)，所以 \(x+\frac1x\ge2\)。</p>
+        <h3>3. 构造含参数的平方和 <span class="badge optional">90 分钟选讲</span></h3>
+        <p><b>例6：</b>对任意实数 \(a,b,x,y\)，证明：</p>
+        <div class="formula">
+          \[
+          (ax+by)^2\le(a^2+b^2)(x^2+y^2).
+          \]
+        </div>
+        <button type="button" data-answer-target="a6" aria-controls="a6" aria-expanded="false" onclick="toggleAnswer('a6',this)">显示解答</button>
+        <div class="answer" id="a6" aria-hidden="true">
+          <p><b>构造动机：</b>目标中同时出现两个平方和以及一次组合 \(ax+by\)。为了让这些结构出现在同一个非负式中，引入实参数 \(t\)，构造</p>
+          <div class="formula">
+            \[
+            F(t)=(at-x)^2+(bt-y)^2\ge0.
+            \]
+          </div>
+          <p>展开得</p>
+          <div class="formula">
+            \[
+            F(t)
+            =(a^2+b^2)t^2-2(ax+by)t+(x^2+y^2).
+            \]
+          </div>
+          <p>若 \(a=b=0\)，原不等式两边都为 \(0\)，结论显然成立。下面设 \(a,b\) 不全为 \(0\)，于是 \(a^2+b^2>0\)。</p>
+          <p>因为关于 \(t\) 的二次式 \(F(t)\) 对所有实数 \(t\) 都非负，所以判别式不大于 \(0\)：</p>
+          <div class="formula">
+            \[
+            \begin{aligned}
+            \Delta
+            &amp;=[-2(ax+by)]^2-4(a^2+b^2)(x^2+y^2)\\
+            &amp;\le0.
+            \end{aligned}
+            \]
+          </div>
+          <p>两边同除以 \(4\)，即得</p>
+          <div class="formula">
+            \[
+            (ax+by)^2\le(a^2+b^2)(x^2+y^2).
+            \]
+          </div>
+          <p>若 \(a=b=0\)，等号恒成立；若 \(a,b\) 不全为 \(0\)，当且仅当存在同一个实数 \(t\)，使 \(x=at,\ y=bt\) 时取等。</p>
         </div>
 
-        <h3>4. 构造法的观察入口</h3>
+        <h3>4. 怎样想到构造什么？</h3>
         <div class="practice-grid">
-          <div class="card"><b>看到平方项</b><br>尝试配成 \((a-b)^2\)。</div>
-          <div class="card"><b>看到高次差</b><br>尝试因式分解。</div>
-          <div class="card"><b>看到倒数</b><br>尝试平方、均值不等式或换元。</div>
+          <div class="card"><b>预期若干量相等时取等</b><br>尝试构造它们两两之差的平方和。</div>
+          <div class="card"><b>作差后出现高次差</b><br>尝试提出 \(a-b\)、\(a+b\) 等因式，并检查每个因式的符号。</div>
+          <div class="card"><b>目标含两个平方和的乘积</b><br>尝试引入参数，构造含两项的平方和。</div>
         </div>
+        <div class="warning"><b>常见错误：</b>只写“显然可以配成……”却不展开核对；忽略某个因式的符号；或者得到等号条件后不检查它是否满足原题条件。</div>
       </section>
 
       <section id="compare">
         <h2>六、三种方法辨析</h2>
-        <table class="compare">
-          <tr>
-            <th>方法</th><th>思维起点</th><th>适合题型</th><th>典型信号</th>
-          </tr>
-          <tr>
-            <td><b>反证法</b></td>
-            <td>先否定结论</td>
-            <td>至少、至多、不可能、唯一</td>
-            <td>直接证明不易，但否定后条件很强</td>
-          </tr>
-          <tr>
-            <td><b>放缩法</b></td>
-            <td>寻找中间量</td>
-            <td>分式和、根式和、数列估计</td>
-            <td>某些项可替换为更简单的上界或下界</td>
-          </tr>
-          <tr>
-            <td><b>构造法</b></td>
-            <td>构造非负量</td>
-            <td>多项式、对称式、平方与乘积</td>
-            <td>作差后可配方或因式分解</td>
-          </tr>
-        </table>
-        <div class="teacher"><b>课堂提问：</b>同一道题是否只能使用一种方法？答案是否定的。数学方法之间经常可以互相转化。</div>
+        <div class="table-wrap">
+          <table class="compare">
+            <thead>
+              <tr>
+                <th>方法</th>
+                <th>第一步问什么？</th>
+                <th>常见信号</th>
+                <th>必须检查</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><b>反证法</b></td>
+                <td>结论的准确否定是什么？</td>
+                <td>至少、至多、不存在、不可能、唯一</td>
+                <td>反设是否写对；矛盾究竟与什么冲突</td>
+              </tr>
+              <tr>
+                <td><b>放缩法</b></td>
+                <td>需要上界还是下界？</td>
+                <td>和式估计、分式、根式、复杂局部</td>
+                <td>方向、符号、比较链是否真正到达目标</td>
+              </tr>
+              <tr>
+                <td><b>构造法</b></td>
+                <td>什么非负式展开后会出现目标？</td>
+                <td>对称式、高次差、预期相等时取等、平方和乘积</td>
+                <td>恒等式、非负依据和取等条件</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="teacher"><b>同一道题可以有多种方法。</b>方法名称描述的是证明主线，不是给每个代数步骤贴唯一标签。例如，平方非负既可以直接完成构造证明，也可以先给出一个局部下界，再服务于整体放缩。</div>
+
+        <h3>即时检测：先选“主线方法”</h3>
+        <div class="quiz" data-explanation="否定结论后可得 x≤1 且 y≤1，从而与 x+y&gt;2 矛盾。">
+          <p><b>①</b> 若 \(x+y>2\)，证明 \(x>1\) 或 \(y>1\)。</p>
+          <button type="button" class="quiz-option" data-correct="true" onclick="checkQuiz(this)">反证法</button>
+          <button type="button" class="quiz-option" data-correct="false" onclick="checkQuiz(this)">放缩法</button>
+          <button type="button" class="quiz-option" data-correct="false" onclick="checkQuiz(this)">构造法</button>
+          <div class="quiz-feedback" aria-live="polite"></div>
+          <button type="button" class="secondary" onclick="resetQuiz(this)">重新作答</button>
+        </div>
+
+        <div class="quiz" data-explanation="目标是估计一个和式的上界，应寻找可求和的逐项上界。">
+          <p><b>②</b> 估计 \(\displaystyle\sum_{k=2}^{n}\frac1{k^2}\) 的上界。</p>
+          <button type="button" class="quiz-option" data-correct="false" onclick="checkQuiz(this)">反证法</button>
+          <button type="button" class="quiz-option" data-correct="true" onclick="checkQuiz(this)">放缩法</button>
+          <button type="button" class="quiz-option" data-correct="false" onclick="checkQuiz(this)">构造法</button>
+          <div class="quiz-feedback" aria-live="polite"></div>
+          <button type="button" class="secondary" onclick="resetQuiz(this)">重新作答</button>
+        </div>
+
+        <div class="quiz" data-explanation="作差后可构造两两之差的平方和，因此主线是构造法。">
+          <p><b>③</b> 证明 \(a^2+b^2+c^2\ge ab+bc+ca\)。</p>
+          <button type="button" class="quiz-option" data-correct="false" onclick="checkQuiz(this)">反证法</button>
+          <button type="button" class="quiz-option" data-correct="false" onclick="checkQuiz(this)">放缩法</button>
+          <button type="button" class="quiz-option" data-correct="true" onclick="checkQuiz(this)">构造法</button>
+          <div class="quiz-feedback" aria-live="polite"></div>
+          <button type="button" class="secondary" onclick="resetQuiz(this)">重新作答</button>
+        </div>
       </section>
 
       <section id="practice">
         <h2>七、分层练习</h2>
+        <p class="lead">先在草稿上写出“为什么选这种方法”，再展开证明。所有答案默认隐藏。</p>
 
         <h3>A组：基础巩固</h3>
         <div class="card">
-          <p><b>1.</b> 已知 \(a+b=3\)，证明 \(a,b\) 中至少有一个不小于 \(\frac32\)。</p>
-          <button onclick="toggleAnswer('p1',this)">显示答案</button>
-          <div class="answer" id="p1">反证：假设 \(a<\frac32\) 且 \(b<\frac32\)，则 \(a+b<3\)，与已知矛盾。</div>
-        </div>
-        <div class="card">
-          <p><b>2.</b> 证明 \(a^2+b^2\ge2ab\)。</p>
-          <button onclick="toggleAnswer('p2',this)">显示答案</button>
-          <div class="answer" id="p2">\((a-b)^2\ge0\)，展开即可。</div>
-        </div>
-
-        <h3>B组：方法选择</h3>
-        <div class="card">
-          <p><b>3.</b> 证明 \(\frac1{2\cdot3}+\frac1{3\cdot4}+\cdots+\frac1{n(n+1)}<\frac12\)。</p>
-          <button onclick="toggleAnswer('p3',this)">显示答案</button>
-          <div class="answer" id="p3">
-            \[
-            \frac1{k(k+1)}=\frac1k-\frac1{k+1}.
-            \]
-            因此原式
-            \[
-            =\frac12-\frac1{n+1}<\frac12.
-            \]
-            这里主要运用了裂项与比较思想。
-          </div>
-        </div>
-        <div class="card">
-          <p><b>4.</b> 证明 \(a^4+b^4\ge2a^2b^2\)。</p>
-          <button onclick="toggleAnswer('p4',this)">显示答案</button>
-          <div class="answer" id="p4">
-            \[
-            a^4+b^4-2a^2b^2=(a^2-b^2)^2\ge0.
-            \]
+          <p><b>1.</b> 已知实数 \(a,b,c\) 满足 \(a+b+c=6\)。证明：\(a,b,c\) 中至少有一个不小于 \(2\)。</p>
+          <button type="button" data-answer-target="p1" aria-controls="p1" aria-expanded="false" onclick="toggleAnswer('p1',this)">显示答案</button>
+          <div class="answer" id="p1" aria-hidden="true">
+            <p><b>方法：</b>反证法。</p>
+            <p>假设三个数都小于 \(2\)，则 \(a+b+c\lt6\)，与已知 \(a+b+c=6\) 矛盾。因此至少有一个数不小于 \(2\)。</p>
           </div>
         </div>
 
-        <h3>C组：综合提升</h3>
         <div class="card">
-          <p><b>5.</b> 已知 \(a,b,c>0\)，且 \(a+b+c=1\)。证明：至少有一个数不小于 \(\frac13\)。</p>
-          <button onclick="toggleAnswer('p5',this)">显示答案</button>
-          <div class="answer" id="p5">
-            反证：假设三个数都小于 \(\frac13\)，相加得 \(a+b+c<1\)，矛盾。
+          <p><b>2.</b> 对任意实数 \(a,b\)，证明 \(a^2+b^2\ge2ab\)，并写出取等条件。</p>
+          <button type="button" data-answer-target="p2" aria-controls="p2" aria-expanded="false" onclick="toggleAnswer('p2',this)">显示答案</button>
+          <div class="answer" id="p2" aria-hidden="true">
+            <p><b>方法：</b>构造平方。</p>
+            <div class="formula">
+              \[
+              a^2+b^2-2ab=(a-b)^2\ge0.
+              \]
+            </div>
+            <p>所以 \(a^2+b^2\ge2ab\)。当且仅当 \(a=b\) 时取等。</p>
           </div>
         </div>
+
+        <h3>B组：方法运用</h3>
         <div class="card">
-          <p><b>6.</b> 证明：对任意实数 \(a,b,c\)，有</p>
-          <div class="formula">\[
+          <p><b>3.</b> 当 \(n\ge2\) 时，证明：</p>
+          <div class="formula">
+            \[
+            1+\frac1{\sqrt2}+\frac1{\sqrt3}+\cdots+\frac1{\sqrt n}\lt2\sqrt n.
+            \]
+          </div>
+          <button type="button" data-answer-target="p3" aria-controls="p3" aria-expanded="false" onclick="toggleAnswer('p3',this)">显示答案</button>
+          <div class="answer" id="p3" aria-hidden="true">
+            <p><b>方法：</b>逐项放缩并裂项。</p>
+            <p>对 \(k\ge2\)，有 \(\sqrt{k-1}\lt\sqrt{k}\)，所以</p>
+            <div class="formula">
+              \[
+              \sqrt{k}+\sqrt{k-1}\lt2\sqrt{k}.
+              \]
+            </div>
+            <p>各量均为正，取倒数并乘以 \(2\)，得</p>
+            <div class="formula">
+              \[
+              \frac1{\sqrt{k}}
+              \lt\frac2{\sqrt{k}+\sqrt{k-1}}
+              =2\big(\sqrt{k}-\sqrt{k-1}\big).
+              \]
+            </div>
+            <p>逐项相加：</p>
+            <div class="formula">
+              \[
+              \begin{aligned}
+              1+\sum_{k=2}^{n}\frac1{\sqrt{k}}
+              &amp;\lt1+2\sum_{k=2}^{n}\big(\sqrt{k}-\sqrt{k-1}\big)\\
+              &amp;=1+2(\sqrt n-1)
+              =2\sqrt n-1\lt2\sqrt n.
+              \end{aligned}
+              \]
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <p><b>4.</b> 已知 \(a,b\ge0\)。证明：</p>
+          <div class="formula">
+            \[
+            a^3+b^3\ge ab(a+b).
+            \]
+          </div>
+          <button type="button" data-answer-target="p4" aria-controls="p4" aria-expanded="false" onclick="toggleAnswer('p4',this)">显示答案</button>
+          <div class="answer" id="p4" aria-hidden="true">
+            <p><b>方法：</b>作差后构造非负乘积。</p>
+            <div class="formula">
+              \[
+              \begin{aligned}
+              a^3+b^3-ab(a+b)
+              &amp;=(a+b)(a^2-2ab+b^2)\\
+              &amp;=(a+b)(a-b)^2\ge0.
+              \end{aligned}
+              \]
+            </div>
+            <p>因为 \(a+b\ge0\)，且 \((a-b)^2\ge0\)。当且仅当 \(a=b\) 时取等。</p>
+          </div>
+        </div>
+
+        <h3>C组：综合提升 <span class="badge optional">90 分钟</span></h3>
+        <div class="card">
+          <p><b>5.</b> 已知 \(x,y,z>0\)，且 \(xyz=1\)。证明：三个数中至少有一个不大于 \(1\)，并且至少有一个不小于 \(1\)。</p>
+          <button type="button" data-answer-target="p5" aria-controls="p5" aria-expanded="false" onclick="toggleAnswer('p5',this)">显示答案</button>
+          <div class="answer" id="p5" aria-hidden="true">
+            <p><b>证明至少有一个不大于 \(1\)：</b>若三个数都大于 \(1\)，则 \(xyz>1\)，与 \(xyz=1\) 矛盾。</p>
+            <p><b>证明至少有一个不小于 \(1\)：</b>若三个数都小于 \(1\)，因为三者均为正，所以 \(xyz\lt1\)，仍与 \(xyz=1\) 矛盾。</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <p><b>6.</b> 对任意实数 \(a,b,c\)，证明：</p>
+          <div class="formula">
+            \[
             (a+b+c)^2\le3(a^2+b^2+c^2).
-          \]</div>
-          <button onclick="toggleAnswer('p6',this)">显示答案</button>
-          <div class="answer" id="p6">
-            两边作差：
-            \[
-            3(a^2+b^2+c^2)-(a+b+c)^2
-            =(a-b)^2+(b-c)^2+(c-a)^2\ge0.
             \]
+          </div>
+          <button type="button" data-answer-target="p6" aria-controls="p6" aria-expanded="false" onclick="toggleAnswer('p6',this)">显示答案</button>
+          <div class="answer" id="p6" aria-hidden="true">
+            <p><b>方法：</b>作差后构造平方和。</p>
+            <div class="formula">
+              \[
+              \begin{aligned}
+              3(a^2+b^2+c^2)-(a+b+c)^2
+              &amp;=(a-b)^2+(b-c)^2+(c-a)^2\\
+              &amp;\ge0.
+              \end{aligned}
+              \]
+            </div>
+            <p>因此原不等式成立。当且仅当 \(a=b=c\) 时取等。</p>
           </div>
         </div>
       </section>
@@ -588,58 +945,133 @@
       <section id="summary">
         <h2>八、课堂总结</h2>
         <div class="lead">
-          <b>反证法：</b>从结论的反面出发，推出矛盾。<br>
-          <b>放缩法：</b>建立容易处理的比较链。<br>
-          <b>构造法：</b>构造非负量，使目标式自然出现。
+          <b>反证法：</b>先写准结论的否定，再明确指出矛盾。<br>
+          <b>放缩法：</b>先定上界或下界方向，再建立能够到达目标的比较链。<br>
+          <b>构造法：</b>根据结构和取等情形设计非负量，并展开核对。
         </div>
+
+        <h3>证明完成前的三项自检</h3>
+        <div class="practice-grid">
+          <div class="card"><b>逻辑</b><br>反设是否真的是原结论的否定？</div>
+          <div class="card"><b>方向</b><br>每次放缩的符号与条件是否充分？</div>
+          <div class="card"><b>结构</b><br>构造恒等式、非负依据和取等条件是否完整？</div>
+        </div>
+
         <h3>一分钟出口题</h3>
-        <p>看到下列题目，你首先想到哪种方法？</p>
+        <p>只判断首先考虑的主线方法，并说出一个理由：</p>
         <ol>
-          <li>证明三个数中至少有两个同号。</li>
-          <li>估计 \(\sum_{k=2}^{n}\frac1{k^2}\) 的上界。</li>
+          <li>已知 \(x+y+z>3\)，证明 \(x,y,z\) 中至少有一个大于 \(1\)。</li>
+          <li>估计 \(\displaystyle\sum_{k=2}^{n}\frac1{k^2}\) 的上界。</li>
           <li>证明 \(a^2+b^2+c^2\ge ab+bc+ca\)。</li>
         </ol>
-        <button onclick="toggleAnswer('exit',this)">显示参考答案</button>
-        <div class="answer" id="exit">
-          1. 反证法；2. 放缩法；3. 构造平方。
+        <button type="button" data-answer-target="exit" aria-controls="exit" aria-expanded="false" onclick="toggleAnswer('exit',this)">显示参考答案</button>
+        <div class="answer" id="exit" aria-hidden="true">
+          <ol>
+            <li><b>反证法：</b>否定“至少一个大于 \(1\)”后，三个数都不大于 \(1\)，相加与已知矛盾。</li>
+            <li><b>放缩法：</b>需要给和式寻找能够求和的逐项上界。</li>
+            <li><b>构造法：</b>作差后可构造成两两之差的平方和。</li>
+          </ol>
         </div>
       </section>
     </main>
   </div>
 
-  <div class="footer">不等式证明专题 · 单文件教学网页 · 可打印</div>
+  <div class="footer">不等式证明专题 · 单文件教学网页 · 答案默认隐藏 · 支持打印</div>
 
   <script>
-    function toggleAnswer(id, btn){
-      const el=document.getElementById(id);
-      el.classList.toggle('show');
-      btn.textContent=el.classList.contains('show')?'隐藏解答':'显示解答';
-      if(window.MathJax && MathJax.typesetPromise) MathJax.typesetPromise([el]);
-    }
+    function setAnswerState(el,btn,show){
+      el.classList.toggle('show',show);
+      el.setAttribute('aria-hidden',String(!show));
+      btn.setAttribute('aria-expanded',String(show));
 
-    function checkQuiz(btn,isCorrect){
-      const siblings=btn.parentElement.querySelectorAll('.quiz-option');
-      siblings.forEach(b=>{b.disabled=true;});
-      btn.classList.add(isCorrect?'correct':'wrong');
-      if(!isCorrect){
-        siblings.forEach(b=>{
-          if(b.textContent.includes('反证法')) b.classList.add('correct');
-        });
+      if(!btn.dataset.showLabel){
+        btn.dataset.showLabel=btn.textContent.trim();
       }
+      if(!btn.dataset.hideLabel){
+        btn.dataset.hideLabel=btn.dataset.showLabel.replace(/^显示/,'隐藏');
+      }
+      btn.textContent=show?btn.dataset.hideLabel:btn.dataset.showLabel;
     }
 
-    let seconds=0, timer=null;
-    function renderClock(){
-      const m=String(Math.floor(seconds/60)).padStart(2,'0');
-      const s=String(seconds%60).padStart(2,'0');
-      document.getElementById('clock').textContent=`${m}:${s}`;
+    function toggleAnswer(id,btn){
+      const el=document.getElementById(id);
+      setAnswerState(el,btn,!el.classList.contains('show'));
     }
+
+    function toggleAllAnswers(show){
+      document.querySelectorAll('button[data-answer-target]').forEach(function(btn){
+        const el=document.getElementById(btn.dataset.answerTarget);
+        if(el) setAnswerState(el,btn,show);
+      });
+    }
+
+    function checkQuiz(btn){
+      const quiz=btn.closest('.quiz');
+      const options=quiz.querySelectorAll('.quiz-option');
+      const feedback=quiz.querySelector('.quiz-feedback');
+      const isCorrect=btn.dataset.correct==='true';
+
+      options.forEach(function(option){
+        option.disabled=true;
+        if(option.dataset.correct==='true'){
+          option.classList.add('correct');
+          if(!isCorrect) option.classList.add('missed');
+        }
+      });
+
+      if(!isCorrect) btn.classList.add('wrong');
+      feedback.className='quiz-feedback '+(isCorrect?'ok':'no');
+      feedback.textContent=(isCorrect?'回答正确。':'这项不是最自然的主线。')+' '+quiz.dataset.explanation;
+    }
+
+    function resetQuiz(btn){
+      const quiz=btn.closest('.quiz');
+      quiz.querySelectorAll('.quiz-option').forEach(function(option){
+        option.disabled=false;
+        option.classList.remove('correct','wrong','missed');
+      });
+      const feedback=quiz.querySelector('.quiz-feedback');
+      feedback.className='quiz-feedback';
+      feedback.textContent='';
+    }
+
+    let elapsedSeconds=0;
+    let timer=null;
+    let startedAt=0;
+
+    function getElapsedSeconds(){
+      if(!timer) return elapsedSeconds;
+      return elapsedSeconds+Math.floor((Date.now()-startedAt)/1000);
+    }
+
+    function renderClock(){
+      const total=getElapsedSeconds();
+      const m=String(Math.floor(total/60)).padStart(2,'0');
+      const s=String(total%60).padStart(2,'0');
+      document.getElementById('clock').textContent=m+':'+s;
+    }
+
     function startTimer(){
       if(timer) return;
-      timer=setInterval(()=>{seconds++;renderClock();},1000);
+      startedAt=Date.now();
+      timer=setInterval(renderClock,250);
     }
-    function pauseTimer(){clearInterval(timer);timer=null;}
-    function resetTimer(){pauseTimer();seconds=0;renderClock();}
+
+    function pauseTimer(){
+      if(!timer) return;
+      elapsedSeconds=getElapsedSeconds();
+      clearInterval(timer);
+      timer=null;
+      renderClock();
+    }
+
+    function resetTimer(){
+      if(timer) clearInterval(timer);
+      timer=null;
+      startedAt=0;
+      elapsedSeconds=0;
+      renderClock();
+    }
   </script>
 </body>
 </html>
