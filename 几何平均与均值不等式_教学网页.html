@@ -1,0 +1,742 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>几何平均与均值不等式</title>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --card:#ffffff;
+      --text:#1f2937;
+      --muted:#64748b;
+      --primary:#2563eb;
+      --primary-soft:#dbeafe;
+      --accent:#059669;
+      --accent-soft:#d1fae5;
+      --warning:#b45309;
+      --warning-soft:#fef3c7;
+      --border:#dbe3ee;
+      --shadow:0 12px 30px rgba(15,23,42,.08);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:"PingFang SC","Microsoft YaHei","Noto Sans CJK SC",Arial,sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at top left, #e0ecff 0, transparent 32%),
+        linear-gradient(180deg,#f8fafc 0%,var(--bg) 100%);
+      line-height:1.75;
+    }
+    .page{
+      width:min(980px,92%);
+      margin:0 auto;
+      padding:42px 0 70px;
+    }
+    header{
+      background:linear-gradient(135deg,#1d4ed8,#2563eb 58%,#0ea5e9);
+      color:#fff;
+      padding:42px 38px;
+      border-radius:24px;
+      box-shadow:var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    header::after{
+      content:"";
+      position:absolute;
+      width:230px;height:230px;
+      right:-75px;top:-90px;
+      border-radius:50%;
+      background:rgba(255,255,255,.12);
+    }
+    header h1{margin:0 0 10px;font-size:clamp(30px,5vw,48px);line-height:1.2}
+    header p{margin:0;color:#eaf2ff;font-size:18px}
+    .nav{
+      display:flex;gap:10px;flex-wrap:wrap;
+      margin:22px 0 28px;
+    }
+    .nav a{
+      color:var(--primary);
+      background:#fff;
+      border:1px solid var(--border);
+      padding:8px 14px;
+      border-radius:999px;
+      text-decoration:none;
+      font-weight:600;
+      box-shadow:0 5px 12px rgba(15,23,42,.05);
+    }
+    section{
+      background:var(--card);
+      margin-top:24px;
+      padding:30px;
+      border-radius:20px;
+      box-shadow:var(--shadow);
+      border:1px solid rgba(219,227,238,.9);
+    }
+    h2{
+      margin:0 0 18px;
+      font-size:26px;
+      color:#0f172a;
+      border-left:6px solid var(--primary);
+      padding-left:12px;
+    }
+    h3{margin-top:26px;color:#1e3a8a}
+    .lead{
+      font-size:18px;
+      background:var(--primary-soft);
+      border-radius:14px;
+      padding:16px 18px;
+    }
+    .formula{
+      text-align:center;
+      font-size:1.15rem;
+      padding:14px;
+      margin:16px 0;
+      background:#f8fafc;
+      border:1px dashed #9fb4cf;
+      border-radius:14px;
+      overflow-x:auto;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:18px;
+    }
+    .mini{
+      padding:20px;
+      border:1px solid var(--border);
+      border-radius:16px;
+      background:#fbfdff;
+    }
+    .tag{
+      display:inline-block;
+      padding:4px 10px;
+      font-size:14px;
+      border-radius:999px;
+      color:#065f46;
+      background:var(--accent-soft);
+      font-weight:700;
+      margin-bottom:8px;
+    }
+    .note{
+      border-left:5px solid var(--accent);
+      background:var(--accent-soft);
+      padding:14px 16px;
+      border-radius:10px;
+      margin:18px 0;
+    }
+    .warning{
+      border-left:5px solid var(--warning);
+      background:var(--warning-soft);
+      padding:14px 16px;
+      border-radius:10px;
+      margin:18px 0;
+    }
+    .diagram-wrap{
+      display:flex;
+      justify-content:center;
+      margin:22px 0;
+    }
+    svg{
+      max-width:100%;
+      height:auto;
+      background:#fff;
+      border-radius:16px;
+      border:1px solid var(--border);
+    }
+    .steps{
+      counter-reset:step;
+      padding-left:0;
+      list-style:none;
+    }
+    .steps li{
+      counter-increment:step;
+      margin:14px 0;
+      padding:14px 16px 14px 54px;
+      border-radius:12px;
+      background:#f8fafc;
+      position:relative;
+      border:1px solid var(--border);
+    }
+    .steps li::before{
+      content:counter(step);
+      position:absolute;
+      left:14px;top:13px;
+      width:28px;height:28px;
+      display:grid;place-items:center;
+      border-radius:50%;
+      color:#fff;background:var(--primary);
+      font-weight:700;
+    }
+    details{
+      margin-top:16px;
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:#fbfdff;
+      overflow:hidden;
+    }
+    summary{
+      cursor:pointer;
+      padding:14px 16px;
+      font-weight:700;
+      color:#1e3a8a;
+      background:#eff6ff;
+    }
+    details .inner{padding:16px}
+    footer{
+      text-align:center;
+      color:var(--muted);
+      margin-top:28px;
+      font-size:14px;
+    }
+    @media(max-width:720px){
+      .grid{grid-template-columns:1fr}
+      section{padding:22px}
+      header{padding:32px 24px}
+    }
+    @media print{
+      body{background:#fff}
+      .nav{display:none}
+      section,header{box-shadow:none;break-inside:avoid}
+      .page{width:100%;padding:0}
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1>几何平均与均值不等式</h1>
+      <p>从比例中项、等面积正方形到 AM-GM 不等式</p>
+    </header>
+
+    <nav class="nav">
+      <a href="#definition">几何平均的定义</a>
+      <a href="#origin">概念来源</a>
+      <a href="#inequality">均值不等式</a>
+      <a href="#proof">两个数的证明</a>
+      <a href="#n-proof">n 个数的证明</a>
+      <a href="#examples">应用示例</a>
+    </nav>
+
+    <section id="definition">
+      <h2>一、几何平均的定义</h2>
+      <p class="lead">
+        对两个正数 \(a,b\)，它们的几何平均数定义为
+      </p>
+      <div class="formula">
+        \[
+        \boxed{G=\sqrt{ab}}
+        \]
+      </div>
+      <p>
+        例如，\(4\) 与 \(9\) 的几何平均数是
+      </p>
+      <div class="formula">
+        \[
+        \sqrt{4\times 9}=\sqrt{36}=6.
+        \]
+      </div>
+
+      <h3>多个正数的几何平均</h3>
+      <p>对于 \(n\) 个正数 \(a_1,a_2,\ldots,a_n\)，几何平均数为</p>
+      <div class="formula">
+        \[
+        \boxed{G=\sqrt[n]{a_1a_2\cdots a_n}}.
+        \]
+      </div>
+
+      <div class="note">
+        几何平均适合描述“乘法变化”，例如连续增长率、复利、比例变化等。
+      </div>
+    </section>
+
+    <section id="origin">
+      <h2>二、几何平均概念的来源</h2>
+
+      <div class="grid">
+        <div class="mini">
+          <span class="tag">来源 1：比例中项</span>
+          <p>在古典几何中，人们研究在 \(a\) 与 \(b\) 之间插入一个数 \(x\)，使三个数构成连续比例：</p>
+          <div class="formula">
+            \[
+            a:x=x:b.
+            \]
+          </div>
+          <p>由比例关系可得</p>
+          <div class="formula">
+            \[
+            \frac{a}{x}=\frac{x}{b}
+            \quad\Longrightarrow\quad
+            x^2=ab.
+            \]
+          </div>
+          <p>因为长度为正，所以</p>
+          <div class="formula">
+            \[
+            \boxed{x=\sqrt{ab}}.
+            \]
+          </div>
+          <p>因此，几何平均最初也被称为<strong>比例中项</strong>。</p>
+        </div>
+
+        <div class="mini">
+          <span class="tag">来源 2：等面积正方形</span>
+          <p>一个长方形的长与宽分别为 \(a,b\)，它的面积为</p>
+          <div class="formula">\[ab.\]</div>
+          <p>若构造一个与它面积相等的正方形，设正方形边长为 \(x\)，则</p>
+          <div class="formula">
+            \[
+            x^2=ab,
+            \]
+          </div>
+          <p>所以</p>
+          <div class="formula">
+            \[
+            \boxed{x=\sqrt{ab}}.
+            \]
+          </div>
+          <p>这正是“几何平均”名称中“几何”二字的直观来源。</p>
+        </div>
+      </div>
+
+      <div class="diagram-wrap">
+        <svg width="760" height="300" viewBox="0 0 760 300" role="img" aria-label="长方形与等面积正方形示意图">
+          <rect x="55" y="80" width="260" height="130" fill="#dbeafe" stroke="#2563eb" stroke-width="3"/>
+          <text x="185" y="63" text-anchor="middle" font-size="22" fill="#1e3a8a">长方形</text>
+          <text x="185" y="150" text-anchor="middle" font-size="24" fill="#1e3a8a">面积 \(ab\)</text>
+          <text x="185" y="235" text-anchor="middle" font-size="21" fill="#334155">长 \(a\)，宽 \(b\)</text>
+
+          <path d="M350 145 L420 145" stroke="#64748b" stroke-width="3" marker-end="url(#arrow)"/>
+          <text x="385" y="125" text-anchor="middle" font-size="18" fill="#475569">等面积</text>
+
+          <rect x="470" y="58" width="185" height="185" fill="#d1fae5" stroke="#059669" stroke-width="3"/>
+          <text x="562" y="40" text-anchor="middle" font-size="22" fill="#065f46">正方形</text>
+          <text x="562" y="145" text-anchor="middle" font-size="24" fill="#065f46">面积 \(x^2\)</text>
+          <text x="562" y="270" text-anchor="middle" font-size="21" fill="#334155">边长 \(x=\sqrt{ab}\)</text>
+
+          <defs>
+            <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto">
+              <path d="M0,0 L0,6 L9,3 z" fill="#64748b"/>
+            </marker>
+          </defs>
+        </svg>
+      </div>
+
+      <h3>为什么算术平均与几何平均不同？</h3>
+      <div class="grid">
+        <div class="mini">
+          <strong>算术平均</strong>
+          <div class="formula">
+            \[
+            A=\frac{a+b}{2}
+            \]
+          </div>
+          <p>表示“加法意义下”的平均位置。</p>
+        </div>
+        <div class="mini">
+          <strong>几何平均</strong>
+          <div class="formula">
+            \[
+            G=\sqrt{ab}
+            \]
+          </div>
+          <p>表示“比例或乘法意义下”的平均位置。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="inequality">
+      <h2>三、均值不等式</h2>
+      <p>对任意两个正数 \(a,b\)，算术平均不小于几何平均：</p>
+      <div class="formula">
+        \[
+        \boxed{\frac{a+b}{2}\geq\sqrt{ab}}.
+        \]
+      </div>
+      <p>这就是两个正数的<strong>算术—几何平均不等式</strong>，简称 AM-GM 不等式。</p>
+
+      <div class="warning">
+        等号成立的条件是
+        \[
+        \boxed{a=b}.
+        \]
+        也就是说，只有当两个数相等时，算术平均与几何平均才相等。
+      </div>
+    </section>
+
+    <section id="proof">
+      <h2>四、均值不等式的证明</h2>
+
+      <h3>证明一：利用平方恒非负</h3>
+      <ol class="steps">
+        <li>因为任何实数的平方都不小于零，所以
+          \[
+          (\sqrt a-\sqrt b)^2\geq 0.
+          \]
+        </li>
+        <li>展开得
+          \[
+          a-2\sqrt{ab}+b\geq0.
+          \]
+        </li>
+        <li>移项可得
+          \[
+          a+b\geq2\sqrt{ab}.
+          \]
+        </li>
+        <li>两边同时除以 \(2\)，得到
+          \[
+          \boxed{\frac{a+b}{2}\geq\sqrt{ab}}.
+          \]
+        </li>
+      </ol>
+      <p>当且仅当</p>
+      <div class="formula">
+        \[
+        \sqrt a-\sqrt b=0
+        \quad\Longleftrightarrow\quad
+        a=b
+        \]
+      </div>
+      <p>时取等号。</p>
+
+      <h3>证明二：利用 \((a-b)^2\geq0\)</h3>
+      <div class="formula">
+        \[
+        (a-b)^2\geq0
+        \]
+        \[
+        a^2-2ab+b^2\geq0
+        \]
+        \[
+        (a+b)^2\geq4ab.
+        \]
+      </div>
+      <p>由于 \(a,b>0\)，所以 \(a+b>0\)，两边开平方得</p>
+      <div class="formula">
+        \[
+        a+b\geq2\sqrt{ab},
+        \]
+      </div>
+      <p>从而</p>
+      <div class="formula">
+        \[
+        \boxed{\frac{a+b}{2}\geq\sqrt{ab}}.
+        \]
+      </div>
+
+      <details>
+        <summary>为什么必须要求 \(a,b>0\)？</summary>
+        <div class="inner">
+          <p>
+            几何平均 \(\sqrt{ab}\) 在实数范围内要求 \(ab\geq0\)。但在高中均值不等式中，通常要求每一项都是正数，
+            这样才能保证根式有意义，并且可以安全地使用开平方、倒数等运算。
+          </p>
+        </div>
+      </details>
+    </section>
+
+
+    <section id="n-proof">
+      <h2>五、\(n\) 个正数情况下的均值不等式</h2>
+
+      <p>设</p>
+      <div class="formula">
+        \[
+        a_1,a_2,\ldots,a_n>0.
+        \]
+      </div>
+      <p>则它们的算术平均不小于几何平均：</p>
+      <div class="formula">
+        \[
+        \boxed{
+        \frac{a_1+a_2+\cdots+a_n}{n}
+        \geq
+        \sqrt[n]{a_1a_2\cdots a_n}
+        }.
+        \]
+      </div>
+      <p>等号成立当且仅当</p>
+      <div class="formula">
+        \[
+        \boxed{a_1=a_2=\cdots=a_n}.
+        \]
+      </div>
+
+      <h3>证明思路：先证明 \(2^k\) 个数，再推广到任意 \(n\)</h3>
+      <p>
+        这种证明方法称为<strong>柯西归纳法</strong>。它分成两个部分：
+      </p>
+      <ol class="steps">
+        <li>由 \(m\) 个数的结论推出 \(2m\) 个数的结论。</li>
+        <li>由 \(n\) 个数的结论反向推出 \(n-1\) 个数的结论。</li>
+      </ol>
+
+      <h3>第一步：由 \(m\) 个数推广到 \(2m\) 个数</h3>
+      <p>
+        假设均值不等式对任意 \(m\) 个正数都成立。现考虑 \(2m\) 个正数
+      </p>
+      <div class="formula">
+        \[
+        a_1,a_2,\ldots,a_{2m}.
+        \]
+      </div>
+
+      <p>将它们分成前后两组，每组各有 \(m\) 个数。设两组的算术平均分别为</p>
+      <div class="formula">
+        \[
+        A=\frac{a_1+\cdots+a_m}{m},
+        \qquad
+        B=\frac{a_{m+1}+\cdots+a_{2m}}{m}.
+        \]
+      </div>
+
+      <p>由归纳假设，</p>
+      <div class="formula">
+        \[
+        A\geq\sqrt[m]{a_1a_2\cdots a_m},
+        \]
+        \[
+        B\geq\sqrt[m]{a_{m+1}a_{m+2}\cdots a_{2m}}.
+        \]
+      </div>
+
+      <p>再对正数 \(A,B\) 使用两个数的均值不等式：</p>
+      <div class="formula">
+        \[
+        \frac{A+B}{2}\geq\sqrt{AB}.
+        \]
+      </div>
+
+      <p>而</p>
+      <div class="formula">
+        \[
+        \frac{A+B}{2}
+        =
+        \frac{a_1+a_2+\cdots+a_{2m}}{2m}.
+        \]
+      </div>
+
+      <p>同时，利用上面的两个估计，</p>
+      <div class="formula">
+        \[
+        \sqrt{AB}
+        \geq
+        \sqrt{
+        \sqrt[m]{a_1\cdots a_m}
+        \sqrt[m]{a_{m+1}\cdots a_{2m}}
+        }.
+        \]
+      </div>
+
+      <p>整理根式得</p>
+      <div class="formula">
+        \[
+        \sqrt{AB}
+        \geq
+        \sqrt[2m]{a_1a_2\cdots a_{2m}}.
+        \]
+      </div>
+
+      <p>因此</p>
+      <div class="formula">
+        \[
+        \boxed{
+        \frac{a_1+a_2+\cdots+a_{2m}}{2m}
+        \geq
+        \sqrt[2m]{a_1a_2\cdots a_{2m}}
+        }.
+        \]
+      </div>
+
+      <div class="note">
+        因为两个数的情形已经证明，所以由
+        \[
+        2\Longrightarrow4\Longrightarrow8\Longrightarrow16\Longrightarrow\cdots
+        \]
+        可知，均值不等式对所有 \(2^k\) 个正数都成立。
+      </div>
+
+      <h3>第二步：由 \(n\) 个数推出 \(n-1\) 个数</h3>
+      <p>
+        假设均值不等式对 \(n\) 个正数成立。现在给定 \(n-1\) 个正数
+      </p>
+      <div class="formula">
+        \[
+        a_1,a_2,\ldots,a_{n-1}.
+        \]
+      </div>
+
+      <p>设它们的算术平均为</p>
+      <div class="formula">
+        \[
+        A=\frac{a_1+a_2+\cdots+a_{n-1}}{n-1}.
+        \]
+      </div>
+
+      <p>
+        在这 \(n-1\) 个数后面再补上一个数 \(A\)。于是得到 \(n\) 个正数
+      </p>
+      <div class="formula">
+        \[
+        a_1,a_2,\ldots,a_{n-1},A.
+        \]
+      </div>
+
+      <p>这 \(n\) 个数的算术平均仍然是 \(A\)，因为</p>
+      <div class="formula">
+        \[
+        \frac{a_1+\cdots+a_{n-1}+A}{n}
+        =
+        \frac{(n-1)A+A}{n}
+        =A.
+        \]
+      </div>
+
+      <p>由 \(n\) 个数的均值不等式，</p>
+      <div class="formula">
+        \[
+        A
+        \geq
+        \sqrt[n]{a_1a_2\cdots a_{n-1}A}.
+        \]
+      </div>
+
+      <p>两边取 \(n\) 次方，得到</p>
+      <div class="formula">
+        \[
+        A^n\geq a_1a_2\cdots a_{n-1}A.
+        \]
+      </div>
+
+      <p>因为 \(A>0\)，两边同时除以 \(A\)：</p>
+      <div class="formula">
+        \[
+        A^{n-1}\geq a_1a_2\cdots a_{n-1}.
+        \]
+      </div>
+
+      <p>再开 \(n-1\) 次方，得到</p>
+      <div class="formula">
+        \[
+        A\geq\sqrt[n-1]{a_1a_2\cdots a_{n-1}}.
+        \]
+      </div>
+
+      <p>代回 \(A\) 的定义：</p>
+      <div class="formula">
+        \[
+        \boxed{
+        \frac{a_1+a_2+\cdots+a_{n-1}}{n-1}
+        \geq
+        \sqrt[n-1]{a_1a_2\cdots a_{n-1}}
+        }.
+        \]
+      </div>
+
+      <h3>结论</h3>
+      <p>
+        对任意正整数 \(n\)，总可以找到某个 \(2^k\geq n\)。我们已经知道均值不等式对
+        \(2^k\) 个正数成立，再连续使用第二步：
+      </p>
+      <div class="formula">
+        \[
+        2^k\Longrightarrow2^k-1\Longrightarrow\cdots\Longrightarrow n.
+        \]
+      </div>
+      <p>因此，均值不等式对任意 \(n\) 个正数都成立。</p>
+
+      <h3>等号条件</h3>
+      <p>
+        在整个证明过程中，只有每一步使用的两个数均值不等式都取等号，最终等号才会成立。
+        因而必须有
+      </p>
+      <div class="formula">
+        \[
+        \boxed{a_1=a_2=\cdots=a_n}.
+        \]
+      </div>
+
+      <details>
+        <summary>例：三个正数的均值不等式</summary>
+        <div class="inner">
+          <p>对 \(a,b,c>0\)，有</p>
+          <div class="formula">
+            \[
+            \boxed{\frac{a+b+c}{3}\geq\sqrt[3]{abc}}.
+            \]
+          </div>
+          <p>当且仅当 \(a=b=c\) 时取等号。</p>
+        </div>
+      </details>
+    </section>
+
+
+    <section id="examples">
+      <h2>六、简单应用</h2>
+
+      <h3>例 1：已知和，求积的最大值</h3>
+      <p>已知 \(x+y=10\)，且 \(x,y>0\)，求 \(xy\) 的最大值。</p>
+      <div class="formula">
+        \[
+        \frac{x+y}{2}\geq\sqrt{xy}
+        \]
+        \[
+        5\geq\sqrt{xy}
+        \]
+        \[
+        xy\leq25.
+        \]
+      </div>
+      <p>当 \(x=y=5\) 时取等号，因此</p>
+      <div class="formula">
+        \[
+        \boxed{xy_{\max}=25}.
+        \]
+      </div>
+
+      <h3>例 2：求 \(x+\frac1x\) 的最小值</h3>
+      <p>当 \(x>0\) 时，</p>
+      <div class="formula">
+        \[
+        \frac{x+\frac1x}{2}
+        \geq
+        \sqrt{x\cdot\frac1x}=1.
+        \]
+      </div>
+      <p>所以</p>
+      <div class="formula">
+        \[
+        x+\frac1x\geq2.
+        \]
+      </div>
+      <p>当 \(x=1\) 时取等号，因此最小值为</p>
+      <div class="formula">
+        \[
+        \boxed{2}.
+        \]
+      </div>
+
+      <div class="note">
+        使用均值不等式求最值时，必须同时检查两点：各项是否为正，以及等号条件是否能够成立。
+      </div>
+    </section>
+
+    <footer>
+      几何平均与均值不等式 · 中文教学网页
+    </footer>
+  </main>
+</body>
+</html>
