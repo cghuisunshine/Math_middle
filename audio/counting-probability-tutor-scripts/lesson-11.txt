@@ -1,0 +1,53 @@
+Lesson 11
+
+Grid Paths
+
+In this lesson, I will explain each idea, read every expression aloud, and then guide you through the practice answer.
+
+Write each shortest path as a sequence of U and R moves.
+
+Let us start with the key idea.
+
+Key idea.
+
+Imagine recording your moves as you walk: write U for every move up and R for every move right. Each shortest path makes one U/R sequence, and every such sequence draws one shortest path.
+
+Now let us see why this works.
+
+Why combinations appear.
+
+A path with u up moves and r right moves has u plus r positions in its move sequence. Choose which u positions contain U. Every position you did not choose must contain R, so that one choice fixes the entire path.
+
+Read the expression as: number of shortest paths equals u plus r choose u.
+
+Now let us work through an example.
+
+Worked example.
+
+A 4 times 3 grid requires 4 right moves and 3 up moves, so every shortest path fills 7 sequence positions.
+
+The visual shows: Example path sequence: R, R, U, R, U, R, U. Up moves occupy positions 3, 5, and 7..
+
+This path chooses positions 3, 5, and 7 for U. Any choice of 3 of the 7 positions creates exactly one path:
+
+Read the expression as: 7 choose 3 equals 35.
+
+Let us use the visual to make the idea concrete.
+
+Visual.
+
+The visual shows: Four by three grid path.
+
+Now pause and try this practice problem yourself.
+
+Practice.
+
+How many shortest paths are there on a 5 times 5 grid?
+
+Let us check the answer.
+
+Each path is a 10-position sequence containing 5 U moves and 5 R moves. Choose the 5 positions that contain U; the other 5 positions must contain R.
+
+Read the expression as: 10 choose 5 equals 252.
+
+That completes lesson 11. Review the key idea, then try the practice problem once more without looking at the answer.

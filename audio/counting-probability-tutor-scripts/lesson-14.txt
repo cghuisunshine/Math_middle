@@ -1,0 +1,45 @@
+Lesson 14
+
+Dependent Probability
+
+In this lesson, I will explain each idea, read every expression aloud, and then guide you through the practice answer.
+
+When choices change the situation, update the sample space.
+
+Let us start with the key idea.
+
+Key idea.
+
+Read the expression as: P open parenthesis A and B close parenthesis equals P open parenthesis A close parenthesis P open parenthesis B given A close parenthesis.
+
+Now let us see why this works.
+
+Why it works.
+
+Among all outcomes, first restrict to the fraction where A happens. Inside that smaller world, multiply by the fraction where B also happens.
+
+Now let us work through an example.
+
+Worked example.
+
+A bag has 5 red balls and 3 blue balls. Two balls are drawn without replacement. What is the probability both are red?
+
+Read the expression as: the fraction 5 over 8 times the fraction 4 over 7 equals the fraction 20 over 56 equals the fraction 5 over 14.
+
+Here is an important point to watch for.
+
+Common mistake.
+
+Without replacement means the denominator changes. With replacement, it would be the fraction 5 over 8 times the fraction 5 over 8 .
+
+Now pause and try this practice problem yourself.
+
+Practice.
+
+A box has 4 white marbles and 6 black marbles. Two marbles are drawn without replacement. What is the probability both are black?
+
+Let us check the answer.
+
+Read the expression as: the fraction 6 over 10 times the fraction 5 over 9 equals the fraction 1 over 3.
+
+That completes lesson 14. Review the key idea, then try the practice problem once more without looking at the answer.

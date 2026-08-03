@@ -1,0 +1,45 @@
+Lesson 17
+
+Hockey-Stick Identity
+
+In this lesson, I will explain each idea, read every expression aloud, and then guide you through the practice answer.
+
+Add a diagonal line of combinations in Pascal’s Triangle.
+
+Here is the main result.
+
+Identity.
+
+Read the expression as: r choose r plus r plus 1 choose r plus and so on plus n choose r equals n plus 1 choose r plus 1.
+
+Now let us see why this works.
+
+Combinatorial proof.
+
+Count ways to choose r plus 1 numbers from 1,2, and so on ,n plus 1 . If the largest chosen number is k plus 1 , then the other r numbers must be chosen from 1,2, and so on ,k , giving k choose r choices. Summing over possible largest numbers gives the left side. Direct counting gives the right side.
+
+Now let us work through an example.
+
+Worked example.
+
+Read the expression as: 2 choose 2 plus 3 choose 2 plus 4 choose 2 plus 5 choose 2 equals 1 plus 3 plus 6 plus 10 equals 20.
+
+Read the expression as: 6 choose 3 equals 20.
+
+Here is an important point to watch for.
+
+Common mistake.
+
+The lower number r stays fixed on the left. The upper number increases.
+
+Now pause and try this practice problem yourself.
+
+Practice.
+
+Compute 3 choose 3 plus 4 choose 3 plus 5 choose 3 plus 6 choose 3 using hockey-stick identity.
+
+Let us check the answer.
+
+Read the expression as: 7 choose 4 equals 35.
+
+That completes lesson 17. Review the key idea, then try the practice problem once more without looking at the answer.

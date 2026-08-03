@@ -1,0 +1,49 @@
+Lesson 2
+
+Addition, Subtraction, and Venn Diagrams
+
+In this lesson, I will explain each idea, read every expression aloud, and then guide you through the practice answer.
+
+Use addition for non-overlapping cases and subtraction to correct double counting.
+
+Let us start with the key idea.
+
+Key idea.
+
+For two sets:
+
+Read the expression as: the size of A union B equals the size of A plus the size of B minus the size of A intersection B.
+
+Now let us see why this works.
+
+Proof.
+
+When we add the size of A plus the size of B , every item in the overlap A intersection B is counted twice. It should be counted once, so subtract the overlap once.
+
+Now let us work through an example.
+
+Worked example.
+
+A class has 30 students. 18 take French, 14 take Spanish, and 7 take both. How many take French or Spanish?
+
+Read the expression as: 18 plus 14 minus 7 equals 25.
+
+Let us use the visual to make the idea concrete.
+
+Visual.
+
+The visual shows: Venn diagram for French and Spanish.
+
+The union is 11 plus 7 plus 7 equals 25 .
+
+Now pause and try this practice problem yourself.
+
+Practice.
+
+There are 40 students. 22 play soccer, 18 play basketball, and 9 play both. How many play at least one of the two sports?
+
+Let us check the answer.
+
+Read the expression as: 22 plus 18 minus 9 equals 31.
+
+That completes lesson 2. Review the key idea, then try the practice problem once more without looking at the answer.

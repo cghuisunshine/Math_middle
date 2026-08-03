@@ -1,0 +1,51 @@
+Lesson 8
+
+Correcting for Overcounting
+
+In this lesson, I will explain each idea, read every expression aloud, and then guide you through the practice answer.
+
+When identical objects create repeated counts, divide by the number of repetitions.
+
+Let us start with the key idea.
+
+Key idea.
+
+If n objects include repeated groups of sizes a,b,c, and so on , then the number of distinct arrangements is:
+
+Read the expression as: the fraction n factorial over a factorial b factorial c factorial and so on.
+
+Now let us see why this works.
+
+Proof.
+
+Pretend all repeated objects are different. This gives n factorial . But each final arrangement can be internally rearranged among the identical objects in a factorial b factorial c factorial and so on ways without changing what we see. Divide by that overcount.
+
+Now let us work through an example.
+
+Worked example.
+
+How many distinct arrangements are there of BALL?
+
+Read the expression as: the fraction 4 factorial over 2 factorial equals 12.
+
+Now let us work through an example.
+
+Another example.
+
+For MISSISSIPPI, the repeated counts are I equals 4 , S equals 4 , P equals 2 , M equals 1 :
+
+Read the expression as: the fraction 11 factorial over 4 factorial 4 factorial 2 factorial.
+
+Now pause and try this practice problem yourself.
+
+Practice.
+
+How many arrangements are there of the letters in BANANA?
+
+Let us check the answer.
+
+BANANA has 6 letters: A appears 3 times, N appears 2 times, B appears once.
+
+Read the expression as: the fraction 6 factorial over 3 factorial 2 factorial equals 60.
+
+That completes lesson 8. Review the key idea, then try the practice problem once more without looking at the answer.

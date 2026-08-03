@@ -1,0 +1,49 @@
+Lesson 13
+
+Complementary Probability
+
+In this lesson, I will explain each idea, read every expression aloud, and then guide you through the practice answer.
+
+“At least one” is often easier by counting “none.”
+
+Let us start with the key idea.
+
+Key idea.
+
+Read the expression as: P open parenthesis A close parenthesis equals 1 minus P open parenthesis A complement close parenthesis.
+
+Now let us see why this works.
+
+Proof.
+
+Exactly one of A and A complement must happen. Therefore P open parenthesis A close parenthesis plus P open parenthesis A complement close parenthesis equals 1 , so P open parenthesis A close parenthesis equals 1 minus P open parenthesis A complement close parenthesis .
+
+Now let us work through an example.
+
+Worked example.
+
+Two dice are rolled. What is the probability of getting at least one 6?
+
+Complement: no 6 on either die.
+
+Read the expression as: 1 minus open parenthesis the fraction 5 over 6 close parenthesis to the power of 2 equals 1 minus the fraction 25 over 36 equals the fraction 11 over 36.
+
+Here is an important point to watch for.
+
+Signal words.
+
+Consider complements when you see: at least one, not, none, or no more than.
+
+Now pause and try this practice problem yourself.
+
+Practice.
+
+Three fair coins are flipped. What is the probability of getting at least one head?
+
+Let us check the answer.
+
+Complement: no heads, meaning all tails.
+
+Read the expression as: 1 minus open parenthesis the fraction 1 over 2 close parenthesis to the power of 3 equals the fraction 7 over 8.
+
+That completes lesson 13. Review the key idea, then try the practice problem once more without looking at the answer.

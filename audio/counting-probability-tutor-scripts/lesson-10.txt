@@ -1,0 +1,55 @@
+Lesson 10
+
+Combinations
+
+In this lesson, I will explain each idea, read every expression aloud, and then guide you through the practice answer.
+
+Choose groups when order does not matter.
+
+Let us start with the key idea.
+
+Key idea.
+
+Read the expression as: n choose r equals the fraction n factorial over r factorial open parenthesis n minus r close parenthesis factorial.
+
+Now let us see why this works.
+
+Proof.
+
+First choose and arrange r objects from n , giving P open parenthesis n,r close parenthesis equals the fraction n factorial over open parenthesis n minus r close parenthesis factorial . But each chosen group of r objects can be arranged in r factorial orders. Divide by r factorial .
+
+Now let us work through an example.
+
+Worked example.
+
+How many ways can we choose 3 students from 10?
+
+Read the expression as: 10 choose 3 equals the fraction 10 times 9 times 8 over 3 times 2 times 1 equals 120.
+
+Why combinations are coefficients in open parenthesis a plus b close parenthesis to the power of n.
+
+Write open parenthesis a plus b close parenthesis to the power of n as n factors of open parenthesis a plus b close parenthesis . To produce a to the power of n minus r b to the power of r , choose b from exactly r of the factors; the other n minus r factors supply a . There are n choose r ways to choose those r factors, so the coefficient of a to the power of n minus r b to the power of r is n choose r .
+
+Read the expression as: open parenthesis a plus b close parenthesis to the power of n equals the sum from r equals 0 to n of n choose r a to the power of n minus r b to the power of r.
+
+For example, the coefficient of a to the power of 2b to the power of 2 in open parenthesis a plus b close parenthesis to the power of 4 is 4 choose 2 equals 6 :
+
+Read the expression as: open parenthesis a plus b close parenthesis to the power of 4 equals a to the power of 4 plus 4a to the power of 3b plus 6a to the power of 2b to the power of 2 plus 4ab to the power of 3 plus b to the power of 4.
+
+Here is an important point to watch for.
+
+Decision test.
+
+Ask: “Would the same people in a different order count as a new answer?” If yes, use permutations. If no, use combinations.
+
+Now pause and try this practice problem yourself.
+
+Practice.
+
+How many 5-person committees can be chosen from 14 people?
+
+Let us check the answer.
+
+Read the expression as: 14 choose 5 equals 2002.
+
+That completes lesson 10. Review the key idea, then try the practice problem once more without looking at the answer.

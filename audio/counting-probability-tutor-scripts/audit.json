@@ -1,0 +1,164 @@
+[
+  {
+    "lesson": 1,
+    "title": "Counting Lists of Numbers",
+    "sourceCharacters": 644,
+    "scriptCharacters": 1259,
+    "formulas": 3,
+    "answerSections": 1,
+    "narrationUnits": 18
+  },
+  {
+    "lesson": 2,
+    "title": "Addition, Subtraction, and Venn Diagrams",
+    "sourceCharacters": 677,
+    "scriptCharacters": 1403,
+    "formulas": 3,
+    "answerSections": 1,
+    "narrationUnits": 18
+  },
+  {
+    "lesson": 3,
+    "title": "Multiplication Principle",
+    "sourceCharacters": 787,
+    "scriptCharacters": 1300,
+    "formulas": 2,
+    "answerSections": 1,
+    "narrationUnits": 16
+  },
+  {
+    "lesson": 4,
+    "title": "Factorials and Arrangements",
+    "sourceCharacters": 635,
+    "scriptCharacters": 1312,
+    "formulas": 3,
+    "answerSections": 1,
+    "narrationUnits": 17
+  },
+  {
+    "lesson": 5,
+    "title": "Partial Permutations",
+    "sourceCharacters": 839,
+    "scriptCharacters": 1569,
+    "formulas": 3,
+    "answerSections": 1,
+    "narrationUnits": 18
+  },
+  {
+    "lesson": 6,
+    "title": "Casework",
+    "sourceCharacters": 1091,
+    "scriptCharacters": 1692,
+    "formulas": 3,
+    "answerSections": 1,
+    "narrationUnits": 23
+  },
+  {
+    "lesson": 7,
+    "title": "Complementary Counting",
+    "sourceCharacters": 913,
+    "scriptCharacters": 1552,
+    "formulas": 3,
+    "answerSections": 1,
+    "narrationUnits": 19
+  },
+  {
+    "lesson": 8,
+    "title": "Correcting for Overcounting",
+    "sourceCharacters": 876,
+    "scriptCharacters": 1661,
+    "formulas": 4,
+    "answerSections": 1,
+    "narrationUnits": 19
+  },
+  {
+    "lesson": 9,
+    "title": "Counting Pairs and Sums",
+    "sourceCharacters": 721,
+    "scriptCharacters": 1633,
+    "formulas": 4,
+    "answerSections": 1,
+    "narrationUnits": 18
+  },
+  {
+    "lesson": 10,
+    "title": "Combinations",
+    "sourceCharacters": 1145,
+    "scriptCharacters": 2509,
+    "formulas": 5,
+    "answerSections": 1,
+    "narrationUnits": 21
+  },
+  {
+    "lesson": 11,
+    "title": "Grid Paths",
+    "sourceCharacters": 1108,
+    "scriptCharacters": 1768,
+    "formulas": 3,
+    "answerSections": 1,
+    "narrationUnits": 20
+  },
+  {
+    "lesson": 12,
+    "title": "Basic Probability",
+    "sourceCharacters": 818,
+    "scriptCharacters": 1555,
+    "formulas": 3,
+    "answerSections": 1,
+    "narrationUnits": 18
+  },
+  {
+    "lesson": 13,
+    "title": "Complementary Probability",
+    "sourceCharacters": 660,
+    "scriptCharacters": 1641,
+    "formulas": 3,
+    "answerSections": 1,
+    "narrationUnits": 18
+  },
+  {
+    "lesson": 14,
+    "title": "Dependent Probability",
+    "sourceCharacters": 785,
+    "scriptCharacters": 1560,
+    "formulas": 3,
+    "answerSections": 1,
+    "narrationUnits": 16
+  },
+  {
+    "lesson": 15,
+    "title": "Expected Value",
+    "sourceCharacters": 753,
+    "scriptCharacters": 1496,
+    "formulas": 3,
+    "answerSections": 1,
+    "narrationUnits": 17
+  },
+  {
+    "lesson": 16,
+    "title": "Pascal's Triangle",
+    "sourceCharacters": 658,
+    "scriptCharacters": 1317,
+    "formulas": 3,
+    "answerSections": 1,
+    "narrationUnits": 17
+  },
+  {
+    "lesson": 17,
+    "title": "Hockey-Stick Identity",
+    "sourceCharacters": 759,
+    "scriptCharacters": 1439,
+    "formulas": 4,
+    "answerSections": 1,
+    "narrationUnits": 16
+  },
+  {
+    "lesson": 18,
+    "title": "Binomial Theorem",
+    "sourceCharacters": 718,
+    "scriptCharacters": 1811,
+    "formulas": 3,
+    "answerSections": 1,
+    "narrationUnits": 17
+  }
+]

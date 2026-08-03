@@ -1,0 +1,47 @@
+Lesson 4
+
+Factorials and Arrangements
+
+In this lesson, I will explain each idea, read every expression aloud, and then guide you through the practice answer.
+
+Arrange all objects when order matters.
+
+Let us start with the key idea.
+
+Key idea.
+
+The number of ways to arrange n different objects is:
+
+Read the expression as: n factorial equals n open parenthesis n minus 1 close parenthesis open parenthesis n minus 2 close parenthesis and so on 3 times 2 times 1.
+
+Now let us see why this works.
+
+Proof.
+
+There are n choices for the first position, n minus 1 for the second, and so on until 1 choice remains. By the multiplication principle, multiply them all.
+
+Now let us work through an example.
+
+Worked example.
+
+How many ways can 5 different books be arranged?
+
+Read the expression as: 5 factorial equals 5 times 4 times 3 times 2 times 1 equals 120.
+
+Here is an important point to watch for.
+
+Common mistake.
+
+Use n factorial only when all n objects are different and all are arranged.
+
+Now pause and try this practice problem yourself.
+
+Practice.
+
+How many ways can 7 different colored hats be arranged in a row?
+
+Let us check the answer.
+
+Read the expression as: 7 factorial equals 5040.
+
+That completes lesson 4. Review the key idea, then try the practice problem once more without looking at the answer.

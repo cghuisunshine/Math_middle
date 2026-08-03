@@ -1,0 +1,49 @@
+Lesson 9
+
+Counting Pairs and Sums
+
+In this lesson, I will explain each idea, read every expression aloud, and then guide you through the practice answer.
+
+Pair-counting often leads to triangular numbers and the formula for 1 plus 2 plus and so on plus n .
+
+Let us start with the key idea.
+
+Key idea.
+
+Read the expression as: 1 plus 2 plus 3 plus and so on plus n equals the fraction n open parenthesis n plus 1 close parenthesis over 2.
+
+Now let us see why this works.
+
+Proof.
+
+Let S equals 1 plus 2 plus and so on plus n . Write it forward and backward:
+
+Read the expression as: S equals 1 plus 2 plus and so on plus n S equals n plus open parenthesis n minus 1 close parenthesis plus and so on plus 1.
+
+Adding gives 2S equals n open parenthesis n plus 1 close parenthesis , so S equals the fraction n open parenthesis n plus 1 close parenthesis over 2 .
+
+Now let us work through an example.
+
+Worked example.
+
+In an 8-person round-robin tournament, every player plays every other player once. How many matches?
+
+Read the expression as: 8 choose 2 equals the fraction 8 times 7 over 2 equals 28.
+
+Here is an important point to watch for.
+
+Common mistake.
+
+If each of 8 players has 7 opponents, 8 times 7 equals 56 counts every match twice. Divide by 2.
+
+Now pause and try this practice problem yourself.
+
+Practice.
+
+How many handshakes occur if 12 people each shake hands with every other person once?
+
+Let us check the answer.
+
+Read the expression as: 12 choose 2 equals the fraction 12 times 11 over 2 equals 66.
+
+That completes lesson 9. Review the key idea, then try the practice problem once more without looking at the answer.

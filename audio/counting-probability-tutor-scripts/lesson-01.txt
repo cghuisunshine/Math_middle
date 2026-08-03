@@ -1,0 +1,49 @@
+Lesson 1
+
+Counting Lists of Numbers
+
+In this lesson, I will explain each idea, read every expression aloud, and then guide you through the practice answer.
+
+Learn the inclusive counting formula and why the extra “+1” appears.
+
+Let us start with the key idea.
+
+Key idea.
+
+To count all integers from a to b , inclusive:
+
+Read the expression as: b minus a plus 1.
+
+Now let us see why this works.
+
+Proof.
+
+Shift the list a,a plus 1,a plus 2, and so on ,b by subtracting a minus 1 from every term. It becomes 1,2,3, and so on ,b minus a plus 1 . Therefore the number of terms is b minus a plus 1 .
+
+Now let us work through an example.
+
+Worked example.
+
+How many integers are from 7 to 29 inclusive?
+
+Read the expression as: 29 minus 7 plus 1 equals 23.
+
+There are 23 integers.
+
+Here is an important point to watch for.
+
+Common mistake.
+
+Using b minus a gives the number of gaps, not the number of integers. From 7 to 29, there are 22 gaps but 23 numbers.
+
+Now pause and try this practice problem yourself.
+
+Practice.
+
+How many integers are from 36 to 93 inclusive?
+
+Let us check the answer.
+
+Read the expression as: 93 minus 36 plus 1 equals 58.
+
+That completes lesson 1. Review the key idea, then try the practice problem once more without looking at the answer.

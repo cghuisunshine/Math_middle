@@ -1,0 +1,45 @@
+Lesson 3
+
+Multiplication Principle
+
+In this lesson, I will explain each idea, read every expression aloud, and then guide you through the practice answer.
+
+Count a sequence of choices by multiplying the number of options at each step.
+
+Let us start with the key idea.
+
+Key idea.
+
+If choice A can be made in m ways and, after that, choice B can be made in n ways, then the two choices together can be made in mn ways.
+
+Now let us see why this works.
+
+Proof.
+
+For each of the m choices of A, there are n choices of B. So the total is n plus n plus and so on plus n , with m copies of n , which equals mn .
+
+Now let us work through an example.
+
+Worked example.
+
+You have 3 shirts and 4 pants. How many outfits?
+
+Read the expression as: 3 times 4 equals 12.
+
+Here is an important point to watch for.
+
+Common mistake.
+
+Do not multiply if you are choosing between separate cases. If the word “or” separates exclusive cases, you probably add.
+
+Now pause and try this practice problem yourself.
+
+Practice.
+
+A lunch special offers 5 sandwiches, 3 drinks, and 2 desserts. How many complete lunches are possible?
+
+Let us check the answer.
+
+Read the expression as: 5 times 3 times 2 equals 30.
+
+That completes lesson 3. Review the key idea, then try the practice problem once more without looking at the answer.

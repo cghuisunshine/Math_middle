@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Counting & Probability Tutorial</title>
-  <script src="audio/counting-probability-narration.words.js"></script>
+  <script src="audio/counting-probability-lessons.words.js"></script>
   <script>
     window.MathJax = {
       tex: { inlineMath: [['\\(', '\\)'], ['$', '$']], displayMath: [['\\[', '\\]']] },
@@ -240,26 +240,6 @@
       border: 0;
     }
 
-    .tts-controls {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-
-    .tts-floating-controls {
-      position: fixed;
-      right: 16px;
-      bottom: 16px;
-      z-index: 30;
-      width: max-content;
-      padding: 10px;
-      background: rgba(255,255,255,.96);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      box-shadow: 0 8px 20px rgba(23, 32, 51, .12);
-      transform: none;
-    }
-
     #ttsAudio { display: none; }
 
     .tts-word {
@@ -326,6 +306,42 @@
       align-items: flex-start;
       gap: 20px;
       margin-bottom: 18px;
+    }
+
+    .lesson-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+
+    .lesson-audio-button {
+      display: inline-grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      padding: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--blue);
+      background: white;
+    }
+
+    .lesson-audio-button:hover {
+      border-color: var(--blue);
+      background: var(--blue-soft);
+    }
+
+    .lesson-audio-button[aria-pressed="true"] {
+      color: white;
+      border-color: var(--blue);
+      background: var(--blue);
+    }
+
+    .lesson-audio-button svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
     }
 
     .lesson-number {
@@ -547,12 +563,6 @@
       }
       main { padding-top: 18px; }
       .overview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .tts-floating-controls {
-        right: 12px;
-        bottom: 12px;
-        width: max-content;
-        transform: none;
-      }
       .lesson-grid { grid-template-columns: 1fr; }
       .full { grid-column: auto; }
       .lesson-header { flex-direction: column; }
@@ -628,10 +638,7 @@
 
       <div id="ttsPanel">
         <span id="ttsStatus" class="tts-status" aria-live="polite">Ready</span>
-        <div class="tts-controls tts-floating-controls">
-          <button id="ttsPlay" type="button" aria-pressed="false">Play</button>
-        </div>
-        <audio id="ttsAudio" preload="metadata" src="audio/counting-probability-narration.mp3"></audio>
+        <audio id="ttsAudio" preload="metadata"></audio>
       </div>
 
       <section class="section-title" id="lessons">
@@ -1013,10 +1020,6 @@
     const lessons = [...document.querySelectorAll('article.lesson')];
     const sideNav = document.getElementById('sideNav');
     const mobileNav = document.getElementById('mobileNav');
-    const narrationAssets = {
-      data: 'audio/counting-probability-narration.words.js',
-      timings: 'audio/counting-probability-narration.words.json'
-    };
 
     function buildNav(target) {
       const top = document.createElement('a');
@@ -1069,13 +1072,47 @@
     }
 
     const ttsAudio = document.getElementById('ttsAudio');
-    const ttsPlay = document.getElementById('ttsPlay');
     const ttsStatus = document.getElementById('ttsStatus');
-    let narrationWords = [];
-    let narrationSpans = [];
+    const lessonNarrations = new Map();
+    let activeLessonRecord = null;
+    let activeLessonButton = null;
     let activeNarrationIndex = -1;
     let narrationReady = false;
     let narrationPreparing = null;
+
+    function setLessonButtonIcon(button, isPlaying) {
+      const title = button.dataset.lessonTitle;
+      const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      svg.setAttribute('viewBox', '0 0 24 24');
+      svg.setAttribute('aria-hidden', 'true');
+      path.setAttribute('d', isPlaying ? 'M7 5h4v14H7zm6 0h4v14h-4z' : 'M8 5v14l11-7z');
+      svg.append(path);
+      while (button.firstChild) button.removeChild(button.firstChild);
+      button.append(svg);
+      button.setAttribute('aria-pressed', String(isPlaying));
+      button.setAttribute('aria-label', `${isPlaying ? 'Pause' : 'Play'} ${title}`);
+      button.title = `${isPlaying ? 'Pause' : 'Play'} ${title}`;
+    }
+
+    function buildLessonAudioControls() {
+      lessons.forEach(lesson => {
+        const header = lesson.querySelector('.lesson-header');
+        const doneLabel = header.querySelector('.done-label');
+        const actions = document.createElement('div');
+        const button = document.createElement('button');
+        actions.className = 'lesson-actions';
+        button.className = 'lesson-audio-button';
+        button.type = 'button';
+        button.dataset.lessonTitle = lesson.dataset.title;
+        button.disabled = true;
+        setLessonButtonIcon(button, false);
+        actions.append(button, doneLabel);
+        header.append(actions);
+      });
+    }
+
+    buildLessonAudioControls();
 
     function cleanNarrationText(text) {
       return text.replace(/\s+/g, ' ').trim();
@@ -1089,18 +1126,18 @@
       return !/[\\$]/.test(text);
     }
 
-    function collectNarrationTargets() {
+    function collectNarrationTargets(root) {
       const selector = [
-        'main h2',
-        'main h3',
-        'main h4',
-        'main p',
-        'main li',
-        'main .chip',
-        'main .mini-card strong',
-        'main .lesson-number'
+        'h2',
+        'h3',
+        'h4',
+        'p',
+        'li',
+        '.chip',
+        '.mini-card strong',
+        '.lesson-number'
       ].join(',');
-      const targets = [...document.querySelectorAll(selector)]
+      const targets = [...root.querySelectorAll(selector)]
         .filter(shouldNarrateElement)
         .map(element => ({ element, text: cleanNarrationText(element.textContent) }));
 
@@ -1118,16 +1155,20 @@
       };
     }
 
-    function renderTimedNarration(text, words) {
-      const narration = collectNarrationTargets();
-      if (narration.text !== text) {
-        ttsStatus.textContent = 'Narration text changed. Regenerate audio timing.';
-        ttsPlay.disabled = true;
-        return false;
-      }
-
-      narrationSpans = [];
+    function renderTimedNarration(lesson, text, words) {
+      const narration = collectNarrationTargets(lesson);
+      const spans = [];
+      let searchCursor = 0;
+      let missingTarget = null;
       narration.targets.forEach(target => {
+        const sourceStart = text.indexOf(target.text, searchCursor);
+        if (sourceStart < 0) {
+          missingTarget = target;
+          return;
+        }
+        target.start = sourceStart;
+        target.end = sourceStart + target.text.length;
+        searchCursor = target.end;
         const elementWords = words
           .map((word, index) => ({ ...word, index }))
           .filter(word => word.start_char >= target.start && word.end_char <= target.end);
@@ -1145,7 +1186,7 @@
           span.dataset.index = String(word.index);
           span.textContent = target.text.slice(localStart, localEnd);
           target.element.append(span);
-          narrationSpans[word.index] = span;
+          spans[word.index] = span;
           cursor = localEnd;
         });
 
@@ -1154,12 +1195,85 @@
         }
       });
 
-      return true;
+      if (missingTarget) {
+        ttsStatus.textContent = 'Narration text changed. Regenerate audio timing.';
+        return null;
+      }
+
+      return spans;
+    }
+
+    function configureLessonPlayback(payloads) {
+      let allLessonsReady = true;
+      lessons.forEach((lesson, index) => {
+        const button = lesson.querySelector('.lesson-audio-button');
+        const payload = payloads[index + 1];
+        if (!button || !payload?.words?.length) {
+          allLessonsReady = false;
+          return;
+        }
+
+        const spans = renderTimedNarration(lesson, payload.text, payload.words);
+        if (!spans) {
+          allLessonsReady = false;
+          return;
+        }
+
+        const record = {
+          lesson,
+          button,
+          audio: payload.audio,
+          words: payload.words,
+          spans
+        };
+        lessonNarrations.set(lesson.id, record);
+        button.dataset.lessonId = lesson.id;
+        button.disabled = false;
+        button.addEventListener('click', () => toggleLessonPlayback(button));
+      });
+      return allLessonsReady;
+    }
+
+    function selectLesson(record) {
+      if (activeLessonRecord === record) return;
+      clearNarrationHighlight();
+      if (activeLessonButton) {
+        setLessonButtonIcon(activeLessonButton, false);
+      }
+      activeLessonRecord = record;
+      activeLessonButton = record.button;
+      ttsAudio.setAttribute('src', record.audio);
+      ttsAudio.load();
+    }
+
+    async function toggleLessonPlayback(button) {
+      try {
+        if (!(await prepareNarration())) return;
+        const record = lessonNarrations.get(button.dataset.lessonId);
+        if (!record) return;
+        const isCurrentLesson = activeLessonRecord === record;
+
+        if (isCurrentLesson && !ttsAudio.paused) {
+          ttsAudio.pause();
+          return;
+        }
+
+        if (!isCurrentLesson) {
+          selectLesson(record);
+        }
+        if (ttsAudio.ended) {
+          ttsAudio.currentTime = 0;
+        }
+        await ttsAudio.play();
+      } catch (error) {
+        ttsStatus.textContent = 'Audio unavailable';
+        console.error(error);
+      }
     }
 
     function clearNarrationHighlight() {
       if (activeNarrationIndex >= 0) {
-        narrationSpans[activeNarrationIndex]?.classList.remove('is-speaking');
+        activeLessonRecord?.spans[activeNarrationIndex]?.classList.remove('is-speaking');
       }
       activeNarrationIndex = -1;
     }
@@ -1179,15 +1293,16 @@
     function setActiveNarrationWord(index) {
       clearNarrationHighlight();
       if (index >= 0) {
-        const span = narrationSpans[index];
+        const span = activeLessonRecord?.spans[index];
         span?.classList.add('is-speaking');
         activeNarrationIndex = index;
         keepActiveNarrationWordInView(span);
       }
     }
 
-    function bindNarrationHighlighting(audio, words) {
+    function bindNarrationHighlighting(audio) {
       function paint() {
+        const words = activeLessonRecord?.words || [];
         const time = audio.currentTime;
         const next = words.findIndex(word => time >= word.start && time < word.end);
         if (next !== activeNarrationIndex) {
@@ -1205,10 +1320,14 @@
       document.querySelector('main').addEventListener('dblclick', async (event) => {
         const target = event.target.closest('.tts-word');
         if (!target) return;
+        const lesson = target.closest('.lesson');
+        const record = lessonNarrations.get(lesson?.id);
+        if (!record) return;
         const index = Number(target.dataset.index);
-        const word = narrationWords[index];
+        const word = record.words[index];
         if (!word) return;
 
+        selectLesson(record);
         ttsAudio.currentTime = word.start;
         setActiveNarrationWord(index);
         try {
@@ -1225,15 +1344,10 @@
       if (narrationPreparing) return narrationPreparing;
       narrationPreparing = (async () => {
         ttsStatus.textContent = 'Loading';
-        let payload = window.countingProbabilityNarration;
-        if (!payload) {
-          const response = await fetch(narrationAssets.timings);
-          if (!response.ok) throw new Error(`Could not load ${narrationAssets.timings}`);
-          payload = await response.json();
-        }
-        narrationWords = payload.words || [];
-        if (!renderTimedNarration(payload.text, narrationWords)) return false;
-        bindNarrationHighlighting(ttsAudio, narrationWords);
+        const payloads = window.countingProbabilityLessons;
+        if (!payloads) throw new Error('Lesson narration data is unavailable');
+        if (!configureLessonPlayback(payloads)) return false;
+        bindNarrationHighlighting(ttsAudio);
         bindNarrationSeeking();
         narrationReady = true;
         ttsStatus.textContent = 'Ready';
@@ -1242,38 +1356,20 @@
       return narrationPreparing;
     }
 
-    ttsPlay.addEventListener('click', async () => {
-      try {
-        if (!(await prepareNarration())) return;
-        if (ttsAudio.paused || ttsAudio.ended) {
-          if (ttsAudio.ended) ttsAudio.currentTime = 0;
-          await ttsAudio.play();
-        } else {
-          ttsAudio.pause();
-        }
-      } catch (error) {
-        ttsStatus.textContent = 'Audio unavailable';
-        console.error(error);
-      }
-    });
-
     ttsAudio.addEventListener('play', () => {
-      ttsPlay.textContent = 'Pause';
-      ttsPlay.setAttribute('aria-pressed', 'true');
+      if (activeLessonButton) setLessonButtonIcon(activeLessonButton, true);
       ttsStatus.textContent = 'Playing';
     });
 
     ttsAudio.addEventListener('pause', () => {
-      ttsPlay.textContent = 'Play';
-      ttsPlay.setAttribute('aria-pressed', 'false');
+      if (activeLessonButton) setLessonButtonIcon(activeLessonButton, false);
       if (!ttsAudio.ended) {
         ttsStatus.textContent = 'Paused';
       }
     });
 
     ttsAudio.addEventListener('ended', () => {
-      ttsPlay.textContent = 'Play';
-      ttsPlay.setAttribute('aria-pressed', 'false');
+      if (activeLessonButton) setLessonButtonIcon(activeLessonButton, false);
       ttsStatus.textContent = 'Ready';
     });
 

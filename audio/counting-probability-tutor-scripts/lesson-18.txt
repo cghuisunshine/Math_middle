@@ -1,0 +1,47 @@
+Lesson 18
+
+Binomial Theorem
+
+In this lesson, I will explain each idea, read every expression aloud, and then guide you through the practice answer.
+
+Use combinations as coefficients in polynomial expansions.
+
+Here is the main result.
+
+Theorem.
+
+Read the expression as: open parenthesis a plus b close parenthesis to the power of n equals the sum from k equals 0 to n of n choose k a to the power of n minus k b to the power of k.
+
+Now let us see why this works.
+
+Proof idea.
+
+In open parenthesis a plus b close parenthesis to the power of n , we multiply n factors of open parenthesis a plus b close parenthesis . To get a to the power of n minus k b to the power of k , choose exactly k of the n factors to contribute b ; the rest contribute a . This can be done in n choose k ways.
+
+Now let us work through an example.
+
+Worked example.
+
+Expand open parenthesis x plus y close parenthesis to the power of 4 .
+
+Read the expression as: open parenthesis x plus y close parenthesis to the power of 4 equals x to the power of 4 plus 4x to the power of 3y plus 6x to the power of 2y to the power of 2 plus 4xy to the power of 3 plus y to the power of 4.
+
+Here is an important point to watch for.
+
+Common mistake.
+
+Keep the exponents adding to n . In every term of open parenthesis a plus b close parenthesis to the power of n , the exponents of a and b add to n .
+
+Now pause and try this practice problem yourself.
+
+Practice.
+
+Find the coefficient of x to the power of 3y to the power of 2 in open parenthesis x plus y close parenthesis to the power of 5 .
+
+Let us check the answer.
+
+We need 3 factors to contribute x and 2 factors to contribute y .
+
+Read the expression as: 5 choose 2 equals 10.
+
+That completes lesson 18. Review the key idea, then try the practice problem once more without looking at the answer.

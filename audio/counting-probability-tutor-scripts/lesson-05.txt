@@ -1,0 +1,49 @@
+Lesson 5
+
+Partial Permutations
+
+In this lesson, I will explain each idea, read every expression aloud, and then guide you through the practice answer.
+
+Choose and arrange only part of a group.
+
+Let us start with the key idea.
+
+Key idea.
+
+The number of ways to choose and arrange r objects from n different objects is:
+
+Read the expression as: P open parenthesis n,r close parenthesis equals the fraction n factorial over open parenthesis n minus r close parenthesis factorial.
+
+Now let us see why this works.
+
+Proof.
+
+The choices are n,n minus 1,n minus 2, and so on ,n minus r plus 1 . This product is the beginning of n factorial . Dividing by open parenthesis n minus r close parenthesis factorial removes the unused tail.
+
+Now let us work through an example.
+
+Worked example.
+
+A club has 10 members. How many ways can it choose a president, vice-president, and treasurer?
+
+Read the expression as: 10 times 9 times 8 equals 720.
+
+Order matters because the jobs are different.
+
+Here is an important point to watch for.
+
+Common mistake.
+
+Do not use combinations here. Choosing Alice as president and Ben as treasurer is different from choosing Ben as president and Alice as treasurer.
+
+Now pause and try this practice problem yourself.
+
+Practice.
+
+How many 3-person officer teams can be formed from 12 people if the offices are president, secretary, and treasurer?
+
+Let us check the answer.
+
+Read the expression as: 12 times 11 times 10 equals 1320.
+
+That completes lesson 5. Review the key idea, then try the practice problem once more without looking at the answer.

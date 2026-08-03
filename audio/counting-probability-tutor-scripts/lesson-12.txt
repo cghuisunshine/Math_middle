@@ -1,0 +1,49 @@
+Lesson 12
+
+Basic Probability
+
+In this lesson, I will explain each idea, read every expression aloud, and then guide you through the practice answer.
+
+Convert counting into probability when outcomes are equally likely.
+
+Let us start with the key idea.
+
+Key idea.
+
+Read the expression as: P open parenthesis E close parenthesis equals the fraction favorable outcomes over total outcomes.
+
+This formula requires equally likely outcomes.
+
+Now let us see why this works.
+
+Why it works.
+
+If there are N equally likely outcomes, each has probability 1 divided by N . If event E contains k of them, then P open parenthesis E close parenthesis equals k times the fraction 1 over N equals the fraction k over N .
+
+Now let us work through an example.
+
+Worked example.
+
+A fair die is rolled. What is the probability of rolling an even number?
+
+Even outcomes are 2,4,6 , so:
+
+Read the expression as: P open parenthesis even close parenthesis equals the fraction 3 over 6 equals the fraction 1 over 2.
+
+Here is an important point to watch for.
+
+Common mistake.
+
+Do not use this simple fraction if the outcomes are not equally likely. For example, “rain” and “no rain” are not automatically 50-50.
+
+Now pause and try this practice problem yourself.
+
+Practice.
+
+A card is drawn from a standard 52-card deck. What is the probability it is a heart?
+
+Let us check the answer.
+
+Read the expression as: the fraction 13 over 52 equals the fraction 1 over 4.
+
+That completes lesson 12. Review the key idea, then try the practice problem once more without looking at the answer.

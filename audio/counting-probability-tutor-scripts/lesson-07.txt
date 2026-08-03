@@ -1,0 +1,51 @@
+Lesson 7
+
+Complementary Counting
+
+In this lesson, I will explain each idea, read every expression aloud, and then guide you through the practice answer.
+
+Count what you do not want, then subtract from the total.
+
+Let us start with the key idea.
+
+Key idea.
+
+Read the expression as: wanted equals total minus unwanted.
+
+This is often useful for “not,” “at least one,” or “no restrictions except...” problems.
+
+Now let us see why this works.
+
+Why it works.
+
+Every object is either wanted or unwanted, and not both. So total equals wanted plus unwanted . Rearranging gives the formula.
+
+Now let us work through an example.
+
+Worked example.
+
+How many 3-digit numbers are not multiples of 7?
+
+There are 900 three-digit numbers. The multiples are 105 equals 15 times 7 through 994 equals 142 times 7 , so there are 142 minus 15 plus 1 equals 128 multiples.
+
+Read the expression as: 900 minus 128 equals 772.
+
+Here is an important point to watch for.
+
+Common mistake.
+
+Make sure the total universe is clear. Here the universe is all 3-digit numbers, not all positive integers.
+
+Now pause and try this practice problem yourself.
+
+Practice.
+
+How many 4-digit PINs contain at least one 7? Digits may repeat, and a PIN may begin with 0.
+
+Let us check the answer.
+
+Total PINs: 10 to the power of 4 . PINs with no 7: 9 to the power of 4 .
+
+Read the expression as: 10 to the power of 4 minus 9 to the power of 4 equals 10000 minus 6561 equals 3439.
+
+That completes lesson 7. Review the key idea, then try the practice problem once more without looking at the answer.

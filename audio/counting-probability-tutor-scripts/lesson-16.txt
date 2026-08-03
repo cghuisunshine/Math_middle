@@ -1,0 +1,47 @@
+Lesson 16
+
+Pascal’s Triangle
+
+In this lesson, I will explain each idea, read every expression aloud, and then guide you through the practice answer.
+
+See combinations in a triangle of numbers.
+
+Let us start with the key idea.
+
+Key idea.
+
+Row n of Pascal’s Triangle contains:
+
+Read the expression as: n choose 0,n choose 1,n choose 2, and so on ,n choose n.
+
+Now let us see why this works.
+
+Pascal’s identity proof.
+
+To choose r people from n , choose a special person Alex. Either Alex is included, so choose r minus 1 from the remaining n minus 1 , or Alex is not included, so choose r from the remaining n minus 1 .
+
+Read the expression as: n choose r equals n minus 1 choose r minus 1 plus n minus 1 choose r.
+
+Let us use the visual to make the idea concrete.
+
+Visual.
+
+The displayed rows of Pascal's Triangle are: 1; 11; 121; 1331; 14641; 15101051.
+
+Now let us work through an example.
+
+Worked example.
+
+Row 4 is 1,4,6,4,1 , so 4 choose 2 equals 6 .
+
+Now pause and try this practice problem yourself.
+
+Practice.
+
+Use Pascal’s identity to compute 7 choose 3 from row 6.
+
+Let us check the answer.
+
+Read the expression as: 7 choose 3 equals 6 choose 2 plus 6 choose 3 equals 15 plus 20 equals 35.
+
+That completes lesson 16. Review the key idea, then try the practice problem once more without looking at the answer.

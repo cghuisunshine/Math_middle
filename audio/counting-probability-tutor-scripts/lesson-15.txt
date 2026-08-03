@@ -1,0 +1,47 @@
+Lesson 15
+
+Expected Value
+
+In this lesson, I will explain each idea, read every expression aloud, and then guide you through the practice answer.
+
+Find the long-run average value of a random process.
+
+Let us start with the key idea.
+
+Key idea.
+
+Read the expression as: E equals x sub 1p sub 1 plus x sub 2p sub 2 plus and so on plus x sub np sub n.
+
+Now let us see why this works.
+
+Why it works.
+
+Over many repetitions, outcome x sub i occurs about a p sub i fraction of the time. Its contribution to the average is therefore about x sub ip sub i . Add all contributions.
+
+Now let us work through an example.
+
+Worked example.
+
+You roll a fair die and win the number of dollars shown. What is the expected value?
+
+Read the expression as: E equals the fraction 1 plus 2 plus 3 plus 4 plus 5 plus 6 over 6 equals the fraction 21 over 6 equals 3.5.
+
+Here is an important point to watch for.
+
+Common mistake.
+
+Expected value does not mean the result must be possible. You can never roll 3.5, but the long-run average is 3.5.
+
+Now pause and try this practice problem yourself.
+
+Practice.
+
+A game pays 10 dollars with probability the fraction 1 over 4 and 0 dollars otherwise. What is the expected payout?
+
+Let us check the answer.
+
+Read the expression as: 10 times the fraction 1 over 4 plus 0 times the fraction 3 over 4 equals 2.50.
+
+The expected payout is 2 dollars and 50 cents.
+
+That completes lesson 15. Review the key idea, then try the practice problem once more without looking at the answer.
