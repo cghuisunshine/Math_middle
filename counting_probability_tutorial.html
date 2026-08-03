@@ -749,6 +749,13 @@
           <div class="box idea"><h4>Key idea</h4><div class="formula">\[\binom{n}{r}=\frac{n!}{r!(n-r)!}\]</div></div>
           <div class="box proof"><h4>Proof</h4><p>First choose and arrange \(r\) objects from \(n\), giving \(P(n,r)=\frac{n!}{(n-r)!}\). But each chosen group of \(r\) objects can be arranged in \(r!\) orders. Divide by \(r!\).</p></div>
           <div class="box example"><h4>Worked example</h4><p>How many ways can we choose 3 students from 10?</p><div class="formula">\[\binom{10}{3}=\frac{10\cdot9\cdot8}{3\cdot2\cdot1}=120\]</div></div>
+          <div class="box example full narration-supplement">
+            <h4>Why combinations are coefficients in \((a+b)^n\)</h4>
+            <p>Write \((a+b)^n\) as \(n\) factors of \((a+b)\). To produce \(a^{n-r}b^r\), choose \(b\) from exactly \(r\) of the factors; the other \(n-r\) factors supply \(a\). There are \(\binom nr\) ways to choose those \(r\) factors, so the coefficient of \(a^{n-r}b^r\) is \(\binom nr\).</p>
+            <div class="formula">\[(a+b)^n=\sum_{r=0}^{n}\binom nr a^{n-r}b^r\]</div>
+            <p>For example, the coefficient of \(a^2b^2\) in \((a+b)^4\) is \(\binom42=6\):</p>
+            <div class="formula">\[(a+b)^4=a^4+4a^3b+6a^2b^2+4ab^3+b^4\]</div>
+          </div>
           <div class="box warning"><h4>Decision test</h4><p>Ask: “Would the same people in a different order count as a new answer?” If yes, use permutations. If no, use combinations.</p></div>
           <div class="box practice full"><h4>Practice</h4><p>How many 5-person committees can be chosen from 14 people?</p><details><summary>Show answer</summary><div class="formula">\[\binom{14}{5}=2002\]</div></details></div>
         </div>
@@ -1030,7 +1037,7 @@
     }
 
     function shouldNarrateElement(element) {
-      if (element.closest('#ttsPanel, details, .formula, .svg-card, .pascal, svg, .done-label')) return false;
+      if (element.closest('#ttsPanel, details, .formula, .svg-card, .pascal, svg, .done-label, .narration-supplement')) return false;
       if (element.children.length > 0) return false;
       const text = cleanNarrationText(element.textContent);
       if (!text) return false;
