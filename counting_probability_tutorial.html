@@ -443,6 +443,41 @@
       overflow-x: auto;
     }
 
+    .move-sequence {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(34px, 1fr));
+      gap: 6px;
+      margin: 14px 0 8px;
+      font-family: var(--mono);
+      text-align: center;
+    }
+
+    .move-slot {
+      position: relative;
+      padding: 8px 4px;
+      border: 1px solid #cbd4e3;
+      border-radius: 8px;
+      background: white;
+      color: #45516a;
+      font-weight: 800;
+    }
+
+    .move-slot.up {
+      border-color: #8fc9ad;
+      background: var(--green-soft);
+      color: #126b44;
+    }
+
+    .move-position {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-family: var(--sans);
+      font-size: .68rem;
+      font-weight: 600;
+      line-height: 1;
+    }
+
     .venn text, .grid-svg text, .tree-svg text { font-family: var(--sans); fill: #23304a; font-size: 13px; }
     .pascal {
       display: grid;
@@ -763,13 +798,23 @@
 
       <article class="lesson" id="lesson-11" data-title="Grid Paths">
         <div class="lesson-header">
-          <div><span class="lesson-number">Lesson 11</span><h3>Grid Paths</h3><p class="lesson-intro">Turn shortest paths into arrangements of moves.</p></div>
+          <div><span class="lesson-number">Lesson 11</span><h3>Grid Paths</h3><p class="lesson-intro">Write each shortest path as a sequence of U and R moves.</p></div>
           <label class="done-label"><input type="checkbox" data-lesson="11"> Done</label>
         </div>
         <div class="lesson-grid">
-          <div class="box idea"><h4>Key idea</h4><p>A shortest path on a rectangular grid is a sequence of right moves and up moves. Counting paths becomes counting arrangements of repeated letters.</p></div>
-          <div class="box proof"><h4>Why combinations appear</h4><p>If a path needs \(r\) right moves and \(u\) up moves, then it has \(r+u\) total moves. Choosing the positions of the \(u\) up moves determines the path, so the count is \(\binom{r+u}{u}\).</p></div>
-          <div class="box example"><h4>Worked example</h4><p>How many shortest paths are there across a \(4\times3\) grid?</p><div class="formula">\[\binom{7}{3}=35\]</div></div>
+          <div class="box idea"><h4>Key idea</h4><p>Imagine recording your moves as you walk: write U for every move up and R for every move right. Each shortest path makes one U/R sequence, and every such sequence draws one shortest path.</p></div>
+          <div class="box proof"><h4>Why combinations appear</h4><p>A path with \(u\) up moves and \(r\) right moves has \(u+r\) positions in its move sequence. Choose which \(u\) positions contain U. Every position you did not choose must contain R, so that one choice fixes the entire path.</p><div class="formula">\[\text{number of shortest paths}=\binom{u+r}{u}\]</div></div>
+          <div class="box example"><h4>Worked example</h4><p>A \(4\times3\) grid requires 4 right moves and 3 up moves, so every shortest path fills 7 sequence positions.</p>
+            <div class="move-sequence" aria-label="Example path sequence: R, R, U, R, U, R, U. Up moves occupy positions 3, 5, and 7.">
+              <span class="move-slot">R<span class="move-position">1</span></span>
+              <span class="move-slot">R<span class="move-position">2</span></span>
+              <span class="move-slot up">U<span class="move-position">3</span></span>
+              <span class="move-slot">R<span class="move-position">4</span></span>
+              <span class="move-slot up">U<span class="move-position">5</span></span>
+              <span class="move-slot">R<span class="move-position">6</span></span>
+              <span class="move-slot up">U<span class="move-position">7</span></span>
+            </div>
+            <p>This path chooses positions 3, 5, and 7 for U. Any choice of 3 of the 7 positions creates exactly one path:</p><div class="formula">\[\binom{7}{3}=35\]</div></div>
           <div class="box example"><h4>Visual</h4><div class="svg-card">
             <svg class="grid-svg" width="360" height="230" viewBox="0 0 360 230" role="img" aria-label="Four by three grid path">
               <g transform="translate(48,35)">
@@ -783,7 +828,7 @@
               </g>
             </svg>
           </div></div>
-          <div class="box practice full"><h4>Practice</h4><p>How many shortest paths are there on a \(5\times5\) grid?</p><details><summary>Show answer</summary><p>There are 5 right moves and 5 up moves.</p><div class="formula">\[\binom{10}{5}=252\]</div></details></div>
+          <div class="box practice full"><h4>Practice</h4><p>How many shortest paths are there on a \(5\times5\) grid?</p><details><summary>Show answer</summary><p>Each path is a 10-position sequence containing 5 U moves and 5 R moves. Choose the 5 positions that contain U; the other 5 positions must contain R.</p><div class="formula">\[\binom{10}{5}=252\]</div></details></div>
         </div>
       </article>
 

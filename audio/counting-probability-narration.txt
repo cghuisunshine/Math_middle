@@ -248,15 +248,17 @@ Lesson 11
 
 Grid Paths
 
-Turn shortest paths into arrangements of moves.
+Write each shortest path as a sequence of U and R moves.
 
 Key idea
 
-A shortest path on a rectangular grid is a sequence of right moves and up moves. Counting paths becomes counting arrangements of repeated letters.
+Imagine recording your moves as you walk: write U for every move up and R for every move right. Each shortest path makes one U/R sequence, and every such sequence draws one shortest path.
 
 Why combinations appear
 
 Worked example
+
+This path chooses positions 3, 5, and 7 for U. Any choice of 3 of the 7 positions creates exactly one path:
 
 Visual
 
