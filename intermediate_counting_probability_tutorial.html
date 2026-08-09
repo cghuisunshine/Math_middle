@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intermediate Counting &amp; Probability Tutorial</title>
+  <script>
+    window.MathJax = {
+      tex: { inlineMath: [['\\\\(', '\\\\)'], ['$', '$']], displayMath: [['\\\\[', '\\\\]']] },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js" async></script>
+  <style>
+    :root {
+      --bg: #f7f8fc;
+      --paper: #ffffff;
+      --ink: #172033;
+      --muted: #657083;
+      --line: #dfe5f0;
+      --blue: #2d65f3;
+      --blue-soft: #eaf0ff;
+      --green: #1b8a5a;
+      --green-soft: #e8f7f0;
+      --orange: #d46a1f;
+      --orange-soft: #fff0e6;
+      --purple: #6b4cc2;
+      --purple-soft: #f0ebff;
+      --red: #ca3c3c;
+      --red-soft: #ffecec;
+      --shadow: 0 16px 40px rgba(23, 32, 51, 0.10);
+      --radius: 18px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      font-family: var(--sans);
+      background: radial-gradient(circle at top left, #eef3ff 0, transparent 35%), var(--bg);
+      color: var(--ink);
+      line-height: 1.6;
+    }
+
+    a { color: var(--blue); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 270px minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    aside {
+      position: sticky;
+      top: 0;
+      align-self: start;
+      height: 100vh;
+      padding: 22px 18px;
+      border-right: 1px solid var(--line);
+      background: rgba(255,255,255,0.92);
+      backdrop-filter: blur(10px);
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+
+    .logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--blue), var(--purple));
+      box-shadow: 0 10px 20px rgba(45, 101, 243, 0.25);
+    }
+
+    .brand h1 {
+      font-size: 1rem;
+      margin: 0;
+      line-height: 1.2;
+    }
+
+    .brand p {
+      margin: 2px 0 0;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .progress-wrap {
+      background: var(--blue-soft);
+      border: 1px solid #d8e2ff;
+      border-radius: 999px;
+      height: 12px;
+      overflow: hidden;
+      margin: 16px 0 8px;
+    }
+
+    .progress-bar {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--green));
+      transition: width .25s ease;
+    }
+
+    .progress-text {
+      color: var(--muted);
+      font-size: .8rem;
+      margin-bottom: 14px;
+    }
+
+    nav a {
+      display: block;
+      padding: 7px 10px;
+      border-radius: 10px;
+      color: #33405b;
+      font-size: 0.9rem;
+    }
+
+    nav a:hover, nav a.active {
+      background: var(--blue-soft);
+      text-decoration: none;
+      color: var(--blue);
+    }
+
+    .side-actions {
+      display: grid;
+      gap: 8px;
+      margin: 18px 0;
+    }
+
+    button, .button {
+      border: 0;
+      border-radius: 12px;
+      padding: 10px 13px;
+      cursor: pointer;
+      font-weight: 700;
+      font-family: inherit;
+      background: var(--blue);
+      color: white;
+      box-shadow: 0 10px 18px rgba(45, 101, 243, .22);
+      text-align: center;
+    }
+
+    button.secondary {
+      color: var(--ink);
+      background: #eef2f8;
+      box-shadow: none;
+    }
+
+    main {
+      padding: 34px clamp(18px, 4vw, 60px) 80px;
+      max-width: 1160px;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border-radius: 28px;
+      background: linear-gradient(135deg, #102448 0%, #2d65f3 58%, #7c60d8 100%);
+      color: white;
+      padding: clamp(28px, 5vw, 56px);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: -80px;
+      top: -100px;
+      width: 330px;
+      height: 330px;
+      background: radial-gradient(circle, rgba(255,255,255,.26), transparent 62%);
+      border-radius: 50%;
+    }
+
+    .hero h2 {
+      font-size: clamp(2rem, 6vw, 4.2rem);
+      line-height: 1.03;
+      margin: 0 0 18px;
+      max-width: 840px;
+      letter-spacing: -0.05em;
+    }
+
+    .hero p {
+      font-size: 1.08rem;
+      max-width: 780px;
+      color: rgba(255,255,255,.88);
+      margin: 0 0 22px;
+    }
+
+    .hero .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: rgba(255,255,255,.16);
+      border: 1px solid rgba(255,255,255,.26);
+      color: white;
+      padding: 7px 12px;
+      border-radius: 999px;
+      font-size: 0.9rem;
+    }
+
+    .source-note {
+      margin: 18px 0 0;
+      padding: 14px 16px;
+      border-radius: 16px;
+      background: rgba(255,255,255,.13);
+      border: 1px solid rgba(255,255,255,.22);
+      color: rgba(255,255,255,.92);
+      font-size: .92rem;
+    }
+
+    .tts-status {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    #ttsAudio { display: none; }
+
+    .tts-word {
+      border-radius: 3px;
+      transition: background-color 120ms ease, color 120ms ease;
+    }
+
+    .tts-word.is-speaking {
+      background: #ffe08a;
+      color: #111827;
+    }
+
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 14px;
+      margin: 24px 0 38px;
+    }
+
+    .mini-card {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: 0 8px 20px rgba(23, 32, 51, .05);
+    }
+
+    .mini-card strong { display: block; margin-bottom: 5px; }
+    .mini-card p { margin: 0; color: var(--muted); font-size: .92rem; }
+
+    .section-title {
+      margin: 46px 0 18px;
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .section-title h2 {
+      margin: 0;
+      font-size: clamp(1.55rem, 3vw, 2.2rem);
+      letter-spacing: -0.03em;
+    }
+
+    .section-title p {
+      margin: 5px 0 0;
+      color: var(--muted);
+      max-width: 740px;
+    }
+
+    .lesson {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 24px;
+      padding: clamp(18px, 3vw, 30px);
+      margin: 18px 0;
+      box-shadow: 0 10px 26px rgba(23, 32, 51, .06);
+      scroll-margin-top: 20px;
+    }
+
+    .lesson-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      margin-bottom: 18px;
+    }
+
+    .lesson-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+
+    .lesson-audio-button {
+      display: inline-grid;
+      place-items: center;
+      width: 38px;
+      height: 38px;
+      padding: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      color: var(--blue);
+      background: white;
+    }
+
+    .lesson-audio-button:hover {
+      border-color: var(--blue);
+      background: var(--blue-soft);
+    }
+
+    .lesson-audio-button[aria-pressed="true"] {
+      color: white;
+      border-color: var(--blue);
+      background: var(--blue);
+    }
+
+    .lesson-audio-button svg {
+      width: 18px;
+      height: 18px;
+      fill: currentColor;
+    }
+
+    .lesson-number {
+      color: white;
+      background: var(--ink);
+      border-radius: 999px;
+      padding: 5px 10px;
+      font-weight: 800;
+      font-size: .82rem;
+      letter-spacing: .02em;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+
+    .lesson h3 {
+      font-size: clamp(1.35rem, 3vw, 1.9rem);
+      margin: 0;
+      letter-spacing: -0.03em;
+    }
+
+    .lesson-intro {
+      color: var(--muted);
+      margin: 6px 0 0;
+    }
+
+    .done-label {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      white-space: nowrap;
+      background: #f2f5fa;
+      border-radius: 999px;
+      padding: 8px 12px;
+      color: var(--muted);
+      font-size: .9rem;
+    }
+
+    .done-label input { accent-color: var(--green); }
+
+    .lesson-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .box {
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      background: #fbfcff;
+    }
+
+    .box h4 {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 8px;
+      font-size: 1rem;
+    }
+
+    .box p:first-of-type { margin-top: 0; }
+    .box p:last-child, .box ul:last-child, .box ol:last-child { margin-bottom: 0; }
+
+    .idea { background: var(--blue-soft); border-color: #d8e2ff; }
+    .proof { background: var(--green-soft); border-color: #c9eadb; }
+    .example { background: var(--purple-soft); border-color: #ded3ff; }
+    .warning { background: var(--orange-soft); border-color: #ffd3b6; }
+    .practice { background: #fff; }
+
+    .full { grid-column: 1 / -1; }
+
+    details {
+      margin-top: 10px;
+      border: 1px dashed #c5cedd;
+      border-radius: 14px;
+      padding: 10px 12px;
+      background: rgba(255,255,255,.66);
+    }
+
+    summary {
+      cursor: pointer;
+      font-weight: 800;
+      color: var(--blue);
+    }
+
+    .formula {
+      padding: 10px 12px;
+      background: rgba(255,255,255,.66);
+      border: 1px solid rgba(0,0,0,.06);
+      border-radius: 12px;
+      overflow-x: auto;
+      margin: 10px 0;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      border-radius: 999px;
+      padding: 4px 9px;
+      background: #eef2f8;
+      color: #536176;
+      font-size: .78rem;
+      font-weight: 800;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+
+    .svg-card {
+      display: grid;
+      place-items: center;
+      padding: 12px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow-x: auto;
+    }
+
+    .move-sequence {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(34px, 1fr));
+      gap: 6px;
+      margin: 14px 0 8px;
+      font-family: var(--mono);
+      text-align: center;
+    }
+
+    .move-slot {
+      position: relative;
+      padding: 8px 4px;
+      border: 1px solid #cbd4e3;
+      border-radius: 8px;
+      background: white;
+      color: #45516a;
+      font-weight: 800;
+    }
+
+    .move-slot.up {
+      border-color: #8fc9ad;
+      background: var(--green-soft);
+      color: #126b44;
+    }
+
+    .move-position {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-family: var(--sans);
+      font-size: .68rem;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .venn text, .grid-svg text, .tree-svg text { font-family: var(--sans); fill: #23304a; font-size: 13px; }
+    .pascal {
+      display: grid;
+      gap: 8px;
+      justify-items: center;
+      font-family: var(--mono);
+      margin: 12px 0;
+    }
+    .pascal-row { display: flex; gap: 8px; justify-content: center; }
+    .pascal-row span {
+      min-width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 999px;
+      background: var(--blue-soft);
+      color: var(--blue);
+      font-weight: 800;
+      border: 1px solid #d8e2ff;
+    }
+
+    .two-col-list {
+      columns: 2;
+      column-gap: 30px;
+    }
+
+    .footer {
+      margin-top: 44px;
+      padding: 24px;
+      border-radius: 22px;
+      background: #111827;
+      color: white;
+    }
+
+    .footer p { color: rgba(255,255,255,.75); }
+
+    .mobile-top {
+      display: none;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(255,255,255,.95);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(10px);
+      padding: 10px 14px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .mobile-top strong { font-size: .96rem; }
+    .mobile-nav { display: none; }
+
+    @media (max-width: 980px) {
+      .layout { display: block; }
+      aside { display: none; }
+      .mobile-top { display: flex; }
+      .mobile-nav.open {
+        display: block;
+        position: sticky;
+        top: 55px;
+        z-index: 9;
+        max-height: 60vh;
+        overflow-y: auto;
+        padding: 12px 16px;
+        border-bottom: 1px solid var(--line);
+        background: white;
+      }
+      main { padding-top: 18px; }
+      .overview-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .lesson-grid { grid-template-columns: 1fr; }
+      .full { grid-column: auto; }
+      .lesson-header { flex-direction: column; }
+      .two-col-list { columns: 1; }
+    }
+
+    @media (max-width: 620px) {
+      .overview-grid { grid-template-columns: 1fr; }
+      .hero { border-radius: 20px; }
+      .lesson { border-radius: 18px; }
+      .side-actions { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media print {
+      aside, .mobile-top, .mobile-nav, .side-actions, .done-label, .tts-panel, button { display: none !important; }
+      .layout { display: block; }
+      main { padding: 0; max-width: none; }
+      body { background: white; }
+      .hero { color: var(--ink); background: white; border: 1px solid var(--line); box-shadow: none; }
+      .hero p, .source-note { color: var(--ink); }
+      .lesson, .mini-card { break-inside: avoid; box-shadow: none; }
+      details { break-inside: avoid; }
+      details > * { display: block; }
+    }
+  </style>
+</head>
+<body>
+  <div class="mobile-top">
+    <strong>Intermediate Counting &amp; Probability</strong>
+    <button class="secondary" onclick="toggleMobileNav()">Menu</button>
+  </div>
+  <div id="mobileNav" class="mobile-nav"></div>
+
+  <div class="layout">
+    <aside>
+      <div class="brand">
+        <div class="logo">I C</div>
+        <div>
+          <h1>Intermediate Counting &amp; Probability</h1>
+          <p>Examples · Proofs · Practice</p>
+        </div>
+      </div>
+
+      <div class="progress-wrap"><div id="progressBar" class="progress-bar"></div></div>
+      <div id="progressText" class="progress-text">0 of 16 lessons marked complete</div>
+
+      <div class="side-actions">
+        <button onclick="expandAllAnswers()">Show answers</button>
+        <button class="secondary" onclick="window.print()">Print</button>
+      </div>
+
+      <nav id="sideNav"></nav>
+    </aside>
+
+    <main>
+      <section class="hero" id="top">
+        <h2>Intermediate Counting &amp; Probability Tutorial</h2>
+        <p>A chapter-by-chapter bridge from core counting techniques to inclusion-exclusion, bijections, recurrence relations, conditional probability, generating functions, and graph theory.</p>
+        <div class="chips">
+          <span class="chip">PIE &amp; bijections</span>
+          <span class="chip">Pigeonhole principle</span>
+          <span class="chip">Expectation &amp; distributions</span>
+          <span class="chip">Recursion &amp; Catalan numbers</span>
+          <span class="chip">Generating functions</span>
+          <span class="chip">Graph theory</span>
+        </div>
+        <div class="source-note">Adapted and paraphrased from the supplied <em>Intermediate Counting &amp; Probability</em> PDF. Use the textbook for the full problem sets and challenge problems.</div>
+      </section>
+
+      <section class="overview-grid" aria-label="Course overview">
+        <div class="mini-card"><strong>1. Correct overlap</strong><p>Use complements and inclusion-exclusion so every desired object is counted exactly once.</p></div>
+        <div class="mini-card"><strong>2. Change the model</strong><p>Use bijections, diagrams, states, or graphs when direct counting becomes awkward.</p></div>
+        <div class="mini-card"><strong>3. Break into pieces</strong><p>Use induction, Fibonacci structure, and recurrences to connect large cases to smaller ones.</p></div>
+        <div class="mini-card"><strong>4. Encode many cases</strong><p>Use identities and generating functions to organize whole families of counts at once.</p></div>
+      </section>
+
+      <section class="section-title" id="lessons">
+        <div>
+          <h2>Lessons</h2>
+          <p>The sequence follows the fifteen instructional chapters of the source, followed by a synthesis lesson.</p>
+        </div>
+      </section>
+
+      <article class="lesson" id="lesson-1" data-title="Review Toolkit">
+        <div class="lesson-header">
+          <div>
+            <span class="lesson-number">Lesson 1</span>
+            <span class="tag">Foundations</span>
+            <h3>Review Toolkit</h3>
+            <p class="lesson-intro">Reconnect constructive counting, probability, expected value, Pascal&#x27;s triangle, and summation notation.</p>
+          </div>
+          <label class="done-label"><input type="checkbox" data-lesson="1"> Done</label>
+        </div>
+        <div class="lesson-grid"><div class="box idea"><h4>Core facts</h4><ul><li>Multiplication principle: multiply the choices in a sequence of decisions.</li><li>Permutations arrange objects; combinations select them without order: <code>C(n,r) = n!/[r!(n-r)!]</code>.</li><li>For equally likely outcomes, <code>P(E) = favorable outcomes / total outcomes</code>.</li><li>Complement: <code>P(E) = 1 - P(not E)</code>. Linearity of expectation: <code>E(X+Y) = E(X)+E(Y)</code>.</li><li>Binomial theorem: <code>(x+y)^n = sum from k=0 to n of C(n,k)x^(n-k)y^k</code>.</li></ul></div><div class="box example"><h4>Worked example</h4><p>How many six-digit strings contain exactly two zeros? Choose the two zero positions in <code>C(6,2)</code> ways. Each remaining position has 9 nonzero choices, so the count is <code>C(6,2)9^4 = 98,415</code>. The construction handles the restriction before filling unrestricted positions.</p></div><div class="box practice full"><h4>Checkpoint</h4><p>Five fair coins are tossed. Find the probability of at least one head.</p><details><summary>Show answer</summary><p><strong>Answer:</strong> Count the complement. <code>1 - (1/2)^5 = 31/32</code>.</p></details></div></div>
+      </article>
+
+      <article class="lesson" id="lesson-2" data-title="Sets and Logic">
+        <div class="lesson-header">
+          <div>
+            <span class="lesson-number">Lesson 2</span>
+            <span class="tag">Language of proof</span>
+            <h3>Sets and Logic</h3>
+            <p class="lesson-intro">Use precise set operations and valid logical implications to organize a counting argument.</p>
+          </div>
+          <label class="done-label"><input type="checkbox" data-lesson="2"> Done</label>
+        </div>
+        <div class="lesson-grid"><div class="box idea"><h4>Sets</h4><ul><li><code>A union B</code> contains elements in at least one of the sets.</li><li><code>A intersection B</code> contains elements in both sets.</li><li><code>A complement</code> contains elements in the universal set but not in A.</li><li>A power set contains every subset; if <code>|S|=n</code>, then <code>|P(S)|=2^n</code>.</li></ul></div><div class="box proof"><h4>Logic that matters</h4><p>The implication “if P, then Q” has contrapositive “if not Q, then not P”; these are logically equivalent. Its converse “if Q, then P” is a different claim. Quantifiers also matter: “for every x there exists y” does not generally mean “there exists one y that works for every x.”</p></div><div class="box practice full"><h4>Checkpoint</h4><p>Let <code>S={1,2,3,4}</code>. How many proper subsets does S have?</p><details><summary>Show answer</summary><p><strong>Answer:</strong> There are <code>2^4=16</code> subsets total. Excluding S itself leaves 15 proper subsets.</p></details></div></div>
+      </article>
+
+      <article class="lesson" id="lesson-3" data-title="Inclusion-Exclusion (PIE)">
+        <div class="lesson-header">
+          <div>
+            <span class="lesson-number">Lesson 3</span>
+            <span class="tag">Correcting overlap</span>
+            <h3>Inclusion-Exclusion (PIE)</h3>
+            <p class="lesson-intro">Count a union by alternating additions and subtractions of intersections.</p>
+          </div>
+          <label class="done-label"><input type="checkbox" data-lesson="3"> Done</label>
+        </div>
+        <div class="lesson-grid"><div class="box idea"><h4>Formulas</h4><ul><li>Two sets: <code>|A union B| = |A| + |B| - |A intersection B|</code>.</li><li>Three sets: add the three single-set counts, subtract the three pairwise intersections, then add the triple intersection.</li><li>For many properties, continue alternating signs according to intersection size.</li></ul></div><div class="box proof"><h4>Why the signs alternate</h4><p>An object lying in exactly <code>j</code> sets is counted <code>C(j,1)-C(j,2)+C(j,3)-...+(-1)^(j+1)C(j,j)=1</code> time. PIE is therefore not a formula to apply blindly: its job is to make the final multiplicity of every desired object exactly one.</p></div><div class="box example"><h4>Worked example</h4><p>From 1 through 100, how many integers are divisible by 2, 3, or 5? Singles give <code>50+33+20</code>. Subtract multiples of 6, 10, and 15: <code>16+10+6</code>. Add multiples of 30: <code>3</code>. The result is <code>103-32+3=74</code>.</p></div><div class="box practice full"><h4>Checkpoint</h4><p>How many integers from 1 through 60 are divisible by 4 or 6?</p><details><summary>Show answer</summary><p><strong>Answer:</strong> <code>15+10-5=20</code>, because the overlap consists of multiples of <code>lcm(4,6)=12</code>.</p></details></div></div>
+      </article>
+
+      <article class="lesson" id="lesson-4" data-title="Constructive Counting and Bijections">
+        <div class="lesson-header">
+          <div>
+            <span class="lesson-number">Lesson 4</span>
+            <span class="tag">Count by building or matching</span>
+            <h3>Constructive Counting and Bijections</h3>
+            <p class="lesson-intro">Describe every object exactly once, or match a hard set to an easy set.</p>
+          </div>
+          <label class="done-label"><input type="checkbox" data-lesson="4"> Done</label>
+        </div>
+        <div class="lesson-grid"><div class="box idea"><h4>Two approaches</h4><ul><li>Constructive counting records the number of legal choices at each stage.</li><li>A bijection is a reversible one-to-one match between two sets, proving equal cardinality.</li><li>A proposed correspondence must work uniquely in both directions.</li></ul></div><div class="box example"><h4>Worked example</h4><p>Count subsets of <code>{1,2,...,n}</code> with even size. Toggle whether <code>n</code> is present. This maps every even subset to a unique odd subset and reverses itself. Since there are <code>2^n</code> subsets total, exactly <code>2^(n-1)</code> have even size.</p></div><div class="box example"><h4>Partitions and Ferrers diagrams</h4><p>A partition writes an integer as a sum of positive integers while ignoring order. A Ferrers diagram turns row lengths into dots. Reflecting the diagram across its diagonal gives a bijection between partitions with at most <code>k</code> parts and partitions whose largest part is at most <code>k</code>.</p></div></div>
+      </article>
+
+      <article class="lesson" id="lesson-5" data-title="Pigeonhole Principle">
+        <div class="lesson-header">
+          <div>
+            <span class="lesson-number">Lesson 5</span>
+            <span class="tag">Force a collision</span>
+            <h3>Pigeonhole Principle</h3>
+            <p class="lesson-intro">More objects than boxes guarantees that some box receives multiple objects.</p>
+          </div>
+          <label class="done-label"><input type="checkbox" data-lesson="5"> Done</label>
+        </div>
+        <div class="lesson-grid"><div class="box idea"><h4>General form</h4><p>Placing <code>n</code> objects into <code>k</code> boxes forces at least one box to contain at least <code>floor((n-1)/k)+1</code>, equivalently <code>ceil(n/k)</code>, objects.</p></div><div class="box proof"><h4>Choosing the boxes</h4><p>The arithmetic is usually easy; the modeling is the hard part. Boxes may be residues, intervals, last digits, subsets, or partial sums. State explicitly what the pigeons and holes are, then state what a shared hole means in the original problem.</p></div><div class="box example"><h4>Worked example</h4><p>Among 13 people, at least two share a birth month: the people are pigeons and the 12 months are holes. More strongly, among 25 people, some month contains at least <code>ceil(25/12)=3</code> birthdays.</p></div><div class="box practice full"><h4>Checkpoint</h4><p>Show that among any 11 integers, two have the same remainder when divided by 10.</p><details><summary>Show answer</summary><p><strong>Answer:</strong> There are 10 remainder classes, 0 through 9, and 11 integers.</p></details></div></div>
+      </article>
+
+      <article class="lesson" id="lesson-6" data-title="Constructive Expectation">
+        <div class="lesson-header">
+          <div>
+            <span class="lesson-number">Lesson 6</span>
+            <span class="tag">Add local contributions</span>
+            <h3>Constructive Expectation</h3>
+            <p class="lesson-intro">Break a complicated random variable into indicators and add their expectations.</p>
+          </div>
+          <label class="done-label"><input type="checkbox" data-lesson="6"> Done</label>
+        </div>
+        <div class="lesson-grid"><div class="box idea"><h4>Linearity</h4><p>If <code>X=X1+X2+...+Xm</code>, then <code>E(X)=E(X1)+...+E(Xm)</code> whether or not the variables are independent. For an indicator <code>Ii</code> of an event, <code>E(Ii)=P(event i)</code>.</p></div><div class="box example"><h4>Worked example</h4><p>Randomly permute <code>1,2,...,n</code>. Let <code>Ii=1</code> when i remains in its original position. Then the number of fixed points is <code>X=I1+...+In</code>. Each position is fixed with probability <code>1/n</code>, so <code>E(X)=n(1/n)=1</code>.</p></div><div class="box example"><h4>Existence from expectation</h4><p>If the average value of a collection is at least <code>a</code>, some member has value at least <code>a</code>. Thus a randomized construction can prove that a deterministic object with a desired property exists, even when it does not identify the object directly.</p></div></div>
+      </article>
+
+      <article class="lesson" id="lesson-7" data-title="Distributions (Stars and Bars)">
+        <div class="lesson-header">
+          <div>
+            <span class="lesson-number">Lesson 7</span>
+            <span class="tag">Identical objects, labeled boxes</span>
+            <h3>Distributions (Stars and Bars)</h3>
+            <p class="lesson-intro">Encode a distribution with stars for objects and bars for separators.</p>
+          </div>
+          <label class="done-label"><input type="checkbox" data-lesson="7"> Done</label>
+        </div>
+        <div class="lesson-grid"><div class="box idea"><h4>Standard counts</h4><ul><li>Positive solutions to <code>x1+...+xk=n</code>: <code>C(n-1,k-1)</code>.</li><li>Nonnegative solutions to <code>x1+...+xk=n</code>: <code>C(n+k-1,k-1)</code>.</li><li>Lower bounds are handled by giving each box its required minimum first.</li></ul></div><div class="box example"><h4>Worked example</h4><p>Distribute 12 identical candies among 4 children so each receives at least 2. Give each child 2 first, leaving 4 candies. The remaining nonnegative solutions to <code>y1+y2+y3+y4=4</code> number <code>C(7,3)=35</code>.</p></div><div class="box warning full"><h4>Warning and checkpoint</h4><p>Stars and bars requires indistinguishable objects and distinguishable boxes. Extra upper bounds may require casework or inclusion-exclusion.</p><p>How many nonnegative solutions satisfy <code>a+b+c=8</code>?</p><details><summary>Show answer</summary><p><strong>Answer:</strong> <code>C(10,2)=45</code>.</p></details></div></div>
+      </article>
+
+      <article class="lesson" id="lesson-8" data-title="Mathematical Induction">
+        <div class="lesson-header">
+          <div>
+            <span class="lesson-number">Lesson 8</span>
+            <span class="tag">Prove an infinite chain</span>
+            <h3>Mathematical Induction</h3>
+            <p class="lesson-intro">Establish a base case, then prove that each true case forces the next.</p>
+          </div>
+          <label class="done-label"><input type="checkbox" data-lesson="8"> Done</label>
+        </div>
+        <div class="lesson-grid"><div class="box idea"><h4>Structure</h4><ol><li>State the proposition <code>P(n)</code> precisely.</li><li>Prove the base case.</li><li>Assume <code>P(k)</code> for an arbitrary k (the induction hypothesis).</li><li>Use that assumption to prove <code>P(k+1)</code>.</li></ol></div><div class="box example"><h4>Worked proof</h4><p>Claim: <code>1+2+...+n=n(n+1)/2</code>. It holds for <code>n=1</code>. Assume the formula for k. Then <code>1+...+k+(k+1)=k(k+1)/2+(k+1)=(k+1)(k+2)/2</code>, which is the required formula for <code>k+1</code>.</p></div><div class="box example"><h4>Strong induction</h4><p>Strong induction allows the step for <code>P(k+1)</code> to use every earlier case <code>P(1),...,P(k)</code>. It is natural when an object can break into pieces of several possible smaller sizes, as in factorization, tilings, and recurrences.</p></div></div>
+      </article>
+
+      <article class="lesson" id="lesson-9" data-title="Fibonacci Numbers">
+        <div class="lesson-header">
+          <div>
+            <span class="lesson-number">Lesson 9</span>
+            <span class="tag">Count by the last move</span>
+            <h3>Fibonacci Numbers</h3>
+            <p class="lesson-intro">A two-case decomposition often produces the Fibonacci recurrence.</p>
+          </div>
+          <label class="done-label"><input type="checkbox" data-lesson="9"> Done</label>
+        </div>
+        <div class="lesson-grid"><div class="box idea"><h4>Sequence</h4><p>With <code>F0=0</code> and <code>F1=1</code>, define <code>Fn=F(n-1)+F(n-2)</code>. The sequence begins <code>0,1,1,2,3,5,8,...</code>.</p></div><div class="box example"><h4>Worked example</h4><p>Let <code>Tn</code> count tilings of a length-n board using squares of length 1 and dominoes of length 2. A tiling ends with either a square, leaving any tiling of length <code>n-1</code>, or a domino, leaving any tiling of length <code>n-2</code>. Thus <code>Tn=T(n-1)+T(n-2)</code>, with <code>T0=T1=1</code>, so <code>Tn=F(n+1)</code>.</p></div><div class="box example"><h4>Closed form</h4><p>Binet's formula is <code>Fn = (phi^n-psi^n)/sqrt(5)</code>, where <code>phi=(1+sqrt(5))/2</code> and <code>psi=(1-sqrt(5))/2</code>. The recurrence is usually better for counting proofs; the closed form is useful for asymptotics and algebraic identities.</p></div></div>
+      </article>
+
+      <article class="lesson" id="lesson-10" data-title="Recursion and Catalan Numbers">
+        <div class="lesson-header">
+          <div>
+            <span class="lesson-number">Lesson 10</span>
+            <span class="tag">Break objects into smaller objects</span>
+            <h3>Recursion and Catalan Numbers</h3>
+            <p class="lesson-intro">Define a count from earlier counts, then solve or exploit the recurrence.</p>
+          </div>
+          <label class="done-label"><input type="checkbox" data-lesson="10"> Done</label>
+        </div>
+        <div class="lesson-grid"><div class="box idea"><h4>Linear recurrences</h4><p>For a constant-coefficient recurrence, try a solution <code>an=r^n</code>. The resulting characteristic equation gives exponential building blocks. Use initial conditions to determine the constants.</p></div><div class="box proof"><h4>Catalan decomposition</h4><p>The Catalan numbers satisfy <code>C0=1</code> and <code>C(n+1)=sum from i=0 to n of Ci*C(n-i)</code>. For balanced parentheses, match the first opening parenthesis with its closing partner: the material inside and after it are independent smaller balanced strings.</p></div><div class="box practice full"><h4>Formula and checkpoint</h4><p><code>Cn = C(2n,n)/(n+1)</code>. Catalan numbers count many equivalent families: balanced parentheses, binary trees, polygon triangulations, and monotone paths that do not cross a diagonal.</p><p><strong>Checkpoint:</strong> <code>C4 = C(8,4)/5 = 14</code>.</p></div></div>
+      </article>
+
+      <article class="lesson" id="lesson-11" data-title="Conditional Probability">
+        <div class="lesson-header">
+          <div>
+            <span class="lesson-number">Lesson 11</span>
+            <span class="tag">Update the sample space</span>
+            <h3>Conditional Probability</h3>
+            <p class="lesson-intro">Once a condition is known, discard outcomes that violate it and renormalize.</p>
+          </div>
+          <label class="done-label"><input type="checkbox" data-lesson="11"> Done</label>
+        </div>
+        <div class="lesson-grid"><div class="box idea"><h4>Formula</h4><p><code>P(A given B)=P(A intersection B)/P(B)</code>, provided <code>P(B)&gt;0</code>. Equivalently, <code>P(A intersection B)=P(B)P(A given B)</code>.</p></div><div class="box example"><h4>Worked example</h4><p>Two cards are drawn without replacement. Given that the first card is an ace, the probability the second is also an ace is <code>3/51=1/17</code>. The condition changes both the number of remaining favorable cards and the size of the sample space.</p></div><div class="box example"><h4>Bayes and independence</h4><p>Bayes' rule reverses a condition: <code>P(A given B)=P(B given A)P(A)/P(B)</code>. Events A and B are independent exactly when <code>P(A given B)=P(A)</code>, or equivalently <code>P(A intersection B)=P(A)P(B)</code>.</p></div></div>
+      </article>
+
+      <article class="lesson" id="lesson-12" data-title="Combinatorial Identities">
+        <div class="lesson-header">
+          <div>
+            <span class="lesson-number">Lesson 12</span>
+            <span class="tag">Count the same set twice</span>
+            <h3>Combinatorial Identities</h3>
+            <p class="lesson-intro">Prove an algebraic identity by showing both sides count the same objects.</p>
+          </div>
+          <label class="done-label"><input type="checkbox" data-lesson="12"> Done</label>
+        </div>
+        <div class="lesson-grid"><div class="box example"><h4>Three proof styles</h4><ul><li>Algebra: manipulate factorials or known identities.</li><li>Lattice paths: interpret a binomial coefficient as a path count.</li><li>Committees: interpret <code>C(n,r)</code> as selecting an r-person group.</li></ul></div><div class="box example"><h4>Worked identity</h4><p>Vandermonde's identity is <code>sum over k of C(m,k)C(n,r-k)=C(m+n,r)</code>. The right side chooses r people from two groups containing m and n people. On the left, k records how many were chosen from the first group; summing covers every possible composition exactly once.</p></div><div class="box example"><h4>Useful identities</h4><p>Symmetry: <code>C(n,r)=C(n,n-r)</code>. Pascal: <code>C(n,r)=C(n-1,r-1)+C(n-1,r)</code>. Row sum: <code>sum from r=0 to n of C(n,r)=2^n</code>.</p></div></div>
+      </article>
+
+      <article class="lesson" id="lesson-13" data-title="Events With States">
+        <div class="lesson-header">
+          <div>
+            <span class="lesson-number">Lesson 13</span>
+            <span class="tag">Make time and position visible</span>
+            <h3>Events With States</h3>
+            <p class="lesson-intro">Represent a process by its current state, then attach transitions, probabilities, or winning labels.</p>
+          </div>
+          <label class="done-label"><input type="checkbox" data-lesson="13"> Done</label>
+        </div>
+        <div class="lesson-grid"><div class="box idea"><h4>State diagrams</h4><p>A state stores all information from the past that can affect the future. Directed edges represent legal next moves. For a random walk, transition probabilities on outgoing edges sum to 1.</p></div><div class="box proof"><h4>First-step analysis</h4><p>Let <code>E_s</code> be the expected remaining time from state s. If one step moves to state t with probability <code>p(s,t)</code>, then <code>E_s = 1 + sum_t p(s,t)E_t</code>, with <code>E_s=0</code> at terminal states. Solve the resulting system of equations.</p></div><div class="box example"><h4>Strategy games</h4><p>In a finite two-player game, mark terminal states as winning or losing and work backward. A state is winning if it has at least one move to a losing state; it is losing if every legal move goes to a winning state.</p></div></div>
+      </article>
+
+      <article class="lesson" id="lesson-14" data-title="Generating Functions">
+        <div class="lesson-header">
+          <div>
+            <span class="lesson-number">Lesson 14</span>
+            <span class="tag">Store counts in coefficients</span>
+            <h3>Generating Functions</h3>
+            <p class="lesson-intro">Translate a counting problem into algebra with a formal power series.</p>
+          </div>
+          <label class="done-label"><input type="checkbox" data-lesson="14"> Done</label>
+        </div>
+        <div class="lesson-grid"><div class="box idea"><h4>Encoding</h4><p>For counts <code>a0,a1,a2,...</code>, the ordinary generating function is <code>A(x)=a0+a1·x+a2·x^2+...</code>. Multiplying generating functions performs all compatible case combinations at once; the coefficient of <code>x^n</code> selects total size n.</p></div><div class="box example"><h4>Worked example</h4><p>Suppose red tokens contribute any nonnegative number and blue tokens contribute an even number. Their generating functions are <code>1/(1-x)</code> and <code>1/(1-x^2)</code>. The coefficient of <code>x^n</code> in their product counts solutions to <code>r+b=n</code> with b even.</p></div><div class="box example"><h4>Classic functions</h4><p><code>1/(1-x)^k</code> encodes distributions into k labeled boxes. The partition generating function is the infinite product <code>product over j&gt;=1 of 1/(1-x^j)</code>. The Fibonacci generating function is <code>x/(1-x-x^2)</code> for <code>F0=0,F1=1</code>.</p></div></div>
+      </article>
+
+      <article class="lesson" id="lesson-15" data-title="Graph Theory">
+        <div class="lesson-header">
+          <div>
+            <span class="lesson-number">Lesson 15</span>
+            <span class="tag">Count relationships</span>
+            <h3>Graph Theory</h3>
+            <p class="lesson-intro">Model objects as vertices and pairwise relationships as edges.</p>
+          </div>
+          <label class="done-label"><input type="checkbox" data-lesson="15"> Done</label>
+        </div>
+        <div class="lesson-grid"><div class="box idea"><h4>Degree and structure</h4><ul><li>Handshake lemma: <code>sum of all vertex degrees = 2E</code>; hence the number of odd-degree vertices is even.</li><li>A connected acyclic graph is a tree; a tree with V vertices has <code>V-1</code> edges.</li><li>A graph is bipartite exactly when it has no odd cycle.</li></ul></div><div class="box proof"><h4>Planarity</h4><p>For a connected planar drawing, Euler's formula is <code>V-E+F=2</code>. If a simple connected planar graph has at least three vertices, then <code>E &lt;= 3V-6</code>; violating this inequality proves nonplanarity, though satisfying it does not prove planarity.</p></div><div class="box example"><h4>Eulerian versus Hamiltonian</h4><p>An Eulerian circuit uses every edge exactly once and exists in a connected graph when every vertex has even degree. A Hamiltonian cycle visits every vertex exactly once; there is no equally simple universal test.</p></div><div class="box practice full"><h4>Checkpoint</h4><p>A graph has degrees <code>3,3,2,2,2,2</code>. How many edges?</p><details><summary>Show answer</summary><p><strong>Answer:</strong> The degree sum is 14, so <code>E=14/2=7</code>.</p></details></div></div>
+      </article>
+
+      <article class="lesson" id="lesson-16" data-title="Synthesis and Challenge Strategy">
+        <div class="lesson-header">
+          <div>
+            <span class="lesson-number">Lesson 16</span>
+            <span class="tag">Choosing the tool</span>
+            <h3>Synthesis and Challenge Strategy</h3>
+            <p class="lesson-intro">Advanced problems often combine two or more methods.</p>
+          </div>
+          <label class="done-label"><input type="checkbox" data-lesson="16"> Done</label>
+        </div>
+        <div class="lesson-grid"><div class="box idea"><h4>Decision sequence</h4><ol><li>Define exactly what one counted object or state is.</li><li>Try a direct construction; handle the tightest restriction first.</li><li>If overlap appears, consider complement or inclusion-exclusion.</li><li>If objects are hard to count, search for a bijection or recurrence.</li><li>If the problem is random, try indicators, conditioning, or states.</li><li>If coefficients or many cases appear, try a combinatorial identity or generating function.</li></ol></div><div class="box proof"><h4>Mixed practice</h4><ol><li>Count nonnegative solutions to <code>x+y+z=12</code> with <code>x&lt;=4</code>.</li><li>Prove that a graph with six vertices of degree 3 has nine edges.</li><li>Find the expected number of heads in 20 fair coin tosses without using the binomial distribution.</li><li>Prove <code>sum from k=0 to n of k·C(n,k)=n·2^(n-1)</code> by marking one selected committee member as captain.</li></ol></div><div class="box practice full"><h4>Answers</h4><details><summary>Show all answers</summary><ol><li>All solutions: <code>C(14,2)=91</code>. Subtract those with <code>x&gt;=5</code>: set <code>x'=x-5</code>, giving <code>C(9,2)=36</code>. Answer: 55.</li><li>The degree sum is 18; divide by 2.</li><li>Sum 20 indicator variables, each with expectation <code>1/2</code>; answer: 10.</li><li>The right side chooses a captain in n ways and any subset of the remaining <code>n-1</code> people. The left side first chooses a k-person committee, then its captain, and sums over k.</li></ol></details></div></div>
+      </article>
+
+      <section class="section-title" id="method-map">
+        <div>
+          <h2>Method Selection Map</h2>
+          <p>When a problem resists the first approach, change the representation before adding more algebra.</p>
+        </div>
+      </section>
+
+      <section class="lesson">
+        <div class="lesson-grid">
+          <div class="box idea">
+            <h4>Ask these questions</h4>
+            <ol>
+              <li><strong>What exactly is one outcome?</strong> Define the counted object or state.</li>
+              <li><strong>Can I construct it uniquely?</strong> Handle the tightest restriction first.</li>
+              <li><strong>Is there overlap?</strong> Try a complement or inclusion-exclusion.</li>
+              <li><strong>Can I match it to something easier?</strong> Search for a bijection.</li>
+              <li><strong>Does the last move split the problem?</strong> Write a recurrence.</li>
+              <li><strong>Is randomness involved?</strong> Try indicators, conditioning, or state equations.</li>
+            </ol>
+          </div>
+          <div class="box practice">
+            <h4>Formula quick reference</h4>
+            <p><span class="tag">PIE</span> Add singles, subtract pairs, add triples, and continue alternating.</p>
+            <p><span class="tag">Pigeonhole</span> Some box has at least \(\lceil n/k\rceil\) objects.</p>
+            <p><span class="tag">Stars &amp; bars</span> \(\binom{n+k-1}{k-1}\) nonnegative distributions.</p>
+            <p><span class="tag">Conditional</span> \(P(A\mid B)=P(A\cap B)/P(B)\).</p>
+            <p><span class="tag">Catalan</span> \(C_n=\frac1{n+1}\binom{2n}n\).</p>
+            <p><span class="tag">Planar</span> \(V-E+F=2\).</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="section-title" id="mixed-practice">
+        <div>
+          <h2>Mixed Practice</h2>
+          <p>Name the method before computing. The method choice is part of the solution.</p>
+        </div>
+      </section>
+
+      <section class="lesson">
+        <div class="lesson-grid">
+          <div class="box practice full">
+            <h4>Problems</h4>
+            <ol class="two-col-list">
+              <li>Count nonnegative solutions to \(x+y+z=12\) with \(x\le 4\).</li>
+              <li>Show that among 20 integers, two differ by a multiple of 19.</li>
+              <li>Find the expected number of fixed points in a random permutation of 12 objects.</li>
+              <li>Prove \(\sum_{k=0}^n k\binom nk=n2^{n-1}\) by double counting.</li>
+              <li>Find the number of length-8 binary strings with no consecutive 1s.</li>
+              <li>A connected planar graph has 10 vertices and 15 edges. How many faces does it have?</li>
+            </ol>
+            <details><summary>Show all answers</summary>
+              <ol>
+                <li>All solutions: \(\binom{14}2=91\). Subtract \(x\ge5\): \(\binom92=36\). Answer: \(55\).</li>
+                <li>Use the 19 residue classes modulo 19 as holes.</li>
+                <li>Write the count as 12 fixed-position indicators. Each has expectation \(1/12\), so the answer is \(1\).</li>
+                <li>Choose a captain and any subset of the other \(n-1\) people, or first choose a size-\(k\) committee and then its captain.</li>
+                <li>The count follows the Fibonacci recurrence and equals \(F_{10}=55\).</li>
+                <li>Euler's formula gives \(F=2-V+E=7\).</li>
+              </ol>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <h2>Final Advice</h2>
+        <p>Advanced counting is less about memorizing more formulas and more about recognizing equivalent descriptions. Build the object, inspect its overlaps, try a reversible correspondence, and only then choose the algebra.</p>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    const lessons = [...document.querySelectorAll('article.lesson')];
+    const sideNav = document.getElementById('sideNav');
+    const mobileNav = document.getElementById('mobileNav');
+
+    function buildNav(target) {
+      const top = document.createElement('a');
+      top.href = '#top';
+      top.textContent = 'Top';
+      target.appendChild(top);
+      lessons.forEach((lesson, index) => {
+        const a = document.createElement('a');
+        a.href = `#lesson-${index + 1}`;
+        a.textContent = `${index + 1}. ${lesson.dataset.title}`;
+        target.appendChild(a);
+      });
+      const map = document.createElement('a');
+      map.href = '#method-map';
+      map.textContent = 'Method selection map';
+      target.appendChild(map);
+      const practice = document.createElement('a');
+      practice.href = '#mixed-practice';
+      practice.textContent = 'Mixed practice';
+      target.appendChild(practice);
+    }
+
+    buildNav(sideNav);
+    buildNav(mobileNav);
+
+    function toggleMobileNav() {
+      mobileNav.classList.toggle('open');
+    }
+
+    function expandAllAnswers() {
+      const answers = [...document.querySelectorAll('details')];
+      const shouldOpen = answers.some(answer => !answer.open);
+      answers.forEach(answer => answer.open = shouldOpen);
+      document.querySelector('.side-actions button').textContent = shouldOpen ? 'Hide answers' : 'Show answers';
+    }
+
+    function updateProgress() {
+      const boxes = [...document.querySelectorAll('input[data-lesson]')];
+      const done = boxes.filter(box => box.checked).length;
+      document.getElementById('progressText').textContent = `${done} of ${boxes.length} lessons marked complete`;
+      document.getElementById('progressBar').style.width = `${boxes.length ? (done / boxes.length) * 100 : 0}%`;
+      boxes.forEach(box => localStorage.setItem(`icp-lesson-${box.dataset.lesson}`, box.checked ? '1' : '0'));
+    }
+
+    document.querySelectorAll('input[data-lesson]').forEach(box => {
+      box.checked = localStorage.getItem(`icp-lesson-${box.dataset.lesson}`) === '1';
+      box.addEventListener('change', updateProgress);
+    });
+    updateProgress();
+
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const id = entry.target.id;
+          document.querySelectorAll('nav a, .mobile-nav a').forEach(a => {
+            a.classList.toggle('active', a.getAttribute('href') === `#${id}`);
+          });
+        }
+      });
+    }, { rootMargin: '-35% 0px -55% 0px', threshold: 0 });
+
+    document.querySelectorAll('section[id], article[id]').forEach(element => observer.observe(element));
+  </script>
+</body>
+</html>
