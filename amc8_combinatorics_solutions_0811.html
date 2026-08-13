@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Worked solutions for five AMC 8 introductory combinatorics problems.">
+  <title>AMC 8 Combinatorics — Five Worked Solutions</title>
+  <style>
+    :root {
+      --background: #fef7f0;
+      --surface: #fffbf5;
+      --ink: #292524;
+      --muted: #6b625d;
+      --line: #dfd5cc;
+      --primary: #b45309;
+      --primary-dark: #7c3f08;
+      --success: #166534;
+      --success-bg: #f0fdf4;
+      --focus: #0284c7;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--background);
+      color: var(--ink);
+      font-family: "Avenir Next", Avenir, "Helvetica Neue", sans-serif;
+      font-size: 17px;
+      line-height: 1.65;
+    }
+
+    a { color: var(--primary-dark); }
+    a:hover { color: var(--primary); }
+    a:focus-visible, button:focus-visible, summary:focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--focus) 55%, transparent);
+      outline-offset: 3px;
+    }
+
+    .page {
+      width: min(880px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 48px 0 72px;
+    }
+
+    header {
+      padding-bottom: 26px;
+      border-bottom: 2px solid var(--ink);
+    }
+
+    h1 {
+      max-width: 720px;
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 6vw, 3.35rem);
+      line-height: 1.07;
+      letter-spacing: -0.045em;
+    }
+
+    .subtitle {
+      max-width: 690px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 22px 0 0;
+    }
+
+    button {
+      min-height: 42px;
+      padding: 8px 14px;
+      border: 1px solid var(--ink);
+      border-radius: 8px;
+      background: var(--ink);
+      color: #fff;
+      font: inherit;
+      font-size: 0.92rem;
+      font-weight: 650;
+      cursor: pointer;
+      transition: background-color 150ms ease, color 150ms ease;
+    }
+
+    button.secondary {
+      background: transparent;
+      color: var(--ink);
+    }
+
+    button:hover { background: var(--primary-dark); }
+    button.secondary:hover { background: #f5e9dc; }
+
+    .answer-key {
+      margin: 28px 0 10px;
+      padding: 20px;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: var(--surface);
+    }
+
+    .answer-key h2 {
+      margin: 0 0 14px;
+      font-size: 1.2rem;
+    }
+
+    .answer-grid {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 12px;
+      margin: 0;
+    }
+
+    .answer-grid li {
+      padding-left: 12px;
+      border-left: 2px solid var(--primary);
+      list-style: none;
+    }
+
+    .answer-grid .answer-label {
+      display: block;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+
+    .answer-grid .answer-value {
+      display: block;
+      margin-top: 1px;
+      font-size: 1.2rem;
+      font-weight: 750;
+      white-space: nowrap;
+    }
+
+    .problems { margin-top: 36px; }
+
+    .problem {
+      padding: 32px 0 34px;
+      border-top: 1px solid var(--line);
+    }
+
+    .problem:first-child { border-top: 0; }
+
+    .problem-heading {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 10px;
+    }
+
+    .problem h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      letter-spacing: -0.02em;
+    }
+
+    .source {
+      flex: none;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+
+    .question {
+      margin: 0 0 18px;
+      font-size: 1.04rem;
+    }
+
+    details {
+      border-left: 3px solid var(--primary);
+      background: var(--surface);
+    }
+
+    summary {
+      padding: 11px 16px;
+      color: var(--primary-dark);
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .working {
+      padding: 2px 18px 18px;
+    }
+
+    .working p { margin: 12px 0; }
+
+    .math {
+      margin: 14px 0;
+      padding: 10px 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 1rem;
+      overflow-x: auto;
+    }
+
+    .final-answer {
+      margin-bottom: 0;
+      color: var(--success);
+      font-weight: 760;
+    }
+
+    .triples {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 16px;
+      margin: 10px 0;
+      padding: 0;
+      list-style: none;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    footer {
+      padding-top: 18px;
+      border-top: 2px solid var(--ink);
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    @media (max-width: 640px) {
+      body { font-size: 16px; }
+      .page { width: min(100% - 24px, 880px); padding-top: 28px; }
+      .answer-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .problem-heading { display: block; }
+      .source { display: inline-block; margin-top: 4px; }
+    }
+
+    @media print {
+      :root { --background: #fff; --surface: #fff; }
+      body { font-size: 11pt; }
+      .page { width: 100%; padding: 0; }
+      .toolbar { display: none; }
+      header { padding-bottom: 14px; }
+      h1 { font-size: 26pt; }
+      .answer-key { break-inside: avoid; }
+      .problem { padding: 18px 0; break-inside: avoid; }
+      details { border-left-color: #777; }
+      details:not([open]) > :not(summary) { display: block; }
+      summary { list-style: none; color: #000; }
+      summary::marker, summary::-webkit-details-marker { display: none; }
+      a { color: #000; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1>Five AMC 8 combinatorics solutions</h1>
+      <p class="subtitle">A compact answer key followed by complete, step-by-step reasoning for the five questions in the generated practice exam.</p>
+      <div class="toolbar" aria-label="Page controls">
+        <button type="button" id="toggle-working">Hide all working</button>
+        <button type="button" class="secondary" id="print-page">Print or save as PDF</button>
+      </div>
+    </header>
+
+    <section class="answer-key" aria-labelledby="answer-key-title">
+      <h2 id="answer-key-title">Answer key</h2>
+      <ol class="answer-grid">
+        <li><span class="answer-label">Question 1</span><span class="answer-value">26</span></li>
+        <li><span class="answer-label">Question 2</span><span class="answer-value">96 (B)</span></li>
+        <li><span class="answer-label">Question 3</span><span class="answer-value">5760 (C)</span></li>
+        <li><span class="answer-label">Question 4</span><span class="answer-value">11/36 (D)</span></li>
+        <li><span class="answer-label">Question 5</span><span class="answer-value">21 (D)</span></li>
+      </ol>
+    </section>
+
+    <section class="problems" aria-label="Worked solutions">
+      <article class="problem" id="question-1">
+        <div class="problem-heading">
+          <h2>1. Counting a cube</h2>
+          <a class="source" href="https://artofproblemsolving.com/wiki/index.php?title=2003_AMC_8_Problems/Problem_1">2003 AMC 8, Problem 1</a>
+        </div>
+        <p class="question">Jamie counts the edges of a cube, Jimmy counts its corners, and Judy counts its faces. What is the sum of their three counts?</p>
+        <details open>
+          <summary>Solution</summary>
+          <div class="working">
+            <p>A cube has 12 edges, 8 corners (vertices), and 6 faces. Add the three counts:</p>
+            <div class="math" role="math">12 + 8 + 6 = 26</div>
+            <p class="final-answer">Answer: 26</p>
+          </div>
+        </details>
+      </article>
+
+      <article class="problem" id="question-2">
+        <div class="problem-heading">
+          <h2>2. Basketball schedule</h2>
+          <a class="source" href="https://artofproblemsolving.com/wiki/index.php?title=2005_AMC_8_Problems/Problem_14">2005 AMC 8, Problem 14</a>
+        </div>
+        <p class="question">A conference has two divisions of six teams. Each team plays every team in its own division twice and every team in the other division once. How many conference games are scheduled?</p>
+        <details open>
+          <summary>Solution</summary>
+          <div class="working">
+            <p>In one division, the number of pairs of teams is 6 choose 2, or 15. Each pair plays twice, so one division schedules 30 games. The two divisions therefore schedule 60 games internally.</p>
+            <p>For cross-division games, each of the 6 teams in one division plays all 6 teams in the other division, giving 36 games.</p>
+            <div class="math" role="math">2 × (15 × 2) + 6 × 6 = 60 + 36 = 96</div>
+            <p class="final-answer">Answer: 96 (B)</p>
+          </div>
+        </details>
+      </article>
+
+      <article class="problem" id="question-3">
+        <div class="problem-heading">
+          <h2>3. Language books</h2>
+          <a class="source" href="https://artofproblemsolving.com/wiki/index.php?title=2018_AMC_8_Problems/Problem_16">2018 AMC 8, Problem 16</a>
+        </div>
+        <p class="question">Nine different books consist of two Arabic, three German, and four Spanish books. How many arrangements keep the Arabic books together and the Spanish books together?</p>
+        <details open>
+          <summary>Solution</summary>
+          <div class="working">
+            <p>Treat the two Arabic books as one block and the four Spanish books as another block. Together with the three individual German books, this gives five objects to arrange, so there are 5! outside arrangements.</p>
+            <p>The Arabic books can be ordered inside their block in 2! ways, and the Spanish books in 4! ways.</p>
+            <div class="math" role="math">5! × 2! × 4! = 120 × 2 × 24 = 5760</div>
+            <p class="final-answer">Answer: 5760 (C)</p>
+          </div>
+        </details>
+      </article>
+
+      <article class="problem" id="question-4">
+        <div class="problem-heading">
+          <h2>4. Product of two dice</h2>
+          <a class="source" href="https://artofproblemsolving.com/wiki/index.php?title=2001_AMC_8_Problems/Problem_18">2001 AMC 8, Problem 18</a>
+        </div>
+        <p class="question">Two dice are thrown. What is the probability that the product of the two results is a multiple of 5?</p>
+        <details open>
+          <summary>Solution</summary>
+          <div class="working">
+            <p>The product is divisible by 5 exactly when at least one die shows 5. There are 6 outcomes with the first die equal to 5 and 6 with the second die equal to 5. The outcome (5, 5) appears in both groups, so subtract it once.</p>
+            <div class="math" role="math">Favorable outcomes = 6 + 6 − 1 = 11</div>
+            <div class="math" role="math">Probability = 11 / 36</div>
+            <p class="final-answer">Answer: 11/36 (D)</p>
+          </div>
+        </details>
+      </article>
+
+      <article class="problem" id="question-5">
+        <div class="problem-heading">
+          <h2>5. Three-digit products</h2>
+          <a class="source" href="https://artofproblemsolving.com/wiki/index.php?title=2009_AMC_8_Problems/Problem_16">2009 AMC 8, Problem 16</a>
+        </div>
+        <p class="question">How many three-digit positive integers have digits whose product equals 24?</p>
+        <details open>
+          <summary>Solution</summary>
+          <div class="working">
+            <p>Because the product is nonzero, none of the digits can be zero. The possible unordered triples of digits are:</p>
+            <ul class="triples" aria-label="Possible digit triples">
+              <li>(1, 3, 8)</li>
+              <li>(1, 4, 6)</li>
+              <li>(2, 2, 6)</li>
+              <li>(2, 3, 4)</li>
+            </ul>
+            <p>The first, second, and fourth triples contain three different digits and each have 3! = 6 arrangements. The triple (2, 2, 6) has 3 arrangements because the two 2s are identical.</p>
+            <div class="math" role="math">6 + 6 + 3 + 6 = 21</div>
+            <p class="final-answer">Answer: 21 (D)</p>
+          </div>
+        </details>
+      </article>
+    </section>
+
+    <footer>
+      Prepared from the five-question Introductory Combinatorics Problems exam. Source links open the corresponding AoPS problem pages.
+    </footer>
+  </main>
+
+  <script>
+    const toggleButton = document.querySelector('#toggle-working');
+    const solutions = [...document.querySelectorAll('details')];
+
+    toggleButton.addEventListener('click', () => {
+      const shouldOpen = solutions.some((solution) => !solution.open);
+      solutions.forEach((solution) => { solution.open = shouldOpen; });
+      toggleButton.textContent = shouldOpen ? 'Hide all working' : 'Show all working';
+    });
+
+    document.querySelector('#print-page').addEventListener('click', () => window.print());
+  </script>
+</body>
+</html>
