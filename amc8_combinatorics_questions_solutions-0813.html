@@ -1,0 +1,769 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>AMC 8 Introductory Combinatorics — Questions &amp; Solutions</title>
+  <style>
+    :root {
+      --page: #faf8f5;
+      --surface: #ffffff;
+      --ink: #2d251f;
+      --muted: #6f6258;
+      --line: #ded6ce;
+      --line-strong: #b9aa9d;
+      --accent: #a64b18;
+      --accent-dark: #7c3511;
+      --accent-soft: #fff1e8;
+      --correct: #176b45;
+      --correct-soft: #e9f7ef;
+      --incorrect: #a12b2b;
+      --incorrect-soft: #fff0ef;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      background: var(--page);
+      color: var(--ink);
+      font-family: "Avenir Next", Avenir, Helvetica, sans-serif;
+      font-size: 16px;
+      line-height: 1.62;
+    }
+
+    button,
+    input { font: inherit; }
+
+    a {
+      color: var(--accent-dark);
+      text-underline-offset: 3px;
+    }
+
+    a:hover { color: var(--accent); }
+
+    .page-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .header-inner,
+    main,
+    .page-footer {
+      width: min(980px, calc(100% - 40px));
+      margin-inline: auto;
+    }
+
+    .header-inner { padding: 32px 0 24px; }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    h1 {
+      max-width: 760px;
+      font-size: clamp(1.9rem, 4vw, 2.6rem);
+      font-weight: 720;
+    }
+
+    .subtitle {
+      max-width: 720px;
+      margin: 12px 0 0;
+      color: var(--muted);
+      font-size: 1.05rem;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 20px;
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 0.93rem;
+    }
+
+    .toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: rgba(250, 248, 245, 0.96);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(8px);
+    }
+
+    .toolbar-inner {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      width: min(980px, calc(100% - 40px));
+      margin-inline: auto;
+      padding: 10px 0;
+    }
+
+    button {
+      min-height: 38px;
+      padding: 7px 13px;
+      border: 1px solid var(--line-strong);
+      border-radius: 7px;
+      background: var(--surface);
+      color: var(--ink);
+      cursor: pointer;
+      transition: background-color 140ms ease, border-color 140ms ease, color 140ms ease;
+    }
+
+    button:hover {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    button:focus-visible,
+    input:focus-visible,
+    summary:focus-visible,
+    a:focus-visible {
+      outline: 3px solid rgba(166, 75, 24, 0.27);
+      outline-offset: 2px;
+    }
+
+    .primary-button {
+      border-color: var(--accent-dark);
+      background: var(--accent-dark);
+      color: #fff;
+    }
+
+    .primary-button:hover {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    main { padding: 28px 0 48px; }
+
+    .answer-key {
+      margin-bottom: 24px;
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      border-left: 4px solid var(--accent);
+      border-radius: 8px;
+      background: var(--surface);
+    }
+
+    .answer-key h2 { font-size: 1.18rem; }
+
+    .answer-key ol {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px 28px;
+      margin: 12px 0 0;
+      padding-left: 22px;
+    }
+
+    .answer-key strong { color: var(--accent-dark); }
+
+    .question {
+      margin-bottom: 22px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 9px;
+      background: var(--surface);
+    }
+
+    .question-header {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 17px 20px;
+      border-bottom: 1px solid var(--line);
+      background: #fdfcfb;
+    }
+
+    .question-header h2 { font-size: 1.25rem; }
+
+    .source-link {
+      flex: none;
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .question-body { padding: 22px 24px 24px; }
+
+    .question-body > p:first-child { margin-top: 0; }
+
+    .question-body p { max-width: 78ch; }
+
+    .choices {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 8px;
+      margin: 22px 0 14px;
+      border: 0;
+      padding: 0;
+    }
+
+    .choices legend {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+    }
+
+    .choice {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      min-height: 46px;
+      padding: 9px 11px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      cursor: pointer;
+    }
+
+    .choice:hover { border-color: var(--line-strong); }
+
+    .choice:has(input:checked) {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .choice input { accent-color: var(--accent-dark); }
+
+    .choice-letter {
+      color: var(--muted);
+      font-weight: 700;
+    }
+
+    .wide-choice { grid-column: span 2; }
+
+    .answer-actions {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 10px 14px;
+    }
+
+    .feedback {
+      min-height: 1.5em;
+      margin: 0;
+      font-weight: 650;
+    }
+
+    .feedback.correct { color: var(--correct); }
+    .feedback.incorrect { color: var(--incorrect); }
+
+    figure {
+      margin: 22px auto;
+      text-align: center;
+    }
+
+    figure svg {
+      display: block;
+      width: min(100%, 650px);
+      height: auto;
+      margin-inline: auto;
+    }
+
+    figcaption {
+      margin-top: 8px;
+      color: var(--muted);
+      font-size: 0.88rem;
+    }
+
+    .math {
+      font-family: "Cambria Math", "STIX Two Math", Georgia, serif;
+      font-size: 1.08em;
+    }
+
+    .display-math {
+      margin: 22px 0;
+      text-align: center;
+      font-family: "Cambria Math", "STIX Two Math", Georgia, serif;
+      font-size: 1.35rem;
+    }
+
+    .menu-list {
+      margin: 12px 0 18px;
+      padding-left: 22px;
+    }
+
+    .solution {
+      margin-top: 22px;
+      border-top: 1px solid var(--line);
+    }
+
+    .solution summary {
+      padding: 14px 0 0;
+      color: var(--accent-dark);
+      font-weight: 720;
+      cursor: pointer;
+    }
+
+    .solution-content {
+      margin-top: 12px;
+      padding: 17px 18px;
+      border-left: 3px solid var(--correct);
+      background: var(--correct-soft);
+    }
+
+    .solution-content > *:first-child { margin-top: 0; }
+    .solution-content > *:last-child { margin-bottom: 0; }
+
+    .reasoning {
+      margin: 12px 0;
+      border-collapse: collapse;
+      background: #fff;
+    }
+
+    .reasoning th,
+    .reasoning td {
+      padding: 8px 12px;
+      border: 1px solid #c8dacf;
+      text-align: left;
+    }
+
+    .reasoning th { font-weight: 700; }
+
+    .answer-line {
+      color: var(--correct);
+      font-size: 1.04rem;
+      font-weight: 760;
+    }
+
+    .student-view .answer-key,
+    .student-view .solution { display: none; }
+
+    .page-footer {
+      padding: 24px 0 42px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 0.86rem;
+    }
+
+    .page-footer p { margin: 4px 0; }
+
+    @media (max-width: 720px) {
+      .header-inner,
+      main,
+      .page-footer,
+      .toolbar-inner {
+        width: min(100% - 24px, 980px);
+      }
+
+      .question-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 6px;
+      }
+
+      .question-body { padding: 18px 16px 20px; }
+
+      .choices { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+      .wide-choice { grid-column: span 2; }
+    }
+
+    @media print {
+      :root {
+        --page: #fff;
+        --line: #aaa;
+      }
+
+      body { font-size: 11pt; }
+      .toolbar,
+      .answer-actions,
+      .feedback { display: none !important; }
+      .header-inner,
+      main,
+      .page-footer { width: 100%; }
+      .header-inner { padding: 0 0 14pt; }
+      main { padding: 14pt 0; }
+      .question { break-inside: avoid; }
+      .solution { display: block !important; }
+      .solution-content { background: #fff; }
+      a { color: inherit; text-decoration: none; }
+      .source-link::after { content: " (AoPS)"; }
+    }
+  </style>
+</head>
+<body>
+  <header class="page-header">
+    <div class="header-inner">
+      <h1>AMC 8 Introductory Combinatorics</h1>
+      <p class="subtitle">Five practice questions with complete worked solutions. Choose an answer, check your work, then compare your reasoning with the solution.</p>
+      <div class="meta" aria-label="Exam details">
+        <span>5 questions</span>
+        <span>AMC 8</span>
+        <span>Topic: Introductory Combinatorics</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="toolbar" aria-label="Page controls">
+    <div class="toolbar-inner">
+      <button class="primary-button" id="viewToggle" type="button">Student view</button>
+      <button id="solutionsToggle" type="button">Hide all solutions</button>
+      <button id="resetAnswers" type="button">Reset answers</button>
+      <button type="button" onclick="window.print()">Print</button>
+    </div>
+  </nav>
+
+  <main>
+    <section class="answer-key" aria-labelledby="answer-key-title">
+      <h2 id="answer-key-title">Answer key</h2>
+      <ol>
+        <li><strong>D</strong> — 5</li>
+        <li><strong>C</strong> — 72</li>
+        <li><strong>C</strong> — 6.54</li>
+        <li><strong>A</strong> — 28</li>
+        <li><strong>E</strong> — 12</li>
+      </ol>
+    </section>
+
+    <article class="question" data-answer="D">
+      <header class="question-header">
+        <h2>1. 2026 AMC 8 Problem 12</h2>
+        <a class="source-link" href="https://artofproblemsolving.com/wiki/index.php?title=2026_AMC_8_Problems/Problem_12" target="_blank" rel="noopener">Source &amp; alternate solutions</a>
+      </header>
+      <div class="question-body">
+        <p>In the figure below, each circle will be filled with a digit from 1 to 6. Each digit must appear exactly once. The sum of the digits in neighboring circles is shown in the box between them. What digit must be placed in the top circle?</p>
+
+        <figure>
+          <svg viewBox="0 0 660 430" role="img" aria-labelledby="triangle-title triangle-desc">
+            <title id="triangle-title">Triangle of six circles with neighboring sums</title>
+            <desc id="triangle-desc">Six empty circles form a triangle. The edge sums, from the top clockwise, are 6, 4, 5, 8, 10, and 9.</desc>
+            <rect x="1" y="1" width="658" height="428" rx="8" fill="#fff" stroke="#ded6ce"/>
+            <g stroke="#4b4139" stroke-width="2.4" fill="none">
+              <line x1="330" y1="72" x2="205" y2="203"/>
+              <line x1="330" y1="72" x2="455" y2="203"/>
+              <line x1="205" y1="203" x2="105" y2="350"/>
+              <line x1="455" y1="203" x2="555" y2="350"/>
+              <line x1="105" y1="350" x2="330" y2="350"/>
+              <line x1="330" y1="350" x2="555" y2="350"/>
+            </g>
+            <g fill="#fff" stroke="#4b4139" stroke-width="2.4">
+              <circle cx="330" cy="72" r="44"/>
+              <circle cx="205" cy="203" r="44"/>
+              <circle cx="455" cy="203" r="44"/>
+              <circle cx="105" cy="350" r="44"/>
+              <circle cx="330" cy="350" r="44"/>
+              <circle cx="555" cy="350" r="44"/>
+            </g>
+            <text x="330" y="82" text-anchor="middle" font-size="34" fill="#2d251f">?</text>
+            <g fill="#fff" stroke="#4b4139" stroke-width="2">
+              <rect x="244" y="113" width="40" height="40"/>
+              <rect x="376" y="113" width="40" height="40"/>
+              <rect x="140" y="258" width="48" height="40"/>
+              <rect x="472" y="258" width="40" height="40"/>
+              <rect x="194" y="330" width="40" height="40"/>
+              <rect x="426" y="330" width="40" height="40"/>
+            </g>
+            <g text-anchor="middle" dominant-baseline="middle" font-size="25" font-family="Avenir Next, sans-serif" fill="#2d251f">
+              <text x="264" y="134">9</text>
+              <text x="396" y="134">6</text>
+              <text x="164" y="279">10</text>
+              <text x="492" y="279">4</text>
+              <text x="214" y="351">8</text>
+              <text x="446" y="351">5</text>
+            </g>
+          </svg>
+        </figure>
+
+        <fieldset class="choices">
+          <legend>Choose an answer for question 1</legend>
+          <label class="choice"><input type="radio" name="q1" value="A"><span class="choice-letter">A</span><span>2</span></label>
+          <label class="choice"><input type="radio" name="q1" value="B"><span class="choice-letter">B</span><span>3</span></label>
+          <label class="choice"><input type="radio" name="q1" value="C"><span class="choice-letter">C</span><span>4</span></label>
+          <label class="choice"><input type="radio" name="q1" value="D"><span class="choice-letter">D</span><span>5</span></label>
+          <label class="choice wide-choice"><input type="radio" name="q1" value="E"><span class="choice-letter">E</span><span>It is impossible</span></label>
+        </fieldset>
+
+        <div class="answer-actions">
+          <button class="check-answer" type="button">Check answer</button>
+          <p class="feedback" aria-live="polite"></p>
+        </div>
+
+        <details class="solution" open>
+          <summary>Worked solution</summary>
+          <div class="solution-content">
+            <p>Focus first on the right side. The right-middle and bottom-right circles add to 4. Using distinct digits from 1 through 6, those two circles must contain 1 and 3.</p>
+            <p>If the right-middle circle were 3, then the sum of 6 above it would force the top circle to be 3 too. That repeats a digit, so it is impossible. Therefore the right-middle circle is 1 and the bottom-right circle is 3.</p>
+            <table class="reasoning">
+              <thead><tr><th>Edge</th><th>Forced value</th></tr></thead>
+              <tbody>
+                <tr><td>Top + 1 = 6</td><td>Top = 5</td></tr>
+                <tr><td>5 + middle-left = 9</td><td>Middle-left = 4</td></tr>
+                <tr><td>4 + bottom-left = 10</td><td>Bottom-left = 6</td></tr>
+                <tr><td>6 + bottom-middle = 8</td><td>Bottom-middle = 2</td></tr>
+                <tr><td>2 + 3 = 5</td><td>The last edge checks</td></tr>
+              </tbody>
+            </table>
+            <p class="answer-line">Answer: D — 5</p>
+          </div>
+        </details>
+      </div>
+    </article>
+
+    <article class="question" data-answer="C">
+      <header class="question-header">
+        <h2>2. 2001 AMC 8 Problem 14</h2>
+        <a class="source-link" href="https://artofproblemsolving.com/wiki/index.php?title=2001_AMC_8_Problems/Problem_14" target="_blank" rel="noopener">Source &amp; alternate solutions</a>
+      </header>
+      <div class="question-body">
+        <p>Tyler has entered a buffet line in which he chooses one kind of meat, two different vegetables, and one dessert. If the order of food items is not important, how many different meals might he choose?</p>
+        <ul class="menu-list">
+          <li>Meat: beef, chicken, pork</li>
+          <li>Vegetables: baked beans, corn, potatoes, tomatoes</li>
+          <li>Dessert: brownies, chocolate cake, chocolate pudding, ice cream</li>
+        </ul>
+
+        <fieldset class="choices">
+          <legend>Choose an answer for question 2</legend>
+          <label class="choice"><input type="radio" name="q2" value="A"><span class="choice-letter">A</span><span>4</span></label>
+          <label class="choice"><input type="radio" name="q2" value="B"><span class="choice-letter">B</span><span>24</span></label>
+          <label class="choice"><input type="radio" name="q2" value="C"><span class="choice-letter">C</span><span>72</span></label>
+          <label class="choice"><input type="radio" name="q2" value="D"><span class="choice-letter">D</span><span>80</span></label>
+          <label class="choice"><input type="radio" name="q2" value="E"><span class="choice-letter">E</span><span>144</span></label>
+        </fieldset>
+
+        <div class="answer-actions">
+          <button class="check-answer" type="button">Check answer</button>
+          <p class="feedback" aria-live="polite"></p>
+        </div>
+
+        <details class="solution" open>
+          <summary>Worked solution</summary>
+          <div class="solution-content">
+            <p>There are 3 choices for meat and 4 choices for dessert. The two vegetables must be different, and their order does not matter, so the number of vegetable pairs is</p>
+            <p class="display-math"><span class="math">C(4, 2) = (4 × 3) ÷ 2 = 6.</span></p>
+            <p>By the multiplication principle, the total number of meals is</p>
+            <p class="display-math"><span class="math">3 × 6 × 4 = 72.</span></p>
+            <p class="answer-line">Answer: C — 72</p>
+          </div>
+        </details>
+      </div>
+    </article>
+
+    <article class="question" data-answer="C">
+      <header class="question-header">
+        <h2>3. 2024 AMC 8 Problem 2</h2>
+        <a class="source-link" href="https://artofproblemsolving.com/wiki/index.php?title=2024_AMC_8_Problems/Problem_2" target="_blank" rel="noopener">Source &amp; alternate solutions</a>
+      </header>
+      <div class="question-body">
+        <p>What is the value of this expression in decimal form?</p>
+        <p class="display-math" aria-label="44 over 11 plus 110 over 44 plus 44 over 1100">
+          <math display="block">
+            <mfrac><mn>44</mn><mn>11</mn></mfrac>
+            <mo>+</mo>
+            <mfrac><mn>110</mn><mn>44</mn></mfrac>
+            <mo>+</mo>
+            <mfrac><mn>44</mn><mn>1100</mn></mfrac>
+          </math>
+        </p>
+
+        <fieldset class="choices">
+          <legend>Choose an answer for question 3</legend>
+          <label class="choice"><input type="radio" name="q3" value="A"><span class="choice-letter">A</span><span>6.4</span></label>
+          <label class="choice"><input type="radio" name="q3" value="B"><span class="choice-letter">B</span><span>6.504</span></label>
+          <label class="choice"><input type="radio" name="q3" value="C"><span class="choice-letter">C</span><span>6.54</span></label>
+          <label class="choice"><input type="radio" name="q3" value="D"><span class="choice-letter">D</span><span>6.9</span></label>
+          <label class="choice"><input type="radio" name="q3" value="E"><span class="choice-letter">E</span><span>6.94</span></label>
+        </fieldset>
+
+        <div class="answer-actions">
+          <button class="check-answer" type="button">Check answer</button>
+          <p class="feedback" aria-live="polite"></p>
+        </div>
+
+        <details class="solution" open>
+          <summary>Worked solution</summary>
+          <div class="solution-content">
+            <p>Simplify each fraction separately:</p>
+            <p class="display-math"><span class="math">44 ÷ 11 = 4, &nbsp; 110 ÷ 44 = 2.5, &nbsp; 44 ÷ 1100 = 0.04.</span></p>
+            <p>Now add the decimal values:</p>
+            <p class="display-math"><span class="math">4 + 2.5 + 0.04 = 6.54.</span></p>
+            <p class="answer-line">Answer: C — 6.54</p>
+          </div>
+        </details>
+      </div>
+    </article>
+
+    <article class="question" data-answer="A">
+      <header class="question-header">
+        <h2>4. 2020 AMC 8 Problem 21</h2>
+        <a class="source-link" href="https://artofproblemsolving.com/wiki/index.php?title=2020_AMC_8_Problems/Problem_21" target="_blank" rel="noopener">Source &amp; alternate solutions</a>
+      </header>
+      <div class="question-body">
+        <p>A game board consists of 64 squares that alternate in color between black and white. The figure below shows square <span class="math">P</span> in the bottom row and square <span class="math">Q</span> in the top row. A marker is placed at <span class="math">P</span>. A step consists of moving the marker onto one of the adjoining white squares in the row above. How many 7-step paths are there from <span class="math">P</span> to <span class="math">Q</span>? (The figure shows a sample path.)</p>
+
+        <figure>
+          <svg viewBox="0 0 460 460" role="img" aria-labelledby="board-title board-desc">
+            <title id="board-title">Eight by eight alternating board</title>
+            <desc id="board-desc">An eight by eight checkerboard with P near the right side of the bottom row, Q one square to the right in the top row, and one sample seven-step path marked with circles.</desc>
+            <defs>
+              <pattern id="checker" width="100" height="100" patternUnits="userSpaceOnUse">
+                <rect width="50" height="50" fill="#2d251f"/>
+                <rect x="50" y="50" width="50" height="50" fill="#2d251f"/>
+              </pattern>
+              <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+                <rect width="50" height="50" fill="none" stroke="#5f554d" stroke-width="1.2"/>
+              </pattern>
+            </defs>
+            <rect x="30" y="30" width="400" height="400" fill="#fff"/>
+            <rect x="30" y="30" width="400" height="400" fill="url(#checker)"/>
+            <rect x="30" y="30" width="400" height="400" fill="url(#grid)" stroke="#2d251f" stroke-width="2"/>
+            <polyline points="305,405 355,355 305,305 255,255 305,205 355,155 305,105 355,55" fill="none" stroke="#a64b18" stroke-width="4" opacity="0.7"/>
+            <g fill="#fff8f2" stroke="#a64b18" stroke-width="3">
+              <circle cx="305" cy="405" r="17"/>
+              <circle cx="355" cy="355" r="17"/>
+              <circle cx="305" cy="305" r="17"/>
+              <circle cx="255" cy="255" r="17"/>
+              <circle cx="305" cy="205" r="17"/>
+              <circle cx="355" cy="155" r="17"/>
+              <circle cx="305" cy="105" r="17"/>
+              <circle cx="355" cy="55" r="17"/>
+            </g>
+            <g font-size="19" font-weight="750" text-anchor="middle" dominant-baseline="middle" fill="#2d251f">
+              <text x="305" y="405">P</text>
+              <text x="355" y="55">Q</text>
+            </g>
+          </svg>
+          <figcaption>The rings show one possible path; every legal path moves diagonally to an adjoining white square in the next row.</figcaption>
+        </figure>
+
+        <fieldset class="choices">
+          <legend>Choose an answer for question 4</legend>
+          <label class="choice"><input type="radio" name="q4" value="A"><span class="choice-letter">A</span><span>28</span></label>
+          <label class="choice"><input type="radio" name="q4" value="B"><span class="choice-letter">B</span><span>30</span></label>
+          <label class="choice"><input type="radio" name="q4" value="C"><span class="choice-letter">C</span><span>32</span></label>
+          <label class="choice"><input type="radio" name="q4" value="D"><span class="choice-letter">D</span><span>33</span></label>
+          <label class="choice"><input type="radio" name="q4" value="E"><span class="choice-letter">E</span><span>35</span></label>
+        </fieldset>
+
+        <div class="answer-actions">
+          <button class="check-answer" type="button">Check answer</button>
+          <p class="feedback" aria-live="polite"></p>
+        </div>
+
+        <details class="solution" open>
+          <summary>Worked solution</summary>
+          <div class="solution-content">
+            <p>Ignoring the board's right edge for a moment, a path from <span class="math">P</span> to <span class="math">Q</span> must use 4 up-right moves and 3 up-left moves. Any choice of which 4 of the 7 steps go right determines a path, giving</p>
+            <p class="display-math"><span class="math">C(7, 4) = 35</span> unrestricted paths.</p>
+            <p>Some of those paths step beyond the right edge. By the reflection principle, reflect each invalid path after its first step across that edge. The reflected path has 6 right moves and 1 left move, so the number of invalid paths is</p>
+            <p class="display-math"><span class="math">C(7, 6) = 7.</span></p>
+            <p>The left edge cannot be reached from <span class="math">P</span> in only three left moves. Therefore the number of legal paths is</p>
+            <p class="display-math"><span class="math">35 − 7 = 28.</span></p>
+            <p class="answer-line">Answer: A — 28</p>
+          </div>
+        </details>
+      </div>
+    </article>
+
+    <article class="question" data-answer="E">
+      <header class="question-header">
+        <h2>5. 2015 AMC 8 Problem 4</h2>
+        <a class="source-link" href="https://artofproblemsolving.com/wiki/index.php?title=2015_AMC_8_Problems/Problem_4" target="_blank" rel="noopener">Source &amp; alternate solutions</a>
+      </header>
+      <div class="question-body">
+        <p>The Centerville Middle School chess team consists of two boys and three girls. A photographer wants to take a picture of the team to appear in the local newspaper. She decides to have them sit in a row with a boy at each end and the three girls in the middle. How many such arrangements are possible?</p>
+
+        <fieldset class="choices">
+          <legend>Choose an answer for question 5</legend>
+          <label class="choice"><input type="radio" name="q5" value="A"><span class="choice-letter">A</span><span>2</span></label>
+          <label class="choice"><input type="radio" name="q5" value="B"><span class="choice-letter">B</span><span>4</span></label>
+          <label class="choice"><input type="radio" name="q5" value="C"><span class="choice-letter">C</span><span>5</span></label>
+          <label class="choice"><input type="radio" name="q5" value="D"><span class="choice-letter">D</span><span>6</span></label>
+          <label class="choice"><input type="radio" name="q5" value="E"><span class="choice-letter">E</span><span>12</span></label>
+        </fieldset>
+
+        <div class="answer-actions">
+          <button class="check-answer" type="button">Check answer</button>
+          <p class="feedback" aria-live="polite"></p>
+        </div>
+
+        <details class="solution" open>
+          <summary>Worked solution</summary>
+          <div class="solution-content">
+            <p>The two boys must occupy the two end seats. They can switch ends, so there are <span class="math">2! = 2</span> ways to place them.</p>
+            <p>The three girls can be arranged in the three middle seats in <span class="math">3! = 6</span> ways.</p>
+            <p>These choices are independent, so multiply:</p>
+            <p class="display-math"><span class="math">2! × 3! = 2 × 6 = 12.</span></p>
+            <p class="answer-line">Answer: E — 12</p>
+          </div>
+        </details>
+      </div>
+    </article>
+  </main>
+
+  <footer class="page-footer">
+    <p>Problems are from the AMC 8 and are copyrighted by the Mathematical Association of America.</p>
+    <p>Problem statements and source references were drawn from the Art of Problem Solving Wiki. Diagrams on this page were recreated as inline vector graphics for reliable offline viewing.</p>
+  </footer>
+
+  <script>
+    const body = document.body;
+    const viewToggle = document.getElementById('viewToggle');
+    const solutionsToggle = document.getElementById('solutionsToggle');
+    const solutionBlocks = [...document.querySelectorAll('.solution')];
+
+    viewToggle.addEventListener('click', () => {
+      const studentMode = body.classList.toggle('student-view');
+      viewToggle.textContent = studentMode ? 'Study view' : 'Student view';
+      viewToggle.setAttribute('aria-pressed', String(studentMode));
+    });
+
+    solutionsToggle.addEventListener('click', () => {
+      const shouldOpen = solutionBlocks.some((item) => !item.open);
+      solutionBlocks.forEach((item) => { item.open = shouldOpen; });
+      solutionsToggle.textContent = shouldOpen ? 'Hide all solutions' : 'Show all solutions';
+    });
+
+    document.querySelectorAll('.check-answer').forEach((button) => {
+      button.addEventListener('click', () => {
+        const question = button.closest('.question');
+        const selected = question.querySelector('input[type="radio"]:checked');
+        const feedback = question.querySelector('.feedback');
+        const correct = question.dataset.answer;
+
+        feedback.classList.remove('correct', 'incorrect');
+        if (!selected) {
+          feedback.textContent = 'Choose an answer first.';
+          return;
+        }
+
+        if (selected.value === correct) {
+          feedback.textContent = 'Correct.';
+          feedback.classList.add('correct');
+        } else {
+          feedback.textContent = 'Not quite—review your reasoning and try again.';
+          feedback.classList.add('incorrect');
+        }
+      });
+    });
+
+    document.getElementById('resetAnswers').addEventListener('click', () => {
+      document.querySelectorAll('input[type="radio"]').forEach((input) => { input.checked = false; });
+      document.querySelectorAll('.feedback').forEach((feedback) => {
+        feedback.textContent = '';
+        feedback.classList.remove('correct', 'incorrect');
+      });
+    });
+
+    let printState = [];
+    window.addEventListener('beforeprint', () => {
+      printState = solutionBlocks.map((item) => item.open);
+      solutionBlocks.forEach((item) => { item.open = true; });
+    });
+
+    window.addEventListener('afterprint', () => {
+      solutionBlocks.forEach((item, index) => { item.open = printState[index]; });
+    });
+  </script>
+</body>
+</html>
