@@ -329,6 +329,53 @@
 
     .reasoning th { font-weight: 700; }
 
+    .pascal-table-wrap {
+      max-width: 680px;
+      margin: 16px auto 20px;
+      overflow-x: auto;
+    }
+
+    .pascal-board {
+      width: 100%;
+      min-width: 560px;
+      border-collapse: collapse;
+      background: #fff;
+      table-layout: fixed;
+    }
+
+    .pascal-board th,
+    .pascal-board td {
+      height: 42px;
+      padding: 4px;
+      border: 1px solid #c8dacf;
+      text-align: center;
+    }
+
+    .pascal-board thead th,
+    .pascal-board tbody th {
+      color: var(--muted);
+      font-size: 0.84rem;
+      font-weight: 650;
+    }
+
+    .pascal-board thead th:first-child { width: 68px; }
+
+    .pascal-board td:empty { background: #f3f1ee; }
+
+    .pascal-board .pascal-start,
+    .pascal-board .pascal-target {
+      background: var(--accent-soft);
+      color: var(--accent-dark);
+      font-weight: 760;
+    }
+
+    .pascal-note {
+      margin-top: -10px;
+      color: var(--muted);
+      font-size: 0.9rem;
+      text-align: center;
+    }
+
     .answer-line {
       color: var(--correct);
       font-size: 1.04rem;
@@ -659,6 +706,40 @@
             <p class="display-math"><span class="math">C(7, 6) = 7.</span></p>
             <p>The left edge cannot be reached from <span class="math">P</span> in only three left moves. Therefore the number of legal paths is</p>
             <p class="display-math"><span class="math">35 − 7 = 28.</span></p>
+
+            <h3>Pascal’s triangle method</h3>
+            <p>We can also count paths directly on the board. Put a <span class="math">1</span> at <span class="math">P</span>. In each new row, write on every reachable white square the sum of the numbers on the two diagonally adjoining squares below it. If one of those squares lies beyond the board, treat its value as <span class="math">0</span>. This is Pascal’s triangle, clipped at the board’s edges.</p>
+
+            <div class="pascal-table-wrap">
+              <table class="pascal-board">
+                <thead>
+                  <tr>
+                    <th scope="col">Step</th>
+                    <th scope="col">1</th>
+                    <th scope="col">2</th>
+                    <th scope="col">3</th>
+                    <th scope="col">4</th>
+                    <th scope="col">5</th>
+                    <th scope="col">6</th>
+                    <th scope="col">7</th>
+                    <th scope="col">8</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><th scope="row">0</th><td></td><td></td><td></td><td></td><td></td><td class="pascal-start">1 (P)</td><td></td><td></td></tr>
+                  <tr><th scope="row">1</th><td></td><td></td><td></td><td></td><td>1</td><td></td><td>1</td><td></td></tr>
+                  <tr><th scope="row">2</th><td></td><td></td><td></td><td>1</td><td></td><td>2</td><td></td><td>1</td></tr>
+                  <tr><th scope="row">3</th><td></td><td></td><td>1</td><td></td><td>3</td><td></td><td>3</td><td></td></tr>
+                  <tr><th scope="row">4</th><td></td><td>1</td><td></td><td>4</td><td></td><td>6</td><td></td><td>3</td></tr>
+                  <tr><th scope="row">5</th><td>1</td><td></td><td>5</td><td></td><td>10</td><td></td><td>9</td><td></td></tr>
+                  <tr><th scope="row">6</th><td></td><td>6</td><td></td><td>15</td><td></td><td>19</td><td></td><td>9</td></tr>
+                  <tr><th scope="row">7</th><td>6</td><td></td><td>21</td><td></td><td>34</td><td></td><td class="pascal-target">28 (Q)</td><td></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p class="pascal-note">Columns 1–8 correspond to the board’s squares from left to right.</p>
+
+            <p>For example, the <span class="math">19</span> at step 6 is <span class="math">10 + 9</span>. Repeating this addition for all seven rows gives <span class="math">28</span> at <span class="math">Q</span>, so there are 28 legal paths.</p>
             <p class="answer-line">Answer: A — 28</p>
           </div>
         </details>
