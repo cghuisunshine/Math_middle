@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Extracted and fully worked solutions for Basic Counting Techniques exercises 2.5.1–2.5.5.">
+  <title>Basic Counting Techniques — Exercises 2.5.1–2.5.5</title>
+  <style>
+    :root {
+      --ink: #172033;
+      --muted: #5c677d;
+      --paper: #ffffff;
+      --page: #f3f6fb;
+      --blue: #1769aa;
+      --blue-soft: #eaf4fc;
+      --green: #0c755f;
+      --green-soft: #eaf8f3;
+      --amber: #9a5a00;
+      --amber-soft: #fff6e5;
+      --border: #d8e1ee;
+      --shadow: 0 10px 30px rgba(23, 32, 51, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      color: var(--ink);
+      background: var(--page);
+      font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      font-size: 17px;
+      line-height: 1.65;
+    }
+
+    header {
+      color: white;
+      background: linear-gradient(135deg, #114c80 0%, #1876b9 62%, #24a6b8 100%);
+      padding: 3.4rem 1.25rem 4rem;
+    }
+
+    .hero, main, footer {
+      width: min(980px, calc(100% - 2rem));
+      margin: 0 auto;
+    }
+
+    .eyebrow {
+      margin: 0 0 0.55rem;
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      opacity: 0.86;
+    }
+
+    h1 {
+      max-width: 760px;
+      margin: 0;
+      font-size: clamp(2rem, 5vw, 3.25rem);
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+    }
+
+    .subtitle {
+      max-width: 720px;
+      margin: 1rem 0 0;
+      font-size: 1.08rem;
+      opacity: 0.92;
+    }
+
+    main { margin-top: -2rem; }
+
+    .card {
+      margin-bottom: 1.3rem;
+      padding: clamp(1.2rem, 3.5vw, 2rem);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: var(--paper);
+      box-shadow: var(--shadow);
+    }
+
+    .overview {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr;
+      gap: 1.25rem;
+    }
+
+    h2, h3 { line-height: 1.25; }
+
+    h2 {
+      margin: 0 0 0.8rem;
+      font-size: clamp(1.4rem, 3vw, 1.85rem);
+      letter-spacing: -0.02em;
+    }
+
+    h3 {
+      margin: 1.25rem 0 0.45rem;
+      font-size: 1.05rem;
+      color: var(--blue);
+    }
+
+    p { margin: 0.5rem 0; }
+
+    ul, ol { padding-left: 1.35rem; }
+
+    li + li { margin-top: 0.4rem; }
+
+    .toc {
+      padding: 1rem 1.15rem;
+      border-radius: 14px;
+      background: var(--blue-soft);
+    }
+
+    .toc strong { display: block; margin-bottom: 0.35rem; }
+    .toc a { color: #0d5d98; text-decoration-thickness: 1px; }
+
+    .problem-text {
+      padding: 1rem 1.15rem;
+      border-left: 5px solid var(--blue);
+      border-radius: 0 12px 12px 0;
+      background: var(--blue-soft);
+    }
+
+    .strategy {
+      margin-top: 1rem;
+      padding: 0.85rem 1rem;
+      border: 1px solid #f0d9ad;
+      border-radius: 12px;
+      color: #684000;
+      background: var(--amber-soft);
+    }
+
+    .steps {
+      margin: 1rem 0 0;
+      padding: 0;
+      list-style: none;
+      counter-reset: solution-step;
+    }
+
+    .steps > li {
+      position: relative;
+      margin-top: 0.9rem;
+      padding: 0 0 0.9rem 3rem;
+      border-bottom: 1px dashed var(--border);
+      counter-increment: solution-step;
+    }
+
+    .steps > li::before {
+      content: counter(solution-step);
+      position: absolute;
+      top: 0.05rem;
+      left: 0;
+      display: grid;
+      width: 2rem;
+      height: 2rem;
+      place-items: center;
+      border-radius: 50%;
+      color: white;
+      background: var(--blue);
+      font-weight: 800;
+    }
+
+    .steps > li:last-child { border-bottom: 0; padding-bottom: 0; }
+
+    .math {
+      overflow-x: auto;
+      margin: 0.7rem 0;
+      padding: 0.75rem 1rem;
+      border-radius: 10px;
+      color: #12283b;
+      background: #f5f8fc;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-size: 0.98rem;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .answer {
+      margin-top: 1.15rem;
+      padding: 1rem 1.15rem;
+      border: 1px solid #bde4d8;
+      border-radius: 12px;
+      color: #095847;
+      background: var(--green-soft);
+      font-size: 1.05rem;
+    }
+
+    .answer strong { color: var(--green); }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0.8rem;
+      margin-top: 0.85rem;
+    }
+
+    .mini-card {
+      padding: 0.85rem 1rem;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fbfcfe;
+    }
+
+    .mini-card b { color: var(--blue); }
+
+    table {
+      width: 100%;
+      margin-top: 0.8rem;
+      border-collapse: collapse;
+      font-size: 0.96rem;
+    }
+
+    th, td {
+      padding: 0.75rem;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th { color: #0f568b; background: var(--blue-soft); }
+
+    .answer-table td:last-child {
+      color: var(--green);
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    footer {
+      padding: 1rem 0 2.5rem;
+      color: var(--muted);
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 720px) {
+      body { font-size: 16px; }
+      header { padding-top: 2.6rem; }
+      .overview, .mini-grid { grid-template-columns: 1fr; }
+      .card { border-radius: 15px; }
+      .steps > li { padding-left: 2.7rem; }
+      table { display: block; overflow-x: auto; }
+    }
+
+    @media print {
+      body { background: white; font-size: 11pt; }
+      header { padding: 1.3cm 1cm; background: #1769aa !important; print-color-adjust: exact; }
+      main { margin-top: 0.6cm; }
+      .card { box-shadow: none; break-inside: avoid; }
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="hero">
+      <p class="eyebrow">Chapter 2 · Basic Counting Techniques</p>
+      <h1>Exercises 2.5.1–2.5.5</h1>
+      <p class="subtitle">Extracted questions with clear, step-by-step solutions using block counting, complementary counting, casework, and the multiplication principle.</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="card overview" aria-labelledby="overview-title">
+      <div>
+        <h2 id="overview-title">Four ideas used on this page</h2>
+        <ul>
+          <li><strong>Multiply</strong> when choices happen one after another.</li>
+          <li><strong>Add</strong> when cases are mutually exclusive.</li>
+          <li><strong>Make a block</strong> when objects must remain together.</li>
+          <li><strong>Use a complement</strong>: total arrangements minus forbidden arrangements.</li>
+        </ul>
+      </div>
+      <nav class="toc" aria-label="Exercise navigation">
+        <strong>Jump to an exercise</strong>
+        <ol>
+          <li><a href="#exercise-251">Team photograph</a></li>
+          <li><a href="#exercise-252">Kennel cages</a></li>
+          <li><a href="#exercise-253">Jones family</a></li>
+          <li><a href="#exercise-254">Two club officers</a></li>
+          <li><a href="#exercise-255">Three club officers</a></li>
+        </ol>
+      </nav>
+    </section>
+
+    <article class="card" id="exercise-251">
+      <h2>2.5.1 — Basketball team photograph</h2>
+      <p class="problem-text"><strong>Extracted question.</strong> A basketball team has 5 forwards and 4 guards. In how many ways can the 9 players stand in a straight line for a photo if all 4 guards must stand next to one another?</p>
+      <p class="strategy"><strong>Strategy:</strong> Treat the four guards as one block.</p>
+      <ol class="steps">
+        <li>
+          <strong>Form one guard block.</strong>
+          <p>The line now contains the guard block plus the 5 individual forwards: 6 objects altogether.</p>
+        </li>
+        <li>
+          <strong>Arrange the 6 objects.</strong>
+          <div class="math">6! = 720</div>
+        </li>
+        <li>
+          <strong>Arrange the guards inside their block.</strong>
+          <div class="math">4! = 24</div>
+        </li>
+        <li>
+          <strong>Multiply the independent choices.</strong>
+          <div class="math">6! × 4! = 720 × 24 = 17,280</div>
+        </li>
+      </ol>
+      <p class="answer"><strong>Final answer:</strong> 17,280 arrangements.</p>
+    </article>
+
+    <article class="card" id="exercise-252">
+      <h2>2.5.2 — Happy Valley Kennel</h2>
+      <p class="problem-text"><strong>Extracted question.</strong> The Happy Valley Kennel has 4 chickens, 2 dogs, and 5 cats. In how many ways can the 11 animals be placed in a row of 11 cages so that all animals of each type occupy adjacent cages?</p>
+      <p class="strategy"><strong>Strategy:</strong> Make three blocks—one chicken block, one dog block, and one cat block.</p>
+      <ol class="steps">
+        <li>
+          <strong>Arrange the three animal-type blocks.</strong>
+          <div class="math">3! = 6</div>
+        </li>
+        <li>
+          <strong>Arrange the animals inside each block.</strong>
+          <div class="math">Chickens: 4! &nbsp;&nbsp; Dogs: 2! &nbsp;&nbsp; Cats: 5!</div>
+        </li>
+        <li>
+          <strong>Multiply all independent arrangements.</strong>
+          <div class="math">3! × 4! × 2! × 5!</div>
+          <div class="math">= 6 × 24 × 2 × 120 = 34,560</div>
+        </li>
+      </ol>
+      <p class="answer"><strong>Final answer:</strong> 34,560 arrangements.</p>
+    </article>
+
+    <article class="card" id="exercise-253">
+      <h2>2.5.3 — The Jones family</h2>
+      <p class="problem-text"><strong>Extracted question.</strong> The Jones family has 5 boys and 3 girls; 2 of the girls are twins. In how many ways can all 8 children sit in a row if the twins insist on sitting together and their other sister refuses to sit next to either twin?</p>
+      <p class="strategy"><strong>Strategy:</strong> Make the twins one block, count all arrangements, and subtract those in which the other sister sits beside the twin block.</p>
+      <ol class="steps">
+        <li>
+          <strong>Temporarily make the twins one block.</strong>
+          <p>We now arrange 7 objects: the twin block, the other sister, and 5 boys.</p>
+        </li>
+        <li>
+          <strong>Count all arrangements of those 7 objects.</strong>
+          <div class="math">7! = 5,040</div>
+        </li>
+        <li>
+          <strong>Count the forbidden arrangements.</strong>
+          <p>If the other sister is next to the twin block, combine them into a larger unit. That larger unit can be ordered in 2 ways: sister–twins or twins–sister.</p>
+          <div class="math">Forbidden = 2 × 6! = 2 × 720 = 1,440</div>
+        </li>
+        <li>
+          <strong>Subtract the forbidden arrangements.</strong>
+          <div class="math">7! − 2 × 6! = 5,040 − 1,440 = 3,600</div>
+        </li>
+        <li>
+          <strong>Arrange the two twins inside their block.</strong>
+          <p>The twins are distinct people, so they can switch places in 2! ways.</p>
+          <div class="math">2! × 3,600 = 2 × 3,600 = 7,200</div>
+        </li>
+      </ol>
+      <p class="answer"><strong>Final answer:</strong> 7,200 seating arrangements.</p>
+    </article>
+
+    <article class="card" id="exercise-254">
+      <h2>2.5.4 — President and vice-president</h2>
+      <p class="problem-text"><strong>Extracted question.</strong> A school MATHCOUNTS club has 20 members: 10 seventh-graders and 10 eighth-graders. In how many ways can two different members be chosen as president and vice-president under the stated conditions?</p>
+      <div class="mini-grid">
+        <section class="mini-card">
+          <h3>(a) No grade restriction</h3>
+          <p>Choose the president first, then choose a different member as vice-president.</p>
+          <div class="math">20 × 19 = 380</div>
+          <p><b>Answer: 380</b></p>
+        </section>
+        <section class="mini-card">
+          <h3>(b) Different grades</h3>
+          <p>There are two exclusive cases.</p>
+          <div class="math">Grade 7 P, Grade 8 VP: 10 × 10 = 100</div>
+          <div class="math">Grade 8 P, Grade 7 VP: 10 × 10 = 100</div>
+          <div class="math">100 + 100 = 200</div>
+          <p><b>Answer: 200</b></p>
+        </section>
+        <section class="mini-card">
+          <h3>(c) Same grade</h3>
+          <p>Again, there are two exclusive cases.</p>
+          <div class="math">Both Grade 7: 10 × 9 = 90</div>
+          <div class="math">Both Grade 8: 10 × 9 = 90</div>
+          <div class="math">90 + 90 = 180</div>
+          <p><b>Answer: 180</b></p>
+        </section>
+        <section class="mini-card">
+          <h3>(d) How are they related?</h3>
+          <p>Every pair is in exactly one of two cases: the officers are in the same grade or in different grades.</p>
+          <div class="math">Part (a) = Part (b) + Part (c)</div>
+          <div class="math">380 = 200 + 180</div>
+          <p><b>They form exhaustive, mutually exclusive cases.</b></p>
+        </section>
+      </div>
+    </article>
+
+    <article class="card" id="exercise-255">
+      <h2>2.5.5 — President, secretary, and treasurer</h2>
+      <p class="problem-text"><strong>Extracted question.</strong> A club has 25 members and wishes to select a president, secretary, and treasurer. How many officer assignments are possible under each condition?</p>
+
+      <h3>(a) Each member can hold at most one office</h3>
+      <ol class="steps">
+        <li>Choose the president: 25 choices.</li>
+        <li>Choose a different secretary: 24 choices.</li>
+        <li>Choose a different treasurer: 23 choices.</li>
+      </ol>
+      <div class="math">25 × 24 × 23 = 13,800</div>
+      <p class="answer"><strong>Answer to (a):</strong> 13,800 assignments.</p>
+
+      <h3>(b) A member may hold all three offices</h3>
+      <p>There is no restriction linking the choices. Each of the three offices independently has 25 possible holders.</p>
+      <div class="math">25 × 25 × 25 = 25³ = 15,625</div>
+      <p class="answer"><strong>Answer to (b):</strong> 15,625 assignments.</p>
+
+      <h3>(c) A member may hold two offices, but not all three</h3>
+      <p>Start with the unrestricted total from part (b), then remove the 25 forbidden outcomes in which one person holds every office.</p>
+      <div class="math">25³ − 25 = 15,625 − 25 = 15,600</div>
+      <p><strong>Check by casework:</strong></p>
+      <div class="math">All distinct + exactly two alike</div>
+      <div class="math">= (25 × 24 × 23) + (3 × 25 × 24)</div>
+      <div class="math">= 13,800 + 1,800 = 15,600</div>
+      <p class="answer"><strong>Answer to (c):</strong> 15,600 assignments.</p>
+    </article>
+
+    <section class="card" aria-labelledby="summary-title">
+      <h2 id="summary-title">Final-answer summary</h2>
+      <table class="answer-table">
+        <thead>
+          <tr><th>Exercise</th><th>Counting expression</th><th>Answer</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>2.5.1</td><td>6! × 4!</td><td>17,280</td></tr>
+          <tr><td>2.5.2</td><td>3! × 4! × 2! × 5!</td><td>34,560</td></tr>
+          <tr><td>2.5.3</td><td>2! × (7! − 2 × 6!)</td><td>7,200</td></tr>
+          <tr><td>2.5.4(a)</td><td>20 × 19</td><td>380</td></tr>
+          <tr><td>2.5.4(b)</td><td>2 × 10 × 10</td><td>200</td></tr>
+          <tr><td>2.5.4(c)</td><td>2 × 10 × 9</td><td>180</td></tr>
+          <tr><td>2.5.5(a)</td><td>25 × 24 × 23</td><td>13,800</td></tr>
+          <tr><td>2.5.5(b)</td><td>25³</td><td>15,625</td></tr>
+          <tr><td>2.5.5(c)</td><td>25³ − 25</td><td>15,600</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <footer>Basic Counting Techniques · Worked solutions for Exercises 2.5.1–2.5.5</footer>
+</body>
+</html>
