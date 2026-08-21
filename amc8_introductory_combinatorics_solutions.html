@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>AMC 8 Introductory Combinatorics | Five Detailed Solutions</title>
+  <style>
+    :root {
+      --bg: #f4f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #667085;
+      --line: #dce4ef;
+      --blue: #2357d8;
+      --blue-soft: #edf3ff;
+      --green: #177245;
+      --green-soft: #eaf8f1;
+      --amber: #8a5500;
+      --amber-soft: #fff6df;
+      --shadow: 0 12px 30px rgba(33, 56, 104, .09);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 0%, #e4edff 0, transparent 31rem),
+        var(--bg);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+                   "Hiragino Sans GB", "Microsoft YaHei", Arial, sans-serif;
+      line-height: 1.7;
+    }
+
+    .page {
+      width: min(100% - 32px, 940px);
+      margin: 0 auto;
+      padding: 42px 0 72px;
+    }
+
+    header {
+      padding: 34px;
+      color: #fff;
+      border-radius: 24px;
+      background: linear-gradient(135deg, #153b9d, #3371ed);
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow {
+      margin: 0 0 8px;
+      font-size: .85rem;
+      font-weight: 750;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      opacity: .82;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(1.8rem, 5vw, 3rem);
+      line-height: 1.2;
+      letter-spacing: -.02em;
+    }
+
+    header p {
+      max-width: 700px;
+      margin: 14px 0 0;
+      opacity: .9;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin: 18px 0 30px;
+    }
+
+    .answer-chip {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      min-height: 54px;
+      padding: 10px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--card);
+      box-shadow: 0 5px 16px rgba(33, 56, 104, .05);
+      font-weight: 750;
+    }
+
+    .answer-chip span {
+      color: var(--muted);
+      font-size: .86rem;
+      font-weight: 650;
+    }
+
+    .problem {
+      margin-top: 24px;
+      padding: 28px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+
+    .problem-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 18px;
+    }
+
+    .number {
+      display: inline-grid;
+      place-items: center;
+      width: 42px;
+      height: 42px;
+      color: #fff;
+      border-radius: 12px;
+      background: var(--blue);
+      font-weight: 800;
+      font-size: 1.15rem;
+    }
+
+    .source {
+      color: var(--muted);
+      font-size: .87rem;
+      font-weight: 650;
+      text-align: right;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 1.25rem;
+      line-height: 1.45;
+    }
+
+    .english {
+      margin: 0 0 16px;
+      padding: 16px 18px;
+      color: #354056;
+      border-left: 4px solid #8aa9f4;
+      border-radius: 0 12px 12px 0;
+      background: var(--blue-soft);
+      font-family: Georgia, "Times New Roman", serif;
+      line-height: 1.58;
+    }
+
+    .choices {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 14px 0 22px;
+    }
+
+    .choice {
+      padding: 6px 11px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: #fafcff;
+      font-size: .93rem;
+    }
+
+    .choice.correct {
+      color: var(--green);
+      border-color: #9bd3b7;
+      background: var(--green-soft);
+      font-weight: 800;
+    }
+
+    h3 {
+      margin: 22px 0 8px;
+      color: var(--blue);
+      font-size: 1.03rem;
+    }
+
+    ol, ul { padding-left: 1.35rem; }
+    li + li { margin-top: 7px; }
+
+    .math {
+      margin: 12px 0;
+      padding: 14px 17px;
+      overflow-x: auto;
+      border: 1px dashed #9cb2db;
+      border-radius: 12px;
+      background: #f8faff;
+      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .result {
+      margin-top: 18px;
+      padding: 14px 17px;
+      color: var(--green);
+      border: 1px solid #a7d8bf;
+      border-radius: 12px;
+      background: var(--green-soft);
+      font-weight: 800;
+    }
+
+    .tip {
+      margin-top: 14px;
+      padding: 12px 15px;
+      color: var(--amber);
+      border-radius: 11px;
+      background: var(--amber-soft);
+      font-size: .93rem;
+    }
+
+    table {
+      width: 100%;
+      margin: 12px 0;
+      border-collapse: collapse;
+      font-size: .95rem;
+    }
+
+    th, td {
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+      text-align: center;
+    }
+
+    th { background: var(--blue-soft); }
+
+    footer {
+      margin-top: 32px;
+      color: var(--muted);
+      text-align: center;
+      font-size: .88rem;
+    }
+
+    @media (max-width: 680px) {
+      .page { width: min(100% - 20px, 940px); padding-top: 18px; }
+      header { padding: 26px 22px; border-radius: 18px; }
+      .summary { grid-template-columns: repeat(2, 1fr); }
+      .summary .answer-chip:last-child { grid-column: 1 / -1; }
+      .problem { padding: 21px 18px; border-radius: 16px; }
+      .problem-top { align-items: flex-start; }
+      table { font-size: .82rem; }
+      th, td { padding: 8px 5px; }
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0f1420;
+        --card: #181f2d;
+        --text: #edf2ff;
+        --muted: #abb5c9;
+        --line: #344055;
+        --blue: #75a0ff;
+        --blue-soft: #202c45;
+        --green: #83deb0;
+        --green-soft: #17362a;
+        --amber: #ffd180;
+        --amber-soft: #3a2d17;
+        --shadow: none;
+      }
+      body { background: var(--bg); }
+      header { background: linear-gradient(135deg, #173986, #285fc9); }
+      .english { color: #dbe5fa; }
+      .choice { background: #1b2332; }
+      .math { background: #171f30; }
+      th { background: #202c45; }
+    }
+
+    @media print {
+      body { background: #fff; }
+      .page { width: 100%; padding: 0; }
+      header, .problem { box-shadow: none; }
+      .problem { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header>
+      <p class="eyebrow">5-question introductory combinatorics exam</p>
+      <h1>AMC 8 Introductory Combinatorics</h1>
+      <p>Five fully worked solutions covering counting, the multiplication principle, permutations, and probability.</p>
+    </header>
+
+    <section class="summary" aria-label="Answer key">
+      <div class="answer-chip"><span>Problem 1</span>C · 4</div>
+      <div class="answer-chip"><span>Problem 2</span>D · 728</div>
+      <div class="answer-chip"><span>Problem 3</span>D · 40</div>
+      <div class="answer-chip"><span>Problem 4</span>D · 11/36</div>
+      <div class="answer-chip"><span>Problem 5</span>D · 9</div>
+    </section>
+
+    <article class="problem">
+      <div class="problem-top">
+        <span class="number">1</span>
+        <span class="source">2000 AMC 8 · Problem 5</span>
+      </div>
+      <h2>Maximum Number of Principals</h2>
+      <p class="english">Each principal of Lincoln High School serves exactly one 3-year term. What is the maximum number of principals this school could have during an 8-year period?</p>
+      <div class="choices">
+        <span class="choice">(A) 2</span><span class="choice">(B) 3</span>
+        <span class="choice correct">(C) 4</span><span class="choice">(D) 5</span>
+        <span class="choice">(E) 8</span>
+      </div>
+
+      <h3>Solution</h3>
+      <p>At the beginning of the 8-year period, the first principal could be near the end of a term. This arrangement allows the largest possible number of principals to appear during the period.</p>
+      <ol>
+        <li>The first principal serves only a short time at the beginning of the 8-year period.</li>
+        <li>The second principal then completes a 3-year term.</li>
+        <li>The third principal completes another 3-year term.</li>
+        <li>With less than 2 years remaining, a fourth principal can begin a term.</li>
+      </ol>
+      <p>Five principals would require four changes of principal. Consecutive changes are 3 years apart, so the time from the first change to the fourth change would be at least:</p>
+      <div class="math">3 × 3 = 9 years &gt; 8 years</div>
+      <p>Therefore, five principals cannot appear during an 8-year period.</p>
+      <div class="result">Answer: 4 principals, choice (C)</div>
+    </article>
+
+    <article class="problem">
+      <div class="problem-top">
+        <span class="number">2</span>
+        <span class="source">2000 AMC 8 · Problem 22</span>
+      </div>
+      <h2>Whole Numbers That Do Not Contain the Digit 1</h2>
+      <p class="english">How many whole numbers between 1 and 1000 do not contain the digit 1?</p>
+      <div class="choices">
+        <span class="choice">(A) 512</span><span class="choice">(B) 648</span>
+        <span class="choice">(C) 720</span><span class="choice correct">(D) 728</span>
+        <span class="choice">(E) 800</span>
+      </div>
+
+      <h3>Solution: Use Leading Zeros</h3>
+      <p>Write every number from 0 through 999 in three-digit form. For example, write 7 as <strong>007</strong> and 52 as <strong>052</strong>.</p>
+      <ol>
+        <li>The hundreds digit cannot be 1, so it has 9 choices: 0, 2, 3, 4, 5, 6, 7, 8, or 9.</li>
+        <li>The tens digit also has 9 choices.</li>
+        <li>The units digit also has 9 choices.</li>
+      </ol>
+      <div class="math">9 × 9 × 9 = 9³ = 729</div>
+      <p>These 729 strings include <strong>000, which represents 0</strong>. Because the interval starts at 1, subtract this one case. The number 1000 contains the digit 1, so it is not counted.</p>
+      <div class="math">729 − 1 = 728</div>
+      <div class="result">Answer: 728 numbers, choice (D)</div>
+      <div class="tip"><strong>Common pitfall:</strong> There is no need to count one-, two-, and three-digit numbers separately. Leading zeros combine the cases, but remember to remove 000.</div>
+    </article>
+
+    <article class="problem">
+      <div class="problem-top">
+        <span class="number">3</span>
+        <span class="source">1999 AMC 8 · Problem 15</span>
+      </div>
+      <h2>Maximum Number of Additional License Plates</h2>
+      <p class="english">Bicycle license plates in Flatville each contain three letters. The first is chosen from the set {C, H, L, P, R}, the second from {A, I, O}, and the third from {D, M, N, T}. When Flatville needed more license plates, they added two new letters. The new letters may both be added to one set or one to another set. What is the largest possible number of ADDITIONAL license plates that can be made by adding two letters?</p>
+      <div class="choices">
+        <span class="choice">(A) 24</span><span class="choice">(B) 30</span>
+        <span class="choice">(C) 36</span><span class="choice correct">(D) 40</span>
+        <span class="choice">(E) 60</span>
+      </div>
+
+      <h3>Step 1: Count the Original Plates</h3>
+      <div class="math">5 × 3 × 4 = 60</div>
+
+      <h3>Step 2: Compare All Ways to Add the Letters</h3>
+      <table>
+        <thead>
+          <tr><th>Location of the new letters</th><th>New total</th><th>Additional plates</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Both in position 1</td><td>7×3×4 = 84</td><td>24</td></tr>
+          <tr><td>Both in position 2</td><td>5×5×4 = 100</td><td><strong>40</strong></td></tr>
+          <tr><td>Both in position 3</td><td>5×3×6 = 90</td><td>30</td></tr>
+          <tr><td>One each in positions 1 and 2</td><td>6×4×4 = 96</td><td>36</td></tr>
+          <tr><td>One each in positions 1 and 3</td><td>6×3×5 = 90</td><td>30</td></tr>
+          <tr><td>One each in positions 2 and 3</td><td>5×4×5 = 100</td><td><strong>40</strong></td></tr>
+        </tbody>
+      </table>
+      <p>The largest new total is 100 plates, so the greatest possible number of additional plates is:</p>
+      <div class="math">100 − 60 = 40</div>
+      <div class="result">Answer: 40 additional plates, choice (D)</div>
+      <div class="tip"><strong>Key detail:</strong> The question asks for the number of <em>additional</em> plates, not the total number after adding the letters.</div>
+    </article>
+
+    <article class="problem">
+      <div class="problem-top">
+        <span class="number">4</span>
+        <span class="source">2001 AMC 8 · Problem 18</span>
+      </div>
+      <h2>The Product of Two Dice Is a Multiple of 5</h2>
+      <p class="english">Two dice are thrown. What is the probability that the product of the two numbers is a multiple of 5?</p>
+      <div class="choices">
+        <span class="choice">(A) 1/36</span><span class="choice">(B) 1/18</span>
+        <span class="choice">(C) 1/6</span><span class="choice correct">(D) 11/36</span>
+        <span class="choice">(E) 1/3</span>
+      </div>
+
+      <h3>Solution</h3>
+      <p>A die can show only 1 through 6, and the only possible result containing a factor of 5 is <strong>5</strong>. Therefore, the product is a multiple of 5 exactly when at least one die shows 5.</p>
+      <p>The complement is easiest to count:</p>
+      <ol>
+        <li>Two dice have 6×6 = 36 equally likely outcomes.</li>
+        <li>Each die has 5 outcomes other than 5.</li>
+        <li>There are 5×5 = 25 outcomes in which neither die shows 5.</li>
+        <li>Therefore, 36−25 = 11 outcomes have at least one 5.</li>
+      </ol>
+      <div class="math">P = 1 − (5/6)² = 1 − 25/36 = 11/36</div>
+      <div class="result">Answer: 11/36, choice (D)</div>
+      <div class="tip"><strong>Alternative count:</strong> There are 6 outcomes with the first die equal to 5 and 6 with the second die equal to 5. The outcome (5,5) is counted twice, so there are 6+6−1=11 favorable outcomes.</div>
+    </article>
+
+    <article class="problem">
+      <div class="problem-top">
+        <span class="number">5</span>
+        <span class="source">2012 AMC 8 · Problem 10</span>
+      </div>
+      <h2>Four-Digit Numbers Using the Digits of 2012</h2>
+      <p class="english">How many 4-digit numbers greater than 1000 are there that use the four digits of 2012?</p>
+      <div class="choices">
+        <span class="choice">(A) 6</span><span class="choice">(B) 7</span>
+        <span class="choice">(C) 8</span><span class="choice correct">(D) 9</span>
+        <span class="choice">(E) 12</span>
+      </div>
+
+      <h3>Step 1: Count All Distinct Arrangements</h3>
+      <p>Two of the four digits are identical 2s, so the number of distinct arrangements is:</p>
+      <div class="math">4! / 2! = 12</div>
+
+      <h3>Step 2: Remove Arrangements Beginning with 0</h3>
+      <p>If 0 is fixed in the first position, the remaining digits 2, 1, and 2 can be arranged in:</p>
+      <div class="math">3! / 2! = 3</div>
+      <p>These arrangements represent three-digit numbers rather than four-digit numbers, so they must be removed.</p>
+      <div class="math">12 − 3 = 9</div>
+      <p>Every remaining arrangement begins with 1 or 2, so each is a four-digit number greater than 1000.</p>
+      <div class="result">Answer: 9 numbers, choice (D)</div>
+      <div class="tip"><strong>Common pitfall:</strong> The two 2s are identical, so they cannot be treated as different objects. Also, 0 cannot be the first digit of a four-digit number.</div>
+    </article>
+
+    <footer>Prepared from the provided worksheet image · Offline HTML edition</footer>
+  </main>
+</body>
+</html>
