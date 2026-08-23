@@ -1,0 +1,483 @@
+<title>Five AMC 8 Counting Problems</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,600;0,700;1,400;1,600&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+:root{
+  --paper:#F5F7F9; --surface:#FFFFFF; --surface-2:#EEF2F6;
+  --ink:#141B24; --ink-2:#4F5C6B; --ink-3:#7A8796;
+  --rule:#DCE2E9; --rule-strong:#C3CCD6;
+  --accent:#1C5479; --accent-soft:#E7EFF5;
+  --gold:#8A5C12; --gold-soft:#F5EEDF;
+  --shadow:0 1px 2px rgba(20,27,36,.05), 0 8px 24px -18px rgba(20,27,36,.35);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#0F1319; --surface:#161C24; --surface-2:#1C232C;
+    --ink:#E6ECF3; --ink-2:#9DA9B7; --ink-3:#7C8896;
+    --rule:#242C36; --rule-strong:#333D49;
+    --accent:#7FB6E0; --accent-soft:#152430;
+    --gold:#D5A257; --gold-soft:#241E14;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -18px rgba(0,0,0,.9);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0F1319; --surface:#161C24; --surface-2:#1C232C;
+  --ink:#E6ECF3; --ink-2:#9DA9B7; --ink-3:#7C8896;
+  --rule:#242C36; --rule-strong:#333D49;
+  --accent:#7FB6E0; --accent-soft:#152430;
+  --gold:#D5A257; --gold-soft:#241E14;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 8px 24px -18px rgba(0,0,0,.9);
+}
+*{box-sizing:border-box}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:"Spectral",Georgia,"Times New Roman",serif;
+  font-size:17px; line-height:1.62; margin:0;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:780px; margin:0 auto; padding:44px 22px 96px}
+.util{font-family:"IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif}
+
+/* ---- header ---- */
+header{border-bottom:1px solid var(--rule); padding-bottom:26px; margin-bottom:8px}
+.eyebrow{
+  font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:11.5px; font-weight:600;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--accent); margin:0 0 12px;
+}
+h1{
+  font-size:clamp(30px,5.2vw,42px); line-height:1.1; font-weight:700; margin:0 0 10px;
+  letter-spacing:-.015em; text-wrap:balance;
+}
+.sub{color:var(--ink-2); margin:0 0 22px; font-size:17px; max-width:60ch}
+.keyrow{display:flex; flex-wrap:wrap; gap:8px; align-items:center}
+.keylabel{
+  font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:11px; font-weight:600;
+  letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin-right:4px;
+}
+.key{
+  font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:12.5px; font-weight:600;
+  background:var(--surface); border:1px solid var(--rule-strong); color:var(--ink-2);
+  border-radius:999px; padding:4px 11px; text-decoration:none; display:inline-block;
+  transition:border-color .15s, color .15s;
+}
+.key b{color:var(--accent)}
+.key:hover,.key:focus-visible{border-color:var(--accent); color:var(--ink)}
+
+/* ---- problem block ---- */
+article{padding:38px 0 6px; border-bottom:1px solid var(--rule)}
+article:last-of-type{border-bottom:none}
+.head{display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:14px}
+.num{
+  font-family:"IBM Plex Sans",system-ui,sans-serif; font-weight:600; font-size:12px;
+  letter-spacing:.12em; color:var(--surface); background:var(--accent);
+  width:26px; height:26px; border-radius:6px; display:inline-flex;
+  align-items:center; justify-content:center; flex:none;
+}
+.src{
+  font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:12.5px; font-weight:500;
+  letter-spacing:.06em; text-transform:uppercase; color:var(--ink-3);
+}
+.stem{margin:0 0 18px; max-width:66ch}
+.stem p{margin:0 0 14px}
+
+/* ---- choices ---- */
+.choices{
+  display:flex; flex-wrap:wrap; gap:8px 10px; margin:16px 0 0; padding:0; list-style:none;
+}
+.choices li{
+  font-size:15.5px; border:1px solid var(--rule); border-radius:7px;
+  padding:5px 12px; background:var(--surface); color:var(--ink-2);
+  display:flex; align-items:center; gap:7px;
+}
+.choices li.right{border-color:var(--accent); background:var(--accent-soft); color:var(--ink)}
+.tag{
+  font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:11px; font-weight:600;
+  letter-spacing:.08em; color:var(--ink-3);
+}
+.choices li.right .tag{color:var(--accent)}
+
+/* ---- solution ---- */
+.sol{
+  margin:26px 0 4px; background:var(--surface); border:1px solid var(--rule);
+  border-left:3px solid var(--accent); border-radius:0 10px 10px 0;
+  padding:22px 24px 18px; box-shadow:var(--shadow);
+}
+.sol h3{
+  font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:11.5px; font-weight:600;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--accent);
+  margin:0 0 14px;
+}
+.sol p{margin:0 0 13px}
+.sol > :last-child{margin-bottom:0}
+.step{
+  font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:11.5px; font-weight:600;
+  letter-spacing:.09em; text-transform:uppercase; color:var(--ink-3);
+  margin:20px 0 7px;
+}
+.sol ul{margin:0 0 13px; padding-left:20px}
+.sol li{margin-bottom:6px}
+.disp{
+  margin:16px 0; padding:12px 16px; background:var(--surface-2); border-radius:8px;
+  text-align:center; font-size:17px; overflow-x:auto;
+}
+.answer{
+  margin-top:18px; padding-top:14px; border-top:1px solid var(--rule);
+  font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:13px; font-weight:600;
+  letter-spacing:.05em; color:var(--ink-2); display:flex; align-items:center; gap:9px;
+}
+.answer b{
+  background:var(--gold-soft); color:var(--gold); border-radius:6px;
+  padding:3px 10px; font-weight:600;
+}
+
+/* ---- math bits ---- */
+.v{font-style:italic; font-variant-numeric:lining-nums}
+.n{font-variant-numeric:tabular-nums lining-nums}
+.fr{
+  display:inline-flex; flex-direction:column; align-items:center; vertical-align:-.42em;
+  line-height:1.08; font-size:.88em; margin:0 .14em; font-variant-numeric:lining-nums;
+}
+.fr i{font-style:normal; border-bottom:1px solid currentColor; padding:0 .28em}
+.fr u{text-decoration:none; padding:0 .28em}
+
+/* ---- figures ---- */
+figure{margin:20px 0; display:flex; flex-direction:column; align-items:center; gap:9px}
+figure svg{max-width:100%; height:auto}
+figcaption{
+  font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:12.5px; color:var(--ink-3);
+  text-align:center; max-width:52ch;
+}
+.fig-row{display:flex; flex-wrap:wrap; gap:26px; justify-content:center; align-items:flex-end}
+.fig-row figure{margin:0}
+.stroke{stroke:var(--ink); fill:none; stroke-width:1.6}
+.thin{stroke:var(--rule-strong); fill:none; stroke-width:1.3}
+.fill-a{fill:var(--accent-soft); stroke:var(--accent); stroke-width:1.6}
+.glyph-t{fill:none; stroke:var(--accent); stroke-width:2; stroke-linejoin:round}
+.glyph-c{fill:none; stroke:var(--gold); stroke-width:2}
+.lab{
+  fill:var(--ink-2); font-family:"IBM Plex Sans",system-ui,sans-serif;
+  font-size:12px; font-weight:500; text-anchor:middle; dominant-baseline:middle;
+}
+.lab-v{fill:var(--ink-3); font-size:11.5px; font-weight:600}
+.seat-open{fill:var(--surface); stroke:var(--rule-strong); stroke-width:1.5}
+.seat-full{fill:var(--surface-2); stroke:var(--rule-strong); stroke-width:1.5}
+
+/* ---- table ---- */
+.tbl{width:100%; border-collapse:collapse; margin:14px 0; font-size:15px}
+.tbl th,.tbl td{
+  padding:7px 10px; text-align:left; border-bottom:1px solid var(--rule);
+  font-variant-numeric:tabular-nums;
+}
+.tbl th{
+  font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:11px; font-weight:600;
+  letter-spacing:.1em; text-transform:uppercase; color:var(--ink-3);
+}
+.tbl td:first-child{font-weight:600}
+.scroll{overflow-x:auto}
+
+footer{
+  margin-top:52px; padding-top:20px; border-top:1px solid var(--rule);
+  font-family:"IBM Plex Sans",system-ui,sans-serif; font-size:12.5px; color:var(--ink-3);
+}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent); outline-offset:3px; border-radius:4px}
+@media print{
+  body{background:#fff} .sol{box-shadow:none} article{break-inside:avoid}
+}
+</style>
+
+<div class="wrap">
+<header>
+  <p class="eyebrow">Topic-balanced set &middot; Introductory combinatorics</p>
+  <h1>Five AMC 8 Counting Problems</h1>
+  <p class="sub">Five contest problems on counting and probability, each with a complete worked solution. Sources span 2014&ndash;2026.</p>
+  <div class="keyrow">
+    <span class="keylabel">Answer key</span>
+    <a class="key" href="#p1">1 &middot; <b>C</b></a>
+    <a class="key" href="#p2">2 &middot; <b>C</b></a>
+    <a class="key" href="#p3">3 &middot; <b>E</b></a>
+    <a class="key" href="#p4">4 &middot; <b>B</b></a>
+    <a class="key" href="#p5">5 &middot; <b>D</b></a>
+  </div>
+</header>
+
+<!-- ================= PROBLEM 1 ================= -->
+<article id="p1">
+  <div class="head"><span class="num">1</span><span class="src">2024 AMC 8 &middot; Problem 25</span></div>
+  <div class="stem">
+    <p>A small airplane has <span class="n">4</span> rows of seats with <span class="n">3</span> seats in each row. Eight passengers have boarded the plane and are distributed randomly among the seats. A married couple is next to board. What is the probability there will be 2 adjacent seats in the same row for the couple?</p>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 190 240" width="190" height="240" role="img" aria-label="Four rows of three seats each">
+      <g>
+        <rect class="seat-open" x="10" y="10"  width="50" height="42" rx="7"/>
+        <rect class="seat-open" x="70" y="10"  width="50" height="42" rx="7"/>
+        <rect class="seat-open" x="130" y="10" width="50" height="42" rx="7"/>
+        <rect class="seat-open" x="10" y="62"  width="50" height="42" rx="7"/>
+        <rect class="seat-open" x="70" y="62"  width="50" height="42" rx="7"/>
+        <rect class="seat-open" x="130" y="62" width="50" height="42" rx="7"/>
+        <rect class="seat-open" x="10" y="114" width="50" height="42" rx="7"/>
+        <rect class="seat-open" x="70" y="114" width="50" height="42" rx="7"/>
+        <rect class="seat-open" x="130" y="114" width="50" height="42" rx="7"/>
+        <rect class="seat-open" x="10" y="166" width="50" height="42" rx="7"/>
+        <rect class="seat-open" x="70" y="166" width="50" height="42" rx="7"/>
+        <rect class="seat-open" x="130" y="166" width="50" height="42" rx="7"/>
+      </g>
+      <text class="lab" x="95" y="228">4 rows &times; 3 seats = 12 seats</text>
+    </svg>
+  </figure>
+
+  <ul class="choices">
+    <li><span class="tag">A</span><span class="fr"><i>8</i><u>15</u></span></li>
+    <li><span class="tag">B</span><span class="fr"><i>32</i><u>55</u></span></li>
+    <li class="right"><span class="tag">C</span><span class="fr"><i>20</i><u>33</u></span></li>
+    <li><span class="tag">D</span><span class="fr"><i>34</i><u>55</u></span></li>
+    <li><span class="tag">E</span><span class="fr"><i>8</i><u>11</u></span></li>
+  </ul>
+
+  <div class="sol">
+    <h3>Solution</h3>
+    <p>Track the <em>empty</em> seats instead of the passengers. There are <span class="n">12</span> seats and <span class="n">8</span> passengers, so exactly <span class="n">4</span> seats stay empty, and every one of the</p>
+    <div class="disp"><span class="n">C(12, 4) = 495</span></div>
+    <p>sets of four empty seats is equally likely. The couple can be seated exactly when some row contains two <em>adjacent</em> empty seats.</p>
+
+    <p class="step">Count the bad cases instead</p>
+    <p>A row has three seats, left&ndash;middle&ndash;right, so the only non-adjacent pair inside a row is {left,&nbsp;right}. That means a single row can hold at most 2 empty seats without an adjacent pair, and there is only one way to do it.</p>
+
+    <figure>
+      <svg viewBox="0 0 340 92" width="340" height="92" role="img" aria-label="Allowed empty-seat patterns within one row">
+        <g>
+          <rect class="seat-full" x="6" y="10" width="28" height="26" rx="5"/>
+          <rect class="seat-full" x="38" y="10" width="28" height="26" rx="5"/>
+          <rect class="seat-full" x="70" y="10" width="28" height="26" rx="5"/>
+          <text class="lab" x="52" y="52">0 empty</text>
+          <text class="lab lab-v" x="52" y="72">1 way</text>
+        </g>
+        <g>
+          <rect class="seat-open" x="126" y="10" width="28" height="26" rx="5"/>
+          <rect class="seat-full" x="158" y="10" width="28" height="26" rx="5"/>
+          <rect class="seat-full" x="190" y="10" width="28" height="26" rx="5"/>
+          <text class="lab" x="172" y="52">1 empty</text>
+          <text class="lab lab-v" x="172" y="72">3 ways</text>
+        </g>
+        <g>
+          <rect class="seat-open" x="246" y="10" width="28" height="26" rx="5"/>
+          <rect class="seat-full" x="278" y="10" width="28" height="26" rx="5"/>
+          <rect class="seat-open" x="310" y="10" width="28" height="26" rx="5"/>
+          <text class="lab" x="292" y="52">2 empty</text>
+          <text class="lab lab-v" x="292" y="72">1 way</text>
+        </g>
+      </svg>
+      <figcaption>Light squares are empty seats. Per row, these are the only ways to leave seats empty with no adjacent empty pair.</figcaption>
+    </figure>
+
+    <p>Now split the 4 empty seats among the 4 rows, with no row taking 3 and no row taking an adjacent pair:</p>
+    <div class="scroll"><table class="tbl">
+      <tr><th>Empties per row</th><th>Choose the rows</th><th>Ways inside rows</th><th>Total</th></tr>
+      <tr><td>2, 2, 0, 0</td><td>C(4,&nbsp;2) = 6</td><td>1 &times; 1</td><td>6</td></tr>
+      <tr><td>2, 1, 1, 0</td><td>4 &times; C(3,&nbsp;2) = 12</td><td>1 &times; 3 &times; 3</td><td>108</td></tr>
+      <tr><td>1, 1, 1, 1</td><td>1</td><td>3<sup>4</sup></td><td>81</td></tr>
+      <tr><td colspan="3">Bad configurations</td><td>195</td></tr>
+    </table></div>
+
+    <p class="step">Finish</p>
+    <div class="disp"><span class="n">P = 1 &minus;</span> <span class="fr"><i>195</i><u>495</u></span> <span class="n">=</span> <span class="fr"><i>300</i><u>495</u></span> <span class="n">=</span> <span class="fr"><i>20</i><u>33</u></span></div>
+    <div class="answer">Answer <b>(C)&nbsp; 20/33</b></div>
+  </div>
+</article>
+
+<!-- ================= PROBLEM 2 ================= -->
+<article id="p2">
+  <div class="head"><span class="num">2</span><span class="src">2019 AMC 8 &middot; Problem 19</span></div>
+  <div class="stem">
+    <p>In a tournament there are six teams that play each other twice. A team earns <span class="n">3</span> points for a win, <span class="n">1</span> point for a draw, and <span class="n">0</span> points for a loss. After all the games have been played it turns out that the top three teams earned the same number of total points. What is the greatest possible number of total points for each of the top three teams?</p>
+  </div>
+
+  <ul class="choices">
+    <li><span class="tag">A</span><span class="n">22</span></li>
+    <li><span class="tag">B</span><span class="n">23</span></li>
+    <li class="right"><span class="tag">C</span><span class="n">24</span></li>
+    <li><span class="tag">D</span><span class="n">26</span></li>
+    <li><span class="tag">E</span><span class="n">30</span></li>
+  </ul>
+
+  <div class="sol">
+    <h3>Solution</h3>
+    <p>Call the top three teams <span class="v">A</span>, <span class="v">B</span>, <span class="v">C</span> and the others <span class="v">D</span>, <span class="v">E</span>, <span class="v">F</span>. Split every game by who plays in it:</p>
+    <ul>
+      <li><b>Inside the top three:</b> <span class="n">2 &times; C(3,&nbsp;2) = 6</span> games.</li>
+      <li><b>Top three vs. bottom three:</b> <span class="n">3 &times; 3 &times; 2 = 18</span> games.</li>
+      <li><b>Inside the bottom three:</b> 6 games &mdash; these give the top three nothing.</li>
+    </ul>
+
+    <p class="step">Upper bound</p>
+    <p>A cross game can give the top three at most <span class="n">3</span> points (a win). An internal game distributes <span class="n">3</span> points if decisive and only <span class="n">2</span> if drawn, so at most <span class="n">3</span> as well. Hence the three teams together earn at most</p>
+    <div class="disp"><span class="n">18 &times; 3 + 6 &times; 3 = 54 + 18 = 72</span></div>
+    <p>and since their totals are equal, each earns at most <span class="n">72 &divide; 3 = 24</span>.</p>
+
+    <p class="step">Achieving 24</p>
+    <p>Both inequalities must be tight, so <span class="v">A</span>, <span class="v">B</span>, <span class="v">C</span> win all 18 cross games &mdash; <span class="n">6</span> wins, <span class="n">18</span> points each &mdash; and none of the 6 internal games may be a draw. Each team plays <span class="n">4</span> internal games and needs <span class="n">24 &minus; 18 = 6</span> more points, i.e. exactly <span class="n">2</span> wins and <span class="n">2</span> losses. A cycle does it:</p>
+    <div class="disp"><span class="v">A</span> beats <span class="v">B</span> twice &nbsp;&middot;&nbsp; <span class="v">B</span> beats <span class="v">C</span> twice &nbsp;&middot;&nbsp; <span class="v">C</span> beats <span class="v">A</span> twice</div>
+    <p>Every top team finishes with <span class="n">18 + 6 = 24</span> points, and the bottom three top out at <span class="n">9</span>&nbsp;points, so the standings really do have these three on top.</p>
+    <div class="answer">Answer <b>(C)&nbsp; 24</b></div>
+  </div>
+</article>
+
+<!-- ================= PROBLEM 3 ================= -->
+<article id="p3">
+  <div class="head"><span class="num">3</span><span class="src">2026 AMC 8 &middot; Problem 25</span></div>
+  <div class="stem">
+    <p>In an equiangular hexagon, all interior angles measure <span class="n">120&deg;</span>. An example of such a hexagon with side lengths <span class="n">2</span>, <span class="n">3</span>, <span class="n">1</span>, <span class="n">3</span>, <span class="n">2</span>, and <span class="n">2</span> is shown below, inscribed in equilateral triangle <span class="v">ABC</span>. Consider all equiangular hexagons with positive integer side lengths that can be inscribed in <span class="v">&#9651;ABC</span>, with all six vertices on the sides of the triangle. What is the total number of such hexagons? Hexagons that differ only by a rotation or a reflection are considered the same.</p>
+  </div>
+
+  <figure>
+    <svg viewBox="-34 -26 308 268" width="300" height="262" role="img" aria-label="Equiangular hexagon with sides 3,1,3,2,2,2 inscribed in equilateral triangle ABC">
+      <polygon class="thin" points="0,207.8 240,207.8 120,0"/>
+      <polygon class="fill-a" points="80,69.3 20,173.2 40,207.8 160,207.8 200,138.6 160,69.3"/>
+      <g fill="var(--ink-2)">
+        <circle cx="80" cy="69.3" r="2.6"/><circle cx="20" cy="173.2" r="2.6"/>
+        <circle cx="40" cy="207.8" r="2.6"/><circle cx="160" cy="207.8" r="2.6"/>
+        <circle cx="200" cy="138.6" r="2.6"/><circle cx="160" cy="69.3" r="2.6"/>
+      </g>
+      <text class="lab lab-v" x="30" y="115">3</text>
+      <text class="lab lab-v" x="12" y="200">1</text>
+      <text class="lab lab-v" x="96" y="224">3</text>
+      <text class="lab lab-v" x="198" y="184">2</text>
+      <text class="lab lab-v" x="198" y="94">2</text>
+      <text class="lab lab-v" x="120" y="52">2</text>
+      <text class="lab" x="-14" y="216">A</text>
+      <text class="lab" x="254" y="216">B</text>
+      <text class="lab" x="120" y="-14">C</text>
+    </svg>
+    <figcaption>The hexagon is the triangle with three small equilateral corners removed &mdash; here of sizes 1 at <span class="v">A</span>, 2 at <span class="v">B</span>, and 2 at <span class="v">C</span>.</figcaption>
+  </figure>
+
+  <ul class="choices">
+    <li><span class="tag">A</span><span class="n">4</span></li>
+    <li><span class="tag">B</span><span class="n">5</span></li>
+    <li><span class="tag">C</span><span class="n">6</span></li>
+    <li><span class="tag">D</span><span class="n">7</span></li>
+    <li class="right"><span class="tag">E</span><span class="n">8</span></li>
+  </ul>
+
+  <div class="sol">
+    <h3>Solution</h3>
+    <p class="step">1. Every such hexagon is a corner-cut</p>
+    <p>An equiangular hexagon is convex, so no line meets it in three vertices. With six vertices on three sides, each side of <span class="v">&#9651;ABC</span> carries exactly two of them, and consecutive vertices on the same side are joined by a hexagon edge lying along that side. What is left over at each corner of the triangle is a small equilateral triangle. So the hexagon is determined by the three corner cuts</p>
+    <div class="disp"><span class="v">p</span> at <span class="v">A</span>, &nbsp; <span class="v">q</span> at <span class="v">B</span>, &nbsp; <span class="v">r</span> at <span class="v">C</span></div>
+    <p>and, going around, its six sides are</p>
+    <div class="disp"><span class="v">p</span>, &nbsp;<span class="v">s</span>&minus;<span class="v">p</span>&minus;<span class="v">q</span>, &nbsp;<span class="v">q</span>, &nbsp;<span class="v">s</span>&minus;<span class="v">q</span>&minus;<span class="v">r</span>, &nbsp;<span class="v">r</span>, &nbsp;<span class="v">s</span>&minus;<span class="v">r</span>&minus;<span class="v">p</span></div>
+    <p>where <span class="v">s</span> is the side length of the triangle.</p>
+
+    <p class="step">2. Read <span class="v">s</span> off the example</p>
+    <p>In the picture the cuts are <span class="v">p</span>&nbsp;=&nbsp;1, <span class="v">q</span>&nbsp;=&nbsp;2, <span class="v">r</span>&nbsp;=&nbsp;2, and the hexagon side lying on <span class="v">AB</span> is <span class="n">3</span>. So <span class="n">s &minus; 1 &minus; 2 = 3</span>, giving</p>
+    <div class="disp"><span class="v">s</span> <span class="n">= 6</span></div>
+    <p>Checking the other two sides: <span class="n">6 &minus; 2 &minus; 1 = 3</span> and <span class="n">6 &minus; 2 &minus; 2 = 2</span>, matching the figure.</p>
+
+    <p class="step">3. Turn it into a counting condition</p>
+    <p>All six sides must be positive integers, so <span class="v">p</span>, <span class="v">q</span>, <span class="v">r</span> are positive integers and each of <span class="n">6&minus;</span><span class="v">p</span><span class="n">&minus;</span><span class="v">q</span>, <span class="n">6&minus;</span><span class="v">q</span><span class="n">&minus;</span><span class="v">r</span>, <span class="n">6&minus;</span><span class="v">r</span><span class="n">&minus;</span><span class="v">p</span> is at least <span class="n">1</span>. Equivalently:</p>
+    <div class="disp"><span class="v">p</span>, <span class="v">q</span>, <span class="v">r</span> <span class="n">&ge; 1</span> &nbsp; and &nbsp; every pairwise sum <span class="n">&le; 5</span></div>
+    <p>Rotating or reflecting the triangle permutes <span class="v">p</span>, <span class="v">q</span>, <span class="v">r</span> in every possible way, so two triples give the same hexagon exactly when they are the same multiset. Count unordered triples with <span class="v">p</span> &le; <span class="v">q</span> &le; <span class="v">r</span>, where the binding constraint is <span class="v">q</span> + <span class="v">r</span> &le; 5:</p>
+    <div class="scroll"><table class="tbl">
+      <tr><th>Cuts {p, q, r}</th><th>Hexagon side lengths</th></tr>
+      <tr><td>{1,&nbsp;1,&nbsp;1}</td><td>1, 4, 1, 4, 1, 4</td></tr>
+      <tr><td>{1,&nbsp;1,&nbsp;2}</td><td>1, 4, 1, 3, 2, 3</td></tr>
+      <tr><td>{1,&nbsp;1,&nbsp;3}</td><td>1, 4, 1, 2, 3, 2</td></tr>
+      <tr><td>{1,&nbsp;1,&nbsp;4}</td><td>1, 4, 1, 1, 4, 1</td></tr>
+      <tr><td>{1,&nbsp;2,&nbsp;2}</td><td>1, 3, 2, 2, 2, 3</td></tr>
+      <tr><td>{1,&nbsp;2,&nbsp;3}</td><td>1, 3, 2, 1, 3, 2</td></tr>
+      <tr><td>{2,&nbsp;2,&nbsp;2}</td><td>2, 2, 2, 2, 2, 2</td></tr>
+      <tr><td>{2,&nbsp;2,&nbsp;3}</td><td>2, 2, 2, 1, 3, 1</td></tr>
+    </table></div>
+    <p>Anything else fails: {1,&nbsp;3,&nbsp;3}, {1,&nbsp;2,&nbsp;4}, {2,&nbsp;2,&nbsp;4} and the rest all have a pairwise sum of at least <span class="n">6</span>, which would collapse a side to length <span class="n">0</span>.</p>
+    <div class="answer">Answer <b>(E)&nbsp; 8</b></div>
+  </div>
+</article>
+
+<!-- ================= PROBLEM 4 ================= -->
+<article id="p4">
+  <div class="head"><span class="num">4</span><span class="src">2014 AMC 8 &middot; Problem 12</span></div>
+  <div class="stem">
+    <p>A magazine printed photos of three celebrities along with three photos of the celebrities as babies. The baby pictures did not identify the celebrities. Readers were asked to match each celebrity with the correct baby pictures. What is the probability that a reader guessing at random will match all three correctly?</p>
+  </div>
+
+  <ul class="choices">
+    <li><span class="tag">A</span><span class="fr"><i>1</i><u>9</u></span></li>
+    <li class="right"><span class="tag">B</span><span class="fr"><i>1</i><u>6</u></span></li>
+    <li><span class="tag">C</span><span class="fr"><i>1</i><u>4</u></span></li>
+    <li><span class="tag">D</span><span class="fr"><i>1</i><u>3</u></span></li>
+    <li><span class="tag">E</span><span class="fr"><i>1</i><u>2</u></span></li>
+  </ul>
+
+  <div class="sol">
+    <h3>Solution</h3>
+    <p>A guess is an assignment of the three baby photos to the three celebrities, i.e. a permutation of three objects. There are</p>
+    <div class="disp"><span class="n">3! = 3 &times; 2 &times; 1 = 6</span></div>
+    <p>equally likely guesses, and exactly one of them is entirely correct.</p>
+    <p>Sequentially: the first celebrity's baby photo is matched with probability <span class="fr"><i>1</i><u>3</u></span>, then the second with probability <span class="fr"><i>1</i><u>2</u></span> from the two remaining, and the third is then forced. That gives <span class="fr"><i>1</i><u>3</u></span> &times; <span class="fr"><i>1</i><u>2</u></span> &times; <span class="n">1 =</span> <span class="fr"><i>1</i><u>6</u></span>.</p>
+    <div class="answer">Answer <b>(B)&nbsp; 1/6</b></div>
+  </div>
+</article>
+
+<!-- ================= PROBLEM 5 ================= -->
+<article id="p5">
+  <div class="head"><span class="num">5</span><span class="src">2022 AMC 8 &middot; Problem 23</span></div>
+  <div class="stem">
+    <p>A <span class="v">&#9651;</span> or <span class="v">&#9711;</span> is placed in each of the nine squares in a <span class="n">3</span>-by-<span class="n">3</span> grid. Shown below is a sample configuration with three <span class="v">&#9651;</span>s in a line. How many configurations will have three <span class="v">&#9651;</span>s in a line and three <span class="v">&#9711;</span>s in a line?</p>
+  </div>
+
+  <figure>
+    <svg viewBox="0 0 150 150" width="150" height="150" role="img" aria-label="Sample 3 by 3 grid with triangles and circles">
+      <g class="thin">
+        <rect x="1" y="1" width="148" height="148"/>
+        <line x1="50" y1="1" x2="50" y2="149"/><line x1="99" y1="1" x2="99" y2="149"/>
+        <line x1="1" y1="50" x2="149" y2="50"/><line x1="1" y1="99" x2="149" y2="99"/>
+      </g>
+      <g class="glyph-t">
+        <polygon points="25.5,16 34,32 17,32"/>
+        <polygon points="25.5,65 34,81 17,81"/>
+        <polygon points="25.5,114 34,130 17,130"/>
+        <polygon points="123.5,16 132,32 115,32"/>
+        <polygon points="123.5,65 132,81 115,81"/>
+        <polygon points="74.5,114 83,130 66,130"/>
+      </g>
+      <g class="glyph-c">
+        <circle cx="74.5" cy="25" r="9"/>
+        <circle cx="74.5" cy="74" r="9"/>
+        <circle cx="123.5" cy="123" r="9"/>
+      </g>
+    </svg>
+    <figcaption>The left column is three <span class="v">&#9651;</span>s in a line; this sample has no line of three <span class="v">&#9711;</span>s.</figcaption>
+  </figure>
+
+  <ul class="choices">
+    <li><span class="tag">A</span><span class="n">39</span></li>
+    <li><span class="tag">B</span><span class="n">42</span></li>
+    <li><span class="tag">C</span><span class="n">78</span></li>
+    <li class="right"><span class="tag">D</span><span class="n">84</span></li>
+    <li><span class="tag">E</span><span class="n">96</span></li>
+  </ul>
+
+  <div class="sol">
+    <h3>Solution</h3>
+    <p class="step">1. The two lines must be two rows, or two columns</p>
+    <p>There are <span class="n">8</span> lines: <span class="n">3</span> rows, <span class="n">3</span> columns, <span class="n">2</span> diagonals. An all-<span class="v">&#9651;</span> line and an all-<span class="v">&#9711;</span> line can share no square, so they must be <em>disjoint</em>. Checking the eight lines: a row and a column always cross, each diagonal crosses every row, every column, and the other diagonal. The only disjoint pairs are <b>two rows</b> or <b>two columns</b>.</p>
+    <p>A configuration cannot be of both kinds at once: an all-<span class="v">&#9651;</span> row meets every column, so no column could be all <span class="v">&#9711;</span>. The two cases are mutually exclusive, and by symmetry they have the same count.</p>
+
+    <p class="step">2. Count the &ldquo;two rows&rdquo; case</p>
+    <p>Describe the grid by its three rows; each row is one of <span class="n">2<sup>3</sup> = 8</span> patterns, so there are <span class="n">8<sup>3</sup> = 512</span> grids. We need at least one row equal to <span class="v">&#9651;&#9651;&#9651;</span> and at least one equal to <span class="v">&#9711;&#9711;&#9711;</span>. By inclusion&ndash;exclusion, subtracting the grids missing one of them and adding back those missing both:</p>
+    <div class="disp"><span class="n">512 &minus; 7<sup>3</sup> &minus; 7<sup>3</sup> + 6<sup>3</sup> = 512 &minus; 343 &minus; 343 + 216 = 42</span></div>
+
+    <p class="step">3. Double it</p>
+    <p>The column case contributes another <span class="n">42</span>, and nothing is counted twice:</p>
+    <div class="disp"><span class="n">42 + 42 = 84</span></div>
+    <div class="answer">Answer <b>(D)&nbsp; 84</b></div>
+  </div>
+</article>
+
+<footer>
+  Problems from the AMC 8 (2014, 2019, 2022, 2024, 2026). Solutions worked out and verified by exhaustive computation for problems 1, 3, and 5.
+</footer>
+</div>
