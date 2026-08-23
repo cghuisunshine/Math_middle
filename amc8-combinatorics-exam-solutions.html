@@ -321,17 +321,36 @@
     </figure>
 
     <ol class="steps">
-      <li><strong>Find the pairs of lines that can carry the two colours.</strong> There are 8 lines in total: 3 rows, 3 columns, 2 diagonals. A △-line and an ○-line must be disjoint, since a shared square cannot hold both symbols.</li>
+      <li><strong>Find the pairs of lines that can carry the two colours.</strong> Call a row, column, or diagonal <em>solid</em> when all 3 of its squares contain the same symbol. A valid pair consists of one solid △-line and one solid ○-line. The two lines must be disjoint, since a shared square cannot hold both symbols. There are 8 lines in total: 3 rows, 3 columns, and 2 diagonals.</li>
       <li><strong>Only parallel rows or parallel columns are disjoint.</strong> A row and a column always cross; every diagonal crosses every row, every column, and the other diagonal.
         <div class="math">C(3,2) rows + C(3,2) columns = 3 + 3 = 6 unordered pairs</div>
       </li>
-      <li><strong>Assign colours and fill the rest.</strong> For each pair, either line can be the △ one, and the 3 leftover squares are unrestricted.
+      <li><strong>Assign symbols and fill the rest.</strong> For each pair, either line can be the △-line, and each of the 3 leftover squares can independently be △ or ○.
         <div class="math">6 × 2 × 2³ = 12 × 8 = 96</div>
+        This calculation counts choices of valid pairs, not distinct completed grids. Therefore, a grid is counted once for every valid pair it contains.
       </li>
-      <li><strong>Correct the double counting.</strong> A grid gets counted once per valid pair it contains. Grids with all three rows solid — coloured with both symbols present — have a 2-to-1 colour split. For example, if the rows are △△△, △△△, and ○○○, then the ○ row forms a valid pair with either △ row. Thus the grid contains two valid pairs and was counted twice. The same reasoning applies to three solid columns.
-        <div class="math">2³ − 2 = 6 such row-grids, and 6 more column-grids</div>
+      <li><strong>See where double counting occurs.</strong> Suppose all 3 rows are solid and both symbols appear:
+        <div class="math wrapok">R₁: △ △ △<br>R₂: △ △ △<br>R₃: ○ ○ ○</div>
+        This grid contains two valid pairs: (R₁, R₃) and (R₂, R₃). The ○-row can pair with either △-row, so the same completed grid appears twice in the count of 96.
       </li>
-      <li><strong>Subtract one copy of each.</strong>
+      <li><strong>Count the double-counted row-grids.</strong> If all 3 rows are solid and both symbols appear, one symbol must occupy 2 rows and the other must occupy 1 row. The minority-symbol row forms a valid pair with each of the two majority-symbol rows, so every such grid contains exactly two valid pairs.
+        <p>Each solid row independently has 2 choices: all △ or all ○. This gives 2³ = 8 row patterns. Exclude the all-△ and all-○ patterns because they do not contain both symbols.</p>
+        <table class="mini">
+          <thead><tr><th>Symbols on R₁, R₂, R₃</th><th>Both present?</th></tr></thead>
+          <tbody>
+            <tr><td>△ △ △</td><td>No</td></tr>
+            <tr><td>△ △ ○</td><td>Yes</td></tr>
+            <tr><td>△ ○ △</td><td>Yes</td></tr>
+            <tr><td>○ △ △</td><td>Yes</td></tr>
+            <tr><td>△ ○ ○</td><td>Yes</td></tr>
+            <tr><td>○ △ ○</td><td>Yes</td></tr>
+            <tr><td>○ ○ △</td><td>Yes</td></tr>
+            <tr><td>○ ○ ○</td><td>No</td></tr>
+          </tbody>
+        </table>
+        <div class="math">2³ − 2 = 8 − 2 = 6 double-counted row-grids</div>
+      </li>
+      <li><strong>Subtract only the extra copies.</strong> The same reasoning gives 6 double-counted column-grids. Each exceptional grid was counted twice but should be counted once, so subtract one extra copy of each—not both copies. It is like counting a student once for each club they belong to: a student in two clubs needs one duplicate removed.
         <div class="math">96 − 6 − 6 = 84</div>
       </li>
     </ol>
