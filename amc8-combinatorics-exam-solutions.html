@@ -258,9 +258,11 @@
         <div class="math">x + y ≤ 5,&nbsp; y + z ≤ 5,&nbsp; z + x ≤ 5</div>
       </li>
       <li><strong>Handle the symmetry.</strong> Rotating the hexagon cycles (x, y, z) and reflecting it reverses the order, so two triples give the same hexagon exactly when they are the same multiset. Count unordered triples with x ≤ y ≤ z.</li>
-      <li><strong>List them.</strong>
-        <div class="math wrapok">{1,1,1} {1,1,2} {1,1,3} {1,1,4} {1,2,2} {1,2,3} {2,2,2} {2,2,3}</div>
-        Rejected: {1,1,5}, {1,2,4}, {1,3,3}, {2,2,4}, {2,3,3} and anything larger, since some pair sums past 5 and a hexagon side would collapse to 0 or less.
+      <li><strong>Count by how many cut sizes are equal.</strong>
+        <p><strong>All three equal:</strong> (1, 1, 1) and (2, 2, 2) work. The next possibility, (3, 3, 3), is degenerate: three sides collapse to length 0, leaving a triangle.</p>
+        <p><strong>Exactly two equal:</strong> the possibilities are (1, 1, 2), (1, 1, 3), (1, 1, 4), (1, 2, 2), and (2, 2, 3).</p>
+        <p><strong>All three different:</strong> the only possibility is (1, 2, 3).</p>
+        <div class="math">2 + 5 + 1 = 8</div>
       </li>
     </ol>
 
