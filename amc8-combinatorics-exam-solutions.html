@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>5-Question Introductory Combinatorics Exam — Worked Solutions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#E4E8EC;
+    --card:#FFFFFF;
+    --ink:#0F1720;
+    --ink-soft:#4A5866;
+    --rule:#CBD4DC;
+    --pick:#D6214B;
+    --keep:#B7C2CC;
+    --mark:#0B6E6E;
+    --wash:#F4F7F9;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    font-size:17px;line-height:1.6;
+  }
+  .wrap{max-width:820px;margin:0 auto;padding:0 20px}
+
+  header.hero{padding:64px 0 40px;border-bottom:1px solid var(--rule)}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--ink-soft)}
+  h1{font-family:"Fraunces",Georgia,serif;font-weight:600;
+     font-size:clamp(32px,6vw,50px);line-height:1.05;letter-spacing:-.02em;margin:14px 0 18px}
+  .lede{max-width:54ch;color:var(--ink-soft);margin:0}
+
+  /* answer key */
+  .key{padding:32px 0 8px}
+  .key h2{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--ink-soft);font-weight:500;margin:0 0 14px}
+  .key ul{list-style:none;margin:0;padding:0;display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule)}
+  .key li{background:var(--card)}
+  .key a{display:flex;justify-content:space-between;gap:16px;align-items:baseline;
+    padding:11px 16px;text-decoration:none;color:var(--ink)}
+  .key a:hover{background:var(--wash)}
+  .key .n{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--ink-soft)}
+  .key .v{font-family:"IBM Plex Mono",monospace;font-weight:500}
+  .key .v span{color:var(--pick)}
+
+  main{padding:28px 0 0}
+  .problem{background:var(--card);border:1px solid var(--rule);margin:22px 0;padding:28px 26px 26px}
+  .src{font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.08em;color:var(--pick)}
+  .src small{display:block;letter-spacing:.14em;text-transform:uppercase;font-size:11px;color:var(--ink-soft);margin-top:3px}
+  .statement{font-family:"Fraunces",Georgia,serif;font-size:20px;line-height:1.45;margin:14px 0 0}
+
+  .choices{display:flex;flex-wrap:wrap;gap:8px;margin:18px 0 0;padding:0;list-style:none}
+  .choices li{
+    font-family:"IBM Plex Mono",monospace;font-size:14px;
+    border:1px solid var(--rule);padding:6px 12px;color:var(--ink-soft);background:var(--wash);
+  }
+  .choices li.correct{border-color:var(--pick);color:var(--ink);background:#fff;
+    box-shadow:inset 0 -3px 0 var(--pick);font-weight:500}
+  .choices .lab{color:var(--pick);margin-right:6px}
+  .choices li:not(.correct) .lab{color:var(--keep)}
+
+  figure.viz{margin:24px 0 4px;padding:0}
+  figcaption{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-soft);
+    margin-top:12px;line-height:1.5;max-width:56ch}
+
+  /* seat map */
+  .plane{display:grid;grid-template-columns:repeat(3,34px);gap:8px}
+  .seat{height:28px;border:1.5px solid var(--keep);border-radius:7px;background:var(--wash)}
+  .seat.taken{background:var(--keep);border-color:var(--keep)}
+  .seat.pair{border-color:var(--pick);background:#fff;box-shadow:inset 0 0 0 2px rgba(214,33,75,.15)}
+
+  /* tic-tac-toe grid */
+  .grid3{display:grid;grid-template-columns:repeat(3,46px);grid-auto-rows:46px;
+    border:1.5px solid var(--ink);width:max-content}
+  .cell{border:1px solid var(--rule);display:flex;align-items:center;justify-content:center}
+  .cell svg{display:block}
+  .cell.free{color:var(--keep);font-family:"IBM Plex Mono",monospace;font-size:15px}
+
+  ol.steps{counter-reset:s;list-style:none;margin:22px 0 0;padding:0;border-top:1px solid var(--rule)}
+  ol.steps > li{counter-increment:s;position:relative;padding:16px 0 16px 40px;border-bottom:1px solid var(--rule)}
+  ol.steps > li::before{content:counter(s);position:absolute;left:0;top:16px;
+    font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-soft);
+    width:24px;height:24px;line-height:24px;text-align:center;border:1px solid var(--rule);border-radius:50%}
+  .math{font-family:"IBM Plex Mono",monospace;font-size:15px;background:var(--wash);
+    border:1px solid var(--rule);padding:10px 14px;margin-top:10px;overflow-x:auto;white-space:nowrap}
+  .math.wrapok{white-space:normal;line-height:1.9}
+  table.mini{border-collapse:collapse;margin-top:12px;font-family:"IBM Plex Mono",monospace;font-size:13.5px}
+  table.mini th,table.mini td{border:1px solid var(--rule);padding:6px 12px;text-align:left}
+  table.mini th{background:var(--wash);font-weight:500;color:var(--ink-soft)}
+
+  .answer{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;margin-top:20px;padding-top:4px}
+  .answer .lbl{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--ink-soft)}
+  .answer .val{font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:30px;
+    letter-spacing:-.01em;border-bottom:3px solid var(--pick);line-height:1.1}
+  .note{margin-top:16px;font-size:15px;color:var(--ink-soft);border-left:2px solid var(--rule);padding-left:14px}
+
+  footer{border-top:1px solid var(--rule);margin-top:40px;padding:24px 0 56px;
+    font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-soft)}
+  a:focus-visible{outline:2px solid var(--pick);outline-offset:2px}
+
+  .reveal{opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+  @media (max-width:520px){
+    body{font-size:16px}.problem{padding:22px 18px}.statement{font-size:18px}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">5-question exam · Introductory combinatorics</div>
+    <h1>Five AMC 8 counting<br>problems, worked out</h1>
+    <p class="lede">Each one is really a question about what to count first. Pick the right thing to count and the arithmetic is small enough to do by hand.</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="key">
+    <h2>Answer key</h2>
+    <ul>
+      <li><a href="#q1"><span class="n">1 · 2024 AMC 8 #25</span><span class="v"><span>(C)</span> 20/33</span></a></li>
+      <li><a href="#q2"><span class="n">2 · 2019 AMC 8 #19</span><span class="v"><span>(C)</span> 24</span></a></li>
+      <li><a href="#q3"><span class="n">3 · 2026 AMC 8 #25</span><span class="v"><span>(E)</span> 8</span></a></li>
+      <li><a href="#q4"><span class="n">4 · 2014 AMC 8 #12</span><span class="v"><span>(B)</span> 1/6</span></a></li>
+      <li><a href="#q5"><span class="n">5 · 2022 AMC 8 #23</span><span class="v"><span>(D)</span> 84</span></a></li>
+    </ul>
+  </section>
+
+<main>
+
+  <!-- Q1 -->
+  <article class="problem reveal" id="q1">
+    <div class="src">Question 1 — 2024 AMC 8 Problem 25<small>Introductory combinatorics</small></div>
+    <p class="statement">A small airplane has 4 rows of seats with 3 seats in each row. Eight passengers have boarded the plane and are distributed randomly among the seats. A married couple is next to board. What is the probability there will be 2 adjacent seats in the same row for the couple?</p>
+    <ul class="choices">
+      <li><span class="lab">(A)</span>8/15</li>
+      <li><span class="lab">(B)</span>32/55</li>
+      <li class="correct"><span class="lab">(C)</span>20/33</li>
+      <li><span class="lab">(D)</span>34/55</li>
+      <li><span class="lab">(E)</span>8/11</li>
+    </ul>
+
+    <figure class="viz">
+      <div class="plane" aria-hidden="true">
+        <div class="seat taken"></div><div class="seat taken"></div><div class="seat taken"></div>
+        <div class="seat pair"></div><div class="seat pair"></div><div class="seat taken"></div>
+        <div class="seat taken"></div><div class="seat taken"></div><div class="seat"></div>
+        <div class="seat taken"></div><div class="seat taken"></div><div class="seat"></div>
+      </div>
+      <figcaption>One of the 495 possible empty-seat patterns. Grey = occupied, white = empty. This one works: row 2 has two empty seats side by side.</figcaption>
+    </figure>
+
+    <ol class="steps">
+      <li><strong>Track the empty seats, not the passengers.</strong> There are 12 seats and 8 passengers, so exactly 4 seats stay empty, and every set of 4 empty seats is equally likely.
+        <div class="math">C(12,4) = 495 equally likely outcomes</div>
+      </li>
+      <li><strong>Translate the condition.</strong> A row of 3 has two adjacent pairs: seats 1–2 and seats 2–3. The couple can sit together exactly when some row has two empty seats that are next to each other.</li>
+      <li><strong>Count the complement</strong> — no row contains two adjacent empty seats. Within a single row, the legal empty-sets are: none (1 way), any one seat (3 ways), or the two outer seats (1 way). Three empties in a row is never legal.
+        <table class="mini">
+          <tr><th>Empties in a row</th><th>0</th><th>1</th><th>2</th><th>3</th></tr>
+          <tr><th>Legal patterns</th><td>1</td><td>3</td><td>1</td><td>0</td></tr>
+        </table>
+      </li>
+      <li><strong>Spread 4 empties over 4 rows</strong> using only those legal patterns, splitting into cases by how many rows hold 2, 1, or 0 empty seats.
+        <div class="math wrapok">2+2+0+0 : C(4,2) × 1 × 1 = 6<br>
+        2+1+1+0 : 4 × C(3,2) × 1 × 3 × 3 = 108<br>
+        1+1+1+1 : 3 × 3 × 3 × 3 = 81<br>
+        total = 6 + 108 + 81 = 195</div>
+      </li>
+      <li><strong>Subtract from 1.</strong>
+        <div class="math">1 − 195/495 = 300/495 = 20/33</div>
+      </li>
+    </ol>
+
+    <div class="answer"><span class="lbl">Answer</span><span class="val">(C) 20/33</span></div>
+    <p class="note">Counting the complement is the move here. Counting "at least one good row" directly forces you into inclusion–exclusion over four overlapping rows.</p>
+  </article>
+
+  <!-- Q2 -->
+  <article class="problem reveal" id="q2">
+    <div class="src">Question 2 — 2019 AMC 8 Problem 19<small>Introductory combinatorics</small></div>
+    <p class="statement">In a tournament there are six teams that play each other twice. A team earns 3 points for a win, 1 point for a draw, and 0 points for a loss. After all the games have been played it turns out that the top three teams earned the same number of total points. What is the greatest possible number of total points for each of the top three teams?</p>
+    <ul class="choices">
+      <li><span class="lab">(A)</span>22</li>
+      <li><span class="lab">(B)</span>23</li>
+      <li class="correct"><span class="lab">(C)</span>24</li>
+      <li><span class="lab">(D)</span>26</li>
+      <li><span class="lab">(E)</span>30</li>
+    </ul>
+
+    <ol class="steps">
+      <li><strong>Bound the points pool of the top three</strong>, then divide by 3. Sort the games into two kinds: those played inside the top three, and those against the bottom three.</li>
+      <li><strong>Games inside the top three.</strong> Three pairs, played twice each, is 6 games. Each game hands out 3 points if it is decisive and only 2 if it is drawn, so this bucket contributes at most
+        <div class="math">6 × 3 = 18 points</div>
+      </li>
+      <li><strong>Games against the bottom three.</strong> Each of the 3 top teams plays each of the 3 bottom teams twice: 3 × 3 × 2 = 18 games. At best the top teams win them all.
+        <div class="math">18 × 3 = 54 points</div>
+      </li>
+      <li><strong>Divide the ceiling three ways.</strong>
+        <div class="math">(18 + 54) ÷ 3 = 72 ÷ 3 = 24 points each</div>
+      </li>
+      <li><strong>Show 24 is reachable.</strong> Let the top three sweep all 6 of their games against the bottom three — that is 18 points apiece. Inside the top three, run a cycle: A beats B twice, B beats C twice, C beats A twice. Each team goes 2–2 there for 6 more points.
+        <div class="math">18 + 6 = 24 for each of A, B, C — a three-way tie</div>
+      </li>
+    </ol>
+
+    <div class="answer"><span class="lbl">Answer</span><span class="val">(C) 24</span></div>
+    <p class="note">The cycle matters. If the top three drew with each other instead, the internal bucket would drop to 12 points and the tie would only reach 22.</p>
+  </article>
+
+  <!-- Q3 -->
+  <article class="problem reveal" id="q3">
+    <div class="src">Question 3 — 2026 AMC 8 Problem 25<small>Introductory combinatorics</small></div>
+    <p class="statement">In an equiangular hexagon, all interior angles measure 120°. An example of such a hexagon with side lengths 2, 3, 1, 3, 2, and 2 is shown below, inscribed in equilateral triangle <em>ABC</em>. Consider all equiangular hexagons with positive integer side lengths that can be inscribed in △<em>ABC</em>, with all six vertices on the sides of the triangle. What is the total number of such hexagons? Hexagons that differ only by a rotation or a reflection are considered the same.</p>
+    <ul class="choices">
+      <li><span class="lab">(A)</span>4</li>
+      <li><span class="lab">(B)</span>5</li>
+      <li><span class="lab">(C)</span>6</li>
+      <li><span class="lab">(D)</span>7</li>
+      <li class="correct"><span class="lab">(E)</span>8</li>
+    </ul>
+
+    <figure class="viz">
+      <svg width="220" height="185" viewBox="0 0 210 180" role="img" aria-label="Equilateral triangle ABC with the example hexagon inscribed, corner triangles of sides 1, 2 and 2 cut off">
+        <polygon points="10,165 190,165 100,9" fill="none" stroke="#B7C2CC" stroke-width="1.5"/>
+        <polygon points="40,165 130,165 160,113 130,61 70,61 25,139"
+                 fill="rgba(214,33,75,.08)" stroke="#D6214B" stroke-width="2"/>
+        <g fill="#0F1720" font-family="IBM Plex Mono, monospace" font-size="11">
+          <text x="4" y="178">A</text><text x="186" y="178">B</text><text x="96" y="8">C</text>
+          <text x="82" y="178">3</text><text x="149" y="147">2</text><text x="150" y="88">2</text>
+          <text x="96" y="55">2</text><text x="40" y="99">3</text><text x="22" y="163">1</text>
+        </g>
+        <g fill="#D6214B">
+          <circle cx="40" cy="165" r="3"/><circle cx="130" cy="165" r="3"/><circle cx="160" cy="113" r="3"/>
+          <circle cx="130" cy="61" r="3"/><circle cx="70" cy="61" r="3"/><circle cx="25" cy="139" r="3"/>
+        </g>
+      </svg>
+      <figcaption>The hexagon is what is left after slicing a small equilateral triangle off each corner. Here the slices have sides 1, 2, 2 and the triangle has side 6.</figcaption>
+    </figure>
+
+    <ol class="steps">
+      <li><strong>Describe the hexagon by the three corners you cut off.</strong> Because every angle is 120°, each corner cut is itself an equilateral triangle. Call the cut sizes <em>x</em>, <em>y</em>, <em>z</em> at corners A, B, C. The hexagon's six sides, in order, are
+        <div class="math">x, s−x−y, y, s−y−z, z, s−z−x &nbsp; (s = side of △ABC)</div>
+      </li>
+      <li><strong>Find <em>s</em> from the example.</strong> Its cuts are 1, 2, 2, and each side of the triangle is a cut, a hexagon side, then another cut.
+        <div class="math">s = 1 + 3 + 2 = 6</div>
+      </li>
+      <li><strong>Turn the conditions into inequalities.</strong> All six side lengths must be positive integers, so <em>x</em>, <em>y</em>, <em>z</em> ≥ 1 and each remaining piece is at least 1:
+        <div class="math">x + y ≤ 5,&nbsp; y + z ≤ 5,&nbsp; z + x ≤ 5</div>
+      </li>
+      <li><strong>Handle the symmetry.</strong> Rotating the hexagon cycles (x, y, z) and reflecting it reverses the order, so two triples give the same hexagon exactly when they are the same multiset. Count unordered triples with x ≤ y ≤ z.</li>
+      <li><strong>List them.</strong>
+        <div class="math wrapok">{1,1,1} {1,1,2} {1,1,3} {1,1,4} {1,2,2} {1,2,3} {2,2,2} {2,2,3}</div>
+        Rejected: {1,1,5}, {1,2,4}, {1,3,3}, {2,2,4}, {2,3,3} and anything larger, since some pair sums past 5 and a hexagon side would collapse to 0 or less.
+      </li>
+    </ol>
+
+    <div class="answer"><span class="lbl">Answer</span><span class="val">(E) 8</span></div>
+    <p class="note">{2,2,2} is the regular hexagon with all sides 2, and {1,1,4} gives sides 1, 4, 1, 1, 4, 1 — the flattest one that still fits.</p>
+  </article>
+
+  <!-- Q4 -->
+  <article class="problem reveal" id="q4">
+    <div class="src">Question 4 — 2014 AMC 8 Problem 12<small>Introductory combinatorics</small></div>
+    <p class="statement">A magazine printed photos of three celebrities along with three photos of the celebrities as babies. The baby pictures did not identify the celebrities. Readers were asked to match each celebrity with the correct baby picture. What is the probability that a reader guessing at random will match all three correctly?</p>
+    <ul class="choices">
+      <li><span class="lab">(A)</span>1/9</li>
+      <li class="correct"><span class="lab">(B)</span>1/6</li>
+      <li><span class="lab">(C)</span>1/4</li>
+      <li><span class="lab">(D)</span>1/3</li>
+      <li><span class="lab">(E)</span>1/2</li>
+    </ul>
+
+    <ol class="steps">
+      <li><strong>A guess is an assignment of the three baby photos to the three celebrities</strong> — that is, an ordering of the three photos.
+        <div class="math">3! = 3 × 2 × 1 = 6 possible guesses</div>
+      </li>
+      <li><strong>Exactly one of those six is completely right</strong>, and a random guesser picks each equally often.
+        <div class="math">1 ÷ 6 = 1/6</div>
+      </li>
+    </ol>
+
+    <div class="answer"><span class="lbl">Answer</span><span class="val">(B) 1/6</span></div>
+    <p class="note">Sequential version, same result: 1/3 chance on the first celebrity, then 1/2 on the second, and the third is forced. (1/3)(1/2)(1) = 1/6.</p>
+  </article>
+
+  <!-- Q5 -->
+  <article class="problem reveal" id="q5">
+    <div class="src">Question 5 — 2022 AMC 8 Problem 23<small>Introductory combinatorics</small></div>
+    <p class="statement">A △ or ○ is placed in each of the nine squares in a 3-by-3 grid. How many configurations will have three △s in a line and three ○s in a line?</p>
+    <ul class="choices">
+      <li><span class="lab">(A)</span>39</li>
+      <li><span class="lab">(B)</span>42</li>
+      <li><span class="lab">(C)</span>78</li>
+      <li class="correct"><span class="lab">(D)</span>84</li>
+      <li><span class="lab">(E)</span>96</li>
+    </ul>
+
+    <figure class="viz">
+      <div class="grid3" aria-hidden="true">
+        <div class="cell"><svg width="22" height="20"><polygon points="11,2 21,18 1,18" fill="none" stroke="#D6214B" stroke-width="2"/></svg></div>
+        <div class="cell"><svg width="22" height="20"><polygon points="11,2 21,18 1,18" fill="none" stroke="#D6214B" stroke-width="2"/></svg></div>
+        <div class="cell"><svg width="22" height="20"><polygon points="11,2 21,18 1,18" fill="none" stroke="#D6214B" stroke-width="2"/></svg></div>
+        <div class="cell free">?</div><div class="cell free">?</div><div class="cell free">?</div>
+        <div class="cell"><svg width="22" height="20"><circle cx="11" cy="10" r="8" fill="none" stroke="#0B6E6E" stroke-width="2"/></svg></div>
+        <div class="cell"><svg width="22" height="20"><circle cx="11" cy="10" r="8" fill="none" stroke="#0B6E6E" stroke-width="2"/></svg></div>
+        <div class="cell"><svg width="22" height="20"><circle cx="11" cy="10" r="8" fill="none" stroke="#0B6E6E" stroke-width="2"/></svg></div>
+      </div>
+      <figcaption>The two lines can never share a square, so they lock in 6 cells and leave 3 free.</figcaption>
+    </figure>
+
+    <ol class="steps">
+      <li><strong>Find the pairs of lines that can carry the two colours.</strong> There are 8 lines in total: 3 rows, 3 columns, 2 diagonals. A △-line and an ○-line must be disjoint, since a shared square cannot hold both symbols.</li>
+      <li><strong>Only parallel rows or parallel columns are disjoint.</strong> A row and a column always cross; every diagonal crosses every row, every column, and the other diagonal.
+        <div class="math">C(3,2) rows + C(3,2) columns = 3 + 3 = 6 unordered pairs</div>
+      </li>
+      <li><strong>Assign colours and fill the rest.</strong> For each pair, either line can be the △ one, and the 3 leftover squares are unrestricted.
+        <div class="math">6 × 2 × 2³ = 12 × 8 = 96</div>
+      </li>
+      <li><strong>Correct the double counting.</strong> A grid gets counted once per valid pair it contains. Grids with all three rows solid — coloured with both symbols present — contain two valid pairs, so each was counted twice.
+        <div class="math">2³ − 2 = 6 such row-grids, and 6 more column-grids</div>
+      </li>
+      <li><strong>Subtract one copy of each.</strong>
+        <div class="math">96 − 6 − 6 = 84</div>
+      </li>
+    </ol>
+
+    <div class="answer"><span class="lbl">Answer</span><span class="val">(D) 84</span></div>
+    <p class="note">No other grid is double counted: a solid row of △ and a solid column of ○ would clash where they meet, so mixed row-and-column overcounts cannot happen.</p>
+  </article>
+
+</main>
+</div>
+
+<footer>
+  <div class="wrap">Five-question introductory combinatorics exam, worked step by step. Answers: 20/33 · 24 · 8 · 1/6 · 84.</div>
+</footer>
+
+<script>
+if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(function (n) { obs.observe(n); });
+} else {
+  document.querySelectorAll('.reveal').forEach(function (n) { n.classList.add('in'); });
+}
+</script>
+</body>
+</html>
