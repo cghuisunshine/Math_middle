@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Section 4.2 Exercises — Committees &amp; Combinations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#E4E8EC;
+    --card:#FFFFFF;
+    --ink:#0F1720;
+    --ink-soft:#4A5866;
+    --rule:#CBD4DC;
+    --pick:#D6214B;
+    --keep:#B7C2CC;
+    --mark:#0B6E6E;
+    --maxw:820px;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    font-size:17px;
+    line-height:1.6;
+  }
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 20px}
+
+  /* ---------- hero ---------- */
+  header.hero{padding:64px 0 40px;border-bottom:1px solid var(--rule)}
+  .eyebrow{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ink-soft);
+  }
+  h1{
+    font-family:"Fraunces",Georgia,serif;
+    font-weight:600;
+    font-size:clamp(34px,6.5vw,52px);
+    line-height:1.05;
+    letter-spacing:-.02em;
+    margin:14px 0 18px;
+  }
+  .lede{max-width:52ch;color:var(--ink-soft);margin:0}
+  .thesis{
+    margin:34px 0 0;
+    padding:22px 24px;
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-left:4px solid var(--pick);
+    font-family:"IBM Plex Mono",monospace;
+    font-size:15px;
+    overflow-x:auto;
+  }
+  .thesis .row{white-space:nowrap;display:flex;align-items:baseline;gap:12px;padding:4px 0}
+  .thesis .tag{color:var(--ink-soft);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+  .thesis strong{color:var(--pick);font-weight:500}
+
+  /* ---------- answer index ---------- */
+  .index{padding:32px 0 8px}
+  .index h2{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+    color:var(--ink-soft);font-weight:500;margin:0 0 14px;
+  }
+  .index ul{list-style:none;margin:0;padding:0;display:grid;gap:1px;background:var(--rule);border:1px solid var(--rule)}
+  .index li{background:var(--card)}
+  .index a{
+    display:flex;justify-content:space-between;gap:16px;align-items:baseline;
+    padding:11px 16px;text-decoration:none;color:var(--ink);
+  }
+  .index a:hover{background:#F4F7F9}
+  .index .n{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--ink-soft)}
+  .index .v{font-family:"IBM Plex Mono",monospace;font-weight:500}
+
+  /* ---------- problems ---------- */
+  main{padding:28px 0 0}
+  .problem{
+    background:var(--card);
+    border:1px solid var(--rule);
+    margin:22px 0;
+    padding:28px 26px 26px;
+  }
+  .problem > .num{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:13px;letter-spacing:.1em;
+    color:var(--pick);
+  }
+  .statement{
+    font-family:"Fraunces",Georgia,serif;
+    font-size:20px;line-height:1.45;
+    margin:10px 0 0;
+  }
+  .statement em{font-style:italic}
+  .part{margin-top:10px;font-family:"Fraunces",Georgia,serif;font-size:19px}
+  .part b{font-family:"IBM Plex Mono",monospace;font-size:14px;color:var(--ink-soft);margin-right:6px}
+
+  /* ---------- dot diagram (signature) ---------- */
+  figure.viz{margin:24px 0 4px;padding:0}
+  .dots{display:flex;flex-wrap:wrap;gap:6px;max-width:520px}
+  .dots.tight{gap:4px}
+  .dot{width:13px;height:13px;border-radius:50%;background:var(--keep);flex:0 0 auto}
+  .dots.tight .dot{width:9px;height:9px}
+  .dot.pick{background:var(--pick)}
+  .dot.mark{background:var(--mark)}
+  .group{margin-bottom:12px}
+  .group .glabel{
+    font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--ink-soft);margin-bottom:7px;
+  }
+  figcaption{
+    font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-soft);
+    margin-top:12px;line-height:1.5;
+  }
+
+  /* ---------- steps ---------- */
+  ol.steps{
+    counter-reset:s;list-style:none;margin:22px 0 0;padding:0;
+    border-top:1px solid var(--rule);
+  }
+  ol.steps > li{
+    counter-increment:s;
+    position:relative;
+    padding:16px 0 16px 40px;
+    border-bottom:1px solid var(--rule);
+  }
+  ol.steps > li::before{
+    content:counter(s);
+    position:absolute;left:0;top:16px;
+    font-family:"IBM Plex Mono",monospace;font-size:12px;
+    color:var(--ink-soft);
+    width:24px;height:24px;line-height:24px;text-align:center;
+    border:1px solid var(--rule);border-radius:50%;
+  }
+  .math{
+    font-family:"IBM Plex Mono",monospace;
+    font-size:15px;
+    background:#F4F7F9;
+    border:1px solid var(--rule);
+    padding:10px 14px;
+    margin-top:10px;
+    overflow-x:auto;
+    white-space:nowrap;
+  }
+  .answer{
+    display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;
+    margin-top:20px;padding-top:4px;
+  }
+  .answer .lbl{
+    font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--ink-soft);
+  }
+  .answer .val{
+    font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:30px;
+    letter-spacing:-.01em;
+    border-bottom:3px solid var(--pick);
+    line-height:1.1;
+  }
+  .note{
+    margin-top:16px;font-size:15px;color:var(--ink-soft);
+    border-left:2px solid var(--rule);padding-left:14px;
+  }
+
+  svg.octagon{display:block}
+
+  footer{
+    border-top:1px solid var(--rule);
+    margin-top:40px;padding:24px 0 56px;
+    font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-soft);
+  }
+
+  a:focus-visible,li a:focus-visible{outline:2px solid var(--pick);outline-offset:2px}
+
+  .reveal{opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease}
+  .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none}
+  }
+  @media (max-width:520px){
+    body{font-size:16px}
+    .problem{padding:22px 18px}
+    .statement{font-size:18px}
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Introduction to Counting &amp; Probability · Section 4.2</div>
+    <h1>Committees, lineups,<br>and lottery balls</h1>
+    <p class="lede">Six exercises, worked one step at a time. Every one of them turns on a single question: does the order of what I pick change the answer?</p>
+
+    <div class="thesis">
+      <div class="row"><span class="tag">order matters</span> 9 × 8 × 7 × 6 = 3,024</div>
+      <div class="row"><span class="tag">divide by</span> 4! = 24 &nbsp;<strong>← the 4! rearrangements of one same group</strong></div>
+      <div class="row"><span class="tag">order ignored</span> C(9,4) = 126</div>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <section class="index">
+    <h2>Answers at a glance</h2>
+    <ul>
+      <li><a href="#p1"><span class="n">4.2.1 (a) / (b)</span><span class="v">3,024 / 126</span></a></li>
+      <li><a href="#p2"><span class="n">4.2.2</span><span class="v">12,650</span></a></li>
+      <li><a href="#p3"><span class="n">4.2.3</span><span class="v">45,045</span></a></li>
+      <li><a href="#p4"><span class="n">4.2.4</span><span class="v">56</span></a></li>
+      <li><a href="#p5"><span class="n">4.2.5</span><span class="v">25,972,650</span></a></li>
+      <li><a href="#p6"><span class="n">4.2.6</span><span class="v">771,400</span></a></li>
+    </ul>
+  </section>
+
+<main>
+
+  <!-- 4.2.1 -->
+  <article class="problem reveal" id="p1">
+    <div class="num">4.2.1</div>
+    <p class="part"><b>(a)</b>In how many ways can I choose 4 different officers from a club of 9 people?</p>
+    <p class="part"><b>(b)</b>In how many ways can I choose a 4-person committee from a club of 9 people?</p>
+
+    <figure class="viz">
+      <div class="dots" data-total="9" data-pick="4"></div>
+      <figcaption>9 members, 4 selected. In (a) the four red slots carry different titles; in (b) they are indistinguishable.</figcaption>
+    </figure>
+
+    <ol class="steps">
+      <li><strong>(a) Officers are distinct roles</strong>, so president-then-treasurer is a different outcome from treasurer-then-president. Order matters — this is a permutation.
+        <div class="math">9 × 8 × 7 × 6 = 3,024</div>
+      </li>
+      <li><strong>(b) A committee has no roles.</strong> The same four people can be listed in 4! = 24 orders, and the count above treats each of those as separate.</li>
+      <li>Divide the ordered count by 4! to collapse each group down to one.
+        <div class="math">3,024 ÷ 24 = 126 &nbsp;&nbsp;=&nbsp;&nbsp; C(9,4)</div>
+      </li>
+    </ol>
+
+    <div class="answer"><span class="lbl">Answer (a)</span><span class="val">3,024</span></div>
+    <div class="answer"><span class="lbl">Answer (b)</span><span class="val">126</span></div>
+  </article>
+
+  <!-- 4.2.2 -->
+  <article class="problem reveal" id="p2">
+    <div class="num">4.2.2</div>
+    <p class="statement">My club has 25 members. In how many ways can I choose members to form a 4-person executive committee?</p>
+
+    <figure class="viz">
+      <div class="dots tight" data-total="25" data-pick="4"></div>
+      <figcaption>25 members, any 4 of them. No titles, so no ordering.</figcaption>
+    </figure>
+
+    <ol class="steps">
+      <li>A committee is unordered, so this is C(25,4).</li>
+      <li>Count the ordered choices first: 25 people for the first seat, then 24, 23, 22.
+        <div class="math">25 × 24 × 23 × 22 = 303,600</div>
+      </li>
+      <li>Each committee was counted 4! = 24 times, once per arrangement. Divide it out.
+        <div class="math">303,600 ÷ 24 = 12,650</div>
+      </li>
+    </ol>
+
+    <div class="answer"><span class="lbl">Answer</span><span class="val">12,650</span></div>
+  </article>
+
+  <!-- 4.2.3 -->
+  <article class="problem reveal" id="p3">
+    <div class="num">4.2.3</div>
+    <p class="statement">Our water polo team has 15 members. I want to choose a starting lineup consisting of 7 players, one of whom will be the goalie (the other six positions are interchangeable). In how many ways can I choose my starting lineup?</p>
+
+    <figure class="viz">
+      <div class="dots" data-total="15" data-pick="6" data-mark="1"></div>
+      <figcaption>Teal = the goalie, a named position. Red = the six interchangeable field players.</figcaption>
+    </figure>
+
+    <ol class="steps">
+      <li><strong>Split the lineup into its two kinds of slots.</strong> The goalie is a distinct role; the other six are not.</li>
+      <li>Pick the goalie first — any of the 15 players.
+        <div class="math">15 choices</div>
+      </li>
+      <li>From the 14 players left, pick 6 field players. Order among them does not matter.
+        <div class="math">C(14,6) = (14×13×12×11×10×9) ÷ 6! = 2,162,160 ÷ 720 = 3,003</div>
+      </li>
+      <li>The two choices are independent, so multiply.
+        <div class="math">15 × 3,003 = 45,045</div>
+      </li>
+    </ol>
+
+    <div class="answer"><span class="lbl">Answer</span><span class="val">45,045</span></div>
+    <p class="note">Choosing the goalie first is what keeps this clean. Choosing all 7 first and then naming a goalie gives C(15,7) × 7 = 6,435 × 7 = 45,045 — the same number, as it must.</p>
+  </article>
+
+  <!-- 4.2.4 -->
+  <article class="problem reveal" id="p4">
+    <div class="num">4.2.4</div>
+    <p class="statement">Consider a regular octagon. How many triangles can be formed whose vertices are the vertices of the octagon?</p>
+
+    <figure class="viz">
+      <svg class="octagon" width="132" height="132" viewBox="0 0 120 120" role="img" aria-label="A regular octagon with one triangle drawn between three of its vertices">
+        <polygon points="60,12 93.9,26.1 108,60 93.9,93.9 60,108 26.1,93.9 12,60 26.1,26.1"
+                 fill="none" stroke="#B7C2CC" stroke-width="1.5"/>
+        <polygon points="60,12 108,60 26.1,93.9" fill="rgba(214,33,75,.10)" stroke="#D6214B" stroke-width="2"/>
+        <g fill="#B7C2CC">
+          <circle cx="93.9" cy="26.1" r="4"/><circle cx="93.9" cy="93.9" r="4"/>
+          <circle cx="60" cy="108" r="4"/><circle cx="12" cy="60" r="4"/>
+          <circle cx="26.1" cy="26.1" r="4"/>
+        </g>
+        <g fill="#D6214B">
+          <circle cx="60" cy="12" r="5"/><circle cx="108" cy="60" r="5"/><circle cx="26.1" cy="93.9" r="5"/>
+        </g>
+      </svg>
+      <figcaption>One triangle is one choice of 3 vertices out of 8.</figcaption>
+    </figure>
+
+    <ol class="steps">
+      <li><strong>A triangle is determined by its three corners</strong>, and listing those corners in a different order gives the same triangle. So this is a combination, not a permutation.</li>
+      <li>No three vertices of a regular octagon lie on a line, so every choice of 3 really does form a triangle — nothing to subtract.</li>
+      <li>Compute C(8,3).
+        <div class="math">C(8,3) = (8 × 7 × 6) ÷ 3! = 336 ÷ 6 = 56</div>
+      </li>
+    </ol>
+
+    <div class="answer"><span class="lbl">Answer</span><span class="val">56</span></div>
+  </article>
+
+  <!-- 4.2.5 -->
+  <article class="problem reveal" id="p5">
+    <div class="num">4.2.5</div>
+    <p class="statement">The Senate of Aopslandia has 100 members, consisting of 55 members of the Red Party and 45 members of the Blue Party. In how many ways can I choose a 5-person committee consisting of 3 Reds and 2 Blues?</p>
+
+    <figure class="viz">
+      <div class="group">
+        <div class="glabel">55 Reds — choose 3</div>
+        <div class="dots tight" data-total="55" data-pick="3"></div>
+      </div>
+      <div class="group">
+        <div class="glabel">45 Blues — choose 2</div>
+        <div class="dots tight" data-total="45" data-pick="2" data-color="mark"></div>
+      </div>
+      <figcaption>Two independent selections, made from two separate pools.</figcaption>
+    </figure>
+
+    <ol class="steps">
+      <li><strong>The party quota splits the problem in two.</strong> The Reds chosen have no effect on which Blues are available, so handle each pool on its own and multiply at the end.</li>
+      <li>Choose 3 of the 55 Reds.
+        <div class="math">C(55,3) = (55 × 54 × 53) ÷ 6 = 157,410 ÷ 6 = 26,235</div>
+      </li>
+      <li>Choose 2 of the 45 Blues.
+        <div class="math">C(45,2) = (45 × 44) ÷ 2 = 1,980 ÷ 2 = 990</div>
+      </li>
+      <li>Multiply the two independent counts.
+        <div class="math">26,235 × 990 = 25,972,650</div>
+      </li>
+    </ol>
+
+    <div class="answer"><span class="lbl">Answer</span><span class="val">25,972,650</span></div>
+  </article>
+
+  <!-- 4.2.6 -->
+  <article class="problem reveal" id="p6">
+    <div class="num">4.2.6</div>
+    <p class="statement">My state's lottery has 30 white balls numbered from 1 through 30, and 20 red balls numbered from 1 through 20. In each lottery drawing, 3 of the white balls and 2 of the red balls are drawn. To win, you must match all 3 white balls and both red balls, without regard to the order in which they were drawn. How many possible different combinations may be drawn?</p>
+
+    <figure class="viz">
+      <div class="group">
+        <div class="glabel">30 white balls — draw 3</div>
+        <div class="dots tight" data-total="30" data-pick="3"></div>
+      </div>
+      <div class="group">
+        <div class="glabel">20 red balls — draw 2</div>
+        <div class="dots tight" data-total="20" data-pick="2" data-color="mark"></div>
+      </div>
+      <figcaption>Same structure as the Senate committee: two pools, drawn independently.</figcaption>
+    </figure>
+
+    <ol class="steps">
+      <li><strong>Order is explicitly ignored</strong>, so each colour is a combination.</li>
+      <li>Choose 3 white balls of 30.
+        <div class="math">C(30,3) = (30 × 29 × 28) ÷ 6 = 24,360 ÷ 6 = 4,060</div>
+      </li>
+      <li>Choose 2 red balls of 20.
+        <div class="math">C(20,2) = (20 × 19) ÷ 2 = 380 ÷ 2 = 190</div>
+      </li>
+      <li>Multiply — every white triple can pair with every red pair.
+        <div class="math">4,060 × 190 = 771,400</div>
+      </li>
+    </ol>
+
+    <div class="answer"><span class="lbl">Answer</span><span class="val">771,400</span></div>
+    <p class="note">A single ticket wins with probability 1 in 771,400 — considerably better odds than the 1-in-12-million lottery worked through in Problem 4.3.</p>
+  </article>
+
+</main>
+</div>
+
+<footer>
+  <div class="wrap">Exercises 4.2.1–4.2.6, worked from the section on combinations. Red marks the objects chosen; teal marks a named role or a second pool.</div>
+</footer>
+
+<script>
+document.querySelectorAll('.dots').forEach(function (el) {
+  var total = +el.dataset.total;
+  var pick  = +el.dataset.pick || 0;
+  var mark  = +el.dataset.mark || 0;
+  var cls   = el.dataset.color === 'mark' ? 'mark' : 'pick';
+  var frag  = document.createDocumentFragment();
+  for (var i = 0; i < total; i++) {
+    var d = document.createElement('span');
+    d.className = 'dot';
+    if (i < mark) d.className += ' mark';
+    else if (i < mark + pick) d.className += ' ' + cls;
+    frag.appendChild(d);
+  }
+  el.appendChild(frag);
+  el.setAttribute('role', 'img');
+  el.setAttribute('aria-label', pick + mark + ' of ' + total + ' objects selected');
+});
+
+if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
+  var obs = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); }
+    });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.reveal').forEach(function (n) { obs.observe(n); });
+} else {
+  document.querySelectorAll('.reveal').forEach(function (n) { n.classList.add('in'); });
+}
+</script>
+</body>
+</html>
