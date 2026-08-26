@@ -104,6 +104,45 @@
     font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-soft)}
   a:focus-visible{outline:2px solid var(--pick);outline-offset:2px}
 
+  /* ---------- Q1 animated walkthrough ---------- */
+  .anim{border:1px solid var(--rule);background:var(--card);margin:24px 0 4px;padding:0}
+  .anim .bar{display:flex;justify-content:space-between;align-items:center;gap:12px;
+    padding:9px 14px;border-bottom:1px solid var(--rule);background:var(--wash);
+    font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-soft)}
+  .anim .stage{display:flex;gap:26px;padding:22px 20px;align-items:flex-start;flex-wrap:wrap}
+  .planewrap{display:flex;flex-direction:column;gap:9px}
+  .prow{display:flex;align-items:center;gap:9px}
+  .rlab{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--keep);width:18px}
+  .anim .seat{width:44px;height:32px;border:1.5px solid var(--keep);border-radius:8px;background:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-family:"IBM Plex Mono",monospace;font-size:14px;color:var(--pick);
+    transition:background .35s ease,border-color .35s ease,opacity .35s ease,box-shadow .35s ease}
+  .anim .seat.taken{background:var(--keep);border-color:var(--keep)}
+  .anim .seat.pair{border-color:var(--pick);box-shadow:inset 0 0 0 2px rgba(214,33,75,.18)}
+  .anim .seat.dim{opacity:.14}
+  .anim .side{flex:1 1 270px;min-width:240px}
+  .anim .stitle{font-family:"Fraunces",Georgia,serif;font-size:19px;line-height:1.3;margin:0 0 8px}
+  .anim .stext{margin:0;font-size:15.5px;color:var(--ink-soft)}
+  .anim .math{white-space:normal;line-height:1.9}
+  .badge{display:inline-block;margin-top:12px;font-family:"IBM Plex Mono",monospace;font-size:12px;
+    padding:4px 11px;border:1px solid var(--rule);border-radius:999px;color:var(--ink-soft)}
+  .badge.ok{color:var(--pick);border-color:var(--pick)}
+  .badge.bad{color:var(--mark);border-color:var(--mark)}
+  .badge.hide{display:none}
+  .anim .ctl{display:flex;align-items:center;gap:8px;padding:10px 14px;
+    border-top:1px solid var(--rule);background:var(--wash)}
+  .anim button{font-family:"IBM Plex Mono",monospace;font-size:12px;background:#fff;color:var(--ink);
+    border:1px solid var(--rule);padding:6px 12px;cursor:pointer;border-radius:2px}
+  .anim button:hover{border-color:var(--ink-soft)}
+  .dots{display:flex;gap:6px;margin-left:auto}
+  .dots button{width:9px;height:9px;padding:0;border-radius:50%;background:var(--keep);border:none}
+  .dots button.on{background:var(--pick)}
+  @media (max-width:520px){
+    .anim .stage{gap:16px;padding:16px 14px}
+    .anim .seat{width:38px;height:28px}
+  }
+
   .reveal{opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease}
   .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
@@ -149,14 +188,27 @@
       <li><span class="lab">(E)</span>8/11</li>
     </ul>
 
-    <figure class="viz">
-      <div class="plane" aria-hidden="true">
-        <div class="seat taken"></div><div class="seat taken"></div><div class="seat taken"></div>
-        <div class="seat pair"></div><div class="seat pair"></div><div class="seat taken"></div>
-        <div class="seat taken"></div><div class="seat taken"></div><div class="seat"></div>
-        <div class="seat taken"></div><div class="seat taken"></div><div class="seat"></div>
+    <figure class="viz anim" id="q1anim">
+      <div class="bar">
+        <span id="q1count">Step 1 / 9</span>
+        <span>Animated walkthrough</span>
       </div>
-      <figcaption>One of the 495 possible empty-seat patterns. Grey = occupied, white = empty. This one works: row 2 has two empty seats side by side.</figcaption>
+      <div class="stage">
+        <div class="planewrap" id="q1seats" aria-hidden="true"></div>
+        <div class="side">
+          <p class="stitle" id="q1title"></p>
+          <p class="stext" id="q1text"></p>
+          <div class="math" id="q1math"></div>
+          <span class="badge hide" id="q1badge"></span>
+        </div>
+      </div>
+      <div class="ctl">
+        <button type="button" id="q1prev" aria-label="Previous step">◀ Prev</button>
+        <button type="button" id="q1play" aria-label="Play or pause">❚❚ Pause</button>
+        <button type="button" id="q1next" aria-label="Next step">Next ▶</button>
+        <span class="dots" id="q1dots"></span>
+      </div>
+      <figcaption>Grey = occupied, white = empty, red outline = where the couple could sit. The animation walks the whole argument: sample the 4 empty seats, test adjacency, then count the patterns that fail.</figcaption>
     </figure>
 
     <ol class="steps">
@@ -367,6 +419,236 @@
 </footer>
 
 <script>
+/* ---------- Question 1: animated walkthrough ---------- */
+(function () {
+  var host = document.getElementById('q1seats');
+  if (!host) return;
+
+  var seats = [];
+  for (var r = 0; r < 4; r++) {
+    var row = document.createElement('div');
+    row.className = 'prow';
+    var lab = document.createElement('span');
+    lab.className = 'rlab';
+    lab.textContent = 'R' + (r + 1);
+    row.appendChild(lab);
+    for (var c = 0; c < 3; c++) {
+      var s = document.createElement('div');
+      s.className = 'seat';
+      row.appendChild(s);
+      seats.push(s);
+    }
+    host.appendChild(row);
+  }
+
+  var ALL = [0,1,2,3,4,5,6,7,8,9,10,11];
+  var ROW3 = [3,4,5,6,7,8,9,10,11];   /* rows 2-4, dimmed in the single-row scene */
+
+  function randomEmpty() {
+    var a = ALL.slice(), i, j, t;
+    for (i = a.length - 1; i > 0; i--) {
+      j = Math.floor(Math.random() * (i + 1));
+      t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return { e: a.slice(0, 4).sort(function (x, y) { return x - y; }) };
+  }
+
+  var SCENES = [
+    {
+      t: 'Track the empty seats, not the passengers',
+      x: '12 seats, 8 passengers, seated at random. However they land, exactly 4 seats stay empty — and every set of 4 empty seats is equally likely.',
+      m: 'C(12,4) = 495 equally likely outcomes',
+      f: [randomEmpty, randomEmpty, randomEmpty, randomEmpty, randomEmpty],
+      ms: 950
+    },
+    {
+      t: 'What "sitting together" means',
+      x: 'A row of 3 contains two adjacent pairs: seats 1–2 and seats 2–3. The couple fits exactly when both seats of some pair are empty.',
+      m: '4 rows × 2 pairs = 8 spots the couple could take',
+      f: [
+        { e: ALL, p: [0,1] }, { e: ALL, p: [1,2] },
+        { e: ALL, p: [3,4] }, { e: ALL, p: [4,5] },
+        { e: ALL, p: [6,7] }, { e: ALL, p: [7,8] },
+        { e: ALL, p: [9,10] }, { e: ALL, p: [10,11] }
+      ],
+      ms: 550
+    },
+    {
+      t: 'Patterns that work',
+      x: 'Some row has two empty seats side by side, so the couple boards and sits together.',
+      m: 'these are the outcomes we want to count',
+      f: [
+        { e: [3,4,8,11], p: [3,4], b: 'ok' },
+        { e: [0,1,5,9],  p: [0,1], b: 'ok' },
+        { e: [2,6,7,10], p: [6,7], b: 'ok' }
+      ],
+      ms: 1500
+    },
+    {
+      t: 'Patterns that fail',
+      x: 'Four seats are empty here too, but no two of them are neighbours in a row. The couple is split up. These are the ones we will count instead — the complement.',
+      m: 'counting the complement beats inclusion–exclusion over 4 overlapping rows',
+      f: [
+        { e: [0,2,4,9],  b: 'bad' },
+        { e: [1,4,7,10], b: 'bad' },
+        { e: [0,2,6,8],  b: 'bad' }
+      ],
+      ms: 1500
+    },
+    {
+      t: 'The rule inside a single row',
+      x: 'Look at one row on its own. The legal empty-sets are: nothing, any one seat, or the two outer seats. Two neighbours or all three are out.',
+      m: '0 empties → 1 way · 1 empty → 3 ways · 2 empties → 1 way (outer) · 3 empties → 0 ways',
+      ok: '✓ legal row — no two empties touch',
+      no: '✗ illegal — neighbours are empty',
+      f: [
+        { e: [],     d: ROW3, b: 'ok'  },
+        { e: [0],    d: ROW3, b: 'ok'  },
+        { e: [1],    d: ROW3, b: 'ok'  },
+        { e: [2],    d: ROW3, b: 'ok'  },
+        { e: [0,2],  d: ROW3, b: 'ok'  },
+        { e: [0,1],  d: ROW3, p: [0,1], b: 'bad' },
+        { e: [1,2],  d: ROW3, p: [1,2], b: 'bad' },
+        { e: [0,1,2],d: ROW3, p: [0,1], b: 'bad' }
+      ],
+      ms: 1000
+    },
+    {
+      t: 'Case 1 — two rows hold two empties each',
+      x: 'Each of those two rows must use its outer pair; the other two rows stay full. Only the choice of rows is free.',
+      m: '2+2+0+0 : C(4,2) × 1 × 1 = 6',
+      f: [
+        { e: [0,2,3,5],  b: 'bad' },
+        { e: [0,2,6,8],  b: 'bad' },
+        { e: [3,5,9,11], b: 'bad' },
+        { e: [6,8,9,11], b: 'bad' }
+      ],
+      ms: 1150
+    },
+    {
+      t: 'Case 2 — one row holds two, two rows hold one',
+      x: 'Pick the double row (4 ways), pick which two of the remaining rows get a single empty seat (C(3,2) = 3), then place each of those singles anywhere in its row (3 × 3).',
+      m: '2+1+1+0 : 4 × C(3,2) × 1 × 3 × 3 = 108',
+      f: [
+        { e: [0,2,4,7],  b: 'bad' },
+        { e: [1,3,5,10], b: 'bad' },
+        { e: [0,6,8,11], b: 'bad' }
+      ],
+      ms: 1150
+    },
+    {
+      t: 'Case 3 — one empty seat in every row',
+      x: 'A lone empty seat can never be adjacent to another, so all four rows are free to choose independently.',
+      m: '1+1+1+1 : 3 × 3 × 3 × 3 = 81',
+      f: [
+        { e: [1,4,7,10], b: 'bad' },
+        { e: [0,4,8,9],  b: 'bad' },
+        { e: [2,3,7,11], b: 'bad' }
+      ],
+      ms: 1150
+    },
+    {
+      t: 'Add the cases, then subtract from 1',
+      x: 'Those three cases cover every arrangement in which the couple is split up. What is left over is the answer.',
+      m: '6 + 108 + 81 = 195 bad patterns<br>495 − 195 = 300 good patterns<br>1 − 195/495 = 300/495 = <strong>20/33</strong>',
+      f: [
+        { e: [3,4,8,11], p: [3,4], b: 'ok' },
+        { e: [0,1,5,9],  p: [0,1], b: 'ok' }
+      ],
+      ms: 1800
+    }
+  ];
+
+  var elTitle = document.getElementById('q1title'),
+      elText  = document.getElementById('q1text'),
+      elMath  = document.getElementById('q1math'),
+      elBadge = document.getElementById('q1badge'),
+      elCount = document.getElementById('q1count'),
+      elDots  = document.getElementById('q1dots'),
+      btnPrev = document.getElementById('q1prev'),
+      btnNext = document.getElementById('q1next'),
+      btnPlay = document.getElementById('q1play');
+
+  var si = 0, fi = 0, timer = null, playing = false, userPaused = false;
+
+  SCENES.forEach(function (sc, i) {
+    var d = document.createElement('button');
+    d.type = 'button';
+    d.setAttribute('aria-label', 'Step ' + (i + 1));
+    d.addEventListener('click', function () { go(i); });
+    elDots.appendChild(d);
+  });
+
+  function paint(fr, sc) {
+    var e = fr.e || [], p = fr.p || [], d = fr.d || [];
+    for (var i = 0; i < 12; i++) {
+      var cl = 'seat';
+      if (e.indexOf(i) < 0) cl += ' taken';
+      if (p.indexOf(i) >= 0) cl += ' pair';
+      if (d.indexOf(i) >= 0) cl += ' dim';
+      seats[i].className = cl;
+      seats[i].textContent = p.indexOf(i) >= 0 && e.indexOf(i) >= 0 ? '♥' : '';
+    }
+    if (fr.b === 'ok') {
+      elBadge.className = 'badge ok';
+      elBadge.textContent = sc.ok || '✓ the couple fits';
+    } else if (fr.b === 'bad') {
+      elBadge.className = 'badge bad';
+      elBadge.textContent = sc.no || '✗ no adjacent empty pair';
+    } else {
+      elBadge.className = 'badge hide';
+    }
+  }
+
+  function render() {
+    var sc = SCENES[si];
+    elTitle.textContent = sc.t;
+    elText.textContent = sc.x;
+    elMath.innerHTML = sc.m;
+    elCount.textContent = 'Step ' + (si + 1) + ' / ' + SCENES.length;
+    for (var i = 0; i < elDots.children.length; i++) {
+      elDots.children[i].className = i === si ? 'on' : '';
+    }
+    var fr = sc.f[fi];
+    paint(typeof fr === 'function' ? fr() : fr, sc);
+  }
+
+  function schedule() {
+    clearTimeout(timer);
+    if (!playing) return;
+    timer = setTimeout(function () {
+      fi++;
+      if (fi >= SCENES[si].f.length) { fi = 0; si = (si + 1) % SCENES.length; }
+      render();
+      schedule();
+    }, SCENES[si].ms);
+  }
+
+  function go(i) { si = (i + SCENES.length) % SCENES.length; fi = 0; render(); schedule(); }
+  function setPlaying(on) {
+    playing = on;
+    btnPlay.textContent = on ? '❚❚ Pause' : '▶ Play';
+    if (on) schedule(); else clearTimeout(timer);
+  }
+
+  btnPrev.addEventListener('click', function () { go(si - 1); });
+  btnNext.addEventListener('click', function () { go(si + 1); });
+  btnPlay.addEventListener('click', function () { userPaused = playing; setPlaying(!playing); });
+
+  render();
+
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce) {
+    setPlaying(false);
+  } else if ('IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { setPlaying(en.isIntersecting && !userPaused); });
+    }, { threshold: 0.25 }).observe(document.getElementById('q1anim'));
+  } else {
+    setPlaying(true);
+  }
+})();
+
 if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window) {
   var obs = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) {
