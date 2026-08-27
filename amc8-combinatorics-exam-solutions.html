@@ -134,8 +134,9 @@
   .rline .cap{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-soft);white-space:nowrap}
   .legal .mark{color:var(--pick)}
   .illegal .mark{color:var(--mark)}
-  .mini3{display:flex;gap:5px}
-  .msseat{width:26px;height:20px;border:1.5px solid var(--keep);border-radius:5px;background:#fff}
+  .mini3{display:inline-flex;gap:5px;flex:none}
+  .msseat{display:inline-block;width:26px;height:20px;flex:none;
+    border:1.5px solid var(--keep);border-radius:5px;background:#fff}
   .msseat.taken{background:var(--keep)}
   .msseat.clash{border-color:var(--mark);box-shadow:inset 0 0 0 2px rgba(11,110,110,.16)}
   .anim .side{flex:1 1 270px;min-width:240px}
@@ -673,7 +674,8 @@
     elTitle.textContent = sc.t;
     elText.textContent = sc.x;
     elMath.innerHTML = sc.m;
-    elCount.textContent = 'Step ' + (si + 1) + ' / ' + SCENES.length;
+    elCount.textContent = 'Step ' + (si + 1) + ' / ' + SCENES.length +
+      (sc.f.length > 1 ? '  ·  ' + (fi + 1) + '/' + sc.f.length : '');
     for (var i = 0; i < elDots.children.length; i++) {
       elDots.children[i].className = i === si ? 'on' : '';
     }
@@ -693,14 +695,24 @@
   }
 
   function go(i) { si = (i + SCENES.length) % SCENES.length; fi = 0; render(); schedule(); }
+
+  /* Prev/Next walk one frame at a time, so every case is reachable while paused */
+  function stepFrame(dir) {
+    clearTimeout(timer);
+    fi += dir;
+    if (fi >= SCENES[si].f.length) { si = (si + 1) % SCENES.length; fi = 0; }
+    else if (fi < 0) { si = (si - 1 + SCENES.length) % SCENES.length; fi = SCENES[si].f.length - 1; }
+    render();
+    schedule();
+  }
   function setPlaying(on) {
     playing = on;
     btnPlay.textContent = on ? '❚❚ Pause' : '▶ Play';
     if (on) schedule(); else clearTimeout(timer);
   }
 
-  btnPrev.addEventListener('click', function () { go(si - 1); });
-  btnNext.addEventListener('click', function () { go(si + 1); });
+  btnPrev.addEventListener('click', function () { stepFrame(-1); });
+  btnNext.addEventListener('click', function () { stepFrame(1); });
   btnPlay.addEventListener('click', function () { userPaused = playing; setPlaying(!playing); });
 
   render();
