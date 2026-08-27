@@ -93,6 +93,20 @@
   table.mini th,table.mini td{border:1px solid var(--rule);padding:6px 12px;text-align:left}
   table.mini th{background:var(--wash);font-weight:500;color:var(--ink-soft)}
 
+  /* second solution / labelled solution heads */
+  .solhead{margin-top:24px}
+  .solhead .tag{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--pick)}
+  .solhead h3{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:21px;
+    letter-spacing:-.01em;margin:6px 0 8px}
+  .solhead p{margin:0;color:var(--ink-soft);font-size:15.5px}
+  .alt{margin-top:30px;padding-top:26px;border-top:1px solid var(--rule)}
+  .alt .solhead{margin-top:0}
+  ul.cases{list-style:none;margin:14px 0 0;padding:0}
+  ul.cases > li{border-left:2px solid var(--rule);padding-left:14px;margin-top:14px}
+  ul.cases .caselab{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--ink-soft);display:block;margin-bottom:4px}
+
   .answer{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;margin-top:20px;padding-top:4px}
   .answer .lbl{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;
     text-transform:uppercase;color:var(--ink-soft)}
@@ -391,6 +405,11 @@
       <figcaption>The two lines can never share a square, so they lock in 6 cells and leave 3 free.</figcaption>
     </figure>
 
+    <div class="solhead" id="q5-solution-1">
+      <span class="tag">Solution 1</span>
+      <h3>Count pairs of lines, then repair the overcount</h3>
+    </div>
+
     <ol class="steps">
       <li><strong>Find the pairs of lines that can carry the two colours.</strong> Call a row, column, or diagonal <em>solid</em> when all 3 of its squares contain the same symbol. A valid pair consists of one solid △-line and one solid ○-line. The two lines must be disjoint, since a shared square cannot hold both symbols. There are 8 lines in total: 3 rows, 3 columns, and 2 diagonals.</li>
       <li><strong>Only parallel rows or parallel columns are disjoint.</strong> A row and a column always cross; every diagonal crosses every row, every column, and the other diagonal.
@@ -428,6 +447,43 @@
 
     <div class="answer"><span class="lbl">Answer</span><span class="val">(D) 84</span></div>
     <p class="note">No other grid is double counted: a solid row of △ and a solid column of ○ would clash where they meet, so mixed row-and-column overcounts cannot happen.</p>
+
+    <section class="alt" id="q5-solution-2">
+      <div class="solhead">
+        <span class="tag">Solution 2</span>
+        <h3>Build the grids directly, so nothing is counted twice</h3>
+        <p>Solution 1 counts <em>pairs of lines</em> and then repairs the overcount. This version counts <em>finished grids</em> instead, so no correction is needed at the end.</p>
+      </div>
+
+      <ol class="steps">
+        <li><strong>The two solid lines can never cross.</strong> If the △-line and the ○-line shared a square, that square would have to hold both symbols. So the two lines are disjoint — which, among the 8 lines, leaves only two parallel rows or two parallel columns. A row and a column always meet, and each diagonal meets every row, every column, and the other diagonal.</li>
+
+        <li><strong>A grid is a "row grid" or a "column grid," never both.</strong> If one row is all △ and another row is all ○, then <em>every</em> column contains one of each symbol, so no column can be solid. The two families never overlap, so we can count them separately and add.</li>
+
+        <li><strong>Count the row grids.</strong> Split on whether the third row is solid too.
+          <ul class="cases">
+            <li>
+              <span class="caselab">Case A — the leftover row is mixed</span>
+              Choose the all-△ row (3 ways), then the all-○ row from the two that remain (2 ways). The last row can be any pattern that uses both symbols: 2³ − 2 = 6.
+              <div class="math">3 × 2 × 6 = 36</div>
+            </li>
+            <li>
+              <span class="caselab">Case B — all three rows are solid</span>
+              Both symbols must appear, so one symbol fills two rows and the other fills one. Choose the odd row out (3 ways) and the symbol on the doubled pair (2 ways).
+              <div class="math">3 × 2 = 6</div>
+            </li>
+          </ul>
+          <div class="math">36 + 6 = 42 row grids</div>
+        </li>
+
+        <li><strong>Columns behave identically</strong>, giving another 42. By step 2 these two lists share nothing, so add them.
+          <div class="math">42 + 42 = 84</div>
+        </li>
+      </ol>
+
+      <div class="answer"><span class="lbl">Same answer</span><span class="val">(D) 84</span></div>
+      <p class="note">The Case B grids are exactly the six Solution 1 had to subtract: they contain two valid pairs of lines, but here each one is built exactly once, because a grid is described by its actual pattern of rows rather than by a pair of lines inside it.</p>
+    </section>
   </article>
 
 </main>
