@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Combination Review Problems 4.11–4.16</title>
+  <style>
+    :root{--navy:#173b63;--blue:#2d6fa3;--pale:#eef6fb;--ink:#17212b;--gold:#f3b544;--green:#16735a}
+    *{box-sizing:border-box} body{margin:0;background:#edf1f4;color:var(--ink);font:17px/1.62 system-ui,-apple-system,"Segoe UI",sans-serif}
+    main{max-width:950px;margin:32px auto;background:#fff;padding:42px;border-radius:18px;box-shadow:0 10px 35px #18364d20}
+    h1{color:var(--navy);font-size:2.15rem;line-height:1.15;margin:0 0 8px} h2{color:var(--navy);border-bottom:3px solid #cce0ee;padding-bottom:8px;margin-top:38px}
+    h3{color:var(--blue);margin-bottom:4px}.subtitle{color:#536575;margin-top:0}.rule,.note{background:var(--pale);border-left:5px solid var(--blue);padding:16px 20px;border-radius:7px;margin:22px 0}
+    .formula{font-family:Georgia,serif;font-size:1.2rem;text-align:center;margin:10px 0}.problem{border:1px solid #dce4ea;border-radius:12px;padding:20px 24px;margin:18px 0}.step{margin:7px 0}.answer{display:inline-block;background:#e7f6f0;color:var(--green);font-weight:750;padding:5px 12px;border-radius:20px;margin-top:8px}
+    table{width:100%;border-collapse:collapse;margin:12px 0}th,td{padding:11px;border-bottom:1px solid #dce4ea;text-align:left}th{background:var(--navy);color:#fff}.why{color:#586773;font-style:italic}.tag{font-size:.78rem;background:#fff1d4;color:#784d00;padding:3px 8px;border-radius:12px;font-weight:700}@media(max-width:650px){main{margin:0;padding:24px 18px;border-radius:0}body{font-size:16px}h1{font-size:1.75rem}}@media print{body{background:#fff}main{box-shadow:none;margin:0;max-width:none}.problem{break-inside:avoid}}
+  </style>
+</head>
+<body><main>
+  <h1>Combination Review Problems</h1><p class="subtitle">Extracted questions and step-by-step solutions · Problems 4.11–4.16</p>
+  <div class="rule"><strong>Main idea:</strong> Use a combination when order does not matter.<div class="formula">C(n,r) = (n choose r) = n! / [r!(n-r)!]</div><strong>Useful shortcut:</strong> C(n,r) = C(n,n-r). Choose whichever lower number makes the calculation shorter.</div>
+
+  <h2>4.11 Compute the following combinations</h2>
+  <table><thead><tr><th>Part</th><th>Step-by-step calculation</th><th>Answer</th></tr></thead><tbody>
+    <tr><td>(a) C(7,2)</td><td>(7×6)/(2×1) = 42/2</td><td><strong>21</strong></td></tr>
+    <tr><td>(b) C(8,6)</td><td>C(8,2) = (8×7)/(2×1) = 56/2</td><td><strong>28</strong></td></tr>
+    <tr><td>(c) C(12,9)</td><td>C(12,3) = (12×11×10)/(3×2×1) = 1320/6</td><td><strong>220</strong></td></tr>
+    <tr><td>(d) C(16,5)</td><td>(16×15×14×13×12)/(5×4×3×2×1) = 524,160/120</td><td><strong>4,368</strong></td></tr>
+    <tr><td>(e) C(85,82)</td><td>C(85,3) = (85×84×83)/(3×2×1) = 592,620/6</td><td><strong>98,770</strong></td></tr>
+    <tr><td>(f) C(133,133)</td><td>There is exactly one way to choose all 133 objects.</td><td><strong>1</strong></td></tr>
+  </tbody></table>
+
+  <h2>4.12 Choosing books</h2>
+  <div class="problem"><h3>Extracted question</h3><p>Joe has one book each for algebra, geometry, history, psychology, Spanish, English, and physics in his locker. If he chooses three books, how many different sets of three books could he choose?</p>
+    <p class="step"><strong>Step 1:</strong> Count the books: there are 7.</p><p class="step"><strong>Step 2:</strong> He chooses 3, and the order of books in a set does not matter. <span class="tag">Combination</span></p>
+    <p class="step"><strong>Step 3:</strong> C(7,3) = (7×6×5)/(3×2×1) = 210/6 = 35.</p><span class="answer">Answer: 35 sets</span></div>
+
+  <h2>4.13 Super Bowl party</h2>
+  <div class="problem"><h3>Extracted question</h3><p>I won a trip for four to the Super Bowl. I can bring three of my friends. I have 8 friends. In how many ways can I form my Super Bowl party?</p>
+    <p class="step"><strong>Step 1:</strong> The winner is already included, so choose 3 friends from 8.</p><p class="step"><strong>Step 2:</strong> The order in which the friends are chosen does not matter.</p>
+    <p class="step"><strong>Step 3:</strong> C(8,3) = (8×7×6)/(3×2×1) = 336/6 = 56.</p><span class="answer">Answer: 56 parties</span></div>
+
+  <h2>4.14 Lock buttons</h2>
+  <div class="problem"><h3>Extracted question</h3><p>A lock has 5 buttons numbered 1–5. The lock is opened by pushing two buttons simultaneously and then pushing one button alone. How many combinations are possible?</p>
+    <p class="step"><strong>Step 1:</strong> Choose the first two buttons. Because they are pushed simultaneously, their order does not matter.</p><p class="step">C(5,2) = (5×4)/(2×1) = 10 choices.</p>
+    <p class="step"><strong>Step 2:</strong> For the single press, any of the 5 buttons can be used: 5 choices.</p><p class="step"><strong>Step 3:</strong> Apply the multiplication principle: 10×5 = 50.</p>
+    <span class="answer">Answer: 50 combinations</span><p class="why">This assumes the final single button may be one of the two buttons pressed first, which is the normal interpretation of the question.</p></div>
+
+  <h2>4.15 Choosing four books</h2>
+  <div class="problem"><h3>Extracted question</h3><p>I want to read 4 books over the next month. My bookshelf has 12 books. In how many ways can I choose which books to read, without regard to the order that I read them?</p>
+    <p class="step"><strong>Step 1:</strong> Choose 4 books from 12.</p><p class="step"><strong>Step 2:</strong> “Without regard to order” tells us to use a combination.</p>
+    <p class="step"><strong>Step 3:</strong> C(12,4) = (12×11×10×9)/(4×3×2×1) = 11,880/24 = 495.</p><span class="answer">Answer: 495 ways</span></div>
+
+  <h2>4.16 Triangles in a dodecagon</h2>
+  <div class="problem"><h3>Extracted question</h3><p>How many triangles can be formed using the vertices of a regular dodecagon (a 12-sided polygon)?</p>
+    <p class="step"><strong>Step 1:</strong> A dodecagon has 12 vertices.</p><p class="step"><strong>Step 2:</strong> Any 3 different vertices form exactly one triangle. In a regular polygon, no three vertices are collinear.</p>
+    <p class="step"><strong>Step 3:</strong> C(12,3) = (12×11×10)/(3×2×1) = 1320/6 = 220.</p><span class="answer">Answer: 220 triangles</span></div>
+
+  <div class="note"><strong>Final answers:</strong> 4.11: 21, 28, 220, 4,368, 98,770, 1 · 4.12: 35 · 4.13: 56 · 4.14: 50 · 4.15: 495 · 4.16: 220</div>
+</main></body></html>
