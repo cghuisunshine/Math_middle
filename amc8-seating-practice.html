@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Seat Maps — Five Practice Problems on Counting Empty Seats</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,500..800&family=DM+Mono:wght@400;500&family=Newsreader:opsz,wght@6..72,400..600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#101f2b;
+    --ink-soft:#42586a;
+    --paper:#dde4e1;
+    --card:#fbfcfb;
+    --teal:#0d6e63;
+    --teal-wash:rgba(13,110,99,.07);
+    --amber:#c8871c;
+    --amber-wash:rgba(200,135,28,.16);
+    --rule:rgba(16,31,43,.16);
+    --seat-r:5px;
+  }
+
+  *{box-sizing:border-box}
+
+  html{-webkit-text-size-adjust:100%}
+
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Newsreader",Georgia,"Times New Roman",serif;
+    font-size:17.5px;
+    line-height:1.62;
+  }
+
+  .wrap{max-width:44rem;margin:0 auto;padding:0 1.15rem 4rem}
+
+  /* ---------- type roles ---------- */
+  .display{
+    font-family:"Archivo",-apple-system,"Segoe UI",sans-serif;
+    font-variation-settings:"wdth" 118,"wght" 700;
+    line-height:1.04;
+    letter-spacing:-.005em;
+  }
+  .eyebrow{
+    font-family:"DM Mono",ui-monospace,"SF Mono",Menlo,monospace;
+    font-size:.71rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    color:var(--teal);
+  }
+  .mono{font-family:"DM Mono",ui-monospace,"SF Mono",Menlo,monospace}
+
+  /* ---------- masthead ---------- */
+  .masthead{padding:2.6rem 0 1.4rem}
+  .masthead h1{
+    font-family:"Archivo",sans-serif;
+    font-variation-settings:"wdth" 116,"wght" 750;
+    font-size:clamp(1.95rem,7.6vw,3.1rem);
+    line-height:1.02;
+    letter-spacing:-.012em;
+    margin:.7rem 0 0;
+    text-wrap:balance;
+  }
+  .masthead .lede{
+    margin:1rem 0 0;
+    color:var(--ink-soft);
+    font-size:1.06rem;
+  }
+
+  /* ---------- boarding pass hero ---------- */
+  .pass{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:3px;
+    margin-top:1.9rem;
+    box-shadow:0 1px 0 rgba(16,31,43,.06);
+  }
+  .pass-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:1rem;
+    padding:.85rem 1.05rem;
+    border-bottom:1px dashed var(--rule);
+  }
+  .pass-top .route{
+    font-family:"Archivo",sans-serif;
+    font-variation-settings:"wdth" 95,"wght" 700;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    font-size:.86rem;
+  }
+  .pass-body{padding:1.15rem 1.05rem 1.25rem;text-align:center}
+  .pass-caption{
+    margin:.15rem 0 1rem;
+    font-size:.95rem;
+    color:var(--ink-soft);
+  }
+  .verdict{
+    font-family:"Archivo",sans-serif;
+    font-variation-settings:"wdth" 100,"wght" 700;
+    font-size:.95rem;
+    text-transform:uppercase;
+    letter-spacing:.05em;
+    margin:1.05rem 0 0;
+    min-height:1.3em;
+  }
+  .verdict[data-ok="yes"]{color:var(--amber)}
+  .verdict[data-ok="no"]{color:var(--ink-soft)}
+  .tally{
+    font-family:"DM Mono",monospace;
+    font-size:.78rem;
+    color:var(--ink-soft);
+    margin:.5rem 0 0;
+  }
+  .deal{
+    margin-top:1.1rem;
+    font-family:"DM Mono",monospace;
+    font-size:.78rem;
+    letter-spacing:.09em;
+    text-transform:uppercase;
+    background:var(--ink);
+    color:var(--card);
+    border:0;
+    border-radius:2px;
+    padding:.62rem 1.15rem;
+    cursor:pointer;
+  }
+  .deal:hover{background:var(--teal)}
+  .deal:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+
+  /* ---------- seat maps ---------- */
+  .map{display:inline-flex;flex-direction:column;gap:6px}
+  .map .row{display:flex;gap:6px}
+  .seat{
+    width:26px;height:26px;
+    border-radius:var(--seat-r);
+    border:1.5px dashed var(--teal);
+    background:transparent;
+    transition:background-color .18s ease,border-color .18s ease;
+  }
+  .seat.occ{background:var(--ink);border:1.5px solid var(--ink)}
+  .seat.pair{background:var(--amber-wash);border:1.5px solid var(--amber)}
+  .map.wide .seat{width:23px;height:23px}
+  .legend{
+    font-family:"DM Mono",monospace;
+    font-size:.72rem;
+    color:var(--ink-soft);
+    display:flex;gap:1.1rem;justify-content:center;flex-wrap:wrap;
+    margin-top:.9rem;
+  }
+  .legend span{display:inline-flex;align-items:center;gap:.4rem}
+  .chip{width:13px;height:13px;border-radius:3px;display:inline-block}
+  .chip.o{background:var(--ink)}
+  .chip.e{border:1.5px dashed var(--teal)}
+
+  /* ---------- index ---------- */
+  .index{
+    margin:2.6rem 0 0;
+    border-top:2px solid var(--ink);
+    border-bottom:1px solid var(--rule);
+  }
+  .index h2{
+    font-family:"Archivo",sans-serif;
+    font-variation-settings:"wdth" 90,"wght" 700;
+    text-transform:uppercase;
+    letter-spacing:.12em;
+    font-size:.76rem;
+    margin:.85rem 0 .6rem;
+    color:var(--ink-soft);
+  }
+  .index ol{list-style:none;margin:0;padding:0 0 .6rem}
+  .index li{border-top:1px solid var(--rule)}
+  .index li:first-child{border-top:0}
+  .index a{
+    display:flex;
+    gap:.8rem;
+    align-items:baseline;
+    padding:.62rem .1rem;
+    text-decoration:none;
+    color:var(--ink);
+  }
+  .index a:hover .t{color:var(--teal)}
+  .index .n{font-family:"DM Mono",monospace;font-size:.78rem;color:var(--teal);width:1.4rem;flex:none}
+  .index .t{flex:1;font-size:1rem}
+  .index .grid-tag{
+    font-family:"DM Mono",monospace;
+    font-size:.73rem;
+    color:var(--ink-soft);
+    white-space:nowrap;
+  }
+
+  /* ---------- question cards ---------- */
+  .q{
+    background:var(--card);
+    border:1px solid var(--rule);
+    border-radius:3px;
+    margin-top:2.1rem;
+    padding:1.35rem 1.15rem 1.3rem;
+    scroll-margin-top:1rem;
+  }
+  .q-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:.8rem;
+    padding-bottom:.75rem;
+    margin-bottom:1rem;
+    border-bottom:1px solid var(--rule);
+  }
+  .q-head .id{
+    font-family:"Archivo",sans-serif;
+    font-variation-settings:"wdth" 90,"wght" 700;
+    text-transform:uppercase;
+    letter-spacing:.1em;
+    font-size:.8rem;
+  }
+  .q-head .tag{
+    font-family:"DM Mono",monospace;
+    font-size:.72rem;
+    color:var(--ink-soft);
+    white-space:nowrap;
+  }
+  .stem{margin:0}
+  .choices{
+    list-style:none;
+    margin:1.15rem 0 0;
+    padding:0;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(6.6rem,1fr));
+    gap:.4rem;
+  }
+  .choices li{
+    font-family:"DM Mono",monospace;
+    font-size:.86rem;
+    border:1px solid var(--rule);
+    border-radius:2px;
+    padding:.42rem .55rem;
+    text-align:center;
+  }
+  .choices li b{color:var(--teal);font-weight:500;margin-right:.35rem}
+
+  figure.fig{margin:1.35rem 0 0;text-align:center}
+  figure.fig figcaption{
+    font-size:.86rem;
+    color:var(--ink-soft);
+    font-style:italic;
+    margin-top:.7rem;
+  }
+
+  /* ---------- solutions ---------- */
+  details.sol{margin-top:1.4rem;border-top:1px dashed var(--rule);padding-top:1rem}
+  details.sol > summary{
+    font-family:"DM Mono",monospace;
+    font-size:.76rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    color:var(--teal);
+    cursor:pointer;
+    list-style:none;
+    display:inline-flex;
+    align-items:center;
+    gap:.5rem;
+  }
+  details.sol > summary::-webkit-details-marker{display:none}
+  details.sol > summary::before{content:"+";font-size:1rem;line-height:1}
+  details.sol[open] > summary::before{content:"–"}
+  details.sol > summary:focus-visible{outline:2px solid var(--amber);outline-offset:3px}
+
+  .steps{counter-reset:s;list-style:none;margin:1.2rem 0 0;padding:0}
+  .steps > li{
+    counter-increment:s;
+    position:relative;
+    padding-left:2.1rem;
+    margin-bottom:1.05rem;
+  }
+  .steps > li::before{
+    content:counter(s);
+    position:absolute;left:0;top:.12em;
+    font-family:"DM Mono",monospace;
+    font-size:.72rem;
+    width:1.45rem;height:1.45rem;
+    display:grid;place-items:center;
+    border:1px solid var(--teal);
+    color:var(--teal);
+    border-radius:2px;
+  }
+  .steps strong{font-weight:600}
+  .calc{
+    font-family:"DM Mono",monospace;
+    font-size:.83rem;
+    line-height:1.75;
+    background:var(--teal-wash);
+    border-left:2px solid var(--teal);
+    padding:.6rem .75rem;
+    margin:.6rem 0 0;
+    overflow-x:auto;
+    white-space:pre-wrap;
+  }
+  table.pat{
+    width:100%;
+    border-collapse:collapse;
+    font-family:"DM Mono",monospace;
+    font-size:.78rem;
+    margin:.7rem 0 0;
+  }
+  table.pat th,table.pat td{
+    border:1px solid var(--rule);
+    padding:.34rem .3rem;
+    text-align:center;
+  }
+  table.pat th{background:var(--teal-wash);font-weight:500;color:var(--ink-soft)}
+
+  .answer{
+    display:inline-flex;
+    align-items:baseline;
+    gap:.55rem;
+    background:var(--ink);
+    color:var(--card);
+    border-radius:2px;
+    padding:.5rem .85rem;
+    margin-top:.4rem;
+    font-family:"DM Mono",monospace;
+    font-size:.85rem;
+  }
+  .answer .lab{color:var(--amber);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase}
+  .aside{
+    margin:1.15rem 0 0;
+    padding-left:.9rem;
+    border-left:2px solid var(--amber);
+    color:var(--ink-soft);
+    font-size:.97rem;
+  }
+
+  /* ---------- answer key ---------- */
+  .key{margin-top:3rem;border-top:2px solid var(--ink);padding-top:.9rem}
+  .key h2{
+    font-family:"Archivo",sans-serif;
+    font-variation-settings:"wdth" 90,"wght" 700;
+    text-transform:uppercase;letter-spacing:.12em;font-size:.76rem;
+    margin:0 0 .7rem;color:var(--ink-soft);
+  }
+  .key ol{list-style:none;margin:0;padding:0;font-family:"DM Mono",monospace;font-size:.84rem}
+  .key li{display:flex;justify-content:space-between;gap:1rem;padding:.45rem .1rem;border-top:1px solid var(--rule)}
+  .key li:first-child{border-top:0}
+  .key .a{color:var(--teal)}
+  footer.foot{margin-top:2.2rem;font-size:.88rem;color:var(--ink-soft)}
+
+  @media (max-width:400px){
+    .seat{width:22px;height:22px}
+    .map.wide .seat{width:19px;height:19px;border-radius:4px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Practice set · after 2024 AMC 8 #25</p>
+    <h1>Five more ways to count an empty seat</h1>
+    <p class="lede">Same move every time: stop tracking the passengers and track the empty seats instead. Then count the arrangements that <em>fail</em> and subtract. Work each one on paper before opening the solution.</p>
+
+    <section class="pass" aria-labelledby="sim-title">
+      <div class="pass-top">
+        <span class="route" id="sim-title">4 rows × 3 seats</span>
+        <span class="mono" style="font-size:.72rem;color:var(--ink-soft)">8 boarded · 4 empty</span>
+      </div>
+      <div class="pass-body">
+        <p class="pass-caption">The original problem, dealt at random.</p>
+        <div class="map" id="sim" aria-hidden="true"></div>
+        <p class="verdict" id="verdict"></p>
+        <p class="tally" id="tally"></p>
+        <button class="deal" id="deal" type="button">Deal a new plane</button>
+        <div class="legend">
+          <span><i class="chip o"></i> taken</span>
+          <span><i class="chip e"></i> empty</span>
+          <span><i class="chip" style="background:var(--amber-wash);border:1.5px solid var(--amber)"></i> couple sits here</span>
+        </div>
+      </div>
+    </section>
+  </header>
+
+  <nav class="index" aria-label="The five problems">
+    <h2>The set</h2>
+    <ol>
+      <li><a href="#q1"><span class="n">1</span><span class="t">One long row at the movies</span><span class="grid-tag">1 × 10</span></a></li>
+      <li><a href="#q2"><span class="n">2</span><span class="t">Airport shuttle, five aboard</span><span class="grid-tag">3 × 3</span></a></li>
+      <li><a href="#q3"><span class="n">3</span><span class="t">The same plane, one more passenger</span><span class="grid-tag">4 × 3</span></a></li>
+      <li><a href="#q4"><span class="n">4</span><span class="t">Wider rows on the tour bus</span><span class="grid-tag">3 × 4</span></a></li>
+      <li><a href="#q5"><span class="n">5</span><span class="t">Three friends need a whole row</span><span class="grid-tag">4 × 3</span></a></li>
+    </ol>
+  </nav>
+
+  <!-- ============ Q1 ============ -->
+  <article class="q" id="q1">
+    <div class="q-head"><span class="id">Question 1</span><span class="tag">one row of 10</span></div>
+    <p class="stem">A small movie theater has a single row of 10 seats. Six people take seats at random. Two friends arrive next and want to sit next to each other. What is the probability that there are 2 adjacent empty seats for them?</p>
+    <ul class="choices">
+      <li><b>A</b>1/2</li><li><b>B</b>2/3</li><li><b>C</b>5/6</li><li><b>D</b>6/7</li><li><b>E</b>13/14</li>
+    </ul>
+
+    <figure class="fig">
+      <div class="map wide"><div class="row">
+        <i class="seat occ"></i><i class="seat"></i><i class="seat occ"></i><i class="seat occ"></i><i class="seat"></i><i class="seat occ"></i><i class="seat"></i><i class="seat"></i><i class="seat occ"></i><i class="seat occ"></i>
+      </div></div>
+      <figcaption>One of the 210 seatings. This one works — seats 7 and 8 are both empty.</figcaption>
+    </figure>
+
+    <details class="sol">
+      <summary>Show the worked solution</summary>
+      <ol class="steps">
+        <li><strong>Count empty seats, not people.</strong> Ten seats hold six people, so exactly 4 stay empty, and every set of 4 empty seats is equally likely.
+          <div class="calc">C(10,4) = 210 equally likely outcomes</div></li>
+        <li><strong>Flip to the complement.</strong> The friends are stuck exactly when no two empty seats are adjacent, so count those seatings.</li>
+        <li><strong>Use the gap trick.</strong> Put the 6 occupied seats in a line. They create 7 gaps — one before, one after, and five between. Dropping the 4 empty seats into 4 <em>different</em> gaps guarantees no two are neighbours, and every non-adjacent arrangement arises exactly once this way.
+          <div class="calc">C(7,4) = 35 bad seatings
+in general: k non-adjacent seats in a row of n → C(n−k+1, k)</div></li>
+        <li><strong>Subtract from 1.</strong>
+          <div class="calc">1 − 35/210 = 175/210 = 5/6</div></li>
+      </ol>
+      <p class="answer"><span class="lab">Answer</span> (C) 5/6</p>
+      <p class="aside">That gap formula is the engine inside every other problem here. In a row of 3 it gives C(2,2) = 1 — the two outer seats, and nothing else.</p>
+    </details>
+  </article>
+
+  <!-- ============ Q2 ============ -->
+  <article class="q" id="q2">
+    <div class="q-head"><span class="id">Question 2</span><span class="tag">3 rows × 3 seats</span></div>
+    <p class="stem">An airport shuttle has 3 rows of seats with 3 seats in each row. Five passengers have boarded and are distributed randomly among the seats. A couple is next to board. What is the probability there will be 2 adjacent seats in the same row for the couple?</p>
+    <ul class="choices">
+      <li><b>A</b>5/21</li><li><b>B</b>3/7</li><li><b>C</b>2/3</li><li><b>D</b>16/21</li><li><b>E</b>6/7</li>
+    </ul>
+
+    <figure class="fig">
+      <div class="map">
+        <div class="row"><i class="seat occ"></i><i class="seat"></i><i class="seat occ"></i></div>
+        <div class="row"><i class="seat"></i><i class="seat"></i><i class="seat occ"></i></div>
+        <div class="row"><i class="seat occ"></i><i class="seat occ"></i><i class="seat"></i></div>
+      </div>
+      <figcaption>Row 2 has two empty seats side by side, so this seating works.</figcaption>
+    </figure>
+
+    <details class="sol">
+      <summary>Show the worked solution</summary>
+      <ol class="steps">
+        <li><strong>Find the empty seats.</strong> Nine seats, five passengers, so 4 seats stay empty.
+          <div class="calc">C(9,4) = 126 equally likely outcomes</div></li>
+        <li><strong>Count the complement</strong> — no row holds two adjacent empty seats. Inside one row of 3 the legal empty-sets are: none, any single seat, or the two outer seats.
+          <table class="pat">
+            <tr><th>Empties in a row</th><th>0</th><th>1</th><th>2</th><th>3</th></tr>
+            <tr><th>Legal patterns</th><td>1</td><td>3</td><td>1</td><td>0</td></tr>
+          </table></li>
+        <li><strong>Split 4 empties across 3 rows,</strong> with no row taking more than 2.
+          <div class="calc">2+2+0 : 3 × 1 × 1 = 3
+2+1+1 : 3 × 3 × 3 = 27
+total  = 30 bad seatings</div></li>
+        <li><strong>Subtract from 1.</strong>
+          <div class="calc">1 − 30/126 = 96/126 = 16/21</div></li>
+      </ol>
+      <p class="answer"><span class="lab">Answer</span> (D) 16/21</p>
+      <p class="aside">Fewer rows than the original, but the row table is identical. Only the case list changes.</p>
+    </details>
+  </article>
+
+  <!-- ============ Q3 ============ -->
+  <article class="q" id="q3">
+    <div class="q-head"><span class="id">Question 3</span><span class="tag">4 rows × 3 seats</span></div>
+    <p class="stem">A small airplane has 4 rows of seats with 3 seats in each row. Seven passengers have boarded the plane and are distributed randomly among the seats. A married couple is next to board. What is the probability there will be 2 adjacent seats in the same row for the couple?</p>
+    <ul class="choices">
+      <li><b>A</b>2/11</li><li><b>B</b>7/11</li><li><b>C</b>3/4</li><li><b>D</b>9/11</li><li><b>E</b>10/11</li>
+    </ul>
+
+    <figure class="fig">
+      <div class="map">
+        <div class="row"><i class="seat occ"></i><i class="seat"></i><i class="seat occ"></i></div>
+        <div class="row"><i class="seat"></i><i class="seat occ"></i><i class="seat"></i></div>
+        <div class="row"><i class="seat occ"></i><i class="seat occ"></i><i class="seat"></i></div>
+        <div class="row"><i class="seat occ"></i><i class="seat occ"></i><i class="seat"></i></div>
+      </div>
+      <figcaption>A rare bad one: five empty seats and still no adjacent pair in any row.</figcaption>
+    </figure>
+
+    <details class="sol">
+      <summary>Show the worked solution</summary>
+      <ol class="steps">
+        <li><strong>Find the empty seats.</strong> Twelve seats, seven passengers, so 5 stay empty.
+          <div class="calc">C(12,5) = 792 equally likely outcomes</div></li>
+        <li><strong>Same row table as the original</strong> — a row of 3 can hold 0, 1, or 2 empties legally (2 only as the outer pair), never 3.</li>
+        <li><strong>Spread 5 empties over 4 rows,</strong> at most 2 per row.
+          <div class="calc">2+2+1+0 : C(4,2) × 2 × 3 = 6 × 2 × 3 = 36
+2+1+1+1 : 4 × 3 × 3 × 3 = 108
+total    = 144 bad seatings</div>
+          In the first case, pick the two rows holding a pair, then which of the two remaining rows holds the single empty seat, then which of its 3 seats that is.</li>
+        <li><strong>Subtract from 1.</strong>
+          <div class="calc">1 − 144/792 = 648/792 = 9/11</div></li>
+      </ol>
+      <p class="answer"><span class="lab">Answer</span> (D) 9/11</p>
+      <p class="aside">One extra empty seat pushed the answer from 20/33 up to 9/11. With 5 empties among 4 rows, some row is forced to hold two.</p>
+    </details>
+  </article>
+
+  <!-- ============ Q4 ============ -->
+  <article class="q" id="q4">
+    <div class="q-head"><span class="id">Question 4</span><span class="tag">3 rows × 4 seats</span></div>
+    <p class="stem">A tour bus has 3 rows of seats with 4 seats in each row. Eight passengers have boarded and are distributed randomly among the seats. Two friends are next to board. What is the probability there will be 2 adjacent seats in the same row for them?</p>
+    <ul class="choices">
+      <li><b>A</b>19/55</li><li><b>B</b>6/11</li><li><b>C</b>36/55</li><li><b>D</b>41/55</li><li><b>E</b>4/5</li>
+    </ul>
+
+    <figure class="fig">
+      <div class="map">
+        <div class="row"><i class="seat"></i><i class="seat occ"></i><i class="seat"></i><i class="seat occ"></i></div>
+        <div class="row"><i class="seat occ"></i><i class="seat occ"></i><i class="seat occ"></i><i class="seat occ"></i></div>
+        <div class="row"><i class="seat"></i><i class="seat occ"></i><i class="seat occ"></i><i class="seat"></i></div>
+      </div>
+      <figcaption>Wider rows, same idea — but now a row can hold two empty seats in three different non-touching ways.</figcaption>
+    </figure>
+
+    <details class="sol">
+      <summary>Show the worked solution</summary>
+      <ol class="steps">
+        <li><strong>Find the empty seats.</strong> Twelve seats, eight passengers, so 4 stay empty.
+          <div class="calc">C(12,4) = 495 equally likely outcomes</div></li>
+        <li><strong>Rebuild the row table for width 4.</strong> This is the only thing that really changes. Two non-touching empties in a row of 4 can be seats 1&amp;3, 1&amp;4, or 2&amp;4 — that is C(4−2+1, 2) = C(3,2) = 3. Three empties always leave a touching pair.
+          <table class="pat">
+            <tr><th>Empties in a row</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th></tr>
+            <tr><th>Legal patterns</th><td>1</td><td>4</td><td>3</td><td>0</td><td>0</td></tr>
+          </table></li>
+        <li><strong>Split 4 empties across 3 rows,</strong> at most 2 per row.
+          <div class="calc">2+2+0 : 3 × 3 × 3 = 27
+2+1+1 : 3 × 3 × 4 × 4 = 144
+total  = 171 bad seatings</div>
+          In the second case: choose the row holding a pair (3), the pattern inside it (3), then a seat in each of the other two rows (4 × 4).</li>
+        <li><strong>Subtract from 1.</strong>
+          <div class="calc">1 − 171/495 = 324/495 = 36/55</div></li>
+      </ol>
+      <p class="answer"><span class="lab">Answer</span> (C) 36/55</p>
+      <p class="aside">Do this one slowly. Everything downstream is just the row table, so if the 3 is wrong, all the case work is wrong too.</p>
+    </details>
+  </article>
+
+  <!-- ============ Q5 ============ -->
+  <article class="q" id="q5">
+    <div class="q-head"><span class="id">Question 5</span><span class="tag">4 rows × 3 seats</span></div>
+    <p class="stem">A small airplane has 4 rows of seats with 3 seats in each row. Six passengers have boarded the plane and are distributed randomly among the seats. Three friends are next to board, and they want a full row to themselves. What is the probability that some row is completely empty?</p>
+    <ul class="choices">
+      <li><b>A</b>2/7</li><li><b>B</b>1/3</li><li><b>C</b>5/14</li><li><b>D</b>3/7</li><li><b>E</b>1/2</li>
+    </ul>
+
+    <figure class="fig">
+      <div class="map">
+        <div class="row"><i class="seat occ"></i><i class="seat"></i><i class="seat occ"></i></div>
+        <div class="row"><i class="seat pair"></i><i class="seat pair"></i><i class="seat pair"></i></div>
+        <div class="row"><i class="seat occ"></i><i class="seat occ"></i><i class="seat"></i></div>
+        <div class="row"><i class="seat occ"></i><i class="seat occ"></i><i class="seat"></i></div>
+      </div>
+      <figcaption>Row 2 is clear, so the three friends are in. Only one row can ever be highlighted at a time — almost.</figcaption>
+    </figure>
+
+    <details class="sol">
+      <summary>Show the worked solution</summary>
+      <ol class="steps">
+        <li><strong>Find the empty seats.</strong> Twelve seats, six passengers, so 6 stay empty.
+          <div class="calc">C(12,6) = 924 equally likely outcomes</div></li>
+        <li><strong>Count the good ones directly this time.</strong> The complement — "no row is fully empty" — is messier here, but "row <em>i</em> is fully empty" is easy to count one row at a time.</li>
+        <li><strong>One named row empty.</strong> That row uses 3 of the 6 empty seats; the other 3 empties sit anywhere among the remaining 9 seats.
+          <div class="calc">C(9,3) = 84 per row
+4 rows × 84 = 336</div></li>
+        <li><strong>Find the double counting.</strong> Two empty rows use all 6 empty seats at once, so such a seating shows up once for each of its two empty rows. Three empty rows would need 9 empties — impossible.
+          <div class="calc">C(4,2) = 6 seatings with two empty rows</div></li>
+        <li><strong>Subtract one extra copy each, not both.</strong>
+          <div class="calc">336 − 6 = 330
+330/924 = 5/14</div></li>
+      </ol>
+      <p class="answer"><span class="lab">Answer</span> (C) 5/14</p>
+      <p class="aside">Same correction as the 3-by-3 grid problem: a seating counted twice needs one copy removed, not two. Removing both would erase the six best seatings on the plane.</p>
+    </details>
+  </article>
+
+  <section class="key">
+    <h2>Answer key</h2>
+    <ol>
+      <li><span>1 · one row of 10</span><span class="a">(C) 5/6</span></li>
+      <li><span>2 · 3 × 3 shuttle</span><span class="a">(D) 16/21</span></li>
+      <li><span>3 · 4 × 3, seven aboard</span><span class="a">(D) 9/11</span></li>
+      <li><span>4 · 3 × 4 tour bus</span><span class="a">(C) 36/55</span></li>
+      <li><span>5 · a whole empty row</span><span class="a">(C) 5/14</span></li>
+    </ol>
+    <footer class="foot">Five practice problems built from 2024 AMC 8 #25. Count the empty seats, count the failures, subtract.</footer>
+  </section>
+
+</div>
+
+<script>
+(function(){
+  var ROWS = 4, COLS = 3, PEOPLE = 8;
+  var sim = document.getElementById('sim');
+  var verdict = document.getElementById('verdict');
+  var tally = document.getElementById('tally');
+  var button = document.getElementById('deal');
+  var deals = 0, wins = 0;
+
+  var cells = [];
+  for (var r = 0; r < ROWS; r++){
+    var row = document.createElement('div');
+    row.className = 'row';
+    var line = [];
+    for (var c = 0; c < COLS; c++){
+      var seat = document.createElement('i');
+      seat.className = 'seat';
+      row.appendChild(seat);
+      line.push(seat);
+    }
+    cells.push(line);
+    sim.appendChild(row);
+  }
+
+  function deal(){
+    var seats = [];
+    for (var i = 0; i < ROWS * COLS; i++) seats.push(i < PEOPLE);
+    for (var j = seats.length - 1; j > 0; j--){
+      var k = Math.floor(Math.random() * (j + 1));
+      var t = seats[j]; seats[j] = seats[k]; seats[k] = t;
+    }
+
+    var ok = false, pr = -1, pc = -1;
+    for (var r = 0; r < ROWS && !ok; r++){
+      for (var c = 0; c < COLS - 1; c++){
+        if (!seats[r * COLS + c] && !seats[r * COLS + c + 1]){ ok = true; pr = r; pc = c; break; }
+      }
+    }
+
+    for (var r2 = 0; r2 < ROWS; r2++){
+      for (var c2 = 0; c2 < COLS; c2++){
+        var el = cells[r2][c2];
+        el.className = 'seat' + (seats[r2 * COLS + c2] ? ' occ' : '');
+      }
+    }
+    if (ok){
+      cells[pr][pc].className = 'seat pair';
+      cells[pr][pc + 1].className = 'seat pair';
+    }
+
+    deals++;
+    if (ok) wins++;
+    verdict.textContent = ok ? 'Row ' + (pr + 1) + ' — the couple sits together' : 'No two empty seats share a row';
+    verdict.setAttribute('data-ok', ok ? 'yes' : 'no');
+    tally.textContent = 'worked ' + wins + ' of ' + deals + ' (' +
+      Math.round(100 * wins / deals) + '%) · theory 20/33 ≈ 61%';
+  }
+
+  button.addEventListener('click', deal);
+  deal();
+})();
+</script>
+</body>
+</html>
