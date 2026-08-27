@@ -121,6 +121,23 @@
   .anim .seat.taken{background:var(--keep);border-color:var(--keep)}
   .anim .seat.pair{border-color:var(--pick);box-shadow:inset 0 0 0 2px rgba(214,33,75,.18)}
   .anim .seat.dim{opacity:.14}
+  /* single-row rule chart */
+  .rowmenu{display:flex;gap:22px;flex-wrap:wrap}
+  .rgroup h4{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-soft);font-weight:500;margin:0 0 8px}
+  .rgroup.legal h4{color:var(--pick)}
+  .rgroup.illegal h4{color:var(--mark)}
+  .rline{display:flex;align-items:center;gap:9px;padding:4px 7px;margin:0 -7px;border-radius:7px;
+    transition:background .3s ease,box-shadow .3s ease}
+  .rline.hi{background:var(--wash);box-shadow:inset 0 0 0 1px var(--rule)}
+  .rline .mark{font-family:"IBM Plex Mono",monospace;font-size:13px;width:12px}
+  .rline .cap{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-soft);white-space:nowrap}
+  .legal .mark{color:var(--pick)}
+  .illegal .mark{color:var(--mark)}
+  .mini3{display:flex;gap:5px}
+  .msseat{width:26px;height:20px;border:1.5px solid var(--keep);border-radius:5px;background:#fff}
+  .msseat.taken{background:var(--keep)}
+  .msseat.clash{border-color:var(--mark);box-shadow:inset 0 0 0 2px rgba(11,110,110,.16)}
   .anim .side{flex:1 1 270px;min-width:240px}
   .anim .stitle{font-family:"Fraunces",Georgia,serif;font-size:19px;line-height:1.3;margin:0 0 8px}
   .anim .stext{margin:0;font-size:15.5px;color:var(--ink-soft)}
@@ -195,6 +212,7 @@
       </div>
       <div class="stage">
         <div class="planewrap" id="q1seats" aria-hidden="true"></div>
+        <div class="rowmenu" id="q1rows" aria-hidden="true" style="display:none"></div>
         <div class="side">
           <p class="stitle" id="q1title"></p>
           <p class="stext" id="q1text"></p>
@@ -442,7 +460,55 @@
   }
 
   var ALL = [0,1,2,3,4,5,6,7,8,9,10,11];
-  var ROW3 = [3,4,5,6,7,8,9,10,11];   /* rows 2-4, dimmed in the single-row scene */
+
+  /* ---- the eight ways one row of 3 can be empty ---- */
+  var ROWPAT = [
+    { e: [],      ok: true,  cap: 'no empty seat' },
+    { e: [0],     ok: true,  cap: 'seat 1 only' },
+    { e: [1],     ok: true,  cap: 'seat 2 only' },
+    { e: [2],     ok: true,  cap: 'seat 3 only' },
+    { e: [0,2],   ok: true,  cap: 'the two outer seats' },
+    { e: [0,1],   ok: false, cap: 'seats 1–2 — neighbours', clash: [0,1] },
+    { e: [1,2],   ok: false, cap: 'seats 2–3 — neighbours', clash: [1,2] },
+    { e: [0,1,2], ok: false, cap: 'all three — neighbours', clash: [0,1,2] }
+  ];
+  var rowLines = [];
+  (function buildRowChart() {
+    var box = document.getElementById('q1rows');
+    [{ cls: 'legal', h: 'Legal — 5 ways', ok: true },
+     { cls: 'illegal', h: 'Illegal — the couple fits', ok: false }].forEach(function (grp) {
+      var g = document.createElement('div');
+      g.className = 'rgroup ' + grp.cls;
+      var h = document.createElement('h4');
+      h.textContent = grp.h;
+      g.appendChild(h);
+      ROWPAT.forEach(function (pat, idx) {
+        if (pat.ok !== grp.ok) return;
+        var line = document.createElement('div');
+        line.className = 'rline';
+        var mk = document.createElement('span');
+        mk.className = 'mark';
+        mk.textContent = pat.ok ? '✓' : '✗';
+        line.appendChild(mk);
+        var mini = document.createElement('span');
+        mini.className = 'mini3';
+        for (var c = 0; c < 3; c++) {
+          var sq = document.createElement('span');
+          sq.className = 'msseat' + (pat.e.indexOf(c) < 0 ? ' taken' : '') +
+                         ((pat.clash || []).indexOf(c) >= 0 ? ' clash' : '');
+          mini.appendChild(sq);
+        }
+        line.appendChild(mini);
+        var cap = document.createElement('span');
+        cap.className = 'cap';
+        cap.textContent = pat.cap;
+        line.appendChild(cap);
+        g.appendChild(line);
+        rowLines[idx] = line;
+      });
+      box.appendChild(g);
+    });
+  })();
 
   function randomEmpty() {
     var a = ALL.slice(), i, j, t;
@@ -497,19 +563,15 @@
     },
     {
       t: 'The rule inside a single row',
-      x: 'Look at one row on its own. The legal empty-sets are: nothing, any one seat, or the two outer seats. Two neighbours or all three are out.',
-      m: '0 empties → 1 way · 1 empty → 3 ways · 2 empties → 1 way (outer) · 3 empties → 0 ways',
-      ok: '✓ legal row — no two empties touch',
+      x: 'Take one row of 3 on its own. Every one of the 8 possible empty-sets is shown: five keep the empties apart, three leave neighbours empty and hand the couple a seat.',
+      m: '0 empties → 1 way · 1 empty → 3 ways · 2 empties → 1 way (the outer pair) · 3 empties → 0 ways',
+      ok: '✓ legal — no two empties touch',
       no: '✗ illegal — neighbours are empty',
+      mode: 'rows',
       f: [
-        { e: [],     d: ROW3, b: 'ok'  },
-        { e: [0],    d: ROW3, b: 'ok'  },
-        { e: [1],    d: ROW3, b: 'ok'  },
-        { e: [2],    d: ROW3, b: 'ok'  },
-        { e: [0,2],  d: ROW3, b: 'ok'  },
-        { e: [0,1],  d: ROW3, p: [0,1], b: 'bad' },
-        { e: [1,2],  d: ROW3, p: [1,2], b: 'bad' },
-        { e: [0,1,2],d: ROW3, p: [0,1], b: 'bad' }
+        { r: 0, b: 'ok' }, { r: 1, b: 'ok' }, { r: 2, b: 'ok' },
+        { r: 3, b: 'ok' }, { r: 4, b: 'ok' },
+        { r: 5, b: 'bad' }, { r: 6, b: 'bad' }, { r: 7, b: 'bad' }
       ],
       ms: 1000
     },
@@ -559,7 +621,8 @@
     }
   ];
 
-  var elTitle = document.getElementById('q1title'),
+  var elRows  = document.getElementById('q1rows'),
+      elTitle = document.getElementById('q1title'),
       elText  = document.getElementById('q1text'),
       elMath  = document.getElementById('q1math'),
       elBadge = document.getElementById('q1badge'),
@@ -580,6 +643,11 @@
   });
 
   function paint(fr, sc) {
+    var rowMode = sc.mode === 'rows';
+    host.style.display = rowMode ? 'none' : '';
+    elRows.style.display = rowMode ? '' : 'none';
+    rowLines.forEach(function (ln, i) { ln.className = 'rline' + (rowMode && fr.r === i ? ' hi' : ''); });
+
     var e = fr.e || [], p = fr.p || [], d = fr.d || [];
     for (var i = 0; i < 12; i++) {
       var cl = 'seat';
