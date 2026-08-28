@@ -1,0 +1,237 @@
+{
+  "voice": "en-GB-SoniaNeural",
+  "rate": "-4%",
+  "clips": [
+    {
+      "file": "board-01.mp3",
+      "scene": "board",
+      "line": 1,
+      "words": 18,
+      "say": "A small aeroplane has four rows of seats, with three seats in every row. Twelve seats in total."
+    },
+    {
+      "file": "board-02.mp3",
+      "scene": "board",
+      "line": 2,
+      "words": 14,
+      "say": "Eight passengers have already boarded, and they have taken their seats completely at random."
+    },
+    {
+      "file": "board-03.mp3",
+      "scene": "board",
+      "line": 3,
+      "words": 35,
+      "say": "A married couple is next to board. They would like two seats next to each other in the same row. In this particular arrangement they are out of luck: no two empty seats are neighbours."
+    },
+    {
+      "file": "idea-01.mp3",
+      "scene": "idea",
+      "line": 1,
+      "words": 22,
+      "say": "Here is the idea that makes this problem easy. Stop thinking about the eight passengers, and think only about the empty seats."
+    },
+    {
+      "file": "idea-02.mp3",
+      "scene": "idea",
+      "line": 2,
+      "words": 26,
+      "say": "Whoever sits wherever, exactly four seats are left over. And because the passengers sat down at random, every set of four empty seats is equally likely."
+    },
+    {
+      "file": "idea-03.mp3",
+      "scene": "idea",
+      "line": 3,
+      "words": 39,
+      "say": "So the whole problem is just this: choose four seats out of twelve to stay empty. That is twelve choose four, which is eleven thousand eight hundred and eighty divided by twenty four, or four hundred and ninety five."
+    },
+    {
+      "file": "pairs-01.mp3",
+      "scene": "pairs",
+      "line": 1,
+      "words": 25,
+      "say": "Next, what does sitting together actually mean? A row of three seats contains two neighbouring pairs: seats one and two, and seats two and three."
+    },
+    {
+      "file": "pairs-02.mp3",
+      "scene": "pairs",
+      "line": 2,
+      "words": 11,
+      "say": "With four rows, that gives eight possible spots for the couple."
+    },
+    {
+      "file": "pairs-03.mp3",
+      "scene": "pairs",
+      "line": 3,
+      "words": 22,
+      "say": "The couple can sit together exactly when both seats of one of those pairs happen to be empty. Here, row two works."
+    },
+    {
+      "file": "why-01.mp3",
+      "scene": "why",
+      "line": 1,
+      "words": 31,
+      "say": "You could try to count the winning patterns directly, but it gets messy. This pattern, for example, has two good rows at once, so a careless count would count it twice."
+    },
+    {
+      "file": "why-02.mp3",
+      "scene": "why",
+      "line": 2,
+      "words": 22,
+      "say": "So we turn the problem around and count the failures instead: the patterns in which no row has two neighbouring empty seats."
+    },
+    {
+      "file": "why-03.mp3",
+      "scene": "why",
+      "line": 3,
+      "words": 14,
+      "say": "Count those, subtract from four hundred and ninety five, and the answer falls out."
+    },
+    {
+      "file": "rowrule-01.mp3",
+      "scene": "rowrule",
+      "line": 1,
+      "words": 24,
+      "say": "Look at a single row on its own. Each of its three seats is either empty or taken, so there are eight possible patterns."
+    },
+    {
+      "file": "rowrule-02.mp3",
+      "scene": "rowrule",
+      "line": 2,
+      "words": 24,
+      "say": "A row with nothing empty is fine, and so is a row with any single empty seat. That is one way plus three ways."
+    },
+    {
+      "file": "rowrule-03.mp3",
+      "scene": "rowrule",
+      "line": 3,
+      "words": 18,
+      "say": "Two empty seats are allowed only if they are the outer two, with a passenger sitting between them."
+    },
+    {
+      "file": "rowrule-04.mp3",
+      "scene": "rowrule",
+      "line": 4,
+      "words": 19,
+      "say": "Two neighbouring empty seats are not allowed, and neither is a completely empty row, since that contains neighbours too."
+    },
+    {
+      "file": "rowrule-05.mp3",
+      "scene": "rowrule",
+      "line": 5,
+      "words": 23,
+      "say": "So each row has five legal patterns: one with nothing empty, three with a single empty seat, and one with the outer pair."
+    },
+    {
+      "file": "split-01.mp3",
+      "scene": "split",
+      "line": 1,
+      "words": 23,
+      "say": "Now spread the four empty seats across the four rows. Since no row may hold three or more, only three splits are possible."
+    },
+    {
+      "file": "split-02.mp3",
+      "scene": "split",
+      "line": 2,
+      "words": 7,
+      "say": "Two rows with two empty seats each."
+    },
+    {
+      "file": "split-03.mp3",
+      "scene": "split",
+      "line": 3,
+      "words": 10,
+      "say": "One row with two, and two rows with one each."
+    },
+    {
+      "file": "split-04.mp3",
+      "scene": "split",
+      "line": 4,
+      "words": 8,
+      "say": "Or a single empty seat in every row."
+    },
+    {
+      "file": "casea-01.mp3",
+      "scene": "casea",
+      "line": 1,
+      "words": 30,
+      "say": "First case: two rows hold two empty seats each. Each of those rows is forced to use its outer pair, so there is no freedom inside a row at all."
+    },
+    {
+      "file": "casea-02.mp3",
+      "scene": "casea",
+      "line": 2,
+      "words": 25,
+      "say": "The only choice is which two of the four rows are the doubled ones. Four choose two is six, so this case gives six patterns."
+    },
+    {
+      "file": "caseb-01.mp3",
+      "scene": "caseb",
+      "line": 1,
+      "words": 20,
+      "say": "Second case: one row holds two empty seats and two other rows hold one each. One row stays completely full."
+    },
+    {
+      "file": "caseb-02.mp3",
+      "scene": "caseb",
+      "line": 2,
+      "words": 21,
+      "say": "Choose the doubled row: four ways. Choose which two of the remaining three rows get a single empty seat: three ways."
+    },
+    {
+      "file": "caseb-03.mp3",
+      "scene": "caseb",
+      "line": 3,
+      "words": 35,
+      "say": "The doubled row is forced to its outer pair, but each single empty seat can sit anywhere in its row: three choices each. Four times three times three times three is one hundred and eight."
+    },
+    {
+      "file": "casec-01.mp3",
+      "scene": "casec",
+      "line": 1,
+      "words": 25,
+      "say": "Third case: a single empty seat in every row. A lone empty seat can never touch another one, so every row is free to choose."
+    },
+    {
+      "file": "casec-02.mp3",
+      "scene": "casec",
+      "line": 2,
+      "words": 17,
+      "say": "Three choices in each of the four rows: three to the fourth power, which is eighty one."
+    },
+    {
+      "file": "add-01.mp3",
+      "scene": "add",
+      "line": 1,
+      "words": 28,
+      "say": "Add the three cases together. Six, plus one hundred and eight, plus eighty one, is one hundred and ninety five patterns in which the couple is split up."
+    },
+    {
+      "file": "finish-01.mp3",
+      "scene": "finish",
+      "line": 1,
+      "words": 24,
+      "say": "That leaves four hundred and ninety five minus one hundred and ninety five, which is three hundred patterns where the couple do sit together."
+    },
+    {
+      "file": "finish-02.mp3",
+      "scene": "finish",
+      "line": 2,
+      "words": 26,
+      "say": "The probability is three hundred over four hundred and ninety five. Divide the top and the bottom by fifteen, and you get twenty over thirty three."
+    },
+    {
+      "file": "takeaway-01.mp3",
+      "scene": "takeaway",
+      "line": 1,
+      "words": 23,
+      "say": "Two moves did all the work here. Count the empty seats instead of the passengers, and count the failures instead of the successes."
+    },
+    {
+      "file": "takeaway-02.mp3",
+      "scene": "takeaway",
+      "line": 2,
+      "words": 20,
+      "say": "Whenever a condition says at least one, that second move is usually the one to reach for. Thanks for watching."
+    }
+  ]
+}

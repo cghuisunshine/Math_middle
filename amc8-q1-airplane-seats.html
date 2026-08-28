@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two Empty Seats in a Row — 2024 AMC 8 #25, narrated</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#E4E8EC;
+    --card:#FFFFFF;
+    --ink:#0F1720;
+    --ink-soft:#4A5866;
+    --rule:#CBD4DC;
+    --pick:#D6214B;
+    --keep:#B7C2CC;
+    --mark:#0B6E6E;
+    --wash:#F4F7F9;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    font-size:17px;line-height:1.6;
+  }
+  .wrap{max-width:940px;margin:0 auto;padding:0 20px}
+  a{color:var(--ink)}
+  a:focus-visible,button:focus-visible{outline:2px solid var(--pick);outline-offset:2px}
+
+  header.hero{padding:56px 0 30px;border-bottom:1px solid var(--rule)}
+  .eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--ink-soft)}
+  h1{font-family:"Fraunces",Georgia,serif;font-weight:600;
+     font-size:clamp(30px,5.4vw,46px);line-height:1.06;letter-spacing:-.02em;margin:14px 0 16px}
+  .lede{max-width:56ch;color:var(--ink-soft);margin:0}
+  .backlink{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-soft);
+    text-decoration:none;border-bottom:1px solid var(--rule)}
+
+  .problem{background:var(--card);border:1px solid var(--rule);margin:26px 0 0;padding:26px 24px}
+  .src{font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.08em;color:var(--pick)}
+  .statement{font-family:"Fraunces",Georgia,serif;font-size:20px;line-height:1.45;margin:12px 0 0}
+  .choices{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0;padding:0;list-style:none}
+  .choices li{font-family:"IBM Plex Mono",monospace;font-size:14px;
+    border:1px solid var(--rule);padding:6px 12px;color:var(--ink-soft);background:var(--wash)}
+  .choices li.correct{border-color:var(--pick);color:var(--ink);background:#fff;
+    box-shadow:inset 0 -3px 0 var(--pick);font-weight:500}
+  .choices .lab{color:var(--pick);margin-right:6px}
+  .choices li:not(.correct) .lab{color:var(--keep)}
+
+  /* ---------------- player ---------------- */
+  .player{background:var(--card);border:1px solid var(--rule);margin:22px 0 0}
+  .pbar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
+    padding:10px 16px;border-bottom:1px solid var(--rule);background:var(--wash);
+    font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-soft)}
+  .pbar .now{color:var(--ink)}
+  .progress{height:3px;background:var(--rule)}
+  .progress i{display:block;height:100%;width:0;background:var(--pick);transition:width .4s ease}
+
+  .stage{display:flex;gap:30px;padding:26px 22px 8px;align-items:flex-start;flex-wrap:wrap}
+  .viewport{flex:0 0 auto;min-height:220px;position:relative}
+  .side{flex:1 1 300px;min-width:270px}
+
+  /* seat map */
+  .planewrap{display:flex;flex-direction:column;gap:10px}
+  .prow{display:flex;align-items:center;gap:10px}
+  .rlab{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--keep);width:20px}
+  .seat{width:50px;height:36px;border:1.5px solid var(--keep);border-radius:9px;background:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-family:"IBM Plex Mono",monospace;font-size:15px;color:var(--pick);
+    transition:background .4s ease,border-color .4s ease,opacity .4s ease,box-shadow .4s ease,transform .4s ease}
+  .seat.taken{background:var(--keep);border-color:var(--keep)}
+  .seat.pair{border-color:var(--pick);box-shadow:inset 0 0 0 2px rgba(214,33,75,.18);transform:translateY(-1px)}
+  .seat.dim{opacity:.2}
+  .rbadge{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--ink-soft);
+    border:1px solid var(--rule);border-radius:999px;padding:1px 8px;margin-left:4px;
+    opacity:0;transition:opacity .35s ease}
+  .rbadge.on{opacity:1}
+  .rbadge.two{color:var(--pick);border-color:var(--pick)}
+
+  /* single-row rule chart */
+  .rowmenu{display:flex;gap:26px;flex-wrap:wrap}
+  .rgroup h4{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;font-weight:500;margin:0 0 10px}
+  .rgroup.legal h4{color:var(--pick)}
+  .rgroup.illegal h4{color:var(--mark)}
+  .rline{display:flex;align-items:center;gap:9px;padding:5px 8px;margin:0 -8px;border-radius:8px;
+    opacity:.42;transition:opacity .3s ease,background .3s ease,box-shadow .3s ease}
+  .rline.hi{opacity:1;background:var(--wash);box-shadow:inset 0 0 0 1px var(--rule)}
+  .rline .mark{font-family:"IBM Plex Mono",monospace;font-size:13px;width:12px}
+  .rline .cap{font-family:"IBM Plex Mono",monospace;font-size:11.5px;color:var(--ink-soft);white-space:nowrap}
+  .legal .mark{color:var(--pick)}
+  .illegal .mark{color:var(--mark)}
+  .mini3{display:inline-flex;gap:5px;flex:none}
+  .msseat{display:inline-block;width:28px;height:21px;flex:none;
+    border:1.5px solid var(--keep);border-radius:5px;background:#fff}
+  .msseat.taken{background:var(--keep)}
+  .msseat.clash{border-color:var(--mark);box-shadow:inset 0 0 0 2px rgba(11,110,110,.16)}
+
+  /* proportion bar */
+  .barwrap{width:min(340px,72vw)}
+  .bartitle{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px}
+  .bar{display:flex;height:54px;border:1px solid var(--rule);overflow:hidden;background:var(--wash)}
+  .bar span{display:flex;align-items:center;justify-content:center;
+    font-family:"IBM Plex Mono",monospace;font-size:13px;color:#fff;
+    transition:width .8s cubic-bezier(.3,.8,.3,1),opacity .5s ease;white-space:nowrap;overflow:hidden}
+  .bar .good{background:var(--pick);width:0}
+  .bar .bad{background:var(--mark);width:0}
+  .bar .rest{background:var(--keep);flex:1}
+  .barlegend{display:flex;gap:16px;margin-top:10px;font-family:"IBM Plex Mono",monospace;
+    font-size:12px;color:var(--ink-soft);flex-wrap:wrap}
+  .barlegend i{display:inline-block;width:10px;height:10px;margin-right:6px;vertical-align:baseline}
+  .sw-good{background:var(--pick)} .sw-bad{background:var(--mark)}
+
+  /* side panel */
+  .flag{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:12px;
+    padding:4px 11px;border:1px solid var(--rule);border-radius:999px;color:var(--ink-soft);margin-bottom:12px}
+  .flag.ok{color:var(--pick);border-color:var(--pick)}
+  .flag.bad{color:var(--mark);border-color:var(--mark)}
+  .flag.hide{display:none}
+  .stitle{font-family:"Fraunces",Georgia,serif;font-size:21px;line-height:1.25;margin:0 0 10px}
+  .math{font-family:"IBM Plex Mono",monospace;font-size:15px;background:var(--wash);
+    border:1px solid var(--rule);padding:11px 14px;margin-top:12px;line-height:1.9;overflow-x:auto}
+  .math.hide{display:none}
+  .cap{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-soft);margin-top:12px}
+
+  /* running ledger */
+  .ledger{margin-top:16px;border:1px solid var(--rule);border-bottom:none;font-family:"IBM Plex Mono",monospace;font-size:13px}
+  .ledger div{display:flex;justify-content:space-between;gap:12px;padding:7px 12px;
+    border-bottom:1px solid var(--rule);color:var(--keep);transition:color .4s ease,background .4s ease}
+  .ledger div.on{color:var(--ink)}
+  .ledger div.on .v{color:var(--pick)}
+  .ledger div.sum{background:var(--wash)}
+  .ledger .v{font-weight:500}
+
+  /* captions + controls */
+  .caption{margin:6px 22px 0;padding:14px 16px;background:var(--wash);border:1px solid var(--rule);
+    font-size:16px;line-height:1.55;min-height:64px;color:var(--ink)}
+  .caption b{font-weight:500}
+  .ctl{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:14px 22px 16px}
+  .ctl button{font-family:"IBM Plex Mono",monospace;font-size:12.5px;background:#fff;color:var(--ink);
+    border:1px solid var(--rule);padding:8px 14px;cursor:pointer;border-radius:2px}
+  .ctl button:hover{border-color:var(--ink-soft)}
+  .ctl button.primary{background:var(--pick);border-color:var(--pick);color:#fff;min-width:112px}
+  .ctl .spacer{flex:1}
+  .ctl .hint{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--keep)}
+
+  /* chapters */
+  .chapters{border-top:1px solid var(--rule);display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(168px,1fr))}
+  .chapters button{text-align:left;background:#fff;border:none;border-right:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);padding:11px 14px;cursor:pointer;font:inherit;font-size:13.5px;color:var(--ink-soft)}
+  .chapters button:hover{background:var(--wash)}
+  .chapters button.on{color:var(--ink);box-shadow:inset 3px 0 0 var(--pick)}
+  .chapters .n{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--keep);display:block}
+
+  /* recap */
+  .recap{background:var(--card);border:1px solid var(--rule);margin:22px 0 0;padding:26px 24px}
+  .recap h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:24px;margin:0 0 4px}
+  .recap .sub{color:var(--ink-soft);margin:0 0 6px;font-size:15.5px}
+  ol.steps{counter-reset:s;list-style:none;margin:18px 0 0;padding:0;border-top:1px solid var(--rule)}
+  ol.steps > li{counter-increment:s;position:relative;padding:16px 0 16px 40px;border-bottom:1px solid var(--rule)}
+  ol.steps > li::before{content:counter(s);position:absolute;left:0;top:16px;
+    font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-soft);
+    width:24px;height:24px;line-height:24px;text-align:center;border:1px solid var(--rule);border-radius:50%}
+  table.mini{border-collapse:collapse;margin-top:12px;font-family:"IBM Plex Mono",monospace;font-size:13.5px}
+  table.mini th,table.mini td{border:1px solid var(--rule);padding:6px 12px;text-align:left}
+  table.mini th{background:var(--wash);font-weight:500;color:var(--ink-soft)}
+  .answer{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px;margin-top:20px}
+  .answer .lbl{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--ink-soft)}
+  .answer .val{font-family:"Fraunces",Georgia,serif;font-weight:700;font-size:30px;
+    letter-spacing:-.01em;border-bottom:3px solid var(--pick);line-height:1.1}
+  .note{margin-top:16px;font-size:15px;color:var(--ink-soft);border-left:2px solid var(--rule);padding-left:14px}
+
+  footer{border-top:1px solid var(--rule);margin-top:36px;padding:22px 0 56px;
+    font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-soft)}
+
+  @media (max-width:640px){
+    body{font-size:16px}
+    .stage{padding:20px 16px 6px;gap:20px}
+    .caption{margin:6px 16px 0}
+    .ctl{padding:12px 16px}
+    .seat{width:44px;height:32px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    .seat,.bar span,.rline,.rbadge{transition:none}
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">2024 AMC 8 · Problem 25 · narrated walkthrough</div>
+  <h1>Two empty seats<br>in the same row</h1>
+  <p class="lede">The whole solution, spoken and animated, one idea at a time — from twelve seats down to a single fraction.</p>
+  <p style="margin:16px 0 0"><a class="backlink" href="amc8-combinatorics-exam-solutions.html">← back to the five-question exam</a></p>
+</header>
+
+<main>
+
+  <article class="problem">
+    <div class="src">The problem</div>
+    <p class="statement">A small airplane has 4 rows of seats with 3 seats in each row. Eight passengers have boarded the plane and are distributed randomly among the seats. A married couple is next to board. What is the probability there will be 2 adjacent seats in the same row for the couple?</p>
+    <ul class="choices">
+      <li><span class="lab">(A)</span>8/15</li>
+      <li><span class="lab">(B)</span>32/55</li>
+      <li class="correct"><span class="lab">(C)</span>20/33</li>
+      <li><span class="lab">(D)</span>34/55</li>
+      <li><span class="lab">(E)</span>8/11</li>
+    </ul>
+  </article>
+
+  <section class="player" id="player">
+    <div class="pbar">
+      <span class="now" id="pnow">Scene 1 / 12 — The aeroplane</span>
+      <span id="pline">line 1 / 3</span>
+    </div>
+    <div class="progress"><i id="pfill"></i></div>
+
+    <div class="stage">
+      <div class="viewport">
+        <div class="planewrap" id="plane"></div>
+        <div class="rowmenu" id="rowchart" style="display:none"></div>
+        <div class="barwrap" id="barview" style="display:none">
+          <div class="bartitle">All 495 outcomes</div>
+          <div class="bar">
+            <span class="good" id="barGood"></span>
+            <span class="bad" id="barBad"></span>
+            <span class="rest"></span>
+          </div>
+          <div class="barlegend">
+            <span><i class="sw-good"></i>together</span>
+            <span><i class="sw-bad"></i>split up</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="side">
+        <span class="flag hide" id="flag"></span>
+        <p class="stitle" id="stitle"></p>
+        <div class="math hide" id="math"></div>
+        <p class="cap" id="cap"></p>
+        <div class="ledger" id="ledger">
+          <div data-k="a"><span>2 + 2 + 0 + 0</span><span class="v">6</span></div>
+          <div data-k="b"><span>2 + 1 + 1 + 0</span><span class="v">108</span></div>
+          <div data-k="c"><span>1 + 1 + 1 + 1</span><span class="v">81</span></div>
+          <div data-k="sum" class="sum"><span>split-up patterns</span><span class="v">195</span></div>
+        </div>
+      </div>
+    </div>
+
+    <p class="caption" id="caption">Press play — Sonia will talk you through it.</p>
+
+    <div class="ctl">
+      <button type="button" id="btnPlay" class="primary">▶ Play</button>
+      <button type="button" id="btnPrev">◀ Back</button>
+      <button type="button" id="btnNext">Next ▶</button>
+      <button type="button" id="btnReplay">↻ Replay line</button>
+      <span class="spacer"></span>
+      <button type="button" id="btnMute">🔊 Sound on</button>
+      <span class="hint" id="audioHint"></span>
+    </div>
+
+    <div class="chapters" id="chapters"></div>
+  </section>
+
+  <section class="recap">
+    <h2>The argument in full</h2>
+    <p class="sub">Everything the narration says, written down.</p>
+    <ol class="steps">
+      <li><strong>Count empty seats, not passengers.</strong> Twelve seats, eight passengers, so exactly four seats stay empty. A seating arrangement matters to this problem only through which four seats are left, and every set of four is equally likely.
+        <div class="math">C(12,4) = (12 × 11 × 10 × 9) / (4 × 3 × 2 × 1) = 11880 / 24 = 495</div>
+      </li>
+      <li><strong>Translate the condition.</strong> A row of three contains two neighbouring pairs — seats 1–2 and seats 2–3 — so there are 4 × 2 = 8 places the couple could sit. They fit exactly when both seats of one such pair are empty.</li>
+      <li><strong>Count the complement.</strong> Counting "at least one good row" directly means inclusion–exclusion over four overlapping rows. Counting the failures is easier: no row may contain two neighbouring empty seats.
+        <div class="math">P(together) = 1 − (failures) / 495</div>
+      </li>
+      <li><strong>The rule inside one row.</strong> Of the 2³ = 8 ways a row can be empty, five are legal: nothing, any single seat (3 ways), or the two outer seats. Two neighbours or all three are out.
+        <table class="mini">
+          <tr><th>Empties in a row</th><th>0</th><th>1</th><th>2</th><th>3</th></tr>
+          <tr><th>Legal patterns</th><td>1</td><td>3</td><td>1</td><td>0</td></tr>
+        </table>
+      </li>
+      <li><strong>Split the four empty seats across the four rows.</strong> No row may hold three, so the only splits are 2+2, 2+1+1 and 1+1+1+1.</li>
+      <li><strong>Case 2 + 2 + 0 + 0.</strong> Choose the two doubled rows; each is forced to its outer pair.
+        <div class="math">C(4,2) × 1 × 1 = 6</div>
+      </li>
+      <li><strong>Case 2 + 1 + 1 + 0.</strong> Choose the doubled row (4), choose which two of the other three rows hold a single empty seat (C(3,2) = 3), then place each single seat freely (3 × 3).
+        <div class="math">4 × 3 × 1 × 3 × 3 = 108</div>
+      </li>
+      <li><strong>Case 1 + 1 + 1 + 1.</strong> A lone empty seat never touches another, so each row chooses independently.
+        <div class="math">3 × 3 × 3 × 3 = 81</div>
+      </li>
+      <li><strong>Add, then subtract from 1.</strong>
+        <div class="math">6 + 108 + 81 = 195 split-up patterns<br>495 − 195 = 300 patterns where they sit together<br>300 / 495 = 20 / 33 ≈ 0.606</div>
+      </li>
+    </ol>
+    <div class="answer"><span class="lbl">Answer</span><span class="val">(C) 20/33</span></div>
+    <p class="note">Two moves carry the whole problem: count the empty seats rather than the people, and count the failures rather than the successes.</p>
+  </section>
+
+</main>
+</div>
+
+<footer>
+  <div class="wrap">2024 AMC 8 Problem 25 · narrated with edge-tts (en-GB-SoniaNeural) · regenerate audio with <code>tools/build_q1_audio.py</code></div>
+</footer>
+
+<audio id="voice" preload="none"></audio>
+
+<script>
+/* ============================================================
+   NARRATION-START
+   Single source of truth for the spoken lines AND the visuals.
+   Strict JSON — tools/build_q1_audio.py parses this block and
+   renders audio/q1/<id>-<nn>.mp3 for every "say" field.
+   Edit the text here, then re-run the script.
+   ============================================================ */
+var SCENES =
+[
+  {
+    "id": "board",
+    "title": "The aeroplane",
+    "view": "plane",
+    "lines": [
+      { "say": "A small aeroplane has four rows of seats, with three seats in every row. Twelve seats in total.",
+        "v": { "e": "all", "math": "4 rows × 3 seats = 12 seats", "cap": "four rows · three seats across" } },
+      { "say": "Eight passengers have already boarded, and they have taken their seats completely at random.",
+        "v": { "e": [2,5,6,9], "stagger": true, "math": "12 seats − 8 passengers = 4 empty seats", "cap": "grey = taken · white = empty" } },
+      { "say": "A married couple is next to board. They would like two seats next to each other in the same row. In this particular arrangement they are out of luck: no two empty seats are neighbours.",
+        "v": { "e": [2,5,6,9], "flag": "bad", "math": "empty: row 1 seat 3 · row 2 seat 3 · row 3 seat 1 · row 4 seat 1", "cap": "four empty seats, no two side by side" } }
+    ]
+  },
+  {
+    "id": "idea",
+    "title": "The key idea",
+    "view": "plane",
+    "lines": [
+      { "say": "Here is the idea that makes this problem easy. Stop thinking about the eight passengers, and think only about the empty seats.",
+        "v": { "e": [2,5,6,9], "dimTaken": true, "math": "", "cap": "ignore who sits where" } },
+      { "say": "Whoever sits wherever, exactly four seats are left over. And because the passengers sat down at random, every set of four empty seats is equally likely.",
+        "v": { "cycle": [[3,4,8,11],[0,2,5,10],[1,6,7,9],[2,3,8,10]], "cap": "every set of four is equally likely" } },
+      { "say": "So the whole problem is just this: choose four seats out of twelve to stay empty. That is twelve choose four, which is eleven thousand eight hundred and eighty divided by twenty four, or four hundred and ninety five.",
+        "v": { "cycle": [[0,1,2,3],[4,7,9,11],[2,5,6,8],[1,3,8,10]], "math": "C(12,4) = (12 × 11 × 10 × 9) / (4 × 3 × 2 × 1) = 11880 / 24 = 495", "cap": "495 equally likely outcomes" } }
+    ]
+  },
+  {
+    "id": "pairs",
+    "title": "What “together” means",
+    "view": "plane",
+    "lines": [
+      { "say": "Next, what does sitting together actually mean? A row of three seats contains two neighbouring pairs: seats one and two, and seats two and three.",
+        "v": { "e": "all", "cycleP": [[0,1],[1,2]], "math": "one row of 3 → 2 adjacent pairs", "cap": "row 1, the two neighbouring pairs" } },
+      { "say": "With four rows, that gives eight possible spots for the couple.",
+        "v": { "e": "all", "cycleP": [[0,1],[1,2],[3,4],[4,5],[6,7],[7,8],[9,10],[10,11]], "math": "4 rows × 2 pairs = 8 possible spots", "cap": "eight places the couple could sit" } },
+      { "say": "The couple can sit together exactly when both seats of one of those pairs happen to be empty. Here, row two works.",
+        "v": { "e": [3,4,8,11], "p": [3,4], "heart": true, "flag": "ok", "math": "empty seats 4 and 5 are neighbours → the couple fits", "cap": "a winning pattern" } }
+    ]
+  },
+  {
+    "id": "why",
+    "title": "Why count backwards",
+    "view": "plane",
+    "lines": [
+      { "say": "You could try to count the winning patterns directly, but it gets messy. This pattern, for example, has two good rows at once, so a careless count would count it twice.",
+        "v": { "e": [0,1,3,4], "p": [0,1,3,4], "heart": true, "flag": "ok", "math": "row 1 works and row 2 works — overlapping cases", "cap": "direct counting needs inclusion–exclusion" } },
+      { "say": "So we turn the problem around and count the failures instead: the patterns in which no row has two neighbouring empty seats.",
+        "v": { "e": [0,2,4,9], "p": [], "heart": false, "flag": "bad", "math": "no two empty seats are neighbours", "cap": "a failure — count these instead" } },
+      { "say": "Count those, subtract from four hundred and ninety five, and the answer falls out.",
+        "v": { "e": [0,2,4,9], "flag": "", "math": "P(together) = 1 − (failures) / 495", "cap": "the plan" } }
+    ]
+  },
+  {
+    "id": "rowrule",
+    "title": "The rule in one row",
+    "view": "rows",
+    "lines": [
+      { "say": "Look at a single row on its own. Each of its three seats is either empty or taken, so there are eight possible patterns.",
+        "v": { "rows": [0,1,2,3,4,5,6,7], "math": "2³ = 8 patterns for one row", "cap": "all eight patterns for one row" } },
+      { "say": "A row with nothing empty is fine, and so is a row with any single empty seat. That is one way plus three ways.",
+        "v": { "rows": [0,1,2,3], "math": "0 empty → 1 way · 1 empty → 3 ways", "cap": "safe: nothing, or any one seat" } },
+      { "say": "Two empty seats are allowed only if they are the outer two, with a passenger sitting between them.",
+        "v": { "rows": [4], "math": "2 empty → 1 way (the outer pair only)", "cap": "the only legal double" } },
+      { "say": "Two neighbouring empty seats are not allowed, and neither is a completely empty row, since that contains neighbours too.",
+        "v": { "rows": [5,6,7], "flag": "bad", "math": "3 empty → 0 ways", "cap": "these hand the couple a seat" } },
+      { "say": "So each row has five legal patterns: one with nothing empty, three with a single empty seat, and one with the outer pair.",
+        "v": { "rows": [0,1,2,3,4], "flag": "ok", "math": "1 + 3 + 1 = 5 legal patterns per row", "cap": "five legal patterns per row" } }
+    ]
+  },
+  {
+    "id": "split",
+    "title": "Splitting four seats",
+    "view": "plane",
+    "lines": [
+      { "say": "Now spread the four empty seats across the four rows. Since no row may hold three or more, only three splits are possible.",
+        "v": { "e": [0,1,2,4], "p": [0,1], "heart": true, "flag": "ok", "badges": ["3","1","0","0"], "math": "a row of 3 empty always contains neighbours → never a failure", "cap": "so no row may hold 3 or 4" } },
+      { "say": "Two rows with two empty seats each.",
+        "v": { "e": [0,2,3,5], "p": [], "flag": "", "badges": ["2","2","0","0"], "math": "4 = 2 + 2 + 0 + 0", "cap": "case 1" } },
+      { "say": "One row with two, and two rows with one each.",
+        "v": { "e": [0,2,4,7], "badges": ["2","1","1","0"], "math": "4 = 2 + 1 + 1 + 0", "cap": "case 2" } },
+      { "say": "Or a single empty seat in every row.",
+        "v": { "e": [1,4,7,10], "badges": ["1","1","1","1"], "math": "4 = 1 + 1 + 1 + 1", "cap": "case 3" } }
+    ]
+  },
+  {
+    "id": "casea",
+    "title": "Case 1 — two and two",
+    "view": "plane",
+    "lines": [
+      { "say": "First case: two rows hold two empty seats each. Each of those rows is forced to use its outer pair, so there is no freedom inside a row at all.",
+        "v": { "e": [0,2,3,5], "badges": ["2","2","0","0"], "math": "each doubled row → the outer pair, 1 way", "cap": "no choice inside the rows" } },
+      { "say": "The only choice is which two of the four rows are the doubled ones. Four choose two is six, so this case gives six patterns.",
+        "v": { "cycle": [[0,2,3,5],[0,2,6,8],[0,2,9,11],[3,5,6,8],[3,5,9,11],[6,8,9,11]], "badges": null, "math": "C(4,2) × 1 × 1 = 6", "ledger": "a", "cap": "all six patterns of this case" } }
+    ]
+  },
+  {
+    "id": "caseb",
+    "title": "Case 2 — two, one and one",
+    "view": "plane",
+    "lines": [
+      { "say": "Second case: one row holds two empty seats and two other rows hold one each. One row stays completely full.",
+        "v": { "e": [0,2,4,7], "badges": ["2","1","1","0"], "math": "one doubled row · two single rows · one full row", "cap": "the shape of case 2" } },
+      { "say": "Choose the doubled row: four ways. Choose which two of the remaining three rows get a single empty seat: three ways.",
+        "v": { "cycle": [[0,2,4,7],[0,2,4,10],[3,5,1,10],[6,8,0,11]], "badges": null, "math": "4 × C(3,2) = 4 × 3 = 12 ways to pick the rows", "cap": "picking the rows" } },
+      { "say": "The doubled row is forced to its outer pair, but each single empty seat can sit anywhere in its row: three choices each. Four times three times three times three is one hundred and eight.",
+        "v": { "cycle": [[0,2,4,7],[0,2,3,10],[6,8,1,11],[9,11,0,4]], "math": "4 × 3 × 1 × 3 × 3 = 108", "ledger": "b", "cap": "108 patterns" } }
+    ]
+  },
+  {
+    "id": "casec",
+    "title": "Case 3 — one in every row",
+    "view": "plane",
+    "lines": [
+      { "say": "Third case: a single empty seat in every row. A lone empty seat can never touch another one, so every row is free to choose.",
+        "v": { "e": [1,4,7,10], "badges": ["1","1","1","1"], "math": "a single empty seat is always legal", "cap": "one per row" } },
+      { "say": "Three choices in each of the four rows: three to the fourth power, which is eighty one.",
+        "v": { "cycle": [[1,4,7,10],[0,4,8,9],[2,3,7,11],[0,5,7,9]], "badges": null, "math": "3 × 3 × 3 × 3 = 3⁴ = 81", "ledger": "c", "cap": "81 patterns" } }
+    ]
+  },
+  {
+    "id": "add",
+    "title": "Adding the failures",
+    "view": "bar",
+    "lines": [
+      { "say": "Add the three cases together. Six, plus one hundred and eight, plus eighty one, is one hundred and ninety five patterns in which the couple is split up.",
+        "v": { "bar": { "bad": 195 }, "ledger": "sum", "math": "6 + 108 + 81 = 195", "cap": "195 of the 495 outcomes fail" } }
+    ]
+  },
+  {
+    "id": "finish",
+    "title": "The answer",
+    "view": "bar",
+    "lines": [
+      { "say": "That leaves four hundred and ninety five minus one hundred and ninety five, which is three hundred patterns where the couple do sit together.",
+        "v": { "bar": { "bad": 195, "good": 300 }, "math": "495 − 195 = 300", "cap": "300 winning outcomes" } },
+      { "say": "The probability is three hundred over four hundred and ninety five. Divide the top and the bottom by fifteen, and you get twenty over thirty three.",
+        "v": { "bar": { "bad": 195, "good": 300 }, "flag": "ok", "math": "300 / 495 = (300 ÷ 15) / (495 ÷ 15) = 20 / 33 ≈ 0.606", "cap": "answer (C) 20/33" } }
+    ]
+  },
+  {
+    "id": "takeaway",
+    "title": "The takeaway",
+    "view": "plane",
+    "lines": [
+      { "say": "Two moves did all the work here. Count the empty seats instead of the passengers, and count the failures instead of the successes.",
+        "v": { "e": [3,4,8,11], "p": [3,4], "heart": true, "flag": "ok", "bar": null, "math": "20 / 33 ≈ 61%", "cap": "a little better than a coin flip" } },
+      { "say": "Whenever a condition says at least one, that second move is usually the one to reach for. Thanks for watching.",
+        "v": { "cycle": [[3,4,8,11],[0,1,5,9],[2,6,7,10],[1,2,5,8]], "math": "“at least one” → count the complement", "cap": "remember this pattern" } }
+    ]
+  }
+];
+/* NARRATION-END */
+
+/* ================= player ================= */
+(function () {
+  var AUDIO_DIR = 'audio/q1/';
+  var ALL = [0,1,2,3,4,5,6,7,8,9,10,11];
+
+  /* ---- build the seat map ---- */
+  var plane = document.getElementById('plane'), seats = [], badges = [];
+  for (var r = 0; r < 4; r++) {
+    var row = document.createElement('div');
+    row.className = 'prow';
+    var lab = document.createElement('span');
+    lab.className = 'rlab'; lab.textContent = 'R' + (r + 1);
+    row.appendChild(lab);
+    for (var c = 0; c < 3; c++) {
+      var s = document.createElement('div');
+      s.className = 'seat';
+      row.appendChild(s); seats.push(s);
+    }
+    var bd = document.createElement('span');
+    bd.className = 'rbadge';
+    row.appendChild(bd); badges.push(bd);
+    plane.appendChild(row);
+  }
+
+  /* ---- build the single-row rule chart ---- */
+  var ROWPAT = [
+    { e: [],      ok: true,  cap: 'nothing empty' },
+    { e: [0],     ok: true,  cap: 'seat 1 only' },
+    { e: [1],     ok: true,  cap: 'seat 2 only' },
+    { e: [2],     ok: true,  cap: 'seat 3 only' },
+    { e: [0,2],   ok: true,  cap: 'the outer two' },
+    { e: [0,1],   ok: false, cap: 'seats 1–2 — neighbours', clash: [0,1] },
+    { e: [1,2],   ok: false, cap: 'seats 2–3 — neighbours', clash: [1,2] },
+    { e: [0,1,2], ok: false, cap: 'the whole row', clash: [0,1,2] }
+  ];
+  var rowLines = [];
+  (function () {
+    var box = document.getElementById('rowchart');
+    [{ cls: 'legal', h: 'Legal — 5 ways', ok: true },
+     { cls: 'illegal', h: 'Illegal — 3 ways', ok: false }].forEach(function (grp) {
+      var g = document.createElement('div');
+      g.className = 'rgroup ' + grp.cls;
+      var h = document.createElement('h4'); h.textContent = grp.h; g.appendChild(h);
+      ROWPAT.forEach(function (pat, idx) {
+        if (pat.ok !== grp.ok) return;
+        var line = document.createElement('div'); line.className = 'rline';
+        var mk = document.createElement('span'); mk.className = 'mark';
+        mk.textContent = pat.ok ? '✓' : '✗'; line.appendChild(mk);
+        var mini = document.createElement('span'); mini.className = 'mini3';
+        for (var c = 0; c < 3; c++) {
+          var sq = document.createElement('span');
+          sq.className = 'msseat' + (pat.e.indexOf(c) < 0 ? ' taken' : '') +
+                         ((pat.clash || []).indexOf(c) >= 0 ? ' clash' : '');
+          mini.appendChild(sq);
+        }
+        line.appendChild(mini);
+        var cp = document.createElement('span'); cp.className = 'cap'; cp.textContent = pat.cap;
+        line.appendChild(cp);
+        g.appendChild(line); rowLines[idx] = line;
+      });
+      box.appendChild(g);
+    });
+  })();
+
+  var el = {
+    plane: plane,
+    rows: document.getElementById('rowchart'),
+    bar: document.getElementById('barview'),
+    good: document.getElementById('barGood'),
+    bad: document.getElementById('barBad'),
+    flag: document.getElementById('flag'),
+    title: document.getElementById('stitle'),
+    math: document.getElementById('math'),
+    cap: document.getElementById('cap'),
+    caption: document.getElementById('caption'),
+    now: document.getElementById('pnow'),
+    lineNo: document.getElementById('pline'),
+    fill: document.getElementById('pfill'),
+    chapters: document.getElementById('chapters'),
+    ledger: document.getElementById('ledger'),
+    hint: document.getElementById('audioHint'),
+    voice: document.getElementById('voice'),
+    play: document.getElementById('btnPlay'),
+    prev: document.getElementById('btnPrev'),
+    next: document.getElementById('btnNext'),
+    replay: document.getElementById('btnReplay'),
+    mute: document.getElementById('btnMute')
+  };
+
+  /* flat playlist of every line */
+  var LIST = [];
+  SCENES.forEach(function (sc, si) {
+    sc.lines.forEach(function (ln, li) {
+      LIST.push({ scene: sc, si: si, li: li, line: ln,
+                  src: AUDIO_DIR + sc.id + '-' + (li < 9 ? '0' : '') + (li + 1) + '.mp3' });
+    });
+  });
+
+  var idx = 0, playing = false, muted = false, cycTimer = null, fallbackTimer = null;
+  var ledgerOn = {};
+
+  SCENES.forEach(function (sc, si) {
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.innerHTML = '<span class="n">' + (si + 1 < 10 ? '0' : '') + (si + 1) + '</span>' + sc.title;
+    b.addEventListener('click', function () { jumpToScene(si); });
+    el.chapters.appendChild(b);
+  });
+
+  function firstIndexOfScene(si) {
+    for (var i = 0; i < LIST.length; i++) if (LIST[i].si === si) return i;
+    return 0;
+  }
+
+  /* ---- rendering ---- */
+  function paintPlane(st) {
+    var e = st.e === 'all' ? ALL : (st.e || []);
+    var p = st.p || [];
+    for (var i = 0; i < 12; i++) {
+      var cl = 'seat';
+      if (e.indexOf(i) < 0) cl += ' taken';
+      if (p.indexOf(i) >= 0) cl += ' pair';
+      if (st.dimTaken && e.indexOf(i) < 0) cl += ' dim';
+      seats[i].className = cl;
+      seats[i].style.transitionDelay = st.stagger ? (i * 55) + 'ms' : '';
+      seats[i].textContent = (st.heart && p.indexOf(i) >= 0) ? '♥' : '';
+    }
+    for (var r = 0; r < 4; r++) {
+      var v = st.badges ? st.badges[r] : null;
+      badges[r].textContent = v === null || v === undefined ? '' : v;
+      badges[r].className = 'rbadge' + (v ? ' on' : '') + (v === '2' || v === '3' ? ' two' : '');
+    }
+  }
+  function paintRows(st) {
+    var hi = st.rows || [];
+    rowLines.forEach(function (ln, i) {
+      ln.className = 'rline' + (hi.indexOf(i) >= 0 ? ' hi' : '');
+    });
+  }
+  function paintBar(st) {
+    var b = st.bar || {};
+    el.bad.style.width = b.bad ? (b.bad / 495 * 100) + '%' : '0';
+    el.good.style.width = b.good ? (b.good / 495 * 100) + '%' : '0';
+    el.bad.textContent = b.bad ? b.bad + ' split up' : '';
+    el.good.textContent = b.good ? b.good + ' together' : '';
+  }
+
+  var state = { e: 'all' };
+
+  function show(view) {
+    el.plane.style.display = view === 'plane' ? '' : 'none';
+    el.rows.style.display = view === 'rows' ? '' : 'none';
+    el.bar.style.display = view === 'bar' ? '' : 'none';
+  }
+
+  function applyLine(item) {
+    var v = item.line.v || {};
+    clearInterval(cycTimer);
+
+    /* sticky: e / bar / badges carry over unless the line says otherwise */
+    if (v.e !== undefined) state.e = v.e;
+    if (v.bar !== undefined) state.bar = v.bar;
+    if (v.badges !== undefined) state.badges = v.badges;
+    state.p = v.p || [];
+    state.rows = v.rows || [];
+    state.heart = !!v.heart;
+    state.stagger = !!v.stagger;
+    state.dimTaken = !!v.dimTaken;
+
+    var view = v.view || item.scene.view;
+    show(view);
+    paintRows(state);
+    paintBar(state);
+
+    if (v.cycle && v.cycle.length) {
+      var k = 0;
+      state.e = v.cycle[0];
+      paintPlane(state);
+      cycTimer = setInterval(function () {
+        k = (k + 1) % v.cycle.length;
+        state.e = v.cycle[k];
+        paintPlane(state);
+      }, 1600);
+    } else if (v.cycleP && v.cycleP.length) {
+      var j = 0;
+      state.p = v.cycleP[0];
+      paintPlane(state);
+      cycTimer = setInterval(function () {
+        j = (j + 1) % v.cycleP.length;
+        state.p = v.cycleP[j];
+        paintPlane(state);
+      }, 850);
+    } else {
+      paintPlane(state);
+    }
+
+    el.title.textContent = item.scene.title;
+    if (v.math) { el.math.innerHTML = v.math; el.math.className = 'math'; }
+    else { el.math.className = 'math hide'; }
+    el.cap.textContent = v.cap || '';
+    if (v.flag === 'ok') { el.flag.className = 'flag ok'; el.flag.textContent = '✓ the couple fits'; }
+    else if (v.flag === 'bad') { el.flag.className = 'flag bad'; el.flag.textContent = '✗ they are split up'; }
+    else { el.flag.className = 'flag hide'; }
+
+    if (v.ledger) ledgerOn[v.ledger] = true;
+    Array.prototype.forEach.call(el.ledger.children, function (row) {
+      row.className = (row.dataset.k === 'sum' ? 'sum' : '') + (ledgerOn[row.dataset.k] ? ' on' : '');
+    });
+
+    el.caption.textContent = item.line.say;
+    el.now.textContent = 'Scene ' + (item.si + 1) + ' / ' + SCENES.length + ' — ' + item.scene.title;
+    el.lineNo.textContent = 'line ' + (item.li + 1) + ' / ' + item.scene.lines.length;
+    el.fill.style.width = ((idx + 1) / LIST.length * 100) + '%';
+    Array.prototype.forEach.call(el.chapters.children, function (b, i) {
+      b.className = i === item.si ? 'on' : '';
+    });
+  }
+
+  /* ---- playback ---- */
+  function estimateMs(text) {
+    return Math.max(2200, text.split(/\s+/).length / 2.7 * 1000 + 700);
+  }
+  function stopTimers() { clearTimeout(fallbackTimer); }
+
+  function speak() {
+    stopTimers();
+    var item = LIST[idx];
+    if (muted) { fallbackTimer = setTimeout(nextAuto, estimateMs(item.line.say)); return; }
+    el.voice.src = item.src;
+    var pr = el.voice.play();
+    if (pr && pr.catch) {
+      pr.catch(function () {
+        /* no audio file yet, or autoplay blocked → fall back to timed pacing */
+        fallbackTimer = setTimeout(nextAuto, estimateMs(item.line.say));
+      });
+    }
+  }
+  function nextAuto() {
+    if (!playing) return;
+    if (idx >= LIST.length - 1) { setPlaying(false); return; }
+    seek(idx + 1); speak();
+  }
+  el.voice.addEventListener('ended', nextAuto);
+  el.voice.addEventListener('error', function () {
+    el.hint.textContent = 'no audio files yet — run tools/build_q1_audio.py';
+    if (playing) { stopTimers(); fallbackTimer = setTimeout(nextAuto, estimateMs(LIST[idx].line.say)); }
+  });
+
+  function setPlaying(on) {
+    playing = on;
+    el.play.textContent = on ? '❚❚ Pause' : '▶ Play';
+    if (on) { speak(); }
+    else { stopTimers(); el.voice.pause(); }
+  }
+  /* Rebuild the whole visual state from line 0 up to i, so jumping around
+     (forwards or backwards) always lands on exactly the same picture. */
+  function seek(i) {
+    idx = Math.max(0, Math.min(LIST.length - 1, i));
+    state = { e: 'all', bar: null, badges: null };
+    ledgerOn = {};
+    for (var k = 0; k < idx; k++) {
+      var vv = LIST[k].line.v || {};
+      if (vv.e !== undefined) state.e = vv.e;
+      if (vv.cycle && vv.cycle.length) state.e = vv.cycle[vv.cycle.length - 1];
+      if (vv.bar !== undefined) state.bar = vv.bar;
+      if (vv.badges !== undefined) state.badges = vv.badges;
+      if (vv.ledger) ledgerOn[vv.ledger] = true;
+    }
+    applyLine(LIST[idx]);
+  }
+  function goto(i) {
+    seek(i);
+    stopTimers(); el.voice.pause();
+    if (playing) speak();
+  }
+  function jumpToScene(si) { goto(firstIndexOfScene(si)); }
+
+  el.play.addEventListener('click', function () { setPlaying(!playing); });
+  el.next.addEventListener('click', function () { goto(idx + 1); });
+  el.prev.addEventListener('click', function () { goto(idx - 1); });
+  el.replay.addEventListener('click', function () { goto(idx); if (!playing) { el.voice.currentTime = 0; if (!muted) el.voice.play().catch(function () {}); } });
+  el.mute.addEventListener('click', function () {
+    muted = !muted;
+    el.mute.textContent = muted ? '🔇 Sound off' : '🔊 Sound on';
+    el.voice.muted = muted;
+    if (muted) { el.voice.pause(); if (playing) { stopTimers(); fallbackTimer = setTimeout(nextAuto, estimateMs(LIST[idx].line.say)); } }
+    else if (playing) speak();
+  });
+
+  document.addEventListener('keydown', function (ev) {
+    if (ev.target && /input|textarea/i.test(ev.target.tagName)) return;
+    if (ev.key === ' ') { ev.preventDefault(); setPlaying(!playing); }
+    else if (ev.key === 'ArrowRight') { goto(idx + 1); }
+    else if (ev.key === 'ArrowLeft') { goto(idx - 1); }
+  });
+
+  seek(0);
+})();
+</script>
+</body>
+</html>
