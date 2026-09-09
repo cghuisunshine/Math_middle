@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Committees, Triplets &amp; Mountain Numbers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+:root{
+  --ground:#EFE5D0;
+  --surface:#FBF4E4;
+  --surface-2:#F5EBD7;
+  --ink:#2B2419;
+  --ink-soft:#5E5241;
+  --ink-faint:#8C7F6B;
+  --rule:#DDCFB4;
+  --accent:#1A6B5B;
+  --accent-soft:#E4EFE6;
+  --flag:#B33A3A;
+  --flag-soft:#F6E4DA;
+}
+/* Single daylight theme: the page stays on the warm paper palette in any OS or browser theme. */
+:root{color-scheme:light}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--ground);color:var(--ink);
+  font-family:"Public Sans",system-ui,-apple-system,sans-serif;
+  font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased;
+}
+main{max-width:62rem;margin:0 auto;padding:40px 22px 72px}
+
+header.masthead{max-width:44rem;margin:0 auto 34px;display:flex;flex-direction:column;gap:10px}
+.eyebrow{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.74rem;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--ink-soft);font-weight:500;
+}
+h1{
+  font-family:Fraunces,Georgia,"Times New Roman",serif;font-weight:600;
+  font-size:clamp(1.95rem,5.4vw,2.85rem);line-height:1.06;margin:0;
+  text-wrap:balance;letter-spacing:-.02em;
+}
+.standfirst{margin:0;color:var(--ink-soft);font-size:1.05rem;max-width:34rem}
+.meta{
+  display:flex;flex-wrap:wrap;gap:8px 18px;align-items:center;
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.78rem;
+  color:var(--ink-faint);border-top:1px solid var(--rule);padding-top:12px;margin-top:6px;
+}
+
+.glance{max-width:44rem;margin:0 auto 40px;background:var(--surface);border:1px solid var(--rule);overflow:hidden}
+.glance h2{
+  margin:0;padding:14px 20px;font-family:"IBM Plex Mono",ui-monospace,monospace;
+  font-size:.76rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;
+  color:var(--ink-soft);border-bottom:1px solid var(--rule);background:var(--surface-2);
+}
+.glance-body{overflow-x:auto}
+table.answers{width:100%;border-collapse:collapse;font-size:.95rem}
+table.answers th,table.answers td{padding:10px 20px;text-align:left;border-bottom:1px solid var(--rule)}
+table.answers tr:last-child td,table.answers tr:last-child th{border-bottom:none}
+table.answers th{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-weight:600;font-size:.85rem;
+  color:var(--accent);white-space:nowrap;vertical-align:top;width:5.5rem;
+}
+table.answers td.val{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-variant-numeric:tabular-nums;
+  font-weight:600;white-space:nowrap;text-align:right;width:9rem;
+}
+table.answers td.desc{color:var(--ink-soft)}
+
+.controls{max-width:44rem;margin:0 auto 30px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+button.toggle{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.78rem;letter-spacing:.06em;
+  text-transform:uppercase;font-weight:600;background:var(--surface);color:var(--ink);
+  border:1px solid var(--rule);border-radius:0;padding:9px 16px;cursor:pointer;
+  transition:border-color .15s,color .15s;
+}
+button.toggle:hover{border-color:var(--accent);color:var(--accent)}
+button.toggle:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.controls .hint{font-size:.85rem;color:var(--ink-faint)}
+
+article.ex{max-width:44rem;margin:0 auto 34px;background:var(--surface);border:1px solid var(--rule)}
+.ex-head{padding:20px 26px 0}
+.ex-num{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.8rem;font-weight:600;
+  color:var(--flag);letter-spacing:.1em;
+}
+.ex-title{
+  font-family:Fraunces,Georgia,serif;font-size:1.45rem;font-weight:600;letter-spacing:-.01em;
+  margin:2px 0 0;line-height:1.2;text-wrap:balance;
+}
+.star{color:var(--flag);font-size:.9em}
+.prompt{margin:14px 26px 0;padding:14px 18px;background:var(--surface-2);border-left:3px solid var(--flag)}
+.prompt p{margin:0}
+.prompt ol{margin:8px 0 0;padding-left:1.35rem}
+.prompt li{margin:2px 0}
+.prompt li::marker{font-family:"IBM Plex Mono",ui-monospace,monospace;color:var(--ink-faint)}
+.solution{padding:6px 26px 24px}
+.label{
+  font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.72rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-faint);font-weight:600;margin:22px 0 6px;
+}
+.solution h4{font-family:"Public Sans",sans-serif;font-size:1rem;font-weight:700;margin:24px 0 4px;color:var(--ink)}
+.solution h4 .part{font-family:"IBM Plex Mono",ui-monospace,monospace;color:var(--accent);margin-right:.4em}
+ol.steps{margin:6px 0 0;padding-left:1.4rem}
+ol.steps li{margin:7px 0}
+ol.steps li::marker{color:var(--ink-faint);font-weight:700}
+.calc{
+  display:block;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.95rem;
+  font-variant-numeric:tabular-nums;background:var(--surface-2);border:1px solid var(--rule);
+  padding:9px 13px;margin:8px 0;overflow-x:auto;white-space:nowrap;
+}
+code{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.93em;background:var(--surface-2);padding:1px 5px}
+.ans{
+  display:inline-flex;align-items:baseline;gap:.55em;margin-top:12px;
+  background:var(--accent-soft);color:var(--accent);
+  border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);
+  padding:7px 14px;font-weight:700;
+}
+.ans .k{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;font-weight:600;opacity:.8}
+.ans .v{font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:1.05rem;font-variant-numeric:tabular-nums}
+.note{margin-top:20px;padding:13px 16px;background:var(--flag-soft);border-left:3px solid var(--flag);font-size:.94rem;color:var(--ink)}
+.note strong{color:var(--flag)}
+.trap{font-size:.94rem;color:var(--ink-soft);border-top:1px dashed var(--rule);margin-top:20px;padding-top:12px}
+.trap strong{color:var(--ink)}
+.mini{width:100%;border-collapse:collapse;font-family:"IBM Plex Mono",ui-monospace,monospace;font-size:.88rem;margin:10px 0 2px;font-variant-numeric:tabular-nums}
+.mini th,.mini td{border:1px solid var(--rule);padding:5px 8px;text-align:center}
+.mini th{background:var(--surface-2);font-weight:600;color:var(--ink-soft)}
+.mini-wrap{overflow-x:auto}
+footer{max-width:44rem;margin:44px auto 0;padding-top:16px;border-top:1px solid var(--rule);font-size:.85rem;color:var(--ink-faint)}
+
+main.hide-solutions .solution{display:none}
+main.hide-solutions .glance{display:none}
+
+@media (max-width:600px){
+  body{font-size:16px}
+  .ex-head,.solution{padding-left:18px;padding-right:18px}
+  .prompt{margin-left:18px;margin-right:18px}
+  table.answers th,table.answers td{padding:9px 12px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+@media print{
+  body{background:#fff;font-size:12pt}
+  .controls{display:none}
+  article.ex,.glance{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<main id="page">
+
+<header class="masthead">
+  <div class="eyebrow">Art of Problem Solving · Counting &amp; Probability</div>
+  <h1>Committees, Triplets &amp; Mountain Numbers</h1>
+  <p class="standfirst">Chapter 5, Section 5.3 — the five circled exercises, each with the question restated and a full step-by-step solution.</p>
+  <div class="meta">
+    <span>Exercises 5.3.1 – 5.3.5</span>
+    <span>Page 88</span>
+    <span>Class of 2026-09-05</span>
+  </div>
+</header>
+
+<section class="glance">
+  <h2>Answers at a glance</h2>
+  <div class="glance-body">
+    <table class="answers">
+      <tbody>
+        <tr><th>5.3.1</th><td class="desc">Trade subcommittee</td><td class="val">840</td></tr>
+        <tr><th>5.3.2 (a)</th><td class="desc">6 starters, no restrictions</td><td class="val">3,003</td></tr>
+        <tr><th>(b)</th><td class="desc">All three triplets start</td><td class="val">165</td></tr>
+        <tr><th>(c)</th><td class="desc">Exactly one triplet starts</td><td class="val">1,386</td></tr>
+        <tr><th>(d)</th><td class="desc">At most one triplet starts</td><td class="val">1,848</td></tr>
+        <tr><th>5.3.3</th><td class="desc">Dogs into 3 / 5 / 2 groups</td><td class="val">420</td></tr>
+        <tr><th>5.3.4</th><td class="desc">3-digit descending numbers</td><td class="val">120</td></tr>
+        <tr><th>5.3.5</th><td class="desc">3-digit mountain numbers</td><td class="val">240</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<div class="controls">
+  <button class="toggle" id="toggleBtn" type="button" aria-pressed="false">Hide solutions</button>
+  <span class="hint">Practice mode leaves only the five questions on the page.</span>
+</div>
+
+<article class="ex">
+  <div class="ex-head">
+    <div class="ex-num">5.3.1</div>
+    <h3 class="ex-title">The Iberian trade commission</h3>
+  </div>
+  <div class="prompt">
+    <p>An Iberian trade commission has 8 Spaniards and 6 Portuguese. In how many ways can we form a subcommittee (to discuss olive oil trade) consisting of 3 Spaniards and 2 Portuguese?</p>
+  </div>
+  <div class="solution">
+    <div class="label">Step-by-step</div>
+    <ol class="steps">
+      <li>Order does not matter inside a subcommittee, so each half is a <strong>combination</strong>, not a permutation.</li>
+      <li>Choose the 3 Spaniards from 8:
+        <span class="calc">C(8,3) = (8 × 7 × 6) / (3 × 2 × 1) = 336 / 6 = 56</span></li>
+      <li>Choose the 2 Portuguese from 6:
+        <span class="calc">C(6,2) = (6 × 5) / (2 × 1) = 30 / 2 = 15</span></li>
+      <li>The two choices are independent, so multiply them:
+        <span class="calc">56 × 15 = 840</span></li>
+    </ol>
+    <div class="ans"><span class="k">Answer</span><span class="v">840</span></div>
+    <p class="trap"><strong>Watch out:</strong> a common slip is to add 56 + 15. Multiply — every one of the 56 Spanish trios can be paired with every one of the 15 Portuguese pairs.</p>
+  </div>
+</article>
+
+<article class="ex">
+  <div class="ex-head">
+    <div class="ex-num">5.3.2</div>
+    <h3 class="ex-title">Volleyball starters and the triplets</h3>
+  </div>
+  <div class="prompt">
+    <p>Our school's girls volleyball team has 14 players, including a set of 3 triplets: Alicia, Amanda and Anna. In how many ways can we choose 6 starters:</p>
+    <ol type="a">
+      <li>with no restrictions?</li>
+      <li>if all three triplets are in the starting lineup?</li>
+      <li>if exactly one of the triplets is in the starting lineup?</li>
+      <li>if at most one of the triplets is in the starting lineup?</li>
+    </ol>
+  </div>
+  <div class="solution">
+    <div class="label">Set-up</div>
+    <p style="margin:4px 0 0">Split the roster once and reuse it: <strong>3 triplets</strong> and <strong>11 other players</strong>.</p>
+
+    <h4><span class="part">(a)</span>No restrictions</h4>
+    <ol class="steps">
+      <li>Any 6 of the 14 players, order irrelevant:
+        <span class="calc">C(14,6) = (14×13×12×11×10×9) / (6×5×4×3×2×1) = 2,162,160 / 720 = 3,003</span></li>
+    </ol>
+    <div class="ans"><span class="k">Answer</span><span class="v">3,003</span></div>
+
+    <h4><span class="part">(b)</span>All three triplets start</h4>
+    <ol class="steps">
+      <li>Alicia, Amanda and Anna take 3 of the 6 spots — that part is forced, 1 way.</li>
+      <li>Fill the remaining 3 spots from the 11 non-triplets:
+        <span class="calc">C(11,3) = (11 × 10 × 9) / (3 × 2 × 1) = 990 / 6 = 165</span></li>
+    </ol>
+    <div class="ans"><span class="k">Answer</span><span class="v">165</span></div>
+
+    <h4><span class="part">(c)</span>Exactly one triplet starts</h4>
+    <ol class="steps">
+      <li>Pick which triplet plays: <code>C(3,1) = 3</code> ways.</li>
+      <li>The other 5 starters must all come from the 11 non-triplets:
+        <span class="calc">C(11,5) = (11×10×9×8×7) / (5×4×3×2×1) = 55,440 / 120 = 462</span></li>
+      <li>Multiply:
+        <span class="calc">3 × 462 = 1,386</span></li>
+    </ol>
+    <div class="ans"><span class="k">Answer</span><span class="v">1,386</span></div>
+
+    <h4><span class="part">(d)</span>At most one triplet starts</h4>
+    <ol class="steps">
+      <li>"At most one" means <strong>zero triplets or exactly one</strong> — two disjoint cases, so add them.</li>
+      <li>Zero triplets: all 6 starters from the 11 others.
+        <span class="calc">C(11,6) = C(11,5) = 462</span></li>
+      <li>Exactly one triplet: 1,386 from part (c).</li>
+      <li>Add:
+        <span class="calc">462 + 1,386 = 1,848</span></li>
+    </ol>
+    <div class="ans"><span class="k">Answer</span><span class="v">1,848</span></div>
+
+    <div class="note"><strong>Check your work.</strong> The four cases by number of triplets must rebuild part (a):
+      0 triplets 462, 1 triplet 1,386, 2 triplets 3 × C(11,4) = 990, 3 triplets 165 —
+      and 462 + 1,386 + 990 + 165 = 3,003.</div>
+  </div>
+</article>
+
+<article class="ex">
+  <div class="ex-head">
+    <div class="ex-num">5.3.3</div>
+    <h3 class="ex-title">Ten dogs, three groups, two fixed dogs</h3>
+  </div>
+  <div class="prompt">
+    <p>Suppose we want to divide the 10 dogs from Problem 5.5 into three groups, one with 3 dogs, one with 5 dogs, and one with 2 dogs. How many ways can we form the groups such that Biter is in the 3-dog group and Nipper is in the 5-dog group?</p>
+  </div>
+  <div class="solution">
+    <div class="label">Step-by-step</div>
+    <ol class="steps">
+      <li>Place the two named dogs first — that is the whole point of the restriction. Biter fills one seat in the 3-dog group; Nipper fills one seat in the 5-dog group.</li>
+      <li>That leaves <strong>8 dogs</strong> for <strong>2 + 4 + 2 remaining seats</strong>.</li>
+      <li>Choose Biter's 2 companions from the 8:
+        <span class="calc">C(8,2) = (8 × 7) / (2 × 1) = 28</span></li>
+      <li>From the 6 dogs left, choose Nipper's 4 companions:
+        <span class="calc">C(6,4) = C(6,2) = (6 × 5) / (2 × 1) = 15</span></li>
+      <li>The final 2 dogs must form the 2-dog group — 1 way. Multiply:
+        <span class="calc">28 × 15 × 1 = 420</span></li>
+    </ol>
+    <div class="ans"><span class="k">Answer</span><span class="v">420</span></div>
+    <p class="trap"><strong>Why no division by a factorial here:</strong> the three groups have different sizes (3, 5, 2), so they are already distinguishable. There is no over-counting to cancel.</p>
+  </div>
+</article>
+
+<article class="ex">
+  <div class="ex-head">
+    <div class="ex-num">5.3.4</div>
+    <h3 class="ex-title">Descending numbers</h3>
+  </div>
+  <div class="prompt">
+    <p>We call a number a <em>descending number</em> if each digit is strictly smaller than the digit that comes before it. For example, 863 is a descending number. How many 3-digit descending numbers are there?</p>
+  </div>
+  <div class="solution">
+    <div class="label">Step-by-step</div>
+    <ol class="steps">
+      <li>Strictly decreasing digits must all be <strong>different</strong>, so a descending number is really a <em>set</em> of 3 digits from {0, 1, …, 9}.</li>
+      <li>Once the set is chosen, the order is forced — largest, middle, smallest. So each set gives <strong>exactly one</strong> descending number: <code>{8,6,3} → 863</code>.</li>
+      <li>Counting descending numbers is therefore counting 3-element subsets of 10 digits:
+        <span class="calc">C(10,3) = (10 × 9 × 8) / (3 × 2 × 1) = 720 / 6 = 120</span></li>
+      <li>No leading-zero cases need to be thrown out: the largest of the three digits comes first, and the largest of three distinct digits is at least 2.</li>
+    </ol>
+    <div class="ans"><span class="k">Answer</span><span class="v">120</span></div>
+    <p class="trap"><strong>The idea worth keeping:</strong> when an arrangement is forced by the choice, choosing and arranging collapse into a single combination.</p>
+  </div>
+</article>
+
+<article class="ex">
+  <div class="ex-head">
+    <div class="ex-num">5.3.5 <span class="star">★</span></div>
+    <h3 class="ex-title">Mountain numbers</h3>
+  </div>
+  <div class="prompt">
+    <p>We call a number a <em>mountain number</em> if its middle digit is larger than any other digit. For example, 284 is a mountain number. How many 3-digit mountain numbers are there?</p>
+  </div>
+  <div class="solution">
+    <div class="label">Step-by-step</div>
+    <ol class="steps">
+      <li>Write the number as <code>a b c</code>. The condition is <code>b &gt; a</code> and <code>b &gt; c</code>, with <code>a ≠ 0</code> (it is the leading digit). Note <code>a</code> and <code>c</code> may be equal — 121 is a mountain number.</li>
+      <li>Build the number around the peak: <strong>fix the middle digit b first</strong>, then count the outer digits independently.</li>
+      <li>For a given <code>b</code>: the left digit <code>a</code> can be 1, 2, …, b−1 → <strong>b−1</strong> choices; the right digit <code>c</code> can be 0, 1, …, b−1 → <strong>b</strong> choices.
+        <span class="calc">count for peak b = (b − 1) × b</span></li>
+      <li>The peak must be at least 2 (it needs a nonzero digit strictly below it on the left), so sum over b = 2 … 9:</li>
+    </ol>
+    <div class="mini-wrap">
+      <table class="mini">
+        <thead><tr><th>peak b</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>9</th><th>total</th></tr></thead>
+        <tbody><tr><td>(b−1)·b</td><td>2</td><td>6</td><td>12</td><td>20</td><td>30</td><td>42</td><td>56</td><td>72</td><td><strong>240</strong></td></tr></tbody>
+      </table>
+    </div>
+    <span class="calc">2 + 6 + 12 + 20 + 30 + 42 + 56 + 72 = 240</span>
+    <div class="ans"><span class="k">Answer</span><span class="v">240</span></div>
+    <p class="trap"><strong>Why not just C(10,3)-style counting:</strong> repeats are allowed on the outside (121, 454), so a mountain number is not determined by a set of three distinct digits. Fixing the peak turns one hard count into eight easy ones.</p>
+  </div>
+</article>
+
+<footer>
+  Introduction to Counting &amp; Probability, Chapter 5 “More with Combinations”, Section 5.3, page 88 · notation <code>C(n,r)</code> = number of ways to choose r objects from n when order does not matter.
+</footer>
+
+</main>
+<script>
+(function(){
+  var btn = document.getElementById('toggleBtn');
+  var page = document.getElementById('page');
+  btn.addEventListener('click', function(){
+    var hidden = page.classList.toggle('hide-solutions');
+    btn.textContent = hidden ? 'Show solutions' : 'Hide solutions';
+    btn.setAttribute('aria-pressed', hidden ? 'true' : 'false');
+  });
+})();
+</script>
+</body>
+</html>
