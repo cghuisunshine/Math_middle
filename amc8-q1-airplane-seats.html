@@ -116,6 +116,27 @@
   .barlegend i{display:inline-block;width:10px;height:10px;margin-right:6px;vertical-align:baseline}
   .sw-good{background:var(--pick)} .sw-bad{background:var(--mark)}
 
+  /* row-choice stepper */
+  .picker{margin-top:16px;padding-top:13px;border-top:1px solid var(--rule);width:min(520px,86vw)}
+  .phead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;
+    font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px}
+  .phead .pcount{color:var(--pick);letter-spacing:.05em;white-space:nowrap}
+  .pchips{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px}
+  .pchip{border:1px solid var(--rule);border-radius:8px;background:#fff;padding:5px 4px 4px;
+    opacity:.28;transition:opacity .3s ease,border-color .3s ease,box-shadow .3s ease,transform .3s ease}
+  .pchip.done{opacity:.7}
+  .pchip.on{opacity:1;border-color:var(--pick);box-shadow:0 0 0 2px rgba(214,33,75,.13);transform:translateY(-2px)}
+  .pcol{display:flex;flex-direction:column;gap:2px}
+  .pcell{height:13px;border:1px solid var(--rule);border-radius:3px;background:var(--wash);
+    font-family:"IBM Plex Mono",monospace;font-size:9px;line-height:11px;text-align:center;color:var(--keep)}
+  .pcell.one{background:#fff;border-color:var(--ink-soft);color:var(--ink-soft)}
+  .pcell.two{background:rgba(214,33,75,.12);border-color:var(--pick);color:var(--pick)}
+  .pcap{font-family:"IBM Plex Mono",monospace;font-size:9.5px;color:var(--ink-soft);
+    text-align:center;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pform{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-soft);margin-top:11px}
+  .pform b{color:var(--pick);font-weight:500}
+
   /* side panel */
   .flag{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:12px;
     padding:4px 11px;border:1px solid var(--rule);border-radius:999px;color:var(--ink-soft);margin-bottom:12px}
@@ -186,9 +207,11 @@
     .caption{margin:6px 16px 0}
     .ctl{padding:12px 16px}
     .seat{width:44px;height:32px}
+    .pchips{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .picker{width:min(520px,100%)}
   }
   @media (prefers-reduced-motion:reduce){
-    .seat,.bar span,.rline,.rbadge{transition:none}
+    .seat,.bar span,.rline,.rbadge,.pchip{transition:none}
   }
 </style>
 </head>
@@ -200,7 +223,11 @@
   <div class="eyebrow">2024 AMC 8 · Problem 25 · narrated walkthrough</div>
   <h1>Two empty seats<br>in the same row</h1>
   <p class="lede">The whole solution, spoken and animated, one idea at a time — from twelve seats down to a single fraction.</p>
-  <p style="margin:16px 0 0"><a class="backlink" href="amc8-combinatorics-exam-solutions.html">← back to the five-question exam</a></p>
+  <p style="margin:16px 0 0">
+    <a class="backlink" href="amc8-combinatorics-exam-solutions.html">← back to the five-question exam</a>
+    &nbsp;&nbsp;·&nbsp;&nbsp;
+    <a class="backlink" href="video/amc8-q1-airplane-seats.mp4">▶ watch it as a 5-minute video</a>
+  </p>
 </header>
 
 <main>
@@ -227,6 +254,7 @@
     <div class="stage">
       <div class="viewport">
         <div class="planewrap" id="plane"></div>
+        <div class="picker" id="picker" style="display:none"></div>
         <div class="rowmenu" id="rowchart" style="display:none"></div>
         <div class="barwrap" id="barview" style="display:none">
           <div class="bartitle">All 495 outcomes</div>
@@ -417,7 +445,19 @@ var SCENES =
       { "say": "First case: two rows hold two empty seats each. Each of those rows is forced to use its outer pair, so there is no freedom inside a row at all.",
         "v": { "e": [0,2,3,5], "badges": ["2","2","0","0"], "math": "each doubled row → the outer pair, 1 way", "cap": "no choice inside the rows" } },
       { "say": "The only choice is which two of the four rows are the doubled ones. Four choose two is six, so this case gives six patterns.",
-        "v": { "cycle": [[0,2,3,5],[0,2,6,8],[0,2,9,11],[3,5,6,8],[3,5,9,11],[6,8,9,11]], "badges": null, "math": "C(4,2) × 1 × 1 = 6", "ledger": "a", "cap": "all six patterns of this case" } }
+        "v": { "cycle": [[0,2,3,5],[0,2,6,8],[0,2,9,11],[3,5,6,8],[3,5,9,11],[6,8,9,11]],
+               "stepTitle": "Pick the two doubled rows",
+               "stepMs": 1300,
+               "stepForm": "each pick is forced to its outer pair → <b>C(4,2) × 1 × 1 = 6</b>",
+               "steps": [
+                 { "e": [0,2,3,5],  "badges": ["2","2","0","0"], "lab": "R1 · R2" },
+                 { "e": [0,2,6,8],  "badges": ["2","0","2","0"], "lab": "R1 · R3" },
+                 { "e": [0,2,9,11], "badges": ["2","0","0","2"], "lab": "R1 · R4" },
+                 { "e": [3,5,6,8],  "badges": ["0","2","2","0"], "lab": "R2 · R3" },
+                 { "e": [3,5,9,11], "badges": ["0","2","0","2"], "lab": "R2 · R4" },
+                 { "e": [6,8,9,11], "badges": ["0","0","2","2"], "lab": "R3 · R4" }
+               ],
+               "badges": null, "math": "C(4,2) × 1 × 1 = 6", "ledger": "a", "cap": "all six patterns of this case" } }
     ]
   },
   {
@@ -428,7 +468,25 @@ var SCENES =
       { "say": "Second case: one row holds two empty seats and two other rows hold one each. One row stays completely full.",
         "v": { "e": [0,2,4,7], "badges": ["2","1","1","0"], "math": "one doubled row · two single rows · one full row", "cap": "the shape of case 2" } },
       { "say": "Choose the doubled row: four ways. Choose which two of the remaining three rows get a single empty seat: three ways.",
-        "v": { "cycle": [[0,2,4,7],[0,2,4,10],[3,5,1,10],[6,8,0,11]], "badges": null, "math": "4 × C(3,2) = 4 × 3 = 12 ways to pick the rows", "cap": "picking the rows" } },
+        "v": { "cycle": [[0,2,4,7],[0,2,4,10],[3,5,1,10],[6,8,0,11]],
+               "stepTitle": "Doubled row  ·  the two single rows",
+               "stepMs": 680,
+               "stepForm": "4 choices of doubled row × 3 choices of the single pair = <b>12</b>",
+               "steps": [
+                 { "e": [0,2,3,6],  "badges": ["2","1","1","0"], "lab": "R1 | R2 R3" },
+                 { "e": [0,2,3,9],  "badges": ["2","1","0","1"], "lab": "R1 | R2 R4" },
+                 { "e": [0,2,6,9],  "badges": ["2","0","1","1"], "lab": "R1 | R3 R4" },
+                 { "e": [0,3,5,6],  "badges": ["1","2","1","0"], "lab": "R2 | R1 R3" },
+                 { "e": [0,3,5,9],  "badges": ["1","2","0","1"], "lab": "R2 | R1 R4" },
+                 { "e": [3,5,6,9],  "badges": ["0","2","1","1"], "lab": "R2 | R3 R4" },
+                 { "e": [0,3,6,8],  "badges": ["1","1","2","0"], "lab": "R3 | R1 R2" },
+                 { "e": [0,6,8,9],  "badges": ["1","0","2","1"], "lab": "R3 | R1 R4" },
+                 { "e": [3,6,8,9],  "badges": ["0","1","2","1"], "lab": "R3 | R2 R4" },
+                 { "e": [0,3,9,11], "badges": ["1","1","0","2"], "lab": "R4 | R1 R2" },
+                 { "e": [0,6,9,11], "badges": ["1","0","1","2"], "lab": "R4 | R1 R3" },
+                 { "e": [3,6,9,11], "badges": ["0","1","1","2"], "lab": "R4 | R2 R3" }
+               ],
+               "badges": null, "math": "4 × C(3,2) = 4 × 3 = 12 ways to pick the rows", "cap": "picking the rows" } },
       { "say": "The doubled row is forced to its outer pair, but each single empty seat can sit anywhere in its row: three choices each. Four times three times three times three is one hundred and eight.",
         "v": { "cycle": [[0,2,4,7],[0,2,3,10],[6,8,1,11],[9,11,0,4]], "math": "4 × 3 × 1 × 3 × 3 = 108", "ledger": "b", "cap": "108 patterns" } }
     ]
@@ -544,6 +602,7 @@ var SCENES =
 
   var el = {
     plane: plane,
+    picker: document.getElementById('picker'),
     rows: document.getElementById('rowchart'),
     bar: document.getElementById('barview'),
     good: document.getElementById('barGood'),
@@ -617,6 +676,81 @@ var SCENES =
       ln.className = 'rline' + (hi.indexOf(i) >= 0 ? ' hi' : '');
     });
   }
+  /* ---- row-choice stepper: walks the row selection one pick at a time ---- */
+  var pickerFor = null, pickerChips = null, pickerCount = null, stepSticky;
+
+  function buildPicker(v) {
+    el.picker.style.display = '';
+    if (pickerFor === v) return;
+    pickerFor = v;
+    el.picker.innerHTML = '';
+
+    var head = document.createElement('div');
+    head.className = 'phead';
+    var lab = document.createElement('span');
+    lab.className = 'plabel';
+    lab.textContent = v.stepTitle || 'Step through the choices';
+    pickerCount = document.createElement('span');
+    pickerCount.className = 'pcount';
+    pickerCount.textContent = '1 / ' + v.steps.length;
+    head.appendChild(lab); head.appendChild(pickerCount);
+    el.picker.appendChild(head);
+
+    pickerChips = document.createElement('div');
+    pickerChips.className = 'pchips';
+    v.steps.forEach(function (s) {
+      var chip = document.createElement('div');
+      chip.className = 'pchip';
+      var col = document.createElement('div');
+      col.className = 'pcol';
+      (s.badges || ['', '', '', '']).forEach(function (b) {
+        var cell = document.createElement('div');
+        cell.className = 'pcell' + (b === '2' ? ' two' : (b === '1' ? ' one' : ''));
+        cell.textContent = b || '·';
+        col.appendChild(cell);
+      });
+      chip.appendChild(col);
+      var cap = document.createElement('div');
+      cap.className = 'pcap';
+      cap.textContent = s.lab || '';
+      chip.appendChild(cap);
+      pickerChips.appendChild(chip);
+    });
+    el.picker.appendChild(pickerChips);
+
+    if (v.stepForm) {
+      var f = document.createElement('div');
+      f.className = 'pform';
+      f.innerHTML = v.stepForm;
+      el.picker.appendChild(f);
+    }
+  }
+
+  function markPicker(v, k) {
+    Array.prototype.forEach.call(pickerChips.children, function (c, i) {
+      c.className = 'pchip' + (i < k ? ' done' : (i === k ? ' on' : ''));
+    });
+    pickerCount.textContent = (k + 1) + ' / ' + v.steps.length;
+  }
+
+  function applyStep(v, k) {
+    var s = v.steps[k];
+    if (s.e !== undefined) state.e = s.e;
+    if (s.badges !== undefined) state.badges = s.badges;
+  }
+
+  function runSteps(v) {
+    stepSticky = { badges: state.badges };   /* restored when the line changes */
+    buildPicker(v);
+    var k = 0;
+    applyStep(v, k); paintPlane(state); markPicker(v, k);
+    cycTimer = setInterval(function () {
+      if (k >= v.steps.length - 1) { clearInterval(cycTimer); return; }
+      k += 1;
+      applyStep(v, k); paintPlane(state); markPicker(v, k);
+    }, v.stepMs || 1100);
+  }
+
   function paintBar(st) {
     var b = st.bar || {};
     el.bad.style.width = b.bad ? (b.bad / 495 * 100) + '%' : '0';
@@ -636,6 +770,7 @@ var SCENES =
   function applyLine(item) {
     var v = item.line.v || {};
     clearInterval(cycTimer);
+    if (stepSticky !== undefined) { state.badges = stepSticky.badges; stepSticky = undefined; }
 
     /* sticky: e / bar / badges carry over unless the line says otherwise */
     if (v.e !== undefined) state.e = v.e;
@@ -652,7 +787,10 @@ var SCENES =
     paintRows(state);
     paintBar(state);
 
-    if (v.cycle && v.cycle.length) {
+    if (v.steps && v.steps.length) {
+      runSteps(v);
+    } else if (v.cycle && v.cycle.length) {
+      el.picker.style.display = 'none';
       var k = 0;
       state.e = v.cycle[0];
       paintPlane(state);
@@ -662,6 +800,7 @@ var SCENES =
         paintPlane(state);
       }, 1600);
     } else if (v.cycleP && v.cycleP.length) {
+      el.picker.style.display = 'none';
       var j = 0;
       state.p = v.cycleP[0];
       paintPlane(state);
@@ -671,6 +810,7 @@ var SCENES =
         paintPlane(state);
       }, 850);
     } else {
+      el.picker.style.display = 'none';
       paintPlane(state);
     }
 
@@ -742,6 +882,11 @@ var SCENES =
       var vv = LIST[k].line.v || {};
       if (vv.e !== undefined) state.e = vv.e;
       if (vv.cycle && vv.cycle.length) state.e = vv.cycle[vv.cycle.length - 1];
+      if (vv.steps && vv.steps.length) {
+        var last = vv.steps[vv.steps.length - 1];
+        if (last.e !== undefined) state.e = last.e;
+        if (last.badges !== undefined) state.badges = last.badges;
+      }
       if (vv.bar !== undefined) state.bar = vv.bar;
       if (vv.badges !== undefined) state.badges = vv.badges;
       if (vv.ledger) ledgerOn[vv.ledger] = true;
