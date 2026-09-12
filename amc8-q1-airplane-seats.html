@@ -116,6 +116,27 @@
   .barlegend i{display:inline-block;width:10px;height:10px;margin-right:6px;vertical-align:baseline}
   .sw-good{background:var(--pick)} .sw-bad{background:var(--mark)}
 
+  /* per-row pattern menus */
+  .rowmenus{margin-top:15px;padding-top:12px;border-top:1px solid var(--rule);width:min(520px,86vw)}
+  .rmhead{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--ink-soft);margin-bottom:10px}
+  .rmgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+  .rmcol{border:1px solid var(--rule);border-radius:8px;background:#fff;padding:6px 5px 5px}
+  .rmcol .rmlab{font-family:"IBM Plex Mono",monospace;font-size:9.5px;color:var(--ink-soft);
+    text-align:center;display:block;margin-bottom:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rmopts{display:flex;flex-direction:column;gap:3px;align-items:center}
+  .rmopt{display:flex;gap:3px;padding:2px 3px;border:1px solid transparent;border-radius:5px;
+    opacity:.4;transition:opacity .3s ease,border-color .3s ease,background .3s ease}
+  .rmopt.on{opacity:1;border-color:var(--pick);background:rgba(214,33,75,.07)}
+  .rmopt.out{border-color:var(--mark);background:rgba(11,110,110,.08)}
+  .rmopt.out .rmcell{border-color:var(--mark)}
+  .rmcell{width:16px;height:12px;border:1.5px solid var(--keep);border-radius:3px;background:#fff}
+  .rmcell.taken{background:var(--keep)}
+  .rmways{font-family:"IBM Plex Mono",monospace;font-size:9px;color:var(--keep);
+    text-align:center;display:block;margin-top:5px}
+  .rmprod{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-soft);margin-top:11px}
+  .rmprod b{color:var(--pick);font-weight:500}
+
   /* row-choice stepper */
   .picker{margin-top:16px;padding-top:13px;border-top:1px solid var(--rule);width:min(520px,86vw)}
   .phead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;
@@ -132,6 +153,9 @@
     font-family:"IBM Plex Mono",monospace;font-size:9px;line-height:11px;text-align:center;color:var(--keep)}
   .pcell.one{background:#fff;border-color:var(--ink-soft);color:var(--ink-soft)}
   .pcell.two{background:rgba(214,33,75,.12);border-color:var(--pick);color:var(--pick)}
+  .pmini{display:flex;gap:2px;justify-content:center;margin-bottom:2px}
+  .pmcell{width:9px;height:7px;border:1px solid var(--keep);border-radius:2px;background:#fff}
+  .pmcell.taken{background:var(--keep)}
   .pcap{font-family:"IBM Plex Mono",monospace;font-size:9.5px;color:var(--ink-soft);
     text-align:center;margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .pform{font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--ink-soft);margin-top:11px}
@@ -208,10 +232,11 @@
     .ctl{padding:12px 16px}
     .seat{width:44px;height:32px}
     .pchips{grid-template-columns:repeat(4,minmax(0,1fr))}
+    .rowmenus{width:min(520px,100%)}
     .picker{width:min(520px,100%)}
   }
   @media (prefers-reduced-motion:reduce){
-    .seat,.bar span,.rline,.rbadge,.pchip{transition:none}
+    .seat,.bar span,.rline,.rbadge,.pchip,.rmopt{transition:none}
   }
 </style>
 </head>
@@ -255,6 +280,7 @@
       <div class="viewport">
         <div class="planewrap" id="plane"></div>
         <div class="picker" id="picker" style="display:none"></div>
+        <div class="rowmenus" id="rowmenus" style="display:none"></div>
         <div class="rowmenu" id="rowchart" style="display:none"></div>
         <div class="barwrap" id="barview" style="display:none">
           <div class="bartitle">All 495 outcomes</div>
@@ -443,9 +469,19 @@ var SCENES =
     "view": "plane",
     "lines": [
       { "say": "First case: two rows hold two empty seats each. Each of those rows is forced to use its outer pair, so there is no freedom inside a row at all.",
-        "v": { "e": [0,2,3,5], "badges": ["2","2","0","0"], "math": "each doubled row → the outer pair, 1 way", "cap": "no choice inside the rows" } },
+        "v": { "e": [0,2,3,5], "badges": ["2","2","0","0"], "menus": true, "chip": "plane",
+               "stepTitle": "Two empty seats in row 1 — the three ways",
+               "stepMs": 3200,
+               "stepForm": "only the outer pair survives → <b>1 way per doubled row</b>",
+               "steps": [
+                 { "e": [0,1,3,5], "lab": "1–2 ✗", "flag": "ok" },
+                 { "e": [1,2,3,5], "lab": "2–3 ✗", "flag": "ok" },
+                 { "e": [0,2,3,5], "lab": "1–3 ✓", "flag": "bad" }
+               ],
+               "math": "each doubled row → the outer pair, 1 way", "cap": "no choice inside the rows" } },
       { "say": "The only choice is which two of the four rows are the doubled ones. Four choose two is six, so this case gives six patterns.",
         "v": { "cycle": [[0,2,3,5],[0,2,6,8],[0,2,9,11],[3,5,6,8],[3,5,9,11],[6,8,9,11]],
+               "menus": true,
                "stepTitle": "Pick the two doubled rows",
                "stepMs": 1300,
                "stepForm": "each pick is forced to its outer pair → <b>C(4,2) × 1 × 1 = 6</b>",
@@ -466,9 +502,10 @@ var SCENES =
     "view": "plane",
     "lines": [
       { "say": "Second case: one row holds two empty seats and two other rows hold one each. One row stays completely full.",
-        "v": { "e": [0,2,4,7], "badges": ["2","1","1","0"], "math": "one doubled row · two single rows · one full row", "cap": "the shape of case 2" } },
+        "v": { "e": [0,2,4,7], "badges": ["2","1","1","0"], "menus": true, "math": "one doubled row · two single rows · one full row", "cap": "the shape of case 2" } },
       { "say": "Choose the doubled row: four ways. Choose which two of the remaining three rows get a single empty seat: three ways.",
         "v": { "cycle": [[0,2,4,7],[0,2,4,10],[3,5,1,10],[6,8,0,11]],
+               "menus": true,
                "stepTitle": "Doubled row  ·  the two single rows",
                "stepMs": 680,
                "stepForm": "4 choices of doubled row × 3 choices of the single pair = <b>12</b>",
@@ -488,7 +525,23 @@ var SCENES =
                ],
                "badges": null, "math": "4 × C(3,2) = 4 × 3 = 12 ways to pick the rows", "cap": "picking the rows" } },
       { "say": "The doubled row is forced to its outer pair, but each single empty seat can sit anywhere in its row: three choices each. Four times three times three times three is one hundred and eight.",
-        "v": { "cycle": [[0,2,4,7],[0,2,3,10],[6,8,1,11],[9,11,0,4]], "math": "4 × 3 × 1 × 3 × 3 = 108", "ledger": "b", "cap": "108 patterns" } }
+        "v": { "cycle": [[0,2,4,7],[0,2,3,10],[6,8,1,11],[9,11,0,4]],
+               "menus": true, "chip": "plane", "badges": ["2","1","1","0"],
+               "stepTitle": "Row 1 doubled — now place each single seat",
+               "stepMs": 1300,
+               "stepForm": "1 × 3 × 3 = <b>9</b> patterns per row choice · 12 × 9 = <b>108</b>",
+               "steps": [
+                 { "e": [0,2,3,6], "lab": "R2:1 R3:1" },
+                 { "e": [0,2,3,7], "lab": "R2:1 R3:2" },
+                 { "e": [0,2,3,8], "lab": "R2:1 R3:3" },
+                 { "e": [0,2,4,6], "lab": "R2:2 R3:1" },
+                 { "e": [0,2,4,7], "lab": "R2:2 R3:2" },
+                 { "e": [0,2,4,8], "lab": "R2:2 R3:3" },
+                 { "e": [0,2,5,6], "lab": "R2:3 R3:1" },
+                 { "e": [0,2,5,7], "lab": "R2:3 R3:2" },
+                 { "e": [0,2,5,8], "lab": "R2:3 R3:3" }
+               ],
+               "math": "4 × 3 × 1 × 3 × 3 = 108", "ledger": "b", "cap": "108 patterns" } }
     ]
   },
   {
@@ -497,9 +550,22 @@ var SCENES =
     "view": "plane",
     "lines": [
       { "say": "Third case: a single empty seat in every row. A lone empty seat can never touch another one, so every row is free to choose.",
-        "v": { "e": [1,4,7,10], "badges": ["1","1","1","1"], "math": "a single empty seat is always legal", "cap": "one per row" } },
+        "v": { "e": [1,4,7,10], "badges": ["1","1","1","1"], "menus": true, "math": "a single empty seat is always legal", "cap": "one per row" } },
       { "say": "Three choices in each of the four rows: three to the fourth power, which is eighty one.",
-        "v": { "cycle": [[1,4,7,10],[0,4,8,9],[2,3,7,11],[0,5,7,9]], "badges": null, "math": "3 × 3 × 3 × 3 = 3⁴ = 81", "ledger": "c", "cap": "81 patterns" } }
+        "v": { "cycle": [[1,4,7,10],[0,4,8,9],[2,3,7,11],[0,5,7,9]],
+               "menus": true, "chip": "plane", "badges": ["1","1","1","1"],
+               "stepTitle": "Slide the empty seat along row 1, then row 2",
+               "stepMs": 900,
+               "stepForm": "every row chooses freely and independently → <b>3⁴ = 81</b>",
+               "steps": [
+                 { "e": [0,3,6,9], "lab": "R1:1" },
+                 { "e": [1,3,6,9], "lab": "R1:2" },
+                 { "e": [2,3,6,9], "lab": "R1:3" },
+                 { "e": [0,3,6,9], "lab": "R2:1" },
+                 { "e": [0,4,6,9], "lab": "R2:2" },
+                 { "e": [0,5,6,9], "lab": "R2:3" }
+               ],
+               "math": "3 × 3 × 3 × 3 = 3⁴ = 81", "ledger": "c", "cap": "81 patterns" } }
     ]
   },
   {
@@ -603,6 +669,7 @@ var SCENES =
   var el = {
     plane: plane,
     picker: document.getElementById('picker'),
+    menus: document.getElementById('rowmenus'),
     rows: document.getElementById('rowchart'),
     bar: document.getElementById('barview'),
     good: document.getElementById('barGood'),
@@ -676,6 +743,49 @@ var SCENES =
       ln.className = 'rline' + (hi.indexOf(i) >= 0 ? ' hi' : '');
     });
   }
+  /* ---- per-row pattern menus: what each row may still look like ---- */
+  var ROWOPTS = { 0: [[]], 1: [[0], [1], [2]], 2: [[0, 2]], 3: [] };
+
+  function emptiesIn(e, r) {
+    var out = [];
+    for (var c = 0; c < 3; c++) if (e.indexOf(r * 3 + c) >= 0) out.push(c);
+    return out;
+  }
+  function same(a, b) {
+    return a.length === b.length && a.every(function (x, i) { return x === b[i]; });
+  }
+  function cells(pattern) {
+    var h = '';
+    for (var c = 0; c < 3; c++) {
+      h += '<span class="rmcell' + (pattern.indexOf(c) < 0 ? ' taken' : '') + '"></span>';
+    }
+    return h;
+  }
+
+  function paintMenus(st, on) {
+    if (!on) { el.menus.style.display = 'none'; return; }
+    el.menus.style.display = '';
+    var e = st.e === 'all' ? ALL : (st.e || []);
+    var html = '<div class="rmhead">What each row may look like</div><div class="rmgrid">';
+    var prod = [];
+    for (var r = 0; r < 4; r++) {
+      var cur = emptiesIn(e, r);
+      var opts = ROWOPTS[cur.length] || [];
+      prod.push(opts.length);
+      html += '<div class="rmcol"><span class="rmlab">R' + (r + 1) + ' · ' + cur.length + ' empty</span>';
+      html += '<div class="rmopts">';
+      opts.forEach(function (o) {
+        html += '<span class="rmopt' + (same(o, cur) ? ' on' : '') + '">' + cells(o) + '</span>';
+      });
+      var listed = opts.some(function (o) { return same(o, cur); });
+      if (!listed) html += '<span class="rmopt out on">' + cells(cur) + '</span>';
+      html += '</div><span class="rmways">' + opts.length + (opts.length === 1 ? ' way' : ' ways') + '</span></div>';
+    }
+    html += '</div><div class="rmprod">' + prod.join(' × ') + ' = <b>' +
+            prod.reduce(function (a, b) { return a * b; }, 1) + '</b> patterns with these rows</div>';
+    el.menus.innerHTML = html;
+  }
+
   /* ---- row-choice stepper: walks the row selection one pick at a time ---- */
   var pickerFor = null, pickerChips = null, pickerCount = null, stepSticky;
 
@@ -703,12 +813,26 @@ var SCENES =
       chip.className = 'pchip';
       var col = document.createElement('div');
       col.className = 'pcol';
-      (s.badges || ['', '', '', '']).forEach(function (b) {
-        var cell = document.createElement('div');
-        cell.className = 'pcell' + (b === '2' ? ' two' : (b === '1' ? ' one' : ''));
-        cell.textContent = b || '·';
-        col.appendChild(cell);
-      });
+      if (v.chip === 'plane') {
+        for (var r = 0; r < 4; r++) {
+          var line = document.createElement('div');
+          line.className = 'pmini';
+          var got = emptiesIn(s.e || [], r);
+          for (var c = 0; c < 3; c++) {
+            var sq = document.createElement('span');
+            sq.className = 'pmcell' + (got.indexOf(c) < 0 ? ' taken' : '');
+            line.appendChild(sq);
+          }
+          col.appendChild(line);
+        }
+      } else {
+        (s.badges || ['', '', '', '']).forEach(function (b) {
+          var cell = document.createElement('div');
+          cell.className = 'pcell' + (b === '2' ? ' two' : (b === '1' ? ' one' : ''));
+          cell.textContent = b || '·';
+          col.appendChild(cell);
+        });
+      }
       chip.appendChild(col);
       var cap = document.createElement('div');
       cap.className = 'pcap';
@@ -737,6 +861,14 @@ var SCENES =
     var s = v.steps[k];
     if (s.e !== undefined) state.e = s.e;
     if (s.badges !== undefined) state.badges = s.badges;
+    if (s.flag !== undefined) setFlag(s.flag);
+    paintMenus(state, !!v.menus);
+  }
+
+  function setFlag(f) {
+    if (f === 'ok') { el.flag.className = 'flag ok'; el.flag.textContent = '✓ the couple fits'; }
+    else if (f === 'bad') { el.flag.className = 'flag bad'; el.flag.textContent = '✗ they are split up'; }
+    else { el.flag.className = 'flag hide'; }
   }
 
   function runSteps(v) {
@@ -791,6 +923,7 @@ var SCENES =
       runSteps(v);
     } else if (v.cycle && v.cycle.length) {
       el.picker.style.display = 'none';
+      paintMenus(state, false);
       var k = 0;
       state.e = v.cycle[0];
       paintPlane(state);
@@ -801,6 +934,7 @@ var SCENES =
       }, 1600);
     } else if (v.cycleP && v.cycleP.length) {
       el.picker.style.display = 'none';
+      paintMenus(state, false);
       var j = 0;
       state.p = v.cycleP[0];
       paintPlane(state);
@@ -812,6 +946,7 @@ var SCENES =
     } else {
       el.picker.style.display = 'none';
       paintPlane(state);
+      paintMenus(state, !!v.menus);
     }
 
     el.title.textContent = item.scene.title;
@@ -821,6 +956,8 @@ var SCENES =
     if (v.flag === 'ok') { el.flag.className = 'flag ok'; el.flag.textContent = '✓ the couple fits'; }
     else if (v.flag === 'bad') { el.flag.className = 'flag bad'; el.flag.textContent = '✗ they are split up'; }
     else { el.flag.className = 'flag hide'; }
+
+    if (v.steps && v.steps.length && v.steps[0].flag !== undefined) setFlag(v.steps[0].flag);
 
     if (v.ledger) ledgerOn[v.ledger] = true;
     Array.prototype.forEach.call(el.ledger.children, function (row) {
