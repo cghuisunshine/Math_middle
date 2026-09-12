@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Distinguishability and After</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  /* Single light theme, matching distributing-objects-lecture.html */
+  :root{
+    color-scheme:light;
+    --paper:#EDEFF7; --card:#FFFFFF; --ink:#191A2E; --ink-soft:#525577;
+    --rule:#D3D8EA; --pick:#D6214B; --mark:#2C7A5E; --wash:#F7F8FC;
+    --keep:#9AA0BA; --amber:#8A5B0E; --amber-bg:#FBF3E2;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;background:var(--paper);color:var(--ink);
+    font-family:"Public Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+    font-size:17px;line-height:1.62;
+  }
+  .wrap{max-width:900px;margin:0 auto;padding-inline:20px}
+  a{color:var(--pick)}
+  button:focus-visible,a:focus-visible{outline:2px solid var(--pick);outline-offset:2px}
+
+  /* ---------- header ---------- */
+  header.hero{padding-block:54px 28px;border-bottom:1px solid var(--rule)}
+  .eyebrow{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:12px;letter-spacing:.15em;text-transform:uppercase;color:var(--ink-soft)}
+  h1{font-family:"Fraunces",Georgia,"Times New Roman",serif;font-weight:600;
+    font-size:clamp(30px,5.6vw,46px);line-height:1.05;letter-spacing:-.02em;margin:14px 0 16px;
+    text-wrap:balance}
+  .lede{max-width:58ch;color:var(--ink-soft);margin:0}
+  .navchips{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+  .navchips a{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.06em;
+    text-decoration:none;color:var(--ink-soft);border:1px solid var(--rule);
+    background:var(--card);padding:6px 11px;border-radius:2px}
+  .navchips a:hover{color:var(--pick);border-color:var(--pick)}
+
+  /* ---------- sections ---------- */
+  section{padding-block:44px 8px}
+  .secnum{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--pick)}
+  h2{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:clamp(23px,3.6vw,31px);
+    line-height:1.14;letter-spacing:-.015em;margin:10px 0 14px;text-wrap:balance}
+  h3{font-family:"Fraunces",Georgia,serif;font-weight:600;font-size:20px;
+    line-height:1.25;margin:26px 0 8px;text-wrap:balance}
+  h4{font-family:"IBM Plex Mono",monospace;font-weight:500;font-size:12px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--ink-soft);margin:20px 0 6px}
+  p{margin:0 0 13px}
+  .intro{max-width:62ch;color:var(--ink-soft)}
+
+  /* ---------- problem cards ---------- */
+  .prob{background:var(--card);border:1px solid var(--rule);margin:18px 0 0}
+  .prob>.head{padding:18px 22px 16px}
+  .tag{font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.07em;
+    color:var(--pick);font-weight:500}
+  .statement{font-family:"Fraunces",Georgia,serif;font-size:18.5px;line-height:1.44;margin:8px 0 0}
+  .parts{margin:12px 0 0;padding-left:0;list-style:none}
+  .parts li{position:relative;padding-left:30px;margin:5px 0}
+  .parts li>.pl{position:absolute;left:0;font-family:"IBM Plex Mono",monospace;
+    font-size:14px;color:var(--ink-soft)}
+  .src{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--keep);margin-top:10px}
+
+  .reveal{display:block;width:100%;text-align:left;cursor:pointer;
+    font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-soft);
+    background:var(--wash);border:0;border-top:1px solid var(--rule);
+    padding:11px 22px}
+  .reveal:hover{color:var(--pick)}
+  .reveal::before{content:"▸ ";color:var(--pick)}
+  .prob.open .reveal::before{content:"▾ "}
+  .prob.open .reveal{color:var(--pick)}
+  .sol{display:none;padding:4px 22px 22px;border-top:1px solid var(--rule);background:var(--card)}
+  .prob.open .sol{display:block}
+  .sol p:first-child{margin-top:14px}
+
+  .ans{display:inline-block;font-family:"IBM Plex Mono",monospace;font-size:15px;
+    font-weight:500;color:var(--ink);background:var(--wash);
+    border:1px solid var(--rule);border-bottom:2px solid var(--pick);
+    padding:3px 10px;margin:2px 0}
+  .step{font-family:"IBM Plex Mono",monospace;font-size:15px;color:var(--mark);
+    display:block;margin:10px 0;overflow-x:auto;white-space:nowrap;padding-bottom:2px}
+  code{font-family:"IBM Plex Mono",monospace;font-size:.92em;
+    background:var(--wash);border:1px solid var(--rule);padding:1px 5px}
+  .sol ul{margin:10px 0;padding-left:20px}
+  .sol ul li{margin:4px 0}
+  em{font-style:italic}
+
+  .revealall{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.13em;
+    text-transform:uppercase;background:transparent;color:var(--ink-soft);
+    border:1px solid var(--rule);padding:7px 13px;cursor:pointer;margin-bottom:4px}
+  .revealall:hover{color:var(--pick);border-color:var(--pick)}
+
+  /* ---------- callouts ---------- */
+  .callout{border:1px solid var(--rule);background:var(--wash);padding:15px 18px;margin:20px 0}
+  .callout .ct{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--pick);display:block;margin-bottom:5px}
+  .callout p:last-child{margin-bottom:0}
+  .callout.warn{background:var(--amber-bg);border-color:var(--amber)}
+  .callout.warn .ct{color:var(--amber)}
+  .callout.big{border-left:3px solid var(--pick)}
+
+  /* ---------- 2x2 matrix ---------- */
+  .matrix{display:grid;grid-template-columns:auto 1fr 1fr;gap:1px;background:var(--rule);
+    border:1px solid var(--rule);margin:22px 0}
+  .matrix>div{background:var(--card);padding:14px 15px}
+  .matrix .hd{background:var(--wash);font-family:"IBM Plex Mono",monospace;font-size:11.5px;
+    letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);
+    display:flex;align-items:center}
+  .matrix .cell .n{font-family:"Fraunces",Georgia,serif;font-size:30px;line-height:1;
+    color:var(--pick);display:block}
+  .matrix .cell .lb{font-family:"IBM Plex Mono",monospace;font-size:11px;color:var(--keep);
+    letter-spacing:.08em;display:block;margin-top:7px}
+  .matrix .cell .why{font-size:14px;color:var(--ink-soft);display:block;margin-top:6px;line-height:1.45}
+  @media (max-width:560px){
+    .matrix{grid-template-columns:1fr 1fr}
+    .matrix .corner{display:none}
+    .matrix .hd.rowh{grid-column:1 / -1}
+  }
+
+  /* ---------- figures ---------- */
+  figure{margin:22px 0;background:var(--card);border:1px solid var(--rule);
+    padding:20px 18px 14px;text-align:center}
+  figure svg{max-width:100%;height:auto}
+  figcaption{font-family:"IBM Plex Mono",monospace;font-size:11.5px;letter-spacing:.08em;
+    color:var(--ink-soft);margin-top:12px;text-transform:uppercase}
+  .gl{stroke:var(--keep);stroke-width:1.6;fill:none}
+  .gm{stroke:var(--pick);stroke-width:3;fill:none;stroke-linecap:round}
+  .gx{stroke:var(--pick);stroke-width:2.2;fill:none;stroke-dasharray:5 5;opacity:.55}
+  .pt{fill:var(--pick)}
+  .lbl{font-family:"Fraunces",Georgia,serif;font-style:italic;font-size:17px;fill:var(--ink)}
+  .cnt{font-family:"IBM Plex Mono",monospace;font-size:12px;fill:var(--mark)}
+  .nodes circle{fill:var(--card);stroke:var(--rule);stroke-width:1}
+  .nodes text{font-family:"IBM Plex Mono",monospace;font-size:11px;fill:var(--mark);
+    text-anchor:middle;dominant-baseline:central}
+  .nodes .last circle{fill:var(--card);stroke:var(--pick);stroke-width:2}
+  .nodes .last text{fill:var(--pick);font-weight:500}
+
+  /* ---------- key table ---------- */
+  .keywrap{overflow-x:auto;margin:20px 0;border:1px solid var(--rule);background:var(--card)}
+  table.key{border-collapse:collapse;width:100%;min-width:460px}
+  table.key th,table.key td{text-align:left;padding:9px 14px;border-bottom:1px solid var(--rule);
+    font-size:15px}
+  table.key th{font-family:"IBM Plex Mono",monospace;font-size:11px;letter-spacing:.12em;
+    text-transform:uppercase;color:var(--ink-soft);background:var(--wash)}
+  table.key td.p{font-family:"IBM Plex Mono",monospace;color:var(--pick);white-space:nowrap;width:1%}
+  table.key td.v{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums}
+  .ans,.step{font-variant-numeric:tabular-nums}
+  @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+  table.key tr:last-child td{border-bottom:0}
+
+  /* ---------- binomial ---------- */
+  .bn{display:inline-flex;align-items:center;vertical-align:middle;
+    font-family:"IBM Plex Mono",monospace;font-size:.95em;line-height:1}
+  .bn i{font-style:normal;font-size:1.7em;font-weight:300;color:var(--keep)}
+  .bn s{text-decoration:none;display:inline-flex;flex-direction:column;align-items:center;
+    padding:0 2px;font-size:.82em;line-height:1.15}
+
+  footer{border-top:1px solid var(--rule);margin-top:52px;padding-block:26px 60px;
+    font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--keep);line-height:1.8}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="eyebrow">AoPS · Introduction to Counting &amp; Probability · pp. 88–96</div>
+  <h1>Distinguishability,<br>and everything after</h1>
+  <p class="lede">Chapter 5 from §5.4 to the end: the four balls-and-boxes problems, the exercises,
+  the summary, all seven review problems, all ten challenge problems, and the Catalan-numbers
+  Extra. Every solution is hidden until you ask for it — try the problem first.</p>
+  <nav class="navchips">
+    <a href="#s54">§5.4 Distinguishability</a>
+    <a href="#practice">Practice drill</a>
+    <a href="#ex54">Exercises 5.4.1–5.4.3</a>
+    <a href="#s55">§5.5 Summary</a>
+    <a href="#rev">Review 5.10–5.16</a>
+    <a href="#chal">Challenge 5.17–5.26</a>
+    <a href="#cat">Extra: Catalan</a>
+    <a href="#key">Answer key</a>
+  </nav>
+</header>
+
+<!-- ============ 5.4 ============ -->
+<section id="s54">
+  <div class="secnum">Section 5.4</div>
+  <h2>Distinguishability</h2>
+  <p class="intro"><strong>Distinguishable</strong> means we can tell the items apart;
+  <strong>indistinguishable</strong> means we can't. There are 3! = 6 ways to order 3
+  distinguishable items, but only 1 way to order 3 indistinguishable ones — all the orders
+  look the same.</p>
+  <p class="intro">Take 4 balls and 2 boxes. Either the balls or the boxes can be
+  distinguishable or not, so the same sentence — "put the balls in the boxes" — is really
+  four different problems with four different answers.</p>
+
+  <div class="matrix">
+    <div class="hd corner"></div>
+    <div class="hd">Boxes distinguishable</div>
+    <div class="hd">Boxes indistinguishable</div>
+
+    <div class="hd rowh">Balls<br>distinguishable</div>
+    <div class="cell"><span class="n">16</span><span class="lb">Problem 5.6</span>
+      <span class="why">Each ball picks a box: 2<sup>4</sup>.</span></div>
+    <div class="cell"><span class="n">8</span><span class="lb">Problem 5.7</span>
+      <span class="why">Only <em>which balls sit together</em> matters.</span></div>
+
+    <div class="hd rowh">Balls<br>indistinguishable</div>
+    <div class="cell"><span class="n">5</span><span class="lb">Problem 5.8</span>
+      <span class="why">Only <em>how many</em> land in box #1: 0–4.</span></div>
+    <div class="cell"><span class="n">3</span><span class="lb">Problem 5.9</span>
+      <span class="why">Only the split: {4,0}, {3,1}, {2,2}.</span></div>
+  </div>
+
+  <button class="revealall" data-scope="s54">Reveal all solutions in this section</button>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Problem 5.6</div>
+      <p class="statement">How many ways are there to put 4 <em>distinguishable</em> balls into
+      2 <em>distinguishable</em> boxes?</p>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <p>For each ball there are 2 choices of box, and the choice is independent for each of the
+      4 balls, so multiply:</p>
+      <span class="step">2 × 2 × 2 × 2 = 2⁴ = 16</span>
+      <p><span class="ans">16</span></p>
+    </div>
+  </article>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Problem 5.7</div>
+      <p class="statement">How many ways are there to put 4 <em>distinguishable</em> balls into
+      2 <em>indistinguishable</em> boxes?</p>
+    </div>
+    <button class="reveal">Solution — two ways</button>
+    <div class="sol">
+      <p>Now we don't care which box is which. We only care which balls are together and which
+      aren't. Two routes:</p>
+
+      <h4>Route 1 — divide out the box labels</h4>
+      <p>Take the 16 from Problem 5.6. There are 2! = 2 ways to arrange the 2 boxes, so</p>
+      <span class="step">16 ÷ 2 = 8</span>
+
+      <div class="callout warn">
+        <span class="ct">Warning</span>
+        <p>This shortcut does <em>not</em> generalise to more than 2 boxes — see Exercise 5.4.2(e).
+        It is exact here because no labelled arrangement survives a box-swap unchanged: that would
+        require the two boxes to hold identical contents, which is impossible when the balls are
+        all different. So the 16 labelled pictures pair up perfectly, 2 to 1.</p>
+      </div>
+
+      <h4>Route 2 — casework on the shape</h4>
+      <ul>
+        <li><strong>4 + 0.</strong> All four balls together: 1 way (it doesn't matter which box,
+        they're identical).</li>
+        <li><strong>3 + 1.</strong> Choose the lone ball: 4 ways.</li>
+        <li><strong>2 + 2.</strong> Choosing 2 balls for "the first box" gives
+        <span class="bn"><i>(</i><s><span>4</span><span>2</span></s><i>)</i></span> = 6, but
+        picking {A,B} and picking {C,D} produce the <em>same</em> picture. Divide by 2: 3 ways.</li>
+      </ul>
+      <span class="step">1 + 4 + 3 = 8</span>
+      <p><span class="ans">8</span> &nbsp; Two methods, same answer — that's the check.</p>
+    </div>
+  </article>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Problem 5.8</div>
+      <p class="statement">How many ways are there to put 4 <em>indistinguishable</em> balls into
+      2 <em>distinguishable</em> boxes?</p>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <p>Since the balls are identical, the only thing worth tracking is <em>how many</em> balls
+      are in each box. Box #1 can hold 0, 1, 2, 3 or 4 balls, and the rest go to box #2.</p>
+      <span class="step">(0,4) (1,3) (2,2) (3,1) (4,0) → 5</span>
+      <p><span class="ans">5</span></p>
+    </div>
+  </article>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Problem 5.9</div>
+      <p class="statement">How many ways are there to put 4 <em>indistinguishable</em> balls into
+      2 <em>indistinguishable</em> boxes?</p>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <p>Nothing is labelled, so all that survives is the <em>split</em> — the multiset of counts.
+      There are only three ways to split 4 identical items into two groups:</p>
+      <span class="step">{4, 0} &nbsp; {3, 1} &nbsp; {2, 2}</span>
+      <p><span class="ans">3</span></p>
+    </div>
+  </article>
+
+  <div class="callout big">
+    <span class="ct">Important</span>
+    <p><strong>Distinguishability matters.</strong> There's nothing to memorise here. On any
+    counting problem, ask what you can and can't tell apart, then use logic. The point of
+    Problems 5.6–5.9 is to make it unmistakable that there <em>is</em> a difference, and that
+    you have to account for it.</p>
+  </div>
+</section>
+
+<!-- ============ Practice drill ============ -->
+<section id="practice">
+  <div class="secnum">Practice</div>
+  <h2>The same four questions, new numbers</h2>
+  <p class="intro">Problems 5.6–5.9 asked one question four ways. Here it is again with different
+  counts, plus two variations. Work each one in the order (a) → (d): the distinguishable-everything
+  case is always the easiest, and the other three are corrections to it.</p>
+  <button class="revealall" data-scope="practice">Reveal all solutions in this section</button>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Practice 1 — warm-up</div>
+      <p class="statement">How many ways are there to put 3 balls in 3 boxes if</p>
+      <ul class="parts">
+        <li><span class="pl">(a)</span>the balls are distinguishable and the boxes are distinguishable?</li>
+        <li><span class="pl">(b)</span>the balls are distinguishable but the boxes are not?</li>
+        <li><span class="pl">(c)</span>the balls are not distinguishable but the boxes are?</li>
+        <li><span class="pl">(d)</span>the balls are not distinguishable and neither are the boxes?</li>
+      </ul>
+      <p class="src">Small enough to list by hand — do that if an answer surprises you</p>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <h4>(a)</h4>
+      <p>Each ball picks a box independently.</p>
+      <span class="step">3³ = 27</span><p><span class="ans">27</span></p>
+
+      <h4>(b) balls distinguishable, boxes not</h4>
+      <p>27 ÷ 6 = 4.5 is not an integer, so casework it is. Call the balls A, B, C.</p>
+      <ul>
+        <li><strong>3+0+0</strong> — all together: 1</li>
+        <li><strong>2+1+0</strong> — choose the loner: 3</li>
+        <li><strong>1+1+1</strong> — all separate, and the boxes are identical: 1</li>
+      </ul>
+      <span class="step">1 + 3 + 1 = 5</span><p><span class="ans">5</span></p>
+
+      <h4>(c) balls not distinguishable, boxes are</h4>
+      <p>Stars and bars: 3 stars, 2 bars.</p>
+      <span class="step">C(3+2, 2) = C(5,2) = 10</span><p><span class="ans">10</span></p>
+
+      <h4>(d) neither distinguishable</h4>
+      <p>Partitions of 3 into at most 3 parts: 3 · 2+1 · 1+1+1</p>
+      <p><span class="ans">3</span></p>
+    </div>
+  </article>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Practice 2 — the even split</div>
+      <p class="statement">How many ways are there to put 6 balls in 2 boxes if</p>
+      <ul class="parts">
+        <li><span class="pl">(a)</span>the balls are distinguishable and the boxes are distinguishable?</li>
+        <li><span class="pl">(b)</span>the balls are distinguishable but the boxes are not?</li>
+        <li><span class="pl">(c)</span>the balls are not distinguishable but the boxes are?</li>
+        <li><span class="pl">(d)</span>the balls are not distinguishable and neither are the boxes?</li>
+      </ul>
+      <p class="src">Part (b) is the point — 6 is even, so a 3+3 split is possible</p>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <h4>(a)</h4><span class="step">2⁶ = 64</span><p><span class="ans">64</span></p>
+
+      <h4>(b) balls distinguishable, boxes not</h4>
+      <p>Here's the thing worth being careful about. In Problem 5.7 the 2+2 case needed an extra
+      division by 2, so it's tempting to think the even 3+3 split breaks the overall
+      "divide by 2!" shortcut here. It doesn't:</p>
+      <span class="step">64 ÷ 2 = 32</span>
+      <p>The shortcut fails only when some labelled arrangement is left <em>unchanged</em> by
+      swapping the boxes — which would need both boxes to hold the same balls, impossible when the
+      balls are all different. A 3+3 split still moves when you swap the boxes; it just gets paired
+      with its mirror image, which is exactly what dividing by 2 handles.</p>
+      <p>Casework confirms it, and note the halving reappears <em>inside</em> the 3+3 case:</p>
+      <ul>
+        <li><strong>6+0</strong>: 1</li>
+        <li><strong>5+1</strong>: C(6,1) = 6</li>
+        <li><strong>4+2</strong>: C(6,2) = 15</li>
+        <li><strong>3+3</strong>: C(6,3) ÷ 2 = 20 ÷ 2 = 10 &nbsp;<em>(choosing {A,B,C} and choosing
+        {D,E,F} give the same picture)</em></li>
+      </ul>
+      <span class="step">1 + 6 + 15 + 10 = 32 ✓</span><p><span class="ans">32</span></p>
+
+      <h4>(c) balls not distinguishable, boxes are</h4>
+      <p>Box #1 holds 0 through 6.</p>
+      <p><span class="ans">7</span></p>
+
+      <h4>(d) neither distinguishable</h4>
+      <p>{6,0}, {5,1}, {4,2}, {3,3}.</p>
+      <p><span class="ans">4</span></p>
+    </div>
+  </article>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Practice 3 — more boxes</div>
+      <p class="statement">How many ways are there to put 5 balls in 4 boxes if</p>
+      <ul class="parts">
+        <li><span class="pl">(a)</span>the balls are distinguishable and the boxes are distinguishable?</li>
+        <li><span class="pl">(b)</span>the balls are distinguishable but the boxes are not?</li>
+        <li><span class="pl">(c)</span>the balls are not distinguishable but the boxes are?</li>
+        <li><span class="pl">(d)</span>the balls are not distinguishable and neither are the boxes?</li>
+      </ul>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <h4>(a)</h4><span class="step">4⁵ = 1024</span><p><span class="ans">1024</span></p>
+
+      <h4>(b) balls distinguishable, boxes not</h4>
+      <p>Casework on the shape. With only 5 balls and 4 identical boxes, at most 4 boxes get used:</p>
+      <ul>
+        <li><strong>5+0+0+0</strong>: 1</li>
+        <li><strong>4+1+0+0</strong> — choose the loner: C(5,1) = 5</li>
+        <li><strong>3+2+0+0</strong> — choose the trio: C(5,3) = 10</li>
+        <li><strong>3+1+1+0</strong> — choose the trio; the two singles sit in identical boxes:
+        C(5,3) = 10</li>
+        <li><strong>2+2+1+0</strong> — choose the loner (5), then split the other 4 into two
+        unordered pairs (C(4,2) ÷ 2 = 3): 15</li>
+        <li><strong>2+1+1+1</strong> — choose the pair; the rest are forced: C(5,2) = 10</li>
+      </ul>
+      <span class="step">1 + 5 + 10 + 10 + 15 + 10 = 51</span><p><span class="ans">51</span></p>
+
+      <h4>(c) balls not distinguishable, boxes are</h4>
+      <p>Stars and bars: 5 stars, 3 bars.</p>
+      <span class="step">C(5+3, 3) = C(8,3) = 56</span><p><span class="ans">56</span></p>
+
+      <h4>(d) neither distinguishable</h4>
+      <p>Partitions of 5 into at most 4 parts:</p>
+      <span class="step">5 · 4+1 · 3+2 · 3+1+1 · 2+2+1 · 2+1+1+1</span>
+      <p>(Only 1+1+1+1+1 is excluded — it needs 5 boxes.)</p>
+      <p><span class="ans">6</span></p>
+    </div>
+  </article>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Practice 4 — no empty boxes</div>
+      <p class="statement">How many ways are there to put 4 balls in 2 boxes <em>if neither box
+      may be left empty</em>, when</p>
+      <ul class="parts">
+        <li><span class="pl">(a)</span>the balls are distinguishable and the boxes are distinguishable?</li>
+        <li><span class="pl">(b)</span>the balls are distinguishable but the boxes are not?</li>
+        <li><span class="pl">(c)</span>the balls are not distinguishable but the boxes are?</li>
+        <li><span class="pl">(d)</span>the balls are not distinguishable and neither are the boxes?</li>
+      </ul>
+      <p class="src">Compare each answer with Problems 5.6–5.9</p>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <p>Every answer here is its counterpart from 5.6–5.9 with the "one box empty" arrangements
+      removed. Complementary counting does all the work.</p>
+
+      <h4>(a)</h4>
+      <p>From 16, throw out the 2 arrangements that pile everything into one box.</p>
+      <span class="step">16 − 2 = 14</span><p><span class="ans">14</span></p>
+
+      <h4>(b)</h4>
+      <p>From 8, throw out the single 4+0 arrangement (the boxes are identical, so there's only one).</p>
+      <span class="step">8 − 1 = 7</span>
+      <p>Cross-check with 14 ÷ 2 = 7 ✓ — the halving argument is still valid.</p>
+      <p><span class="ans">7</span></p>
+
+      <h4>(c)</h4>
+      <p>From 5, drop the counts 0 and 4. Box #1 holds 1, 2 or 3.</p>
+      <p><span class="ans">3</span></p>
+
+      <h4>(d)</h4>
+      <p>From 3, drop {4,0}. Left with {3,1} and {2,2}.</p>
+      <p><span class="ans">2</span></p>
+    </div>
+  </article>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Practice 5 ★ — partly distinguishable</div>
+      <p class="statement">Three balls are indistinguishably red and two are indistinguishably blue.
+      How many ways are there to put all five into 3 distinguishable boxes?</p>
+      <p class="src">Modelled on Problem 5.16(e)</p>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <p>The reds and the blues never interfere — knowing where the reds went tells you nothing
+      about the blues — so place each colour independently and multiply.</p>
+      <ul>
+        <li>3 identical reds into 3 labelled boxes: C(3+2, 2) = C(5,2) = 10</li>
+        <li>2 identical blues into 3 labelled boxes: C(2+2, 2) = C(4,2) = 6</li>
+      </ul>
+      <span class="step">10 × 6 = 60</span><p><span class="ans">60</span></p>
+      <p>Sanity check against the extremes: if all five balls were identical you'd get
+      C(7,2) = 21, and if all five were different you'd get 3⁵ = 243. Partial distinguishability
+      lands in between, as it must.</p>
+    </div>
+  </article>
+</section>
+
+<!-- ============ Exercises 5.4 ============ -->
+<section id="ex54">
+  <div class="secnum">Exercises</div>
+  <h2>5.4.1 – 5.4.3</h2>
+  <button class="revealall" data-scope="ex54">Reveal all solutions in this section</button>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Exercise 5.4.1</div>
+      <p class="statement">How many ways are there to put 5 balls in 2 boxes if</p>
+      <ul class="parts">
+        <li><span class="pl">(a)</span>the balls are distinguishable and the boxes are distinguishable?</li>
+        <li><span class="pl">(b)</span>the balls are distinguishable but the boxes are not?</li>
+        <li><span class="pl">(c)</span>the balls are not distinguishable but the boxes are?</li>
+        <li><span class="pl">(d)</span>the balls are not distinguishable and neither are the boxes?</li>
+      </ul>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <h4>(a) both distinguishable</h4>
+      <p>Each of the 5 balls independently picks one of 2 boxes.</p>
+      <span class="step">2⁵ = 32</span><p><span class="ans">32</span></p>
+
+      <h4>(b) balls distinguishable, boxes not</h4>
+      <p>Divide by 2! = 2. This is exact, for the same reason as in Problem 5.7: with all balls
+      different, the two boxes can never hold identical contents, so swapping them always produces
+      a genuinely different labelled picture.</p>
+      <span class="step">32 ÷ 2 = 16</span>
+      <p>Casework check: 5+0 → 1; 4+1 → <span class="bn"><i>(</i><s><span>5</span><span>1</span></s><i>)</i></span> = 5;
+      3+2 → <span class="bn"><i>(</i><s><span>5</span><span>2</span></s><i>)</i></span> = 10.
+      Total 1 + 5 + 10 = 16. ✓</p>
+      <p><span class="ans">16</span></p>
+
+      <h4>(c) balls not distinguishable, boxes are</h4>
+      <p>Only the count in box #1 matters: 0, 1, 2, 3, 4 or 5.</p>
+      <p><span class="ans">6</span></p>
+
+      <h4>(d) neither distinguishable</h4>
+      <p>Only the split matters: {5,0}, {4,1}, {3,2}.</p>
+      <p><span class="ans">3</span></p>
+    </div>
+  </article>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Exercise 5.4.2</div>
+      <p class="statement">How many ways are there to put 5 balls in 3 boxes if</p>
+      <ul class="parts">
+        <li><span class="pl">(a)</span>the balls are distinguishable and the boxes are distinguishable?</li>
+        <li><span class="pl">(b)</span>the balls are distinguishable but the boxes are not?</li>
+        <li><span class="pl">(c)</span>the balls are not distinguishable but the boxes are?</li>
+        <li><span class="pl">(d)</span>the balls are not distinguishable and neither are the boxes?</li>
+        <li><span class="pl">(e)★</span>Can you explain why your answer to (b) is not simply your
+        answer to (a) divided by 3!?</li>
+      </ul>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <h4>(a) both distinguishable</h4>
+      <span class="step">3⁵ = 243</span><p><span class="ans">243</span></p>
+
+      <h4>(b) balls distinguishable, boxes not</h4>
+      <p>Casework on the <em>shape</em> of the split. There is no dividing-by-3! shortcut here
+      (see part (e)).</p>
+      <ul>
+        <li><strong>5+0+0</strong> — all together: 1</li>
+        <li><strong>4+1+0</strong> — pick the lone ball: <span class="bn"><i>(</i><s><span>5</span><span>1</span></s><i>)</i></span> = 5</li>
+        <li><strong>3+2+0</strong> — pick the trio: <span class="bn"><i>(</i><s><span>5</span><span>3</span></s><i>)</i></span> = 10</li>
+        <li><strong>3+1+1</strong> — pick the trio (10 ways); the last two balls are forced into
+        their own boxes, and those boxes are identical, so: 10 × 1 = 10</li>
+        <li><strong>2+2+1</strong> — pick the loner (5 ways), then split the remaining 4 into two
+        unordered pairs (<span class="bn"><i>(</i><s><span>4</span><span>2</span></s><i>)</i></span> ÷ 2 = 3 ways): 5 × 3 = 15</li>
+      </ul>
+      <span class="step">1 + 5 + 10 + 10 + 15 = 41</span>
+      <p><span class="ans">41</span></p>
+
+      <h4>(c) balls not distinguishable, boxes are</h4>
+      <p>Stars and bars: 5 identical stars and 2 bars in a row, in any order.</p>
+      <span class="step">C(5+2, 2) = C(7,2) = 21</span>
+      <p><span class="ans">21</span></p>
+
+      <h4>(d) neither distinguishable</h4>
+      <p>Partitions of 5 into at most 3 parts:</p>
+      <span class="step">5 · 4+1 · 3+2 · 3+1+1 · 2+2+1</span>
+      <p><span class="ans">5</span></p>
+
+      <h4>(e)★ Why 243 ÷ 3! is wrong</h4>
+      <p>First, the fatal clue: <strong>243 ÷ 6 = 40.5</strong>, which isn't even a whole number.
+      So the method can't be right.</p>
+      <p>Dividing by 3! assumes every unlabelled picture comes from <em>exactly</em> 6 labelled
+      ones. That's only true when all three boxes hold different contents. If two boxes hold the
+      same thing — including two empty boxes — swapping them changes nothing, so that picture is
+      produced by fewer than 6 labelled arrangements.</p>
+      <p><strong>Example.</strong> All 5 balls in one box. There are only <em>3</em> labelled
+      versions of this (balls in box 1, box 2, or box 3), not 6, because the two empty boxes are
+      interchangeable.</p>
+      <p>The division trick works only when no arrangement is fixed by any box-swap. With 2 boxes
+      and an odd number of balls that's guaranteed; with 3 boxes it fails immediately.</p>
+    </div>
+  </article>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Exercise 5.4.3</div>
+      <p class="statement">How many ways are there to put 2 balls in <em>n</em> boxes
+      (where <em>n</em> ≥ 2) if</p>
+      <ul class="parts">
+        <li><span class="pl">(a)</span>the balls are distinguishable and the boxes are distinguishable?</li>
+        <li><span class="pl">(b)</span>the balls are distinguishable but the boxes are not?</li>
+        <li><span class="pl">(c)</span>the balls are not distinguishable but the boxes are?</li>
+        <li><span class="pl">(d)</span>the balls are not distinguishable and neither are the boxes?</li>
+      </ul>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <h4>(a)</h4>
+      <p>Each ball picks one of <em>n</em> boxes.</p>
+      <p><span class="ans">n²</span></p>
+
+      <h4>(b)</h4>
+      <p>With unlabelled boxes the only question is whether the two balls are together or apart.
+      Both are possible because <em>n</em> ≥ 2.</p>
+      <p><span class="ans">2</span> &nbsp; Notice this doesn't grow with <em>n</em> at all.</p>
+
+      <h4>(c)</h4>
+      <p>Stars and bars: 2 stars, <em>n</em> − 1 bars.</p>
+      <span class="step">C(n+1, 2) = n(n+1)/2</span>
+      <p>Direct check: same box → <em>n</em> ways; different boxes → C(n,2) ways.
+      n + n(n−1)/2 = n(n+1)/2. ✓</p>
+      <p><span class="ans">n(n+1)/2</span></p>
+
+      <h4>(d)</h4>
+      <p>Only the split survives: {2} or {1,1}.</p>
+      <p><span class="ans">2</span></p>
+    </div>
+  </article>
+</section>
+
+<!-- ============ 5.5 Summary ============ -->
+<section id="s55">
+  <div class="secnum">Section 5.5</div>
+  <h2>Summary</h2>
+
+  <div class="callout">
+    <span class="ct">Grid paths</span>
+    <p>Combinations count paths on a grid. If a path needs <em>a</em> total steps in one direction
+    and <em>b</em> total steps in another, and the steps can come in any order, there are</p>
+    <span class="step">C(a+b, a) = C(a+b, b) &nbsp; possible paths.</span>
+    <p>Make sure you understand <em>why</em>: a path is just a word made of <em>a</em> R's and
+    <em>b</em> U's, and choosing the path means choosing which of the a+b positions hold the R's.</p>
+  </div>
+
+  <div class="callout">
+    <span class="ct">Combine your tools</span>
+    <p>Complementary counting and casework don't go away once you learn combinations — the harder
+    committee-forming problems need all three together.</p>
+  </div>
+
+  <div class="callout">
+    <span class="ct">Distinguishability matters</span>
+    <p>Keep track of whether the objects are distinguishable or indistinguishable, and proceed
+    accordingly.</p>
+  </div>
+
+  <div class="callout big">
+    <span class="ct">Concept</span>
+    <p>If it's easy to do, solving a problem in two different ways is a good way to check your
+    answer.</p>
+  </div>
+
+  <p class="intro" style="margin-top:22px;font-style:italic">
+  "All man's troubles come from not knowing how to sit still in one room." — Blaise Pascal</p>
+</section>
+
+<!-- ============ Review ============ -->
+<section id="rev">
+  <div class="secnum">Review Problems</div>
+  <h2>5.10 – 5.16</h2>
+  <button class="revealall" data-scope="rev">Reveal all solutions in this section</button>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Problem 5.10</div>
+      <p class="statement">In the diagram below (paths only go up and to the right):</p>
+      <ul class="parts">
+        <li><span class="pl">(a)</span>How many paths are there from <em>A</em> to <em>B</em>?</li>
+        <li><span class="pl">(b)</span>How many paths are there from <em>A</em> to <em>C</em>?</li>
+        <li><span class="pl">(c)</span>How many paths are there from <em>C</em> to <em>B</em>?</li>
+        <li><span class="pl">(d)</span>How many paths are there from <em>A</em> to <em>B</em>
+        passing through <em>C</em>?</li>
+      </ul>
+      <figure style="margin-bottom:0">
+        <svg viewBox="0 0 300 250" width="300" role="img" aria-label="A five by four grid with A at the bottom left corner, B at the top right corner, and C at the lattice point one step right and two steps up from A">
+          <g class="gl">
+            <path d="M20 230 H280 M20 180 H280 M20 130 H280 M20 80 H280 M20 30 H280"/>
+            <path d="M20 230 V30 M72 230 V30 M124 230 V30 M176 230 V30 M228 230 V30 M280 230 V30"/>
+          </g>
+          <circle class="pt" cx="20" cy="230" r="4"/>
+          <circle class="pt" cx="280" cy="30" r="4"/>
+          <circle class="pt" cx="72" cy="130" r="4"/>
+          <text class="lbl" x="8" y="248">A</text>
+          <text class="lbl" x="286" y="22">B</text>
+          <text class="lbl" x="80" y="122">C</text>
+        </svg>
+        <figcaption>Figure 5.15 — the grid is 5 wide and 4 tall</figcaption>
+      </figure>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <p>Put <em>A</em> at the origin. The grid is 5 across and 4 up, so
+      <em>B</em> = (5, 4). The point <em>C</em> is one step right and two steps up:
+      <em>C</em> = (1, 2).</p>
+
+      <h4>(a) A → B</h4>
+      <p>Every path is 5 R's and 4 U's in some order — 9 steps, choose which 4 are U.</p>
+      <span class="step">C(9, 4) = 126</span><p><span class="ans">126</span></p>
+
+      <h4>(b) A → C</h4>
+      <p>1 right, 2 up: 3 steps, choose which 1 is R.</p>
+      <span class="step">C(3, 1) = 3</span><p><span class="ans">3</span></p>
+
+      <h4>(c) C → B</h4>
+      <p>From (1,2) to (5,4) is 4 right and 2 up: 6 steps, choose which 2 are U.</p>
+      <span class="step">C(6, 2) = 15</span><p><span class="ans">15</span></p>
+
+      <h4>(d) A → B through C</h4>
+      <p>A path through <em>C</em> splits into an independent first leg and second leg, so multiply.</p>
+      <span class="step">3 × 15 = 45</span><p><span class="ans">45</span></p>
+      <p>Sanity check: 45 &lt; 126, as it must be — only about a third of all paths happen to
+      pass through <em>C</em>.</p>
+    </div>
+  </article>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Problem 5.11</div>
+      <p class="statement">In how many ways can we choose 3 distinct letters of the alphabet,
+      without regard to order, if we must choose 1 vowel (A, E, I, O or U) and 2 consonants?</p>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <p>There are 5 vowels and 26 − 5 = 21 consonants. The two choices are independent, so
+      multiply.</p>
+      <span class="step">5 × C(21, 2) = 5 × 210 = 1050</span>
+      <p><span class="ans">1050</span></p>
+    </div>
+  </article>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Problem 5.12</div>
+      <p class="statement">I have 10 distinguishable socks in my drawer: 4 white, 4 brown and
+      2 blue. In how many ways can I choose a pair of socks, provided that:</p>
+      <ul class="parts">
+        <li><span class="pl">(a)</span>I get two socks of the same colour?</li>
+        <li><span class="pl">(b)</span>I get two socks of different colours?</li>
+      </ul>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <h4>(a) same colour</h4>
+      <p>Casework on the colour — the cases can't overlap.</p>
+      <span class="step">C(4,2) + C(4,2) + C(2,2) = 6 + 6 + 1 = 13</span>
+      <p><span class="ans">13</span></p>
+
+      <h4>(b) different colours</h4>
+      <p>Complementary counting: every pair is either same-colour or different-colour.</p>
+      <span class="step">C(10,2) − 13 = 45 − 13 = 32</span>
+      <p>Direct check: 4·4 (white-brown) + 4·2 (white-blue) + 4·2 (brown-blue)
+      = 16 + 8 + 8 = 32. ✓</p>
+      <p><span class="ans">32</span></p>
+    </div>
+  </article>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Problem 5.13</div>
+      <p class="statement">Zichen has 6 different T-shirts and 8 different polo shirts. He needs to
+      select 6 shirts to pack for an upcoming vacation. In how many ways can Zichen select 6 shirts</p>
+      <ul class="parts">
+        <li><span class="pl">(a)</span>without restrictions?</li>
+        <li><span class="pl">(b)</span>to have 3 T-shirts and 3 polo shirts?</li>
+        <li><span class="pl">(c)</span>to have more polo shirts than T-shirts?</li>
+      </ul>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <h4>(a)</h4>
+      <p>All 14 shirts are different; just choose 6 of them.</p>
+      <span class="step">C(14, 6) = 3003</span><p><span class="ans">3003</span></p>
+
+      <h4>(b)</h4>
+      <p>Choose the T-shirts and the polos independently.</p>
+      <span class="step">C(6,3) × C(8,3) = 20 × 56 = 1120</span><p><span class="ans">1120</span></p>
+
+      <h4>(c)</h4>
+      <p>With 6 shirts total, "more polos than T-shirts" means at least 4 polos. Casework:</p>
+      <ul>
+        <li>4 polos, 2 tees: C(8,4) × C(6,2) = 70 × 15 = 1050</li>
+        <li>5 polos, 1 tee: C(8,5) × C(6,1) = 56 × 6 = 336</li>
+        <li>6 polos, 0 tees: C(8,6) × C(6,0) = 28 × 1 = 28</li>
+      </ul>
+      <span class="step">1050 + 336 + 28 = 1414</span><p><span class="ans">1414</span></p>
+      <p><em>Why not "half of 3003 minus the ties"?</em> Because T-shirts and polos aren't
+      symmetric — there are 6 of one and 8 of the other — so that shortcut doesn't apply.</p>
+    </div>
+  </article>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Problem 5.14</div>
+      <p class="statement">The Sagebrush High School student council has 6 juniors and 6 seniors as
+      class representatives. Two committees, each consisting of 2 juniors and 2 seniors, are to be
+      created. If no student can serve on both committees, how many different pairs of committees
+      are possible?</p>
+      <p class="src">Source: MATHCOUNTS</p>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <p>Build the committees one at a time, then correct for the fact that the two committees
+      aren't labelled.</p>
+      <ul>
+        <li>First committee: C(6,2) juniors × C(6,2) seniors = 15 × 15 = 225</li>
+        <li>Second committee, from who's left: C(4,2) × C(4,2) = 6 × 6 = 36</li>
+      </ul>
+      <span class="step">225 × 36 = 8100 ordered pairs</span>
+      <p>But a <em>pair</em> of committees is unordered — calling one "first" and the other
+      "second" counted each pair exactly twice. The two committees can never be identical (no
+      shared students), so the division is clean.</p>
+      <span class="step">8100 ÷ 2 = 4050</span>
+      <p><span class="ans">4050</span></p>
+    </div>
+  </article>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Problem 5.15</div>
+      <p class="statement">Our basketball team has 10 players, including Steve and Danny. We need
+      to divide into two teams of 5 for an intra-squad scrimmage. In how many ways can we do this:</p>
+      <ul class="parts">
+        <li><span class="pl">(a)</span>without restrictions?</li>
+        <li><span class="pl">(b)</span>if Steve and Danny insist on playing on the same team?</li>
+        <li><span class="pl">(c)</span>if Steve and Danny insist on playing on opposing teams?</li>
+        <li><span class="pl">(d)</span>How are your answers to (a), (b) and (c) related?</li>
+      </ul>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <h4>(a)</h4>
+      <p>Choosing 5 players picks out both teams at once, and choosing a set of 5 or its complement
+      gives the same division — the teams are unlabelled.</p>
+      <span class="step">C(10,5) ÷ 2 = 252 ÷ 2 = 126</span><p><span class="ans">126</span></p>
+
+      <h4>(b) same team</h4>
+      <p>Put Steve and Danny together, then fill their team with 3 of the other 8. That determines
+      everything, and there's no double-count left to fix (the pair is on one specific side).</p>
+      <span class="step">C(8, 3) = 56</span><p><span class="ans">56</span></p>
+
+      <h4>(c) opposing teams</h4>
+      <p>Steve's team needs 4 more players from the remaining 8; Danny's team gets the rest.</p>
+      <span class="step">C(8, 4) = 70</span><p><span class="ans">70</span></p>
+
+      <h4>(d) the relationship</h4>
+      <p>Steve and Danny are either together or apart — there is no third option — so (b) and (c)
+      partition (a):</p>
+      <span class="step">56 + 70 = 126</span>
+      <p>That's a complementary-counting check on all three answers at once.</p>
+    </div>
+  </article>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Problem 5.16</div>
+      <p class="statement">How many ways are there to put 4 balls in 3 boxes if:</p>
+      <ul class="parts">
+        <li><span class="pl">(a)</span>the balls are distinguishable and the boxes are distinguishable?</li>
+        <li><span class="pl">(b)</span>the balls are distinguishable but the boxes are not?</li>
+        <li><span class="pl">(c)</span>the balls are not distinguishable but the boxes are?</li>
+        <li><span class="pl">(d)</span>the balls are not distinguishable and neither are the boxes?</li>
+        <li><span class="pl">(e)★</span>two balls are indistinguishably green, two are indistinguishably
+        red, and the boxes are distinguishable?</li>
+      </ul>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <h4>(a)</h4><span class="step">3⁴ = 81</span><p><span class="ans">81</span></p>
+
+      <h4>(b) balls distinguishable, boxes not</h4>
+      <p>Casework on the shape (81 ÷ 6 = 13.5 is not an integer, so no shortcut):</p>
+      <ul>
+        <li><strong>4+0+0</strong>: 1</li>
+        <li><strong>3+1+0</strong>: choose the loner — 4</li>
+        <li><strong>2+2+0</strong>: C(4,2) ÷ 2 = 3</li>
+        <li><strong>2+1+1</strong>: choose the pair — C(4,2) = 6; the last two balls sit alone in
+        identical boxes, so no further choice</li>
+      </ul>
+      <span class="step">1 + 4 + 3 + 6 = 14</span><p><span class="ans">14</span></p>
+
+      <h4>(c) balls not distinguishable, boxes are</h4>
+      <p>Stars and bars: 4 stars, 2 bars.</p>
+      <span class="step">C(4+2, 2) = C(6,2) = 15</span><p><span class="ans">15</span></p>
+
+      <h4>(d) neither distinguishable</h4>
+      <p>Partitions of 4 into at most 3 parts: 4 · 3+1 · 2+2 · 2+1+1</p>
+      <p><span class="ans">4</span></p>
+
+      <h4>(e)★ two green, two red, boxes distinguishable</h4>
+      <p>The greens don't interact with the reds at all, so handle each colour separately and
+      multiply. Placing 2 identical green balls into 3 labelled boxes is stars and bars:
+      C(2+2, 2) = 6. Same for red.</p>
+      <span class="step">6 × 6 = 36</span><p><span class="ans">36</span></p>
+      <p>Sanity check: 36 sits between 15 (all balls identical) and 81 (all balls different) —
+      exactly where partial distinguishability should land.</p>
+    </div>
+  </article>
+</section>
+
+<!-- ============ Challenge ============ -->
+<section id="chal">
+  <div class="secnum">Challenge Problems</div>
+  <h2>5.17 – 5.26</h2>
+  <button class="revealall" data-scope="chal">Reveal all solutions in this section</button>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Problem 5.17</div>
+      <p class="statement">In the diagram below, the grid path from <em>F</em> to <em>G</em> is
+      missing, so paths from <em>D</em> to <em>E</em> cannot pass between <em>F</em> and
+      <em>G</em>. How many paths are there from <em>D</em> to <em>E</em>? (All steps go up or to
+      the right.)</p>
+      <figure style="margin-bottom:0">
+        <svg viewBox="0 0 300 200" width="300" role="img" aria-label="A five by three grid with D at the bottom left, E at the top right, and the horizontal segment between lattice points F and G in the top row removed">
+          <g class="gl">
+            <path d="M20 180 H280 M20 130 H280 M20 80 H124 M176 80 H280 M20 30 H280"/>
+            <path d="M20 180 V30 M72 180 V30 M124 180 V30 M176 180 V30 M228 180 V30 M280 180 V30"/>
+          </g>
+          <path class="gx" d="M124 80 H176"/>
+          <circle class="pt" cx="20" cy="180" r="4"/>
+          <circle class="pt" cx="280" cy="30" r="4"/>
+          <circle class="pt" cx="124" cy="80" r="4"/>
+          <circle class="pt" cx="176" cy="80" r="4"/>
+          <text class="lbl" x="8" y="198">D</text>
+          <text class="lbl" x="286" y="22">E</text>
+          <text class="lbl" x="108" y="72">F</text>
+          <text class="lbl" x="181" y="72">G</text>
+        </svg>
+        <figcaption>Figure 5.16 — the dashed segment F→G is missing</figcaption>
+      </figure>
+    </div>
+    <button class="reveal">Solution — two ways</button>
+    <div class="sol">
+      <p>Put <em>D</em> at the origin. The grid is 5 across and 3 up, so <em>E</em> = (5, 3),
+      <em>F</em> = (2, 2) and <em>G</em> = (3, 2).</p>
+
+      <h4>Route 1 — complementary counting</h4>
+      <p>Count all paths, then subtract the ones that use the forbidden segment.</p>
+      <span class="step">All paths D → E: C(8, 3) = 56</span>
+      <p>A path uses the F→G segment exactly when it goes D → F, crosses, then G → E. Those legs
+      are independent:</p>
+      <ul>
+        <li>D(0,0) → F(2,2): 2 right and 2 up — C(4,2) = 6</li>
+        <li>G(3,2) → E(5,3): 2 right and 1 up — C(3,1) = 3</li>
+      </ul>
+      <span class="step">Bad paths: 6 × 3 = 18 &nbsp;→&nbsp; 56 − 18 = 38</span>
+
+      <h4>Route 2 — count forward on the lattice</h4>
+      <p>Write 1 at <em>D</em> and give every other point the sum of the point below it and the
+      point to its left — skipping the missing edge. Notice <em>G</em> gets 4 instead of 10,
+      because nothing can reach it from <em>F</em>.</p>
+      <figure style="margin:14px 0 0">
+        <svg viewBox="0 0 300 200" width="300" role="img" aria-label="The same grid annotated with the number of paths reaching each lattice point, ending in 38 at E">
+          <g class="gl">
+            <path d="M20 180 H280 M20 130 H280 M20 80 H124 M176 80 H280 M20 30 H280"/>
+            <path d="M20 180 V30 M72 180 V30 M124 180 V30 M176 180 V30 M228 180 V30 M280 180 V30"/>
+          </g>
+          <path class="gx" d="M124 80 H176"/>
+          <g class="nodes">
+            <g><circle cx="20" cy="180" r="11"/><text x="20" y="180">1</text></g><g><circle cx="72" cy="180" r="11"/><text x="72" y="180">1</text></g><g><circle cx="124" cy="180" r="11"/><text x="124" y="180">1</text></g><g><circle cx="176" cy="180" r="11"/><text x="176" y="180">1</text></g><g><circle cx="228" cy="180" r="11"/><text x="228" y="180">1</text></g><g><circle cx="280" cy="180" r="11"/><text x="280" y="180">1</text></g>
+            <g><circle cx="20" cy="130" r="11"/><text x="20" y="130">1</text></g><g><circle cx="72" cy="130" r="11"/><text x="72" y="130">2</text></g><g><circle cx="124" cy="130" r="11"/><text x="124" y="130">3</text></g><g><circle cx="176" cy="130" r="11"/><text x="176" y="130">4</text></g><g><circle cx="228" cy="130" r="11"/><text x="228" y="130">5</text></g><g><circle cx="280" cy="130" r="11"/><text x="280" y="130">6</text></g>
+            <g><circle cx="20" cy="80" r="11"/><text x="20" y="80">1</text></g><g><circle cx="72" cy="80" r="11"/><text x="72" y="80">3</text></g><g><circle cx="124" cy="80" r="11"/><text x="124" y="80">6</text></g><g><circle cx="176" cy="80" r="11"/><text x="176" y="80">4</text></g><g><circle cx="228" cy="80" r="11"/><text x="228" y="80">9</text></g><g><circle cx="280" cy="80" r="11"/><text x="280" y="80">15</text></g>
+            <g><circle cx="20" cy="30" r="11"/><text x="20" y="30">1</text></g><g><circle cx="72" cy="30" r="11"/><text x="72" y="30">4</text></g><g><circle cx="124" cy="30" r="11"/><text x="124" y="30">10</text></g><g><circle cx="176" cy="30" r="11"/><text x="176" y="30">14</text></g><g><circle cx="228" cy="30" r="11"/><text x="228" y="30">23</text></g><g class="last"><circle cx="280" cy="30" r="11"/><text x="280" y="30">38</text></g>
+          </g>
+        </svg>
+        <figcaption>Path counts at each lattice point</figcaption>
+      </figure>
+      <p style="margin-top:14px"><span class="ans">38</span> &nbsp; Both methods agree.</p>
+    </div>
+  </article>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Problem 5.18</div>
+      <p class="statement">Nine lines are drawn in a plane. What is the largest possible number of
+      points in the plane at which at least two of the nine lines intersect?</p>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <p>Two distinct lines meet in at most one point, so each intersection point is "caused by"
+      at least one pair of lines. To maximise the count we want every pair to meet, and no two
+      pairs to meet at the same place — that is, no two lines parallel and no three lines
+      concurrent. Both conditions are easy to arrange (take nine lines in general position).</p>
+      <span class="step">C(9, 2) = 36</span>
+      <p><span class="ans">36</span></p>
+    </div>
+  </article>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Problem 5.19</div>
+      <p class="statement">Three goats and seven llamas are to be split into two 5-animal groups,
+      such that each group has at least one goat and at least one llama. In how many ways can this
+      be accomplished?</p>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <p>The two groups are unlabelled, so work with ordered groups and halve at the end.</p>
+      <p>Say group 1 gets <em>g</em> goats; then it gets 5 − <em>g</em> llamas, and group 2 gets
+      3 − <em>g</em> goats and 2 + <em>g</em> llamas. The conditions:</p>
+      <ul>
+        <li><em>g</em> ≥ 1 and 3 − <em>g</em> ≥ 1 → <em>g</em> = 1 or 2</li>
+        <li>5 − <em>g</em> ≥ 1 and 2 + <em>g</em> ≥ 1 → automatic</li>
+      </ul>
+      <p>So only two cases survive, and a group can never be all-goats (only 3 goats exist for a
+      group of 5) or all-llamas without breaking the goat condition.</p>
+      <ul>
+        <li><em>g</em> = 1: C(3,1) × C(7,4) = 3 × 35 = 105</li>
+        <li><em>g</em> = 2: C(3,2) × C(7,3) = 3 × 35 = 105</li>
+      </ul>
+      <span class="step">(105 + 105) ÷ 2 = 105</span>
+      <p>The two groups are never identical (they'd need the same goat count, impossible with 3
+      goats), so halving is exact.</p>
+      <p><span class="ans">105</span></p>
+      <p>Check against the unrestricted count: C(10,5) ÷ 2 = 126 total splits, and the only
+      forbidden ones put all 3 goats in one group (that group is 3 goats + 2 llamas, leaving the
+      other group all llamas) — C(7,2) = 21 of them. 126 − 21 = 105. ✓</p>
+    </div>
+  </article>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Problem 5.20</div>
+      <p class="statement">In this problem, people and desks are distinguishable, but books are not.</p>
+      <ul class="parts">
+        <li><span class="pl">(a)</span>In how many ways can 3 people be seated at a row of 5 desks,
+        one person per desk?</li>
+        <li><span class="pl">(b)</span>In how many ways can 3 identical copies of this textbook be
+        placed on a row of 5 desks, such that no desk has more than one book?</li>
+        <li><span class="pl">(c)</span>What is the answer to (b) if we allow more than one book on
+        each desk?</li>
+      </ul>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <h4>(a) distinguishable people, at most one per desk</h4>
+      <p>Seat them one at a time: 5 desks for the first, 4 for the second, 3 for the third.</p>
+      <span class="step">5 × 4 × 3 = 60</span><p><span class="ans">60</span></p>
+
+      <h4>(b) identical books, at most one per desk</h4>
+      <p>The books are identical, so all that matters is <em>which</em> 3 desks hold a book.</p>
+      <span class="step">C(5, 3) = 10</span><p><span class="ans">10</span></p>
+      <p>Notice (a) = (b) × 3! — the 60 seatings are the 10 desk-choices times the 3! ways to
+      assign distinguishable people to them.</p>
+
+      <h4>(c) identical books, stacking allowed</h4>
+      <p>Now it's 3 identical items into 5 distinguishable desks — stars and bars with 3 stars and
+      4 bars.</p>
+      <span class="step">C(3+4, 4) = C(7, 4) = 35</span><p><span class="ans">35</span></p>
+    </div>
+  </article>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Problem 5.21</div>
+      <p class="statement">How many positive integers less than 1000 are there such that the digits
+      are <em>not</em> in strictly increasing order from left to right? (The digits of 124 are in
+      strictly increasing order, but the digits of 88 and 946 are not.)</p>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <p>"Not" in the problem statement is the signal for complementary counting. There are
+      <strong>999</strong> positive integers less than 1000. Count the strictly increasing ones
+      and subtract.</p>
+      <p>Key observation: if you pick any set of distinct nonzero digits, there is <em>exactly
+      one</em> way to arrange them in increasing order. And 0 can never appear — it would have to
+      come first, which isn't allowed for a leading digit.</p>
+      <ul>
+        <li>1-digit: any of 1–9, all trivially increasing — C(9,1) = 9</li>
+        <li>2-digit: C(9,2) = 36</li>
+        <li>3-digit: C(9,3) = 84</li>
+      </ul>
+      <span class="step">9 + 36 + 84 = 129 increasing &nbsp;→&nbsp; 999 − 129 = 870</span>
+      <p><span class="ans">870</span></p>
+    </div>
+  </article>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Problem 5.22</div>
+      <p class="statement">A party consists of twenty mathematicians and twenty physicists. Every
+      mathematician shakes hands with every other person at the party. Half of the physicists only
+      shake hands with mathematicians; the other half of the physicists all also shake hands with
+      each other. How many handshakes in total are there?</p>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <p>Sort the handshakes by who's involved — three disjoint types.</p>
+      <ul>
+        <li><strong>Mathematician–mathematician:</strong> every pair shakes — C(20,2) = 190</li>
+        <li><strong>Mathematician–physicist:</strong> every mathematician shakes with every
+        physicist — 20 × 20 = 400</li>
+        <li><strong>Physicist–physicist:</strong> only among the sociable half, 10 of them —
+        C(10,2) = 45</li>
+      </ul>
+      <span class="step">190 + 400 + 45 = 635</span>
+      <p><span class="ans">635</span></p>
+      <p>The trap is counting a handshake twice. Fixing the <em>types</em> first keeps the cases
+      disjoint, so no correction is needed.</p>
+    </div>
+  </article>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Problem 5.23</div>
+      <p class="statement">Five different circles are drawn in a plane. What is the maximum number
+      of different points at which the circles can meet?</p>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <p>Two distinct circles meet in at most 2 points — the key difference from Problem 5.18,
+      where two lines met in at most 1. With five circles arranged so that every pair meets twice
+      and no point is shared by three circles:</p>
+      <span class="step">2 × C(5, 2) = 2 × 10 = 20</span>
+      <p><span class="ans">20</span></p>
+    </div>
+  </article>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Problem 5.24 ★</div>
+      <p class="statement">I have <em>n</em> friends. Every night of the 365-day year I invite three
+      of them to dinner. What is the smallest <em>n</em> could be such that it is still possible for
+      me to make these invitations without ever inviting the same group of three friends? (I can
+      invite the same friend, or even the same pair of friends, but never the same whole group of
+      three.)</p>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <p>Each night uses up one 3-element subset of my <em>n</em> friends, and no subset may repeat.
+      So I need at least 365 subsets available:</p>
+      <span class="step">C(n, 3) ≥ 365</span>
+      <p>Test values:</p>
+      <ul>
+        <li>C(13, 3) = 286 — not enough</li>
+        <li>C(14, 3) = 364 — one night short!</li>
+        <li>C(15, 3) = 455 — enough</li>
+      </ul>
+      <p>The near-miss at 14 is the whole point of the problem.</p>
+      <p><span class="ans">n = 15</span></p>
+    </div>
+  </article>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Problem 5.25 ★</div>
+      <p class="statement">An integer is called <em>snakelike</em> if its decimal representation
+      a₁a₂a₃…a<sub>k</sub> satisfies a<sub>i</sub> &lt; a<sub>i+1</sub> when <em>i</em> is odd and
+      a<sub>i</sub> &gt; a<sub>i+1</sub> when <em>i</em> is even. How many snakelike integers
+      between 1000 and 9999 have four distinct digits?</p>
+      <p class="src">Source: AIME</p>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <p>For a 4-digit number a₁a₂a₃a₄ the conditions are
+      <strong>a₁ &lt; a₂ &gt; a₃ &lt; a₄</strong> — an up-down-up zigzag.</p>
+      <p>Strategy: first choose the <em>set</em> of four distinct digits, then count how many
+      orderings zigzag. With four distinct values <em>w &lt; x &lt; y &lt; z</em>, exactly 5 of the
+      24 orderings are up-down-up:</p>
+      <span class="step">wyxz · wzxy · xywz · xzwy · yzwx</span>
+      <p>(Check one: <em>xywz</em> means a₁=x, a₂=y, a₃=w, a₄=z, and indeed
+      x &lt; y &gt; w &lt; z. ✓ &nbsp;The largest value <em>z</em> can never sit in position 1 or 3,
+      which is what cuts 24 down to 5.)</p>
+
+      <h4>Case 1 — 0 is not one of the digits</h4>
+      <p>Choose 4 digits from 1–9, and all 5 orderings are legal.</p>
+      <span class="step">C(9, 4) × 5 = 126 × 5 = 630</span>
+
+      <h4>Case 2 — 0 is one of the digits</h4>
+      <p>Choose the other 3 digits from 1–9: C(9,3) = 84 sets. Now 0 is the smallest value
+      <em>w</em>, and it may not lead. Of the five orderings, the two beginning with <em>w</em>
+      (<em>wyxz</em> and <em>wzxy</em>) are out, leaving 3.</p>
+      <span class="step">C(9, 3) × 3 = 84 × 3 = 252</span>
+
+      <span class="step">630 + 252 = 882</span>
+      <p><span class="ans">882</span></p>
+    </div>
+  </article>
+
+  <article class="prob">
+    <div class="head">
+      <div class="tag">Problem 5.26 ★</div>
+      <p class="statement">Mack the bug starts at the point (0,0,0) at noon and each minute moves
+      one unit in either the positive <em>x</em>-direction, the positive <em>y</em>-direction, or
+      the positive <em>z</em>-direction. How many different paths could he take to (3,5,2)?</p>
+    </div>
+    <button class="reveal">Solution</button>
+    <div class="sol">
+      <p>This is the grid-path idea in three dimensions. Mack must make 3 x-steps, 5 y-steps and
+      2 z-steps — 10 steps total — and the path is entirely determined by the <em>order</em> of
+      those steps. So a path is a rearrangement of the word</p>
+      <span class="step">X X X Y Y Y Y Y Z Z</span>
+      <p>Choose which 3 of the 10 positions are X, then which 5 of the remaining 7 are Y:</p>
+      <span class="step">C(10,3) × C(7,5) = 120 × 21 = 2520</span>
+      <p>Equivalently, the multinomial:</p>
+      <span class="step">10! / (3! · 5! · 2!) = 3628800 / 1440 = 2520</span>
+      <p><span class="ans">2520</span></p>
+    </div>
+  </article>
+</section>
+
+<!-- ============ Catalan ============ -->
+<section id="cat">
+  <div class="secnum">Extra!</div>
+  <h2>Catalan numbers</h2>
+  <p class="intro">Counting paths across a rectangular grid gives combinations. What happens if we
+  take only <em>half</em> the grid?</p>
+
+  <p>Consider the lower half of an <em>n</em> × <em>n</em> square grid — everything on or below the
+  diagonal from the lower-left corner <em>A</em> to the upper-right corner <em>B</em>. Count the
+  paths from <em>A</em> to <em>B</em> moving only up or to the right, with no cheating along the
+  diagonal segments.</p>
+
+  <figure>
+    <svg viewBox="0 0 220 200" width="220" role="img" aria-label="The lower half of a 5 by 5 grid, showing a sample staircase path from A at the lower left to B at the upper right">
+      <g class="gl">
+        <path d="M20 180 H180 M52 148 H180 M84 116 H180 M116 84 H180 M148 52 H180"/>
+        <path d="M52 180 V148 M84 180 V116 M116 180 V84 M148 180 V52 M180 180 V20"/>
+        <path d="M20 180 L180 20"/>
+      </g>
+      <path class="gm" d="M20 180 H52 V148 H84 V116 H116 V84 H148 V52 H180 V20"/>
+      <circle class="pt" cx="20" cy="180" r="4"/>
+      <circle class="pt" cx="180" cy="20" r="4"/>
+      <text class="lbl" x="6" y="196">A</text>
+      <text class="lbl" x="186" y="14">B</text>
+    </svg>
+    <figcaption>A legal staircase path for n = 5</figcaption>
+  </figure>
+
+  <h3>The reflection trick</h3>
+  <p>On a <em>full</em> 5 × 5 grid there are 10 steps — 5 up and 5 right — so C(10,5) paths; in
+  general C(2n, n). But the diagonal restriction rules some of them out. A path like
+  "rruuurruur" strays above the diagonal and is illegal.</p>
+  <p>Here's the clever part. Take any illegal path, find the <em>first</em> point where it strays
+  above the diagonal, and <strong>flip everything after that point</strong>: every r becomes a u
+  and every u becomes an r. Every flipped path ends up at the point one unit left and one unit up
+  from <em>B</em> — so it uses <em>n</em> − 1 steps right and <em>n</em> + 1 steps up. That means
+  illegal paths correspond exactly to</p>
+  <span class="step">C(2n, n−1) &nbsp; paths</span>
+  <p>and the reflection is reversible, so the correspondence is perfect. Therefore the answer is</p>
+  <span class="step">C(2n, n) − C(2n, n−1)</span>
+  <p>A little algebra simplifies this to the <em>n</em>th <strong>Catalan number</strong>:</p>
+  <span class="step">Cₙ = 1/(n+1) · C(2n, n)</span>
+  <p>For <em>n</em> = 5:</p>
+  <span class="step">C(10,5) − C(10,4) = 252 − 210 = 42 &nbsp; and &nbsp; 252/6 = 42 ✓</span>
+  <p class="intro">Catalan numbers turn up all over advanced counting — balanced parentheses,
+  triangulations of a polygon, binary trees. AoPS explores them in <em>Intermediate Counting
+  &amp; Probability</em>.</p>
+</section>
+
+<!-- ============ Key ============ -->
+<section id="key">
+  <div class="secnum">All answers</div>
+  <h2>Answer key</h2>
+  <div class="keywrap">
+    <table class="key">
+      <tr><th>Problem</th><th>Answer</th></tr>
+      <tr><td class="p">5.6 / 5.7 / 5.8 / 5.9</td><td class="v">16 / 8 / 5 / 3</td></tr>
+      <tr><td class="p">Practice 1 a–d</td><td class="v">27 / 5 / 10 / 3</td></tr>
+      <tr><td class="p">Practice 2 a–d</td><td class="v">64 / 32 / 7 / 4</td></tr>
+      <tr><td class="p">Practice 3 a–d</td><td class="v">1024 / 51 / 56 / 6</td></tr>
+      <tr><td class="p">Practice 4 a–d</td><td class="v">14 / 7 / 3 / 2</td></tr>
+      <tr><td class="p">Practice 5</td><td class="v">60</td></tr>
+      <tr><td class="p">5.4.1 a–d</td><td class="v">32 / 16 / 6 / 3</td></tr>
+      <tr><td class="p">5.4.2 a–d</td><td class="v">243 / 41 / 21 / 5 &nbsp;<span style="color:var(--ink-soft)">(e: 243÷6 = 40.5, not an integer)</span></td></tr>
+      <tr><td class="p">5.4.3 a–d</td><td class="v">n² / 2 / n(n+1)/2 / 2</td></tr>
+      <tr><td class="p">5.10 a–d</td><td class="v">126 / 3 / 15 / 45</td></tr>
+      <tr><td class="p">5.11</td><td class="v">1050</td></tr>
+      <tr><td class="p">5.12 a–b</td><td class="v">13 / 32</td></tr>
+      <tr><td class="p">5.13 a–c</td><td class="v">3003 / 1120 / 1414</td></tr>
+      <tr><td class="p">5.14</td><td class="v">4050</td></tr>
+      <tr><td class="p">5.15 a–c</td><td class="v">126 / 56 / 70 &nbsp;<span style="color:var(--ink-soft)">(d: 56 + 70 = 126)</span></td></tr>
+      <tr><td class="p">5.16 a–e</td><td class="v">81 / 14 / 15 / 4 / 36</td></tr>
+      <tr><td class="p">5.17</td><td class="v">38</td></tr>
+      <tr><td class="p">5.18</td><td class="v">36</td></tr>
+      <tr><td class="p">5.19</td><td class="v">105</td></tr>
+      <tr><td class="p">5.20 a–c</td><td class="v">60 / 10 / 35</td></tr>
+      <tr><td class="p">5.21</td><td class="v">870</td></tr>
+      <tr><td class="p">5.22</td><td class="v">635</td></tr>
+      <tr><td class="p">5.23</td><td class="v">20</td></tr>
+      <tr><td class="p">5.24</td><td class="v">15</td></tr>
+      <tr><td class="p">5.25</td><td class="v">882</td></tr>
+      <tr><td class="p">5.26</td><td class="v">2520</td></tr>
+      <tr><td class="p">Catalan, n = 5</td><td class="v">42</td></tr>
+    </table>
+  </div>
+</section>
+
+<footer>
+  Art of Problem Solving · Introduction to Counting &amp; Probability<br>
+  Chapter 5, More with Combinations — pages 88–96<br>
+  Every answer verified by exhaustive computation.
+</footer>
+
+</div>
+
+<script>
+(function(){
+  document.querySelectorAll('.reveal').forEach(function(b){
+    b.addEventListener('click', function(){
+      b.closest('.prob').classList.toggle('open');
+    });
+  });
+  document.querySelectorAll('.revealall').forEach(function(b){
+    b.addEventListener('click', function(){
+      var sec = document.getElementById(b.dataset.scope);
+      var probs = sec.querySelectorAll('.prob');
+      var anyClosed = Array.prototype.some.call(probs, function(p){
+        return !p.classList.contains('open');
+      });
+      probs.forEach(function(p){ p.classList.toggle('open', anyClosed); });
+      b.textContent = anyClosed ? 'Hide all solutions in this section'
+                                : 'Reveal all solutions in this section';
+    });
+  });
+})();
+</script>
+</body>
+</html>
