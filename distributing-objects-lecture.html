@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Distributing objects into boxes — worked through</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#EDEFF7; --card:#FFFFFF;
+  --ink:#191A2E; --ink-soft:#525577;
+  --line:#C6CBE3; --line-soft:#DDE1EF;
+  --o1:#D64933; --o2:#E39A1E; --o3:#2F8F6B; --o4:#3E5FC4; --o5:#8B49B8;
+  --plain:#9AA0BA; --accent:#3E5FC4; --flag:#E39A1E;
+  --stage-bg:#F7F8FC; --radius:10px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:17px;line-height:1.62;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:"Bricolage Grotesque",Georgia,sans-serif;font-weight:700;line-height:1.09;margin:0}
+h1{font-size:clamp(2.2rem,5.6vw,3.9rem);letter-spacing:-.025em}
+h2{font-size:clamp(1.5rem,3.4vw,2.15rem);letter-spacing:-.018em}
+h3{font-size:1.1rem;font-weight:600;letter-spacing:-.008em}
+p{margin:0 0 1.05em}
+a{color:var(--accent)}
+code,.mono{font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:.93em}
+.wrap{max-width:1080px;margin:0 auto;padding:0 22px}
+.col{max-width:64ch;margin-left:auto;margin-right:auto}
+.rule{height:1px;background:var(--line);margin:50px 0 44px}
+
+header.hero{padding:58px 0 8px}
+.kicker{font-size:.94rem;color:var(--ink-soft);margin:0 0 18px}
+.hero h1{margin-bottom:18px}
+.hero .lede{font-size:1.14rem;max-width:56ch;color:var(--ink-soft)}
+
+.exhead{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:6px}
+.extag{
+  font-family:"IBM Plex Mono",monospace;font-size:.78rem;font-weight:600;
+  background:var(--ink);color:#fff;padding:3px 9px;border-radius:5px;white-space:nowrap;
+}
+.extag.soft{background:#E6E9F5;color:var(--ink-soft)}
+
+.stage{background:var(--stage-bg);border:1px solid var(--line);border-radius:var(--radius);padding:22px;margin:26px 0}
+.stage-head{display:flex;flex-wrap:wrap;gap:10px 18px;align-items:baseline;justify-content:space-between;margin-bottom:16px}
+.hint{font-size:.85rem;color:var(--ink-soft)}
+
+button{font:inherit;font-size:.93rem;font-weight:600;background:var(--ink);color:#fff;border:0;
+  border-radius:7px;padding:9px 15px;cursor:pointer;transition:background .15s ease,transform .08s ease}
+button:hover{background:#2B2D4C}
+button:active{transform:translateY(1px)}
+button:disabled{background:var(--plain);cursor:default}
+button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+button.ghost:hover{background:#E6E9F5}
+:focus-visible{outline:2.5px solid var(--accent);outline-offset:2px}
+.btnrow{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+
+/* objects + boxes */
+.obj{width:25px;height:25px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;
+  color:#fff;font-size:.7rem;font-weight:600;font-family:"IBM Plex Mono",monospace;
+  background:var(--plain);flex:0 0 auto;transition:background .45s ease,color .45s ease}
+.obj.plain{color:transparent}
+.box{border:2px solid var(--ink);border-top:0;border-radius:0 0 8px 8px;background:#fff;
+  min-height:66px;min-width:74px;padding:9px 8px 8px;display:flex;flex-wrap:wrap;
+  align-content:flex-end;gap:5px;justify-content:center;position:relative}
+.box.plainbox{border-color:var(--plain);border-style:dashed}
+.box .tag{position:absolute;top:-23px;left:50%;transform:translateX(-50%);
+  font-family:"IBM Plex Mono",monospace;font-size:.73rem;font-weight:600;color:var(--ink);
+  background:var(--flag);padding:2px 9px;border-radius:5px 5px 0 0;white-space:nowrap;
+  transition:opacity .35s ease}
+.box .tag.hidden{opacity:0}
+.box .cnt{font-family:"IBM Plex Mono",monospace;font-size:1.05rem;font-weight:600;color:var(--ink-soft)}
+.boxrow{display:flex;gap:14px;flex-wrap:wrap;padding-top:26px;justify-content:center}
+
+/* formula displays */
+.fx{font-family:"IBM Plex Mono",monospace;text-align:center;font-size:1.05rem;line-height:1.9;margin:14px 0}
+.frac{display:inline-flex;flex-direction:column;vertical-align:middle;margin:0 3px;text-align:center}
+.frac .num{border-bottom:1.5px solid var(--ink);padding:0 7px 2px}
+.frac .den{padding:2px 7px 0}
+.tok{transition:opacity .5s ease,color .5s ease;position:relative;padding:0 1px}
+.tok.gone{color:var(--plain);opacity:.35}
+.tok.gone::after{content:"";position:absolute;left:0;right:0;top:52%;height:1.5px;background:var(--o1)}
+.tok.flash{color:var(--o1);font-weight:600}
+.result{opacity:0;transition:opacity .5s ease;margin-top:16px}
+.result.show{opacity:1}
+.bigf{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:1.1rem;text-align:center;margin:12px 0 0}
+
+/* linear equation model */
+.eqrow{font-family:"IBM Plex Mono",monospace;font-size:1.15rem;text-align:center;margin:8px 0 18px;font-weight:600}
+.eqrow span{transition:color .3s ease}
+.eqrow span.lit{color:var(--o4)}
+.sbrow{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;align-items:center;min-height:42px;margin:14px 0}
+.star{width:19px;height:19px;border-radius:50%;background:var(--plain)}
+.bar{width:5px;height:29px;border-radius:3px;background:var(--o4)}
+
+/* case stepper */
+.cases{display:grid;gap:12px}
+.casecard{background:#fff;border:1px solid var(--line);border-radius:8px;padding:15px 17px;
+  opacity:.42;transition:opacity .4s ease,border-color .4s ease}
+.casecard.on{opacity:1;border-color:var(--ink)}
+.casecard h4{margin:0 0 9px;font-size:.98rem;font-weight:600;font-family:"IBM Plex Sans",sans-serif}
+.shaperow{display:flex;gap:11px;align-items:flex-end;margin-bottom:11px;flex-wrap:wrap}
+.minibox{border:1.5px solid var(--ink);border-top:0;border-radius:0 0 5px 5px;min-width:44px;min-height:38px;
+  display:flex;flex-wrap:wrap;gap:3px;align-content:flex-end;justify-content:center;padding:4px 4px 3px}
+.minibox.empty{border-color:var(--plain);border-style:dashed}
+.emp{width:19px;height:19px;border-radius:50%;color:#fff;font-size:.64rem;font-weight:600;
+  font-family:"IBM Plex Mono",monospace;display:flex;align-items:center;justify-content:center}
+.calc{font-family:"IBM Plex Mono",monospace;font-size:.94rem;color:var(--ink-soft)}
+.calc b{color:var(--ink)}
+.runtotal{font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:1.25rem;text-align:center;margin:16px 0 0}
+
+/* duplicate merge */
+.pairgrid{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:14px 0}
+.pair{background:#fff;border:1px solid var(--line-soft);border-radius:7px;padding:8px 11px;
+  font-family:"IBM Plex Mono",monospace;font-size:.92rem;position:relative;
+  transition:transform .5s cubic-bezier(.4,0,.2,1),opacity .45s ease}
+.pair.rep{border-color:var(--ink);box-shadow:0 0 0 2px #E6E9F5}
+.pair .bdg{position:absolute;top:-8px;right:-8px;background:var(--ink);color:#fff;
+  font-family:"IBM Plex Mono",monospace;font-size:.66rem;padding:1px 6px;border-radius:9px;
+  opacity:0;transition:opacity .4s ease}
+.pair .bdg.show{opacity:1}
+
+/* partition cards */
+.plist{display:flex;flex-wrap:wrap;gap:11px;justify-content:center;margin:14px 0}
+.pcard{background:#fff;border:1px solid var(--line-soft);border-radius:7px;padding:10px 12px;
+  opacity:0;transform:translateY(6px);transition:opacity .4s ease,transform .4s ease}
+.pcard.in{opacity:1;transform:none}
+.pcard .lbl{text-align:center;margin-top:7px;font-size:.82rem;color:var(--ink-soft);font-family:"IBM Plex Mono",monospace}
+.ferrer{display:flex;gap:8px;align-items:flex-end;justify-content:center}
+.fcol{display:flex;flex-direction:column-reverse;gap:3px;min-width:14px;min-height:14px}
+.fdot{width:12px;height:12px;border-radius:50%;background:var(--plain)}
+.fcol.zero{border-bottom:2px dashed var(--plain)}
+
+/* reference table */
+.ref{width:100%;border-collapse:collapse;margin:22px 0;font-size:.92rem;background:#fff}
+.ref th,.ref td{border:1px solid var(--line);padding:11px 12px;text-align:left;vertical-align:top}
+.ref th{background:#E6E9F5;font-weight:600;font-size:.85rem}
+.ref td.f{font-family:"IBM Plex Mono",monospace;font-weight:600;white-space:nowrap}
+.ref tr:hover td{background:#FFF6E4}
+
+.matrix{width:100%;border-collapse:collapse;margin:22px 0;font-size:.92rem;background:#fff}
+.matrix th,.matrix td{border:1px solid var(--line);padding:12px;text-align:left;vertical-align:top}
+.matrix th{background:#E6E9F5;font-weight:600;font-size:.85rem}
+.matrix td .f{font-family:"IBM Plex Mono",monospace;font-weight:600;display:block;margin-bottom:4px}
+.matrix td small{color:var(--ink-soft);font-size:.83rem;display:block;line-height:1.45}
+
+.note{border-left:3px solid var(--flag);background:#FFF9EC;padding:14px 16px;border-radius:0 8px 8px 0;
+  margin:22px 0;font-size:.95rem}
+.note.warn{border-left-color:var(--o1);background:#FDF0EE}
+.note strong{font-weight:600}
+
+.q{background:#fff;border:1px solid var(--line);border-radius:8px;padding:17px 19px;margin-bottom:13px}
+.q p{margin:0 0 12px}
+.ans{display:none;border-top:1px dashed var(--line);padding-top:12px;margin-top:6px;font-size:.94rem;color:var(--ink-soft)}
+.ans.open{display:block;animation:drop .3s ease}
+.ans .mono{color:var(--ink);font-weight:600}
+@keyframes drop{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+
+footer{padding:42px 0 70px;color:var(--ink-soft);font-size:.9rem}
+@media (prefers-reduced-motion: reduce){
+  *{transition-duration:.001s !important;animation-duration:.001s !important}
+  html{scroll-behavior:auto}
+}
+</style>
+</head>
+<body>
+
+<header class="hero wrap">
+  <div class="col">
+    <p class="kicker">Discrete mathematics · Section 6.5 · distributing objects into boxes</p>
+    <h1>Four questions,<br>one way of thinking</h1>
+    <p class="lede">Everything here turns on two yes/no answers: are the objects distinguishable, and are the boxes distinguishable? Work the same four examples the lecture works, and watch what each answer changes.</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+<!-- ===== REFERENCE ===== -->
+<section>
+  <div class="col">
+    <h2>The recap sheet</h2>
+    <p>Before the four cases, this is the set of formulas everything is built from. Keep it somewhere you can glance at — most mistakes in this section are picking the wrong row, not doing the arithmetic wrong.</p>
+  </div>
+  <table class="ref">
+    <thead><tr><th style="width:34%">Situation</th><th style="width:24%">Formula</th><th>What it counts</th></tr></thead>
+    <tbody>
+      <tr><td>Permutations, no repetition</td><td class="f">P(n,r) = n!/(n−r)!</td><td>Pick r of n, order matters, nothing reused</td></tr>
+      <tr><td>Combinations, no repetition</td><td class="f">C(n,r) = n!/(r!(n−r)!)</td><td>Pick r of n, order irrelevant</td></tr>
+      <tr><td>Permutations with repetition</td><td class="f">n<sup>r</sup></td><td>r slots, n choices each, reuse allowed</td></tr>
+      <tr><td>Combinations with repetition</td><td class="f">C(n+r−1, r)</td><td>Pick r from n types, reuse allowed, order irrelevant</td></tr>
+      <tr><td>Permutations with indistinguishable objects</td><td class="f">n!/(n<sub>1</sub>!⋯n<sub>k</sub>!)</td><td>Arrange n items where n<sub>i</sub> of them are copies of type i</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<div class="rule"></div>
+
+<!-- ===== EXAMPLE 1 ===== -->
+<section>
+  <div class="col">
+    <div class="exhead">
+      <span class="extag">Example 1</span>
+      <span class="extag soft">objects distinguishable · boxes distinguishable</span>
+    </div>
+    <h2>Poker hands to three players</h2>
+    <p>How many ways are there to deal five-card poker hands from a 52-card deck to each of three players?</p>
+    <p>The cards are all different and the players are all different, so both sides are distinguishable. Within a hand the order does not matter — a poker hand is a poker hand — so each deal is a combination.</p>
+    <p>Deal in sequence. Player one takes 5 of 52. Player two takes 5 of the 47 that remain. Player three takes 5 of the remaining 42.</p>
+  </div>
+
+  <div class="stage">
+    <div class="stage-head">
+      <h3>Watch the factorials cancel</h3>
+      <div class="btnrow">
+        <button id="cancelBtn">Cancel the middle terms</button>
+        <button id="cancelReset" class="ghost">Reset</button>
+      </div>
+    </div>
+
+    <div class="fx" id="fxLine">
+      <span class="frac"><span class="num">52!</span><span class="den">5!&nbsp;<span class="tok" data-t="47a">47!</span></span></span>
+      ·
+      <span class="frac"><span class="num"><span class="tok" data-t="47b">47!</span></span><span class="den">5!&nbsp;<span class="tok" data-t="42a">42!</span></span></span>
+      ·
+      <span class="frac"><span class="num"><span class="tok" data-t="42b">42!</span></span><span class="den">5!&nbsp;37!</span></span>
+    </div>
+
+    <div class="result" id="fxResult">
+      <div class="fx">
+        =
+        <span class="frac"><span class="num">52!</span><span class="den">5!&nbsp;5!&nbsp;5!&nbsp;37!</span></span>
+      </div>
+      <p class="hint" style="text-align:center">Three hands of five — and a fourth box holding the 37 cards nobody was dealt.</p>
+    </div>
+
+    <div class="boxrow" id="pokerBoxes"></div>
+  </div>
+
+  <div class="col">
+    <p>So this case does have a closed formula. With <span class="mono">n</span> distinguishable objects and <span class="mono">k</span> distinguishable boxes holding <span class="mono">n<sub>1</sub>, n<sub>2</sub>, …, n<sub>k</sub></span> objects:</p>
+    <p class="bigf">n! / (n<sub>1</sub>! n<sub>2</sub>! ⋯ n<sub>k</sub>!)</p>
+    <div class="note">
+      <strong>The trap in this one is the leftovers.</strong> It looks like three boxes, but 15 cards out of 52 are dealt, so the undealt 37 form a fourth box. If the denominators do not use up all of <span class="mono">n</span>, you have missed a box.
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ===== EXAMPLE 2 ===== -->
+<section>
+  <div class="col">
+    <div class="exhead">
+      <span class="extag">Example 2</span>
+      <span class="extag soft">objects identical · boxes distinguishable</span>
+    </div>
+    <h2>Ten identical tokens into five labelled bins</h2>
+    <p>The tokens carry no identity, so an arrangement is nothing but a list of counts. That is exactly the linear equation model: let <span class="mono">x<sub>i</sub></span> be the number of tokens in bin <span class="mono">i</span> and count the non-negative whole-number solutions.</p>
+  </div>
+
+  <div class="stage">
+    <div class="stage-head">
+      <h3>The linear equation model</h3>
+      <div class="btnrow"><button id="tokShuffle">Redistribute</button></div>
+    </div>
+    <p class="eqrow" id="eqRow"></p>
+    <div class="sbrow" id="tokRow"></div>
+    <p class="hint" style="text-align:center;margin:0 0 6px">Ten identical tokens, four dividers. Where the dividers fall is the only decision being made.</p>
+    <div class="boxrow" id="tokBoxes"></div>
+  </div>
+
+  <div class="col">
+    <p>Choosing 10 tokens from 5 types with repetition allowed gives</p>
+    <p class="bigf">C(5 + 10 − 1, 10) = C(14, 10) = 14! / (10! · 4!) = 1001</p>
+    <p>Reading it the other way round is the same number: you are choosing which 4 of the 14 positions in the row hold dividers, <span class="mono">C(14,4)</span>.</p>
+    <div class="note">
+      <strong>Which number goes where.</strong> The 5 is the number of bins and the 10 is the number of tokens, and they are not interchangeable. Writing the equation <span class="mono">x<sub>1</sub> + x<sub>2</sub> + x<sub>3</sub> + x<sub>4</sub> + x<sub>5</sub> = 10</span> first makes it very hard to swap them by accident.
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ===== EXAMPLE 3 ===== -->
+<section>
+  <div class="col">
+    <div class="exhead">
+      <span class="extag">Example 3</span>
+      <span class="extag soft">objects distinguishable · boxes identical</span>
+    </div>
+    <h2>Four employees into three identical lockers</h2>
+    <p>Four employees — call them A, B, C, D — share three identical lockers, and each locker holds between zero and three of them. This is the hard case, and it is hard for one reason: the lockers are interchangeable, so there is no formula to reach for. You break it into shapes and count each shape.</p>
+    <p>Read the constraint before anything else. Each locker takes at most three people, so all four in one locker is not allowed. That leaves three possible shapes.</p>
+  </div>
+
+  <div class="stage">
+    <div class="stage-head">
+      <h3>One shape at a time</h3>
+      <div class="btnrow">
+        <button id="caseNext">Show the first shape</button>
+        <button id="caseReset" class="ghost">Reset</button>
+      </div>
+    </div>
+    <div class="cases" id="caseList"></div>
+    <p class="runtotal" id="caseTotal"></p>
+  </div>
+
+  <div class="col">
+    <h3 style="margin-bottom:10px">Why the 2-and-2 shape gets halved</h3>
+    <p>Splitting four people into two pairs looks like <span class="mono">C(4,2) = 6</span>: choose who goes in the first locker and the rest follow. But the lockers are identical, so putting AB in one and CD in the other is the same arrangement as putting CD in one and AB in the other. Every split has been counted twice.</p>
+  </div>
+
+  <div class="stage">
+    <div class="stage-head">
+      <h3>C(4,2) = 6, but only 3 are different</h3>
+      <div class="btnrow">
+        <button id="mergeBtn">Merge the repeats</button>
+        <button id="mergeReset" class="ghost">Reset</button>
+      </div>
+    </div>
+    <div class="pairgrid" id="pairGrid"></div>
+    <p class="hint" id="mergeHint" style="text-align:center">Each card shows locker one | locker two. Since the lockers are identical, reading a card backwards gives the same arrangement.</p>
+  </div>
+
+  <div class="col">
+    <div class="note warn">
+      <strong>Two mistakes worth naming.</strong> First, don't halve the 2-1-1 shape. Once you have chosen the pair with <span class="mono">C(4,2)</span>, the two people left over are each alone, and there is nothing left to arrange — the lockers are identical, so there is no choice about which single goes where. Second, don't try to permute the lockers at the end. Any instinct to multiply by 3! belongs to labelled boxes, not these.
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ===== EXAMPLE 4 ===== -->
+<section>
+  <div class="col">
+    <div class="exhead">
+      <span class="extag">Example 4</span>
+      <span class="extag soft">objects identical · boxes identical</span>
+    </div>
+    <h2>Five copies of a book into three identical boxes</h2>
+    <p>Nothing has a label here, which makes this deceptively simple. The books are interchangeable and so are the boxes, so an arrangement is only a list of sizes with no order to it. List them systematically, largest part first, and stop when you run out.</p>
+  </div>
+
+  <div class="stage">
+    <div class="stage-head">
+      <h3>List the cases</h3>
+      <div class="btnrow"><button id="bookReveal">Show them one by one</button></div>
+    </div>
+    <div class="plist" id="bookList"></div>
+    <p class="bigf" id="bookTotal" style="opacity:0;transition:opacity .4s ease">5 ways</p>
+  </div>
+
+  <div class="col">
+    <p>The temptation is to keep going — to say that 5-0-0 and 0-5-0 and 0-0-5 are three different answers. They are not. The boxes are identical, so there is no first box to speak of. Same books, same boxes, same arrangement.</p>
+  </div>
+
+  <div class="stage">
+    <div class="stage-head">
+      <h3>All one arrangement</h3>
+      <div class="btnrow"><button id="sameBtn">Take the labels off</button></div>
+    </div>
+    <div class="plist" id="sameList"></div>
+    <p class="hint" id="sameHint" style="text-align:center">Three labelled outcomes…</p>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ===== SUMMARY ===== -->
+<section>
+  <div class="col">
+    <h2>The four cases side by side</h2>
+  </div>
+  <table class="matrix">
+    <thead><tr><th style="width:17%">Objects</th><th style="width:17%">Boxes</th><th>How you count</th></tr></thead>
+    <tbody>
+      <tr><td>distinguishable</td><td>distinguishable</td><td><span class="f">n! / (n<sub>1</sub>!⋯n<sub>k</sub>!)</span><small>Closed formula. Poker hands. Watch for a leftover box.</small></td></tr>
+      <tr><td>identical</td><td>distinguishable</td><td><span class="f">C(n + k − 1, n)</span><small>Closed formula. Combinations with repetition — set up the linear equation first.</small></td></tr>
+      <tr><td>distinguishable</td><td>identical</td><td><span class="f">no closed formula</span><small>Break into shapes, count each with combinations, halve any shape with two equal-sized groups, then add.</small></td></tr>
+      <tr><td>identical</td><td>identical</td><td><span class="f">no closed formula</span><small>List the size patterns in decreasing order and count them.</small></td></tr>
+    </tbody>
+  </table>
+  <div class="col">
+    <div class="note">
+      <strong>The formulas are a starting point, not a shortcut.</strong> A constraint like "each box holds at most one ball" or "each locker takes at most three" can knock out cases or change the count entirely. Read the restriction first, then decide whether a formula still applies.
+    </div>
+  </div>
+</section>
+
+<div class="rule"></div>
+
+<!-- ===== PRACTICE ===== -->
+<section>
+  <div class="col">
+    <h2>Practice: one of each type</h2>
+    <p>Five balls go into seven boxes, and <strong>each box holds at most one ball</strong>. That restriction is doing a lot of work — try each part before opening the answer.</p>
+  </div>
+
+  <div class="stage">
+    <div class="stage-head">
+      <h3>Five balls, seven boxes, at most one each</h3>
+      <div class="btnrow">
+        <button id="pracA">Balls labelled, boxes labelled</button>
+        <button id="pracB" class="ghost">Boxes unlabelled</button>
+      </div>
+    </div>
+    <div class="boxrow" id="pracBoxes"></div>
+    <p class="bigf" id="pracText"></p>
+  </div>
+
+  <div class="col">
+    <div class="q">
+      <p><strong>(a)</strong> Both the balls and the boxes are labelled.</p>
+      <button class="ghost reveal">Show answer</button>
+      <div class="ans"><p>Ball one has 7 boxes to choose from. Ball two has 6 left, ball three has 5, and so on, because no box can take a second ball. That is <span class="mono">7 · 6 · 5 · 4 · 3 = P(7,5) = 2520</span>.</p></div>
+    </div>
+
+    <div class="q">
+      <p><strong>(b)</strong> The balls are labelled, the boxes are not.</p>
+      <button class="ghost reveal">Show answer</button>
+      <div class="ans"><p>Every ball ends up alone in some box, and the boxes are interchangeable, so there is nothing to distinguish one outcome from another. Whichever box ball one sits in, that box is identical to every other. <span class="mono">1 way.</span></p></div>
+    </div>
+
+    <div class="q">
+      <p><strong>(c)</strong> The balls are not labelled, the boxes are.</p>
+      <button class="ghost reveal">Show answer</button>
+      <div class="ans"><p>The only decision is which five of the seven boxes end up holding a ball. <span class="mono">C(7,5) = 21</span>.</p></div>
+    </div>
+
+    <div class="q">
+      <p><strong>(d)</strong> Neither is labelled.</p>
+      <button class="ghost reveal">Show answer</button>
+      <div class="ans"><p>Same reasoning as (b). Once the boxes are unlabelled, whether the balls are labelled changes nothing — five boxes hold one ball each and two are empty. <span class="mono">1 way.</span></p></div>
+    </div>
+
+    <div class="note warn">
+      <strong>Notice what (a) is not.</strong> Without the one-ball limit, labelled-into-labelled would be <span class="mono">7<sup>5</sup> = 16,807</span>. The restriction turns it into a permutation instead. This is exactly why reaching straight for a formula is risky.
+    </div>
+  </div>
+</section>
+
+<footer class="wrap"><div class="col">
+  <p>Built from the lecture's four worked examples. Do them again on paper with the page closed — the cases in Examples 3 and 4 are the ones that only stick once you have generated the list yourself.</p>
+</div></footer>
+
+</div>
+
+<script>
+(function(){
+"use strict";
+var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+var COLORS = ["var(--o1)","var(--o2)","var(--o3)","var(--o4)","var(--o5)"];
+
+function el(t,c,x){var n=document.createElement(t); if(c)n.className=c; if(x!==undefined)n.textContent=x; return n;}
+function box(tag, hidden){
+  var b = el("div","box");
+  var t = el("div","tag", tag);
+  if(hidden) t.classList.add("hidden");
+  b.appendChild(t);
+  return b;
+}
+
+/* ============ EXAMPLE 1 — poker ============ */
+var pokerBoxes = document.getElementById("pokerBoxes");
+[["Player 1","5 cards"],["Player 2","5 cards"],["Player 3","5 cards"],["Left over","37 cards"]].forEach(function(p){
+  var b = box(p[0]);
+  b.appendChild(el("div","cnt", p[1]));
+  if(p[0]==="Left over"){ b.style.borderStyle="dashed"; b.querySelector(".tag").style.background="#E6E9F5"; }
+  pokerBoxes.appendChild(b);
+});
+
+var cancelBtn = document.getElementById("cancelBtn");
+var cancelReset = document.getElementById("cancelReset");
+var fxResult = document.getElementById("fxResult");
+function toks(name){ return document.querySelectorAll('[data-t^="'+name+'"]'); }
+
+cancelBtn.addEventListener("click", function(){
+  cancelBtn.disabled = true;
+  var seq = [["47",0],["42", reduce?0:700]];
+  seq.forEach(function(s){
+    setTimeout(function(){
+      toks(s[0]).forEach(function(n){ n.classList.add("flash"); });
+      setTimeout(function(){
+        toks(s[0]).forEach(function(n){ n.classList.remove("flash"); n.classList.add("gone"); });
+      }, reduce?0:420);
+    }, s[1]);
+  });
+  setTimeout(function(){ fxResult.classList.add("show"); }, reduce?0:1500);
+});
+cancelReset.addEventListener("click", function(){
+  document.querySelectorAll(".tok").forEach(function(n){ n.classList.remove("gone","flash"); });
+  fxResult.classList.remove("show");
+  cancelBtn.disabled = false;
+});
+
+/* ============ EXAMPLE 2 — tokens ============ */
+var tokRow = document.getElementById("tokRow");
+var tokBoxes = document.getElementById("tokBoxes");
+var eqRow = document.getElementById("eqRow");
+var N_TOK = 10, K_BIN = 5;
+
+function drawTokens(counts){
+  tokRow.innerHTML = "";
+  for(var b=0;b<K_BIN;b++){
+    for(var i=0;i<counts[b];i++) tokRow.appendChild(el("div","star"));
+    if(b < K_BIN-1) tokRow.appendChild(el("div","bar"));
+  }
+  tokBoxes.innerHTML = "";
+  for(var j=0;j<K_BIN;j++){
+    var bx = box("Bin " + (j+1));
+    bx.appendChild(el("div","cnt", String(counts[j])));
+    tokBoxes.appendChild(bx);
+  }
+  var parts = [];
+  for(var m=0;m<K_BIN;m++) parts.push('<span class="lit">'+counts[m]+'</span>');
+  eqRow.innerHTML = "x₁ + x₂ + x₃ + x₄ + x₅ = 10 &nbsp;→&nbsp; " + parts.join(" + ") + " = 10";
+}
+function randomCounts(){
+  var c = [0,0,0,0,0];
+  for(var i=0;i<N_TOK;i++) c[Math.floor(Math.random()*K_BIN)]++;
+  return c;
+}
+drawTokens([3,0,4,1,2]);
+document.getElementById("tokShuffle").addEventListener("click", function(){ drawTokens(randomCounts()); });
+
+/* ============ EXAMPLE 3 — lockers ============ */
+var EMP = ["A","B","C","D"];
+var CASE_DATA = [
+  { title:"Shape 3 + 1 — three together, one alone",
+    groups:[["A","B","C"],["D"],[]],
+    calc:'C(4,3) = 4!/(3!·1!) = <b>4</b>',
+    why:"Choose which three share a locker; the fourth has nowhere else to go." },
+  { title:"Shape 2 + 2 — two pairs",
+    groups:[["A","B"],["C","D"],[]],
+    calc:'C(4,2) ÷ 2 = 6 ÷ 2 = <b>3</b>',
+    why:"Choose a pair, and the other pair is decided — but that counts every split twice, because the lockers are identical." },
+  { title:"Shape 2 + 1 + 1 — one pair, two singles",
+    groups:[["A","B"],["C"],["D"]],
+    calc:'C(4,2) = 4!/(2!·2!) = <b>6</b>',
+    why:"Choose the pair and you are done. The two singles are not a further choice — the lockers are identical." }
+];
+var CASE_VALS = [4,3,6];
+var caseList = document.getElementById("caseList");
+var caseTotal = document.getElementById("caseTotal");
+var caseNext = document.getElementById("caseNext");
+var shown = 0;
+
+function buildCases(){
+  caseList.innerHTML = "";
+  CASE_DATA.forEach(function(c){
+    var card = el("div","casecard");
+    card.appendChild(el("h4","", c.title));
+    var row = el("div","shaperow");
+    c.groups.forEach(function(g){
+      var mb = el("div","minibox" + (g.length ? "" : " empty"));
+      g.forEach(function(name){
+        var d = el("div","emp", name);
+        d.style.background = COLORS[EMP.indexOf(name)];
+        mb.appendChild(d);
+      });
+      row.appendChild(mb);
+    });
+    card.appendChild(row);
+    var calc = el("div","calc");
+    calc.innerHTML = c.calc;
+    card.appendChild(calc);
+    var why = el("div","calc");
+    why.style.cssText = "margin-top:6px;font-family:'IBM Plex Sans',sans-serif;font-size:.89rem";
+    why.textContent = c.why;
+    card.appendChild(why);
+    caseList.appendChild(card);
+  });
+  shown = 0;
+  caseTotal.textContent = "";
+  caseNext.disabled = false;
+  caseNext.textContent = "Show the first shape";
+}
+caseNext.addEventListener("click", function(){
+  var cards = caseList.querySelectorAll(".casecard");
+  if(shown >= cards.length) return;
+  cards[shown].classList.add("on");
+  shown++;
+  var running = CASE_VALS.slice(0,shown);
+  if(shown < cards.length){
+    caseTotal.textContent = running.join(" + ") + " = " + running.reduce(function(a,b){return a+b;},0) + " so far";
+    caseNext.textContent = "Next shape";
+  }else{
+    caseTotal.textContent = "4 + 3 + 6 = 13 ways";
+    caseNext.disabled = true;
+    caseNext.textContent = "That's all three";
+  }
+});
+document.getElementById("caseReset").addEventListener("click", buildCases);
+buildCases();
+
+/* --- 2+2 duplicate merge --- */
+var PAIRS = ["AB | CD","AC | BD","AD | BC","CD | AB","BD | AC","BC | AD"];
+var pairGrid = document.getElementById("pairGrid");
+var mergeHint = document.getElementById("mergeHint");
+var mergeBtn = document.getElementById("mergeBtn");
+var pairNodes = [];
+
+function buildPairs(){
+  pairGrid.innerHTML = "";
+  pairNodes = PAIRS.map(function(p){
+    var n = el("div","pair");
+    n.appendChild(el("span","", p));
+    var b = el("div","bdg","×2");
+    n.appendChild(b);
+    n.dataset.key = p.split(" | ").map(function(s){return s;}).sort().join("/");
+    pairGrid.appendChild(n);
+    return n;
+  });
+  mergeBtn.disabled = false;
+  mergeHint.textContent = "Each card shows locker one | locker two. Since the lockers are identical, reading a card backwards gives the same arrangement.";
+}
+mergeBtn.addEventListener("click", function(){
+  mergeBtn.disabled = true;
+  var seen = {}, reps = [], dups = [];
+  pairNodes.forEach(function(n){
+    var k = n.dataset.key;
+    if(!seen[k]){ seen[k] = n; reps.push(n); }
+    else dups.push({node:n, rep:seen[k]});
+  });
+  var before = new Map();
+  reps.forEach(function(r){ before.set(r, r.getBoundingClientRect()); });
+
+  function finish(){
+    dups.forEach(function(d){ d.node.style.display = "none"; });
+    reps.forEach(function(r){
+      var b = before.get(r), a = r.getBoundingClientRect();
+      var dx = b.left - a.left, dy = b.top - a.top;
+      if(dx || dy){
+        r.style.transition = "none";
+        r.style.transform = "translate(" + dx + "px," + dy + "px)";
+        r.getBoundingClientRect();
+        r.style.transition = "";
+        r.style.transform = "";
+      }
+      r.classList.add("rep");
+      r.querySelector(".bdg").classList.add("show");
+    });
+    mergeHint.textContent = "Three distinct splits, each counted twice by C(4,2). That is the ÷ 2.";
+  }
+  if(reduce){ finish(); return; }
+  dups.forEach(function(d){
+    var a = d.node.getBoundingClientRect(), b = d.rep.getBoundingClientRect();
+    d.node.style.transform = "translate(" + (b.left-a.left) + "px," + (b.top-a.top) + "px) scale(.45)";
+    d.node.style.opacity = "0";
+  });
+  setTimeout(finish, 540);
+});
+document.getElementById("mergeReset").addEventListener("click", buildPairs);
+buildPairs();
+
+/* ============ EXAMPLE 4 — books ============ */
+var BOOKS = [[5,0,0],[4,1,0],[3,2,0],[3,1,1],[2,2,1]];
+var bookList = document.getElementById("bookList");
+BOOKS.forEach(function(p){
+  var card = el("div","pcard");
+  var f = el("div","ferrer");
+  p.forEach(function(size){
+    var col = el("div","fcol" + (size ? "" : " zero"));
+    for(var i=0;i<size;i++) col.appendChild(el("div","fdot"));
+    f.appendChild(col);
+  });
+  card.appendChild(f);
+  card.appendChild(el("div","lbl", p.join(" · ")));
+  bookList.appendChild(card);
+});
+document.getElementById("bookReveal").addEventListener("click", function(){
+  var cards = bookList.querySelectorAll(".pcard");
+  cards.forEach(function(c,i){ setTimeout(function(){ c.classList.add("in"); }, reduce?0:i*260); });
+  setTimeout(function(){
+    document.getElementById("bookTotal").style.opacity = "1";
+  }, reduce?0:cards.length*260 + 250);
+  this.disabled = true;
+});
+
+/* --- 5-0-0 sameness --- */
+var SAME = [[5,0,0],[0,5,0],[0,0,5]];
+var sameList = document.getElementById("sameList");
+var sameHint = document.getElementById("sameHint");
+var sameNodes = [];
+SAME.forEach(function(p, idx){
+  var card = el("div","pcard");
+  card.classList.add("in");
+  var f = el("div","ferrer");
+  p.forEach(function(size){
+    var col = el("div","fcol" + (size ? "" : " zero"));
+    for(var i=0;i<size;i++) col.appendChild(el("div","fdot"));
+    f.appendChild(col);
+  });
+  card.appendChild(f);
+  var lbl = el("div","lbl", "Box 1·2·3 = " + p.join("·"));
+  card.appendChild(lbl);
+  card._lbl = lbl;
+  sameList.appendChild(card);
+  sameNodes.push(card);
+});
+document.getElementById("sameBtn").addEventListener("click", function(){
+  this.disabled = true;
+  sameNodes.forEach(function(n){ n._lbl.textContent = "5 · 0 · 0"; });
+  var rep = sameNodes[0];
+  var before = rep.getBoundingClientRect();
+  function finish(){
+    sameNodes.slice(1).forEach(function(n){ n.style.display = "none"; });
+    var a = rep.getBoundingClientRect();
+    var dx = before.left - a.left, dy = before.top - a.top;
+    if(dx || dy){
+      rep.style.transition = "none";
+      rep.style.transform = "translate(" + dx + "px," + dy + "px)";
+      rep.getBoundingClientRect();
+      rep.style.transition = "transform .5s cubic-bezier(.4,0,.2,1)";
+      rep.style.transform = "";
+    }
+    sameHint.textContent = "…one arrangement. There is no box 1 when the boxes are identical.";
+  }
+  if(reduce){ finish(); return; }
+  setTimeout(function(){
+    sameNodes.slice(1).forEach(function(n){
+      var a = n.getBoundingClientRect(), b = rep.getBoundingClientRect();
+      n.style.transition = "transform .5s cubic-bezier(.4,0,.2,1),opacity .45s ease";
+      n.style.transform = "translate(" + (b.left-a.left) + "px," + (b.top-a.top) + "px) scale(.5)";
+      n.style.opacity = "0";
+    });
+    setTimeout(finish, 540);
+  }, 420);
+});
+
+/* ============ PRACTICE visual ============ */
+var pracBoxes = document.getElementById("pracBoxes");
+var pracText = document.getElementById("pracText");
+var pracMode = "labelled";
+
+function drawPractice(assign){
+  pracBoxes.innerHTML = "";
+  for(var b=0;b<7;b++){
+    var bx = box("Box " + (b+1), pracMode !== "labelled");
+    if(pracMode !== "labelled") bx.classList.add("plainbox");
+    var idx = assign.indexOf(b);
+    if(idx >= 0){
+      var o = el("div","obj", String(idx+1));
+      if(pracMode === "labelled"){ o.style.background = COLORS[idx % COLORS.length]; }
+      else { o.classList.add("plain"); }
+      bx.appendChild(o);
+    }
+    pracBoxes.appendChild(bx);
+  }
+}
+function pick5(){
+  var pool = [0,1,2,3,4,5,6], out = [];
+  for(var i=0;i<5;i++) out.push(pool.splice(Math.floor(Math.random()*pool.length),1)[0]);
+  return out;
+}
+drawPractice([0,2,3,5,6]);
+pracText.innerHTML = "7 · 6 · 5 · 4 · 3 = P(7,5) = 2520";
+
+document.getElementById("pracA").addEventListener("click", function(){
+  pracMode = "labelled";
+  drawPractice(pick5());
+  pracText.innerHTML = "7 · 6 · 5 · 4 · 3 = P(7,5) = 2520";
+});
+document.getElementById("pracB").addEventListener("click", function(){
+  pracMode = "plain";
+  drawPractice(pick5());
+  pracText.innerHTML = "every outcome looks like this one → 1 way";
+});
+
+/* ============ reveals ============ */
+document.querySelectorAll(".reveal").forEach(function(b){
+  b.addEventListener("click", function(){
+    var ans = b.parentElement.querySelector(".ans");
+    var open = ans.classList.toggle("open");
+    b.textContent = open ? "Hide answer" : "Show answer";
+  });
+});
+})();
+</script>
+</body>
+</html>
