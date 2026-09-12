@@ -153,50 +153,50 @@
       "file": "casea-01.mp3",
       "scene": "casea",
       "line": 1,
-      "words": 30,
-      "say": "First case: two rows hold two empty seats each. Each of those rows is forced to use its outer pair, so there is no freedom inside a row at all."
+      "words": 37,
+      "say": "First case: two rows hold two empty seats each. Seats one and two are neighbours, so that pattern is out. Seats two and three, also out. Only the outer pair survives — one way per doubled row."
     },
     {
       "file": "casea-02.mp3",
       "scene": "casea",
       "line": 2,
-      "words": 25,
-      "say": "The only choice is which two of the four rows are the doubled ones. Four choose two is six, so this case gives six patterns."
+      "words": 41,
+      "say": "So the only real choice is which two of the four rows are the doubled ones. Rows one and two, one and three, one and four, two and three, two and four, three and four. Four choose two is six patterns."
     },
     {
       "file": "caseb-01.mp3",
       "scene": "caseb",
       "line": 1,
-      "words": 20,
-      "say": "Second case: one row holds two empty seats and two other rows hold one each. One row stays completely full."
+      "words": 42,
+      "say": "Second case: one row holds two empty seats, two other rows hold one each, and the last row stays completely full. Look at the menu under each row: one way for the doubled row, but still three ways for every single one."
     },
     {
       "file": "caseb-02.mp3",
       "scene": "caseb",
       "line": 2,
-      "words": 21,
-      "say": "Choose the doubled row: four ways. Choose which two of the remaining three rows get a single empty seat: three ways."
+      "words": 36,
+      "say": "First choose the doubled row — four ways. Then choose which two of the remaining three rows take a single empty seat — three ways each time. Twelve row choices in all, and here they come."
     },
     {
       "file": "caseb-03.mp3",
       "scene": "caseb",
       "line": 3,
-      "words": 35,
-      "say": "The doubled row is forced to its outer pair, but each single empty seat can sit anywhere in its row: three choices each. Four times three times three times three is one hundred and eight."
+      "words": 42,
+      "say": "Now hold one of those choices still and fill in the seats. The doubled row is stuck with its outer pair, but each single seat roams freely: three places times three places is nine. Twelve times nine is one hundred and eight."
     },
     {
       "file": "casec-01.mp3",
       "scene": "casec",
       "line": 1,
-      "words": 25,
-      "say": "Third case: a single empty seat in every row. A lone empty seat can never touch another one, so every row is free to choose."
+      "words": 27,
+      "say": "Third case: a single empty seat in every row. A lone empty seat can never touch another one, so every row keeps its full menu of three."
     },
     {
       "file": "casec-02.mp3",
       "scene": "casec",
       "line": 2,
-      "words": 17,
-      "say": "Three choices in each of the four rows: three to the fourth power, which is eighty one."
+      "words": 29,
+      "say": "Slide the empty seat along row one — three places. The same in row two, and in rows three and four. Three to the fourth power is eighty one."
     },
     {
       "file": "add-01.mp3",

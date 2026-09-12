@@ -468,10 +468,10 @@ var SCENES =
     "title": "Case 1 — two and two",
     "view": "plane",
     "lines": [
-      { "say": "First case: two rows hold two empty seats each. Each of those rows is forced to use its outer pair, so there is no freedom inside a row at all.",
+      { "say": "First case: two rows hold two empty seats each. Seats one and two are neighbours, so that pattern is out. Seats two and three, also out. Only the outer pair survives \u2014 one way per doubled row.",
         "v": { "e": [0,2,3,5], "badges": ["2","2","0","0"], "menus": true, "chip": "plane",
                "stepTitle": "Two empty seats in row 1 — the three ways",
-               "stepMs": 3200,
+               "stepMs": 4100,
                "stepForm": "only the outer pair survives → <b>1 way per doubled row</b>",
                "steps": [
                  { "e": [0,1,3,5], "lab": "1–2 ✗", "flag": "ok" },
@@ -479,11 +479,11 @@ var SCENES =
                  { "e": [0,2,3,5], "lab": "1–3 ✓", "flag": "bad" }
                ],
                "math": "each doubled row → the outer pair, 1 way", "cap": "no choice inside the rows" } },
-      { "say": "The only choice is which two of the four rows are the doubled ones. Four choose two is six, so this case gives six patterns.",
+      { "say": "So the only real choice is which two of the four rows are the doubled ones. Rows one and two, one and three, one and four, two and three, two and four, three and four. Four choose two is six patterns.",
         "v": { "cycle": [[0,2,3,5],[0,2,6,8],[0,2,9,11],[3,5,6,8],[3,5,9,11],[6,8,9,11]],
                "menus": true,
                "stepTitle": "Pick the two doubled rows",
-               "stepMs": 1300,
+               "stepMs": 2400,
                "stepForm": "each pick is forced to its outer pair → <b>C(4,2) × 1 × 1 = 6</b>",
                "steps": [
                  { "e": [0,2,3,5],  "badges": ["2","2","0","0"], "lab": "R1 · R2" },
@@ -501,13 +501,13 @@ var SCENES =
     "title": "Case 2 — two, one and one",
     "view": "plane",
     "lines": [
-      { "say": "Second case: one row holds two empty seats and two other rows hold one each. One row stays completely full.",
+      { "say": "Second case: one row holds two empty seats, two other rows hold one each, and the last row stays completely full. Look at the menu under each row: one way for the doubled row, but still three ways for every single one.",
         "v": { "e": [0,2,4,7], "badges": ["2","1","1","0"], "menus": true, "math": "one doubled row · two single rows · one full row", "cap": "the shape of case 2" } },
-      { "say": "Choose the doubled row: four ways. Choose which two of the remaining three rows get a single empty seat: three ways.",
+      { "say": "First choose the doubled row \u2014 four ways. Then choose which two of the remaining three rows take a single empty seat \u2014 three ways each time. Twelve row choices in all, and here they come.",
         "v": { "cycle": [[0,2,4,7],[0,2,4,10],[3,5,1,10],[6,8,0,11]],
                "menus": true,
                "stepTitle": "Doubled row  ·  the two single rows",
-               "stepMs": 680,
+               "stepMs": 950,
                "stepForm": "4 choices of doubled row × 3 choices of the single pair = <b>12</b>",
                "steps": [
                  { "e": [0,2,3,6],  "badges": ["2","1","1","0"], "lab": "R1 | R2 R3" },
@@ -524,11 +524,11 @@ var SCENES =
                  { "e": [3,6,9,11], "badges": ["0","1","1","2"], "lab": "R4 | R2 R3" }
                ],
                "badges": null, "math": "4 × C(3,2) = 4 × 3 = 12 ways to pick the rows", "cap": "picking the rows" } },
-      { "say": "The doubled row is forced to its outer pair, but each single empty seat can sit anywhere in its row: three choices each. Four times three times three times three is one hundred and eight.",
+      { "say": "Now hold one of those choices still and fill in the seats. The doubled row is stuck with its outer pair, but each single seat roams freely: three places times three places is nine. Twelve times nine is one hundred and eight.",
         "v": { "cycle": [[0,2,4,7],[0,2,3,10],[6,8,1,11],[9,11,0,4]],
                "menus": true, "chip": "plane", "badges": ["2","1","1","0"],
                "stepTitle": "Row 1 doubled — now place each single seat",
-               "stepMs": 1300,
+               "stepMs": 1640,
                "stepForm": "1 × 3 × 3 = <b>9</b> patterns per row choice · 12 × 9 = <b>108</b>",
                "steps": [
                  { "e": [0,2,3,6], "lab": "R2:1 R3:1" },
@@ -549,13 +549,13 @@ var SCENES =
     "title": "Case 3 — one in every row",
     "view": "plane",
     "lines": [
-      { "say": "Third case: a single empty seat in every row. A lone empty seat can never touch another one, so every row is free to choose.",
+      { "say": "Third case: a single empty seat in every row. A lone empty seat can never touch another one, so every row keeps its full menu of three.",
         "v": { "e": [1,4,7,10], "badges": ["1","1","1","1"], "menus": true, "math": "a single empty seat is always legal", "cap": "one per row" } },
-      { "say": "Three choices in each of the four rows: three to the fourth power, which is eighty one.",
+      { "say": "Slide the empty seat along row one \u2014 three places. The same in row two, and in rows three and four. Three to the fourth power is eighty one.",
         "v": { "cycle": [[1,4,7,10],[0,4,8,9],[2,3,7,11],[0,5,7,9]],
                "menus": true, "chip": "plane", "badges": ["1","1","1","1"],
                "stepTitle": "Slide the empty seat along row 1, then row 2",
-               "stepMs": 900,
+               "stepMs": 1660,
                "stepForm": "every row chooses freely and independently → <b>3⁴ = 81</b>",
                "steps": [
                  { "e": [0,3,6,9], "lab": "R1:1" },
@@ -871,16 +871,37 @@ var SCENES =
     else { el.flag.className = 'flag hide'; }
   }
 
+  var stepRun = null;
+
+  function stepTick() {
+    var r = stepRun;
+    if (!r) { clearInterval(cycTimer); return; }
+    if (r.k >= r.v.steps.length - 1) { clearInterval(cycTimer); return; }
+    r.k += 1;
+    applyStep(r.v, r.k); paintPlane(state); markPicker(r.v, r.k);
+  }
+
+  function startSteps(ms) {
+    clearInterval(cycTimer);
+    stepRun.k = 0;
+    applyStep(stepRun.v, 0); paintPlane(state); markPicker(stepRun.v, 0);
+    cycTimer = setInterval(stepTick, ms);
+  }
+
   function runSteps(v) {
     stepSticky = { badges: state.badges };   /* restored when the line changes */
     buildPicker(v);
-    var k = 0;
-    applyStep(v, k); paintPlane(state); markPicker(v, k);
-    cycTimer = setInterval(function () {
-      if (k >= v.steps.length - 1) { clearInterval(cycTimer); return; }
-      k += 1;
-      applyStep(v, k); paintPlane(state); markPicker(v, k);
-    }, v.stepMs || 1100);
+    stepRun = { v: v, k: 0, idx: idx };
+    startSteps(v.stepMs || 1100);
+  }
+
+  /* Spread the steps over however long this line's narration actually runs,
+     so re-recording the voice never desynchronises the animation. */
+  function retimeSteps(seconds) {
+    if (!stepRun || stepRun.idx !== idx) return;
+    if (!seconds || !isFinite(seconds) || seconds <= 0) return;
+    var n = stepRun.v.steps.length;
+    startSteps(Math.max(320, (seconds * 1000 - 400) / n));
   }
 
   function paintBar(st) {
@@ -902,6 +923,7 @@ var SCENES =
   function applyLine(item) {
     var v = item.line.v || {};
     clearInterval(cycTimer);
+    stepRun = null;
     if (stepSticky !== undefined) { state.badges = stepSticky.badges; stepSticky = undefined; }
 
     /* sticky: e / bar / badges carry over unless the line says otherwise */
@@ -997,6 +1019,7 @@ var SCENES =
     if (idx >= LIST.length - 1) { setPlaying(false); return; }
     seek(idx + 1); speak();
   }
+  el.voice.addEventListener('loadedmetadata', function () { retimeSteps(el.voice.duration); });
   el.voice.addEventListener('ended', nextAuto);
   el.voice.addEventListener('error', function () {
     el.hint.textContent = 'no audio files yet — run tools/build_q1_audio.py';
