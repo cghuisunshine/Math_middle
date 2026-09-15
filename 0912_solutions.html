@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chapter 5 Solutions</title>
+<style>
+  :root{--ink:#1f2933;--muted:#5f6b7a;--accent:#2f6fb5;--bg:#faf8f4;--card:#fff;--line:#e4e0d8;--ans:#e9f3e8;--ansb:#3d8b40}
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.65 Georgia,"Times New Roman",serif;padding:32px 16px 64px}
+  main{max-width:760px;margin:0 auto}
+  header{border-bottom:2px solid var(--accent);margin-bottom:28px;padding-bottom:12px}
+  .tag{font:600 12px/1 system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+  h1{margin:6px 0 4px;font-size:30px}
+  .sub{color:var(--muted);font-size:15px;margin:0}
+  .problem{background:var(--card);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:8px;padding:16px 20px;margin-bottom:28px}
+  .problem ol{margin:8px 0 0;padding-left:26px}
+  section{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px 22px;margin-bottom:22px}
+  h2{margin:0 0 10px;font-size:21px}
+  h2 span{display:inline-block;background:var(--accent);color:#fff;font:700 14px/1 system-ui,sans-serif;border-radius:50%;width:26px;height:26px;text-align:center;line-height:26px;margin-right:8px;vertical-align:2px}
+  .step{margin:10px 0}
+  .step b{font-family:system-ui,sans-serif;font-size:13px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;display:block}
+  table{border-collapse:collapse;margin:8px 0;font-size:15px;width:100%}
+  th,td{border:1px solid var(--line);padding:6px 10px;text-align:center}
+  th{background:#f3f1ec;font-family:system-ui,sans-serif;font-size:13px}
+  .wrap{overflow-x:auto}
+  .answer{background:var(--ans);border-left:4px solid var(--ansb);border-radius:6px;padding:8px 14px;margin-top:12px;font-weight:bold}
+  .summary td:last-child{font-weight:bold;color:var(--ansb)}
+  .note{color:var(--muted);font-size:15px}
+  details.card{background:var(--card);border:1px solid var(--line);border-radius:10px;margin-bottom:18px;overflow:hidden}
+  summary{cursor:pointer;list-style:none;padding:16px 22px;display:flex;align-items:center;justify-content:space-between}
+  summary::-webkit-details-marker{display:none}
+  summary h2{margin:0}
+  summary::after{content:"▸";color:var(--accent);font-size:20px;transition:transform .2s}
+  details[open] summary::after{transform:rotate(90deg)}
+  summary:hover{background:#f7f5f0}
+  .body{padding:0 22px 18px}
+  .controls{display:flex;gap:10px;margin:-10px 0 18px;flex-wrap:wrap}
+  .controls button{font:600 13px system-ui,sans-serif;border:1px solid var(--accent);background:#fff;color:var(--accent);border-radius:6px;padding:6px 12px;cursor:pointer}
+  .controls button:hover{background:var(--accent);color:#fff}
+  .ptitle{font:700 24px/1.2 Georgia,serif;margin:40px 0 12px;padding-top:18px;border-top:1px dashed var(--line)}
+  .ptitle.first{margin-top:0;border-top:0;padding-top:0}
+  .grid{display:block;margin:10px auto;max-width:260px}
+  .grid line{stroke:#4a5563;stroke-width:1.5}
+  .grid text{font:italic 16px Georgia,serif;fill:var(--ink)}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <div class="tag">Chapter 5 · More with Combinations · 2026.9.12</div>
+  <h1>Circled Problems — Step-by-Step Solutions</h1>
+  <p class="sub">Exercises 5.4.1, 5.4.2, 5.4.3 · Review Problems 5.10, 5.11</p>
+</header>
+
+<div class="controls"><button onclick="document.querySelectorAll('details').forEach(d=>d.open=true)">Expand all</button><button onclick="document.querySelectorAll('details').forEach(d=>d.open=false)">Collapse all</button></div>
+
+<div class="ptitle first">Exercise 5.4.1</div>
+<div class="problem">
+  <strong>How many ways are there to put 5 balls in 2 boxes if</strong>
+  <ol type="a">
+    <li>the balls are distinguishable and the boxes are distinguishable?</li>
+    <li>the balls are distinguishable but the boxes are not?</li>
+    <li>the balls are not distinguishable but the boxes are?</li>
+    <li>the balls are not distinguishable and neither are the boxes?</li>
+  </ol>
+</div>
+
+
+<details class="card"><summary><h2><span>a</span>Distinguishable balls, distinguishable boxes</h2></summary><div class="body">
+  <div class="step"><b>Step 1 — Think one ball at a time</b>Label the balls A, B, C, D, E and the boxes Box 1 and Box 2. Each ball must go somewhere.</div>
+  <div class="step"><b>Step 2 — Count choices per ball</b>Ball A has 2 choices (Box 1 or Box 2). Ball B also has 2 choices, and so on. The choices don't affect each other.</div>
+  <div class="step"><b>Step 3 — Multiply</b>2 × 2 × 2 × 2 × 2 = 2<sup>5</sup> = 32.</div>
+  <div class="answer">Answer: 32 ways</div>
+</div></details>
+
+<details class="card"><summary><h2><span>b</span>Distinguishable balls, identical boxes</h2></summary><div class="body">
+  <div class="step"><b>Step 1 — What matters now?</b>The boxes look the same, so only <em>which balls end up together</em> matters. Swapping the two boxes gives the same arrangement.</div>
+  <div class="step"><b>Step 2 — List the possible group sizes</b>Splitting 5 balls into two groups: {5, 0}, {4, 1}, {3, 2}.</div>
+  <div class="step"><b>Step 3 — Count each case</b>
+    <div class="wrap"><table>
+      <tr><th>Split</th><th>How to choose</th><th>Ways</th></tr>
+      <tr><td>{5, 0}</td><td>All balls together</td><td>1</td></tr>
+      <tr><td>{4, 1}</td><td>Pick the 1 ball that is alone: C(5,1)</td><td>5</td></tr>
+      <tr><td>{3, 2}</td><td>Pick the 2 balls in the smaller group: C(5,2)</td><td>10</td></tr>
+    </table></div>
+  </div>
+  <div class="step"><b>Step 4 — Add</b>1 + 5 + 10 = 16.</div>
+  <p class="note">Check: in part (a) every arrangement is counted twice once we can't tell the boxes apart (swap them), and no arrangement looks the same after swapping — so 32 ÷ 2 = 16. ✓</p>
+  <div class="answer">Answer: 16 ways</div>
+</div></details>
+
+<details class="card"><summary><h2><span>c</span>Identical balls, distinguishable boxes</h2></summary><div class="body">
+  <div class="step"><b>Step 1 — What matters now?</b>The balls are all the same, so we only track <em>how many</em> balls go into Box 1 (the rest go to Box 2).</div>
+  <div class="step"><b>Step 2 — List the cases</b>
+    <div class="wrap"><table>
+      <tr><th>Box 1</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td></tr>
+      <tr><th>Box 2</th><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td><td>0</td></tr>
+    </table></div>
+  </div>
+  <div class="step"><b>Step 3 — Count</b>Box 1 can hold 0, 1, 2, 3, 4, or 5 balls → 6 cases.</div>
+  <div class="answer">Answer: 6 ways</div>
+</div></details>
+
+<details class="card"><summary><h2><span>d</span>Identical balls, identical boxes</h2></summary><div class="body">
+  <div class="step"><b>Step 1 — What matters now?</b>Nothing is labeled, so we only care about how 5 splits into two numbers, where order doesn't matter.</div>
+  <div class="step"><b>Step 2 — List the splits</b>From part (c), the pairs (0,5) and (5,0) are now the same, (1,4) and (4,1) are the same, and (2,3) and (3,2) are the same.</div>
+  <div class="step"><b>Step 3 — Count</b>{5, 0}, {4, 1}, {3, 2} → 3 ways.</div>
+  <div class="answer">Answer: 3 ways</div>
+</div></details>
+
+<details class="card"><summary><h2>Summary</h2></summary><div class="body">
+  <div class="wrap"><table class="summary">
+    <tr><th>Part</th><th>Balls</th><th>Boxes</th><th>Answer</th></tr>
+    <tr><td>(a)</td><td>distinguishable</td><td>distinguishable</td><td>32</td></tr>
+    <tr><td>(b)</td><td>distinguishable</td><td>identical</td><td>16</td></tr>
+    <tr><td>(c)</td><td>identical</td><td>distinguishable</td><td>6</td></tr>
+    <tr><td>(d)</td><td>identical</td><td>identical</td><td>3</td></tr>
+  </table></div>
+  <p class="note">Key idea (from the textbook): distinguishability matters! The fewer things we can tell apart, the fewer different arrangements there are.</p>
+</div></details>
+
+<div class="ptitle">Exercise 5.4.2</div>
+<div class="problem">
+  <strong>How many ways are there to put 5 balls in 3 boxes if</strong>
+  <ol type="a">
+    <li>the balls are distinguishable and the boxes are distinguishable?</li>
+    <li>the balls are distinguishable but the boxes are not?</li>
+    <li>the balls are not distinguishable but the boxes are?</li>
+    <li>the balls are not distinguishable and neither are the boxes?</li>
+    <li>★ Can you explain why your answer to part (b) is not simply your answer to part (a) divided by 3!?</li>
+  </ol>
+</div>
+<details class="card"><summary><h2><span>a</span>Distinguishable balls, distinguishable boxes</h2></summary><div class="body">
+  <div class="step"><b>Step 1 — One ball at a time</b>Each of the 5 labeled balls can go into Box 1, Box 2, or Box 3 → 3 choices each.</div>
+  <div class="step"><b>Step 2 — Multiply</b>3 × 3 × 3 × 3 × 3 = 3<sup>5</sup> = 243.</div>
+  <div class="answer">Answer: 243 ways</div>
+</div></details>
+<details class="card"><summary><h2><span>b</span>Distinguishable balls, identical boxes</h2></summary><div class="body">
+  <div class="step"><b>Step 1 — What matters?</b>Boxes look the same, so we only care how the balls are <em>grouped</em>. List the possible group sizes (adding to 5, at most 3 groups): {5,0,0}, {4,1,0}, {3,2,0}, {3,1,1}, {2,2,1}.</div>
+  <div class="step"><b>Step 2 — Count each case</b>
+    <div class="wrap"><table>
+      <tr><th>Sizes</th><th>How to choose the balls</th><th>Ways</th></tr>
+      <tr><td>{5,0,0}</td><td>All together</td><td>1</td></tr>
+      <tr><td>{4,1,0}</td><td>Pick the lone ball: C(5,1)</td><td>5</td></tr>
+      <tr><td>{3,2,0}</td><td>Pick the pair: C(5,2)</td><td>10</td></tr>
+      <tr><td>{3,1,1}</td><td>Pick the group of 3: C(5,3); the other two are each alone</td><td>10</td></tr>
+      <tr><td>{2,2,1}</td><td>Pick the lone ball (5 ways), then split the other 4 into two pairs (3 ways)</td><td>5 × 3 = 15</td></tr>
+    </table></div>
+    <p class="note">Careful with {2,2,1}: C(4,2) = 6 counts each split of 4 balls into two pairs twice, because the two pairs sit in identical boxes. So it is 6 ÷ 2 = 3.</p></div>
+  <div class="step"><b>Step 3 — Add</b>1 + 5 + 10 + 10 + 15 = 41.</div>
+  <div class="answer">Answer: 41 ways</div>
+</div></details>
+<details class="card"><summary><h2><span>c</span>Identical balls, distinguishable boxes</h2></summary><div class="body">
+  <div class="step"><b>Step 1 — What matters?</b>Only how many balls go in each box: (Box 1, Box 2, Box 3) with the numbers adding to 5.</div>
+  <div class="step"><b>Step 2 — Casework on Box 1</b>If Box 1 has <i>k</i> balls, the other 5 − <i>k</i> balls go into Boxes 2 and 3. From Exercise 5.4.1(c), that can be done in (5 − <i>k</i>) + 1 ways.
+    <div class="wrap"><table>
+      <tr><th>Box 1</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td></tr>
+      <tr><th>Ways for Boxes 2 &amp; 3</th><td>6</td><td>5</td><td>4</td><td>3</td><td>2</td><td>1</td></tr>
+    </table></div></div>
+  <div class="step"><b>Step 3 — Add</b>6 + 5 + 4 + 3 + 2 + 1 = 21.</div>
+  <div class="answer">Answer: 21 ways</div>
+</div></details>
+<details class="card"><summary><h2><span>d</span>Identical balls, identical boxes</h2></summary><div class="body">
+  <div class="step"><b>Step 1 — What matters?</b>Only the group sizes, in any order: write 5 as a sum of at most 3 whole numbers.</div>
+  <div class="step"><b>Step 2 — List them</b>5+0+0, 4+1+0, 3+2+0, 3+1+1, 2+2+1.</div>
+  <div class="step"><b>Step 3 — Count</b>5 ways — the same size list we used in part (b).</div>
+  <div class="answer">Answer: 5 ways</div>
+</div></details>
+<details class="card"><summary><h2><span>e</span>★ Why isn’t (b) = (a) ÷ 3! ?</h2></summary><div class="body">
+  <div class="step"><b>Step 1 — Try it</b>243 ÷ 6 = 40.5 — not even a whole number, so simple division can’t be right.</div>
+  <div class="step"><b>Step 2 — When does dividing by 3! work?</b>Dividing by 3! = 6 assumes every grouping in (b) shows up exactly 6 times in (a), once for each way to assign the three groups to the three labeled boxes. That only happens when all three boxes hold <em>different</em> contents.</div>
+  <div class="step"><b>Step 3 — Where it fails</b>Two empty boxes have the same contents, so swapping them changes nothing. Example: all 5 balls in one box gives only <b>3</b> arrangements in (a) (pick which box), not 6.</div>
+  <div class="step"><b>Step 4 — Check the numbers</b>
+    <div class="wrap"><table>
+      <tr><th>Groupings in (b)</th><th>Count</th><th>Copies in (a) each</th><th>Total in (a)</th></tr>
+      <tr><td>No empty box ({3,1,1}, {2,2,1})</td><td>25</td><td>6</td><td>150</td></tr>
+      <tr><td>One empty box ({4,1,0}, {3,2,0})</td><td>15</td><td>6</td><td>90</td></tr>
+      <tr><td>Two empty boxes ({5,0,0})</td><td>1</td><td>3</td><td>3</td></tr>
+      <tr><th colspan="3">Total</th><th>243 ✓</th></tr>
+    </table></div></div>
+  <div class="answer">Answer: the two empty boxes are identical, so the “all in one box” grouping appears only 3 times in (a), not 6.</div>
+</div></details>
+
+<div class="ptitle">Exercise 5.4.3</div>
+<div class="problem">
+  <strong>How many ways are there to put 2 balls in <i>n</i> boxes (where <i>n</i> ≥ 2) if</strong>
+  <ol type="a">
+    <li>the balls are distinguishable and the boxes are distinguishable?</li>
+    <li>the balls are distinguishable but the boxes are not?</li>
+    <li>the balls are not distinguishable but the boxes are?</li>
+    <li>the balls are not distinguishable and neither are the boxes?</li>
+  </ol>
+</div>
+<details class="card"><summary><h2><span>a</span>Distinguishable balls, distinguishable boxes</h2></summary><div class="body">
+  <div class="step"><b>Step 1 — One ball at a time</b>Ball 1 can go in any of the <i>n</i> boxes; so can Ball 2.</div>
+  <div class="step"><b>Step 2 — Multiply</b><i>n</i> × <i>n</i> = <i>n</i><sup>2</sup>.</div>
+  <div class="step"><b>Quick check (n = 2)</b>2<sup>2</sup> = 4, matching the 2-box case. ✓</div>
+  <div class="answer">Answer: <i>n</i><sup>2</sup> ways</div>
+</div></details>
+<details class="card"><summary><h2><span>b</span>Distinguishable balls, identical boxes</h2></summary><div class="body">
+  <div class="step"><b>Step 1 — Only two possibilities</b>Because the boxes look alike, all that matters is whether the two balls are <em>together</em> or <em>apart</em>.</div>
+  <div class="step"><b>Step 2 — Count</b>Together: 1 way. Apart: 1 way (which boxes doesn’t matter). Both are possible since <i>n</i> ≥ 2.</div>
+  <div class="answer">Answer: 2 ways (for every <i>n</i> ≥ 2)</div>
+</div></details>
+<details class="card"><summary><h2><span>c</span>Identical balls, distinguishable boxes</h2></summary><div class="body">
+  <div class="step"><b>Step 1 — Case: same box</b>Choose the box that gets both balls: <i>n</i> ways.</div>
+  <div class="step"><b>Step 2 — Case: different boxes</b>Balls are identical, so just choose which 2 boxes get one ball: C(<i>n</i>, 2) = <i>n</i>(<i>n</i> − 1)/2.</div>
+  <div class="step"><b>Step 3 — Add</b><i>n</i> + <i>n</i>(<i>n</i> − 1)/2 = <i>n</i>(<i>n</i> + 1)/2.</div>
+  <div class="step"><b>Quick check (n = 2)</b>2·3/2 = 3: (2,0), (1,1), (0,2). ✓</div>
+  <div class="answer">Answer: <i>n</i>(<i>n</i> + 1)/2 ways</div>
+</div></details>
+<details class="card"><summary><h2><span>d</span>Identical balls, identical boxes</h2></summary><div class="body">
+  <div class="step"><b>Step 1 — Same idea as (b)</b>Nothing is labeled, so only “together” or “apart” matters.</div>
+  <div class="step"><b>Step 2 — Count</b>Together: 1 way. Apart: 1 way.</div>
+  <div class="answer">Answer: 2 ways (for every <i>n</i> ≥ 2)</div>
+</div></details>
+
+<div class="ptitle">Review Problem 5.10</div>
+<div class="problem">
+  <strong>In the diagram shown in Figure 5.15 (paths only go up and to the right):</strong>
+  <ol type="a">
+    <li>How many paths are there from A to B?</li>
+    <li>How many paths are there from A to C?</li>
+    <li>How many paths are there from C to B?</li>
+    <li>How many paths are there from A to B passing through C?</li>
+  </ol>
+  <svg class="grid" viewBox="-25 -25 290 225" role="img" aria-label="Grid 5 squares wide and 4 tall; A bottom-left, B top-right, C one right and three up from A"><line x1="0" y1="0" x2="0" y2="160"/><line x1="40" y1="0" x2="40" y2="160"/><line x1="80" y1="0" x2="80" y2="160"/><line x1="120" y1="0" x2="120" y2="160"/><line x1="160" y1="0" x2="160" y2="160"/><line x1="200" y1="0" x2="200" y2="160"/><line x1="0" y1="0" x2="200" y2="0"/><line x1="0" y1="40" x2="200" y2="40"/><line x1="0" y1="80" x2="200" y2="80"/><line x1="0" y1="120" x2="200" y2="120"/><line x1="0" y1="160" x2="200" y2="160"/><circle cx="0" cy="160" r="5" fill="#2f6fb5"/><circle cx="200" cy="0" r="5" fill="#2f6fb5"/><circle cx="40" cy="40" r="5" fill="#c0392b"/><text x="-20" y="182">A</text><text x="206" y="-8">B</text><text x="48" y="62">C</text></svg>
+  <p class="note">The grid is 5 squares wide and 4 squares tall. C is the grid point 1 step right and 3 steps up from A (the top-left corner of the square labeled C).</p>
+</div>
+<details class="card"><summary><h2><span>a</span>Paths from A to B</h2></summary><div class="body">
+  <div class="step"><b>Step 1 — Count the steps</b>From A to B we need 5 Right (R) and 4 Up (U) steps: 9 steps in total.</div>
+  <div class="step"><b>Step 2 — A path is a word</b>Each path is an arrangement of RRRRRUUUU (e.g. RRUURURUR), and each arrangement is a different path.</div>
+  <div class="step"><b>Step 3 — Choose the Up positions</b>Choose which 4 of the 9 steps are Up: C(9, 4) = (9·8·7·6)/(4·3·2·1) = 126.</div>
+  <div class="answer">Answer: 126 paths</div>
+</div></details>
+<details class="card"><summary><h2><span>b</span>Paths from A to C</h2></summary><div class="body">
+  <div class="step"><b>Step 1 — Count the steps</b>A to C: 1 Right and 3 Up → 4 steps.</div>
+  <div class="step"><b>Step 2 — Choose</b>Choose which of the 4 steps is the Right step: C(4, 1) = 4.</div>
+  <div class="answer">Answer: 4 paths</div>
+</div></details>
+<details class="card"><summary><h2><span>c</span>Paths from C to B</h2></summary><div class="body">
+  <div class="step"><b>Step 1 — Count the steps</b>C to B: 4 Right and 1 Up → 5 steps.</div>
+  <div class="step"><b>Step 2 — Choose</b>Choose which of the 5 steps is the Up step: C(5, 1) = 5.</div>
+  <div class="answer">Answer: 5 paths</div>
+</div></details>
+<details class="card"><summary><h2><span>d</span>Paths from A to B through C</h2></summary><div class="body">
+  <div class="step"><b>Step 1 — Split the trip</b>Every such path is a path A → C followed by a path C → B.</div>
+  <div class="step"><b>Step 2 — Multiply</b>Each of the 4 first halves pairs with each of the 5 second halves: 4 × 5 = 20.</div>
+  <div class="step"><b>Check</b>20 is less than the 126 total paths, as it should be. ✓</div>
+  <div class="answer">Answer: 20 paths</div>
+</div></details>
+
+<div class="ptitle">Review Problem 5.11</div>
+<div class="problem">
+  <strong>In how many ways can we choose 3 distinct letters of the alphabet, without regard to order, if we must choose 1 vowel (A, E, I, O, or U) and 2 consonants?</strong>
+</div>
+<details class="card"><summary><h2><span>✓</span>Solution</h2></summary><div class="body">
+  <div class="step"><b>Step 1 — Sort the letters</b>26 letters = 5 vowels + 21 consonants.</div>
+  <div class="step"><b>Step 2 — Choose the vowel</b>C(5, 1) = 5 ways.</div>
+  <div class="step"><b>Step 3 — Choose 2 consonants</b>Order doesn’t matter: C(21, 2) = (21 × 20)/2 = 210 ways.</div>
+  <div class="step"><b>Step 4 — Multiply</b>The two choices are independent: 5 × 210 = 1050.</div>
+  <p class="note">Common mistake: 21 × 20 = 420 counts each consonant pair twice (B-C and C-B), so divide by 2.</p>
+  <div class="answer">Answer: 1050 ways</div>
+</div></details>
+</main>
+</body>
+</html>
